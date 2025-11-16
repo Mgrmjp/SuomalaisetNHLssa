@@ -130,6 +130,8 @@ function formatLocalDate(date) {
 <style>
 	.date-controls__card {
 		position: relative;
+		overflow: visible;
+		z-index: 100;
 	}
 
 	.nav-btn {
@@ -171,6 +173,26 @@ function formatLocalDate(date) {
 		box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
 	}
 
+	/* Flowbite calendar day colors */
+	:global(.datepicker .day) {
+		color: #0f172a !important;
+	}
+
+	:global(.datepicker .day:hover:not([aria-disabled='true'])) {
+		background-color: #f3f4f6 !important;
+		color: #0f172a !important;
+	}
+
+	:global(.datepicker .day[aria-selected='true']) {
+		background-color: #fbbf24 !important;
+		color: #0f172a !important;
+		border-color: #d97706 !important;
+	}
+
+	:global(.datepicker .day[aria-selected='false'][aria-disabled='true']) {
+		color: #cbd5e1 !important;
+	}
+
 	/* Keep the calendar above surrounding cards */
 	:global(.datepicker) {
 		position: relative;
@@ -178,6 +200,6 @@ function formatLocalDate(date) {
 	}
 
 	:global(.datepicker-dropdown) {
-		z-index: 40 !important;
+		z-index: 200 !important;
 	}
 </style>

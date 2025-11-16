@@ -39,16 +39,10 @@ onMount(() => {
 </svelte:head>
 
 <div class="w-full max-w-6xl mx-auto px-4 py-8">
-	<div class="text-center mb-8 hero-header">
-		<div class="flex justify-center mb-4 hero-flag">
-			<svg width="64" height="40" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg">
-				<rect width="18" height="12" fill="#FFFFFF"/>
-				<rect x="5" y="0" width="3" height="12" fill="#003580"/>
-				<rect x="0" y="4.5" width="18" height="3" fill="#003580"/>
-			</svg>
-		</div>
-		<h1 class="text-3xl font-bold text-gray-900 mb-2 hero-title">Suomalaiset NHL-pelaajat</h1>
-		<p class="text-gray-600 hero-subtitle">Seuraa suomalaisten NHL-pelaajien suorituksia</p>
+	<div class="text-center mb-8 hero-header space-y-3">
+		<h1 class="text-3xl font-bold text-gray-900 hero-title">Suomalaiset NHL-pelaajat</h1>
+		<p class="text-gray-700 hero-subtitle">Päivittäin päivittyvä seuranta suomalaisille NHL-pelaajille</p>
+		<p class="text-sm text-gray-600">Tämän päivän ja eilisen tilastot, pisteet ja peliajat yhdellä silmäyksellä</p>
 	</div>
 
 	<div class="space-y-8">
