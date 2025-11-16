@@ -1,0 +1,119 @@
+<script>
+import { onMount } from 'svelte'
+import SimpleDateControls from '$lib/components/game/SimpleDateControls.svelte'
+import MonthView from '$lib/components/game/MonthView.svelte'
+import PlayerList from '$lib/components/game/PlayerList.svelte'
+import SummaryStatsSkeleton from '$lib/components/game/SummaryStatsSkeleton.svelte'
+import {
+    players,
+    showCalendarView,
+    isLoading,
+    selectedDate,
+    currentDateReadOnly,
+    formatDate,
+    setDate,
+} from '$lib/stores/gameData.js'
+
+// Reactive variables
+$: totalGoals = $players?.reduce((sum, player) => sum + player.goals, 0) || 0
+$: totalAssists = $players?.reduce((sum, player) => sum + player.assists, 0) || 0
+$: totalPoints = $players?.reduce((sum, player) => sum + player.points, 0) || 0
+$: totalPenaltyMinutes = $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
+$: playersWithPoints = $players?.filter((player) => player.points > 0).length || 0
+
+// Default to last night's games on first load
+onMount(() => {
+    // Avoid reloading if user already selected a date
+    if ($selectedDate) return
+
+    const today = formatDate($currentDateReadOnly)
+    const lastNight = new Date(today)
+    lastNight.setDate(lastNight.getDate() - 1)
+    setDate(formatDate(lastNight))
+})
+</script>
+
+<svelte:head>
+	<title>Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot</title>
+	<meta name="description" content="Seuraa suomalaisten NHL-pelaajien suorituksia reaaliajassa" />
+</svelte:head>
+
+<div class="w-full max-w-6xl mx-auto px-4 py-8">
+	<div class="text-center mb-8 hero-header">
+		<div class="flex justify-center mb-4 hero-flag">
+			<svg width="64" height="40" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg">
+				<rect width="18" height="12" fill="#FFFFFF"/>
+				<rect x="5" y="0" width="3" height="12" fill="#003580"/>
+				<rect x="0" y="4.5" width="18" height="3" fill="#003580"/>
+			</svg>
+		</div>
+		<h1 class="text-3xl font-bold text-gray-900 mb-2 hero-title">Suomalaiset NHL-pelaajat</h1>
+		<p class="text-gray-600 hero-subtitle">Seuraa suomalaisten NHL-pelaajien suorituksia</p>
+	</div>
+
+	<div class="space-y-8">
+		<!-- Controls Section -->
+		<div>
+			<SimpleDateControls />
+		</div>
+
+		{#if $players && $players.length > 0}
+			<div class="flex flex-wrap justify-center gap-8 hero-stats">
+				<div class="text-center hero-stat hero-stat--goals">
+					<div class="flex justify-center mb-1">
+						<svg class="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+							<path fill="currentColor" d="M0 160c0-53 114.6-96 256-96s256 43 256 96s-114.6 96-256 96S0 213 0 160m0 82.2V352c0 53 114.6 96 256 96s256-43 256-96V242.2c-113.4 82.3-398.5 82.4-512 0"/>
+						</svg>
+					</div>
+					<div class="text-xl font-bold text-gray-800">{totalGoals}</div>
+					<div class="text-xs text-gray-600">Maalit</div>
+				</div>
+				<div class="text-center hero-stat hero-stat--assists">
+					<div class="flex justify-center mb-1">
+						<svg class="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+							<path fill="currentColor" d="m323.4 85.2l-96.8 78.4c-16.1 13-19.2 36.4-7 53.1c12.9 17.8 38 21.3 55.3 7.8l99.3-77.2c7-5.4 17-4.2 22.5 2.8s4.2 17-2.8 22.5L373 188.8L550.2 352H592c26.5 0 48-21.5 48-48V176c0-26.5-21.5-48-48-48h-80.7l-3.9-2.5L434.8 79c-15.3-9.8-33.2-15-51.4-15c-21.8 0-43 7.5-60 21.2m22.8 124.4l-51.7 40.2c-31.5 24.6-77.2 18.2-100.8-14.2c-22.2-30.5-16.6-73.1 12.7-96.8l83.2-67.3c-11.6-4.9-24.1-7.4-36.8-7.4C234 64 215.7 69.6 200 80l-72 48H48c-26.5 0-48 21.5-48 48v128c0 26.5 21.5 48 48 48h108.2l91.4 83.4c19.6 17.9 49.9 16.5 67.8-3.1c5.5-6.1 9.2-13.2 11.1-20.6l17 15.6c19.5 17.9 49.9 16.6 67.8-2.9c4.5-4.9 7.8-10.6 9.9-16.5c19.4 13 45.8 10.3 62.1-7.5c17.9-19.5 16.6-49.9-2.9-67.8z"/>
+						</svg>
+					</div>
+					<div class="text-xl font-bold text-gray-800">{totalAssists}</div>
+					<div class="text-xs text-gray-600">Syötöt</div>
+				</div>
+				<div class="text-center hero-stat hero-stat--points">
+					<div class="flex justify-center mb-1">
+						<svg class="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+							<path fill="currentColor" d="M20 12a2 2 0 0 0-.703.133l-2.398-1.963c.059-.214.101-.436.101-.67C17 8.114 15.886 7 14.5 7S12 8.114 12 9.5c0 .396.1.765.262 1.097l-2.909 3.438A2.06 2.06 0 0 0 9 14c-.179 0-.348.03-.512.074l-2.563-2.563C5.97 11.348 6 11.179 6 11c0-1.108-.892-2-2-2s-2 .892-2 2s.892 2 2 2c.179 0 .348-.03.512-.074l2.563 2.563A1.906 1.906 0 0 0 7 16c0 1.108.892 2 2 2s2-.892 2-2c0-.237-.048-.46-.123-.671l2.913-3.442c.227.066.462.113.71.113a2.48 2.48 0 0 0 1.133-.281l2.399 1.963A2.077 2.077 0 0 0 18 14c0 1.108.892 2 2 2s2-.892 2-2s-.892-2-2-2"/>
+						</svg>
+					</div>
+					<div class="text-xl font-bold text-gray-900">{totalPoints}</div>
+					<div class="text-xs text-gray-600">Pisteet</div>
+				</div>
+				<div class="text-center hero-stat hero-stat--pims">
+					<div class="flex justify-center mb-1">
+						<svg class="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+							<g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
+								<path d="M10 5a2 2 0 0 0-2 2v3h2.4A7.48 7.48 0 0 0 8 15.5a7.48 7.48 0 0 0 2.4 5.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1V7a4 4 0 1 1 8 0v1.15a7.446 7.446 0 0 0-1.943.685A.999.999 0 0 1 12 8.5V7a2 2 0 0 0-2-2"/>
+								<path d="M10 15.5a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0m6.5-1.5a1 1 0 1 0-2 0v1.5a1 1 0 0 0 .293.707l1 1a1 1 0 0 0 1.414-1.414l-.707-.707z"/>
+							</g>
+						</svg>
+					</div>
+					<div class="text-xl font-bold text-gray-700">{totalPenaltyMinutes}</div>
+					<div class="text-xs text-gray-600">Rangaistusmin</div>
+				</div>
+				<div class="text-center hero-stat hero-stat--onboard">
+					<div class="flex justify-center mb-1">
+						<svg class="w-5 h-5 text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+							<path fill="currentColor" d="M5 6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2m7-2a2 2 0 1 0 2 2c0-1.11-.89-2-2-2m7-2c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2M3.5 11c-.83 0-1.5.67-1.5 1.5V17h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2C9.67 9 9 9.67 9 10.5V15h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2c-.83 0-1.5.67-1.5 1.5V13h1v5h4v-5h1V8.5c0-.83-.67-1.5-1.5-1.5z"/>
+						</svg>
+					</div>
+					<div class="text-xl font-bold text-gray-800">{playersWithPoints}</div>
+					<div class="text-xs text-gray-600">Pisteillä</div>
+				</div>
+			</div>
+		{:else if $isLoading}
+			<SummaryStatsSkeleton />
+		{/if}
+
+		<!-- Player List -->
+		<PlayerList />
+	</div>
+
+</div>

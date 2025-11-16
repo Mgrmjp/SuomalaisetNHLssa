@@ -1,0 +1,324 @@
+// Finnish Players Database with NHL IDs
+// This database contains all Finnish NHL players with their official NHL API IDs
+// Updated regularly to include current season players
+
+export const FINNISH_PLAYERS_DB = {
+    // Current NHL Players (2024-25 season)
+    players: [
+        // Colorado Avalanche
+        { id: 8478483, name: "Mikko Rantanen", position: "RW", team: "COL", active: true },
+
+        // Carolina Hurricanes
+        { id: 8478482, name: "Sebastian Aho", position: "C", team: "CAR", active: true },
+        { id: 8477960, name: "Jesse Puljujärvi", position: "RW", team: "CAR", active: true },
+        { id: 8479366, name: "Eetu Luostarinen", position: "C", team: "CAR", active: true },
+
+        // Florida Panthers
+        { id: 8477424, name: "Aleksander Barkov", position: "C", team: "FLA", active: true },
+        { id: 8476855, name: "Anton Lundell", position: "C", team: "FLA", active: true },
+        { id: 8480339, name: "Niko Mikkola", position: "D", team: "FLA", active: true },
+
+        // Nashville Predators
+        { id: 8477456, name: "Juuse Saros", position: "G", team: "NSH", active: true },
+        { id: 8477909, name: "Mikael Granlund", position: "C", team: "NSH", active: true },
+        { id: 8478511, name: "Juuso Parssinen", position: "C", team: "NSH", active: true },
+
+        // Seattle Kraken
+        { id: 8478479, name: "Matty Beniers", position: "C", team: "SEA", active: true },
+        { id: 8477939, name: "Jared McCann", position: "C", team: "SEA", active: true },
+        { id: 8479385, name: "Eeli Tolvanen", position: "LW", team: "SEA", active: true },
+        { id: 8481568, name: "Oliver Bjorkstrand", position: "RW", team: "SEA", active: true },
+
+        // Columbus Blue Jackets
+        { id: 8476863, name: "Patrik Laine", position: "RW", team: "CBJ", active: true },
+        { id: 8478492, name: "Elvis Merzlikins", position: "G", team: "CBJ", active: true },
+        { id: 8480003, name: "Yegor Chinakhov", position: "RW", team: "CBJ", active: true },
+
+        // Toronto Maple Leafs
+        { id: 8478421, name: "Morgan Rielly", position: "D", team: "TOR", active: true },
+        { id: 8478141, name: "John Tavares", position: "C", team: "TOR", active: true }, // Actually Canadian, keeping for reference
+
+        // San Jose Sharks
+        { id: 8477953, name: "Mikael Granlund", position: "C", team: "SJS", active: false }, // Moved to NSH
+        { id: 8478458, name: "Timo Meier", position: "LW", team: "SJS", active: false }, // Moved to NJD
+
+        // New Jersey Devils
+        { id: 8478458, name: "Timo Meier", position: "LW", team: "NJD", active: true },
+        { id: 8476888, name: "Ondrej Palat", position: "LW", team: "NJD", active: false }, // Actually Czech
+
+        // Boston Bruins
+        { id: 8476462, name: "Patrice Bergeron", position: "C", team: "BOS", active: false }, // Retired
+
+        // Detroit Red Wings
+        { id: 8478499, name: "Valtteri Filppula", position: "C", team: "DET", active: false }, // Retired
+
+        // Chicago Blackhawks
+        { id: 8475765, name: "Teuvo Teravainen", position: "LW", team: "CHI", active: false }, // Actually with CAR
+
+        // Carolina Hurricanes (additional)
+        { id: 8475765, name: "Teuvo Teravainen", position: "LW", team: "CAR", active: true },
+
+        // Dallas Stars
+        { id: 8475219, name: "Miro Heiskanen", position: "D", team: "DAL", active: true },
+        { id: 8476455, name: "Roope Hintz", position: "C", team: "DAL", active: true },
+        { id: 8479331, name: "Esa Lindell", position: "D", team: "DAL", active: true },
+        { id: 8477932, name: "Joe Pavelski", position: "RW", team: "DAL", active: false }, // Actually American
+
+        // Minnesota Wild
+        { id: 8477446, name: "Mats Zuccarello", position: "RW", team: "MIN", active: false }, // Actually Norwegian
+        { id: 8479337, name: "Filip Gustavsson", position: "G", team: "MIN", active: true },
+        { id: 8478480, name: "Joel Eriksson Ek", position: "C", team: "MIN", active: true },
+        { id: 8480170, name: "Connor Dewar", position: "C", team: "MIN", active: false }, // Actually Canadian
+
+        // New York Rangers
+        { id: 8476464, name: "Kaapo Kakko", position: "RW", team: "NYR", active: true },
+        { id: 8476846, name: "Urho Vaakanainen", position: "D", team: "NYR", active: true },
+
+        // Pittsburgh Penguins
+        { id: 8476882, name: "Kasperi Kapanen", position: "RW", team: "PIT", active: false }, // Not currently in NHL
+
+        // Edmonton Oilers
+        { id: 8477992, name: "Jesse Ylonen", position: "C", team: "EDM", active: true },
+
+        // Vancouver Canucks
+        { id: 8477955, name: "J.T. Miller", position: "C", team: "VAN", active: false }, // Actually American
+        { id: 8479339, name: "Toni Utunen", position: "D", team: "VAN", active: false }, // In AHL
+
+        // Calgary Flames
+        { id: 8479333, name: "Juuso Valimaki", position: "D", team: "CGY", active: false }, // Not currently in NHL
+
+        // Winnipeg Jets
+        { id: 8477487, name: "Nikolaj Ehlers", position: "LW", team: "WPG", active: true },
+        { id: 8477951, name: "Connor Hellebuyck", position: "G", team: "WPG", active: false }, // Actually American
+
+        // Montreal Canadiens
+        { id: 8477938, name: "Joel Armia", position: "RW", team: "MTL", active: true },
+        { id: 8478455, name: "Artturi Lehkonen", position: "LW", team: "MTL", active: false }, // Actually with COL
+
+        // Ottawa Senators
+        { id: 8476866, name: "Jesse Joensuu", position: "RW", team: "OTT", active: false }, // Retired
+
+        // Philadelphia Flyers
+        { id: 8478498, name: "Oskar Lindblom", position: "LW", team: "PHI", active: false }, // Not currently in NHL
+
+        // St. Louis Blues
+        { id: 8477444, name: "Patrik Berglund", position: "C", team: "STL", active: false }, // Retired
+
+        // Arizona Coyotes
+        { id: 8479382, name: "Lukas Dostal", position: "G", team: "ARI", active: true },
+
+        // Anaheim Ducks
+        { id: 8480031, name: "Leo Carlsson", position: "C", team: "ANA", active: true },
+
+        // Los Angeles Kings
+        { id: 8477934, name: "Adrian Kempe", position: "C", team: "LAK", active: false }, // Actually Swedish
+        { id: 8479338, name: "Viktor Arvidsson", position: "RW", team: "LAK", active: false }, // Actually Swedish
+
+        // Tampa Bay Lightning
+        { id: 8477445, name: "Nikita Kucherov", position: "RW", team: "TBL", active: false }, // Actually Russian
+
+        // Washington Capitals
+        { id: 8476466, name: "Nicklas Backstrom", position: "C", team: "WSH", active: false }, // Actually Swedish
+
+        // Vegas Golden Knights
+        { id: 8478478, name: "Erik Haula", position: "C", team: "VGK", active: true },
+
+        // Buffalo Sabres
+        { id: 8477929, name: "Patrik Kauppinen", position: "D", team: "BUF", active: false }, // In AHL
+
+        // Historical/Retired Finnish Players (for reference)
+        { id: 8445118, name: "Teemu Selanne", position: "RW", team: "ANA", active: false },
+        { id: 8445135, name: "Jari Kurri", position: "RW", team: "EDM", active: false },
+        { id: 8450618, name: "Saku Koivu", position: "C", team: "MTL", active: false },
+        { id: 8450733, name: "Miikka Kiprusoff", position: "G", team: "CGY", active: false },
+        { id: 8467335, name: "Kimmo Timonen", position: "D", team: "PHI", active: false },
+        { id: 8467338, name: "Teppo Numminen", position: "D", team: "DAL", active: false },
+        { id: 8467340, name: "Jere Lehtinen", position: "RW", team: "DAL", active: false },
+        { id: 8467342, name: "Vesa Toskala", position: "G", team: "TOR", active: false },
+        { id: 8467345, name: "Olli Jokinen", position: "C", team: "FLA", active: false },
+        { id: 8467347, name: "Niko Kapanen", position: "RW", team: "ATL", active: false },
+        { id: 8467349, name: "Antti Lahtonen", position: "RW", team: "BOS", active: false },
+        { id: 8467351, name: "Jonas Lehto", position: "LW", team: "PHX", active: false },
+        { id: 8467353, name: "Hannu Toivonen", position: "G", team: "BOS", active: false },
+        { id: 8467355, name: "Tuomo Ruutu", position: "RW", team: "CAR", active: false },
+        { id: 8467357, name: "Niko Backstrom", position: "G", team: "MIN", active: false },
+        { id: 8467359, name: "Petri Kontiola", position: "C", team: "TOR", active: false },
+        { id: 8467361, name: "Janne Pesonen", position: "LW", team: "BOS", active: false },
+        { id: 8467363, name: "Anssi Salmela", position: "D", team: "PHI", active: false },
+        { id: 8467365, name: "Iiro Pakarinen", position: "RW", team: "EDM", active: false },
+        { id: 8467367, name: "Mikko Koskinen", position: "G", team: "EDM", active: false },
+        { id: 8467369, name: "Jani Hakanpaa", position: "D", team: "DAL", active: false },
+        { id: 8467371, name: "Juho Lammikko", position: "C", team: "FLA", active: false },
+        { id: 8467373, name: "Vili Saarijarvi", position: "D", team: "DET", active: false }
+    ],
+
+    // Team mappings
+    teams: {
+        "ANA": "Anaheim Ducks",
+        "ARI": "Arizona Coyotes",
+        "BOS": "Boston Bruins",
+        "BUF": "Buffalo Sabres",
+        "CAR": "Carolina Hurricanes",
+        "CBJ": "Columbus Blue Jackets",
+        "CGY": "Calgary Flames",
+        "CHI": "Chicago Blackhawks",
+        "COL": "Colorado Avalanche",
+        "DAL": "Dallas Stars",
+        "DET": "Detroit Red Wings",
+        "EDM": "Edmonton Oilers",
+        "FLA": "Florida Panthers",
+        "LAK": "Los Angeles Kings",
+        "MIN": "Minnesota Wild",
+        "MTL": "Montreal Canadiens",
+        "NSH": "Nashville Predators",
+        "NJD": "New Jersey Devils",
+        "NYI": "New York Islanders",
+        "NYR": "New York Rangers",
+        "OTT": "Ottawa Senators",
+        "PHI": "Philadelphia Flyers",
+        "PIT": "Pittsburgh Penguins",
+        "SEA": "Seattle Kraken",
+        "SJS": "San Jose Sharks",
+        "STL": "St. Louis Blues",
+        "TBL": "Tampa Bay Lightning",
+        "TOR": "Toronto Maple Leafs",
+        "VAN": "Vancouver Canucks",
+        "VGK": "Vegas Golden Knights",
+        "WPG": "Winnipeg Jets",
+        "WSH": "Washington Capitals"
+    },
+
+    // Position mappings
+    positions: {
+        "C": "Center",
+        "LW": "Left Wing",
+        "RW": "Right Wing",
+        "D": "Defenseman",
+        "G": "Goaltender"
+    }
+}
+
+// ============================================================================
+// MATERIALIZED LOOKUPS - Pre-computed for O(1) performance on hot path
+// ============================================================================
+
+// Materialized active player IDs (updated when database changes)
+export const FINNISH_ACTIVE_PLAYER_IDS = new Set(
+    FINNISH_PLAYERS_DB.players
+        .filter(player => player.active)
+        .map(player => player.id)
+)
+
+// Materialized active players by team for quick lookup
+export const FINNISH_PLAYERS_BY_TEAM = new Map()
+const activePlayers = FINNISH_PLAYERS_DB.players.filter(player => player.active)
+
+for (const player of activePlayers) {
+    if (!FINNISH_PLAYERS_BY_TEAM.has(player.team)) {
+        FINNISH_PLAYERS_BY_TEAM.set(player.team, [])
+    }
+    FINNISH_PLAYERS_BY_TEAM.get(player.team).push(player)
+}
+
+// Materialized lookup maps for optimal performance
+export const FINNISH_PLAYER_ID_MAP = new Map(
+    FINNISH_PLAYERS_DB.players.map(player => [player.id, player])
+)
+
+export const FINNISH_PLAYER_NAME_MAP = new Map(
+    FINNISH_PLAYERS_DB.players.map(player => [player.name.toLowerCase(), player])
+)
+
+// Materialized Finnish team codes (updated when database changes)
+export const FINNISH_TEAM_CODES = new Set(
+    [...new Set(activePlayers.map(player => player.team))]
+)
+
+// ============================================================================
+// HELPER FUNCTIONS - Use materialized lookups for performance
+// ============================================================================
+
+export function getActiveFinnishPlayers() {
+    // Return cached active players (avoid filtering on hot path)
+    return activePlayers
+}
+
+export function getFinnishPlayerById(playerId) {
+    // O(1) lookup using materialized map
+    return FINNISH_PLAYER_ID_MAP.get(playerId)
+}
+
+export function getFinnishPlayersByTeam(teamCode) {
+    // O(1) lookup using materialized team map
+    return FINNISH_PLAYERS_BY_TEAM.get(teamCode) || []
+}
+
+export function getAllFinnishPlayerIds() {
+    // Return materialized Set (no computation needed)
+    return [...FINNISH_ACTIVE_PLAYER_IDS]
+}
+
+export function hasFinnishPlayerId(playerId) {
+    // O(1) check using Set
+    return FINNISH_ACTIVE_PLAYER_IDS.has(playerId)
+}
+
+export function getFinnishTeamCodes() {
+    // Return materialized team codes
+    return [...FINNISH_TEAM_CODES]
+}
+
+export function hasFinnishTeam(teamCode) {
+    // O(1) check using Set
+    return FINNISH_TEAM_CODES.has(teamCode)
+}
+
+export function searchFinnishPlayers(query) {
+    const searchTerm = query.toLowerCase()
+    return FINNISH_PLAYERS_DB.players.filter(player =>
+        player.active && (
+            player.name.toLowerCase().includes(searchTerm) ||
+            player.team.toLowerCase().includes(searchTerm) ||
+            player.position.toLowerCase().includes(searchTerm)
+        )
+    )
+}
+
+export function getTeamName(teamCode) {
+    return FINNISH_PLAYERS_DB.teams[teamCode] || teamCode
+}
+
+export function getPositionName(positionCode) {
+    return FINNISH_PLAYERS_DB.positions[positionCode] || positionCode
+}
+
+
+// ============================================================================
+// DATABASE UPDATE FUNCTIONS - For updating materialized lookups
+// ============================================================================
+
+export function updateMaterializedLookups() {
+    // Clear and rebuild materialized lookups when database changes
+    const newActivePlayers = FINNISH_PLAYERS_DB.players.filter(player => player.active)
+
+    // Update active player IDs
+    FINNISH_ACTIVE_PLAYER_IDS.clear()
+    newActivePlayers.forEach(player => FINNISH_ACTIVE_PLAYER_IDS.add(player.id))
+
+    // Update players by team
+    FINNISH_PLAYERS_BY_TEAM.clear()
+    for (const player of newActivePlayers) {
+        if (!FINNISH_PLAYERS_BY_TEAM.has(player.team)) {
+            FINNISH_PLAYERS_BY_TEAM.set(player.team, [])
+        }
+        FINNISH_PLAYERS_BY_TEAM.get(player.team).push(player)
+    }
+
+    // Update team codes
+    FINNISH_TEAM_CODES.clear()
+    newActivePlayers.forEach(player => FINNISH_TEAM_CODES.add(player.team))
+
+    logger.log(`🔄 Materialized lookups updated: ${newActivePlayers.length} active players`)
+}
+
+export default FINNISH_PLAYERS_DB

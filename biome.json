@@ -1,0 +1,139 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.2.5/schema.json",
+    "vcs": {
+        "enabled": false
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "includes": ["src/**/*"]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 100
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "suspicious": {
+                "noExplicitAny": "warn",
+                "noGlobalAssign": "error",
+                "noImplicitAnyLet": "error",
+                "noUnsafeDeclarationMerging": "error",
+                "noArrayIndexKey": "warn"
+            },
+            "correctness": {
+                "noUnusedVariables": "error",
+                "noUndeclaredVariables": "off",
+                "noUnreachable": "error",
+                "noUnreachableSuper": "error",
+                "useExhaustiveDependencies": "error",
+                "noUnusedImports": "error",
+                "noUnusedPrivateClassMembers": "error",
+                "noUnusedLabels": "error",
+                "noSelfAssign": "error",
+                "noSetterReturn": "error",
+                "noInvalidConstructorSuper": "error",
+                "noInvalidUseBeforeDeclaration": "error",
+                "noInnerDeclarations": "error",
+                "noConstAssign": "error",
+                "noConstantCondition": "error",
+                "noEmptyCharacterClassInRegex": "error",
+                "noEmptyPattern": "error",
+                "noGlobalObjectCalls": "error",
+                "noNonoctalDecimalEscape": "error",
+                "noPrecisionLoss": "error",
+                "noUnusedFunctionParameters": "error"
+            },
+            "style": {
+                "useConst": "error",
+                "noParameterAssign": "error",
+                "useTemplate": "error",
+                "useShorthandAssign": "error",
+                "useShorthandFunctionType": "error",
+                "noNegationElse": "error",
+                "noUselessElse": "error",
+                "useSingleVarDeclarator": "error"
+            },
+            "security": {
+                "noDangerouslySetInnerHtml": "error",
+                "noGlobalEval": "error"
+            },
+            "complexity": {
+                "noBannedTypes": "error",
+                "noForEach": "warn",
+                "noStaticOnlyClass": "error",
+                "noThisInStatic": "error",
+                "noUselessConstructor": "error",
+                "noUselessFragments": "error",
+                "noVoid": "error",
+                "useLiteralKeys": "error",
+                "useSimpleNumberKeys": "error"
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single",
+            "semicolons": "asNeeded",
+            "trailingCommas": "es5",
+            "bracketSpacing": true
+        },
+        "globals": [
+            "$:",
+            "$$",
+            "browser",
+            "window",
+            "document",
+            "console",
+            "alert",
+            "fetch",
+            "setTimeout",
+            "setInterval",
+            "clearTimeout",
+            "clearInterval"
+        ]
+    },
+    "json": {
+        "formatter": {
+            "indentStyle": "space",
+            "indentWidth": 4
+        }
+    },
+    "css": {
+        "formatter": {
+            "enabled": true,
+            "indentStyle": "space",
+            "indentWidth": 4
+        }
+    },
+    "assist": {
+        "enabled": true,
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
+    },
+    "overrides": [
+        {
+            "includes": ["*.svelte"],
+            "linter": {
+                "rules": {
+                    "suspicious": {
+                        "noExplicitAny": "warn"
+                    },
+                    "correctness": {
+                        "noUnusedImports": "error",
+                        "noUnusedVariables": "error"
+                    },
+                    "style": {
+                        "useConst": "error"
+                    }
+                }
+            }
+        }
+    ]
+}

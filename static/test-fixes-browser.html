@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixes Verification Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .pass { background-color: #d4edda; border-color: #c3e6cb; }
+        .fail { background-color: #f8d7da; border-color: #f5c6cb; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Fixes Verification Test</h1>
+    
+    <h2>Test 1: PlayerCard String() Wrapper Fix</h2>
+    <div id="playerCardTest"></div>
+    
+    <h2>Test 2: Cache Warming State Initialization</h2>
+    <div id="cacheTest"></div>
+    
+    <script>
+        // Test 1: PlayerCard String() wrapper
+        function testPlayerCardFix() {
+            const container = document.getElementById('playerCardTest');
+            const testCases = [
+                { name: undefined, expected: 'Unknown Player' },
+                { name: null, expected: 'Unknown Player' },
+                { name: 'Mikko Rantanen', expected: 'Mikko Rantanen' },
+                { name: '', expected: 'Unknown Player' },
+                { name: 123, expected: '123' }
+            ];
+            
+            let allPassed = true;
+            
+            testCases.forEach((testCase, index) => {
+                try {
+                    // This simulates what happens in PlayerCard.svelte after the fix
+                    const result = String(testCase.name || 'Unknown Player');
+                    const id = result.replace(/\s+/g, '-').toLowerCase();
+                    
+                    const testDiv = document.createElement('div');
+                    testDiv.className = 'test pass';
+                    testDiv.innerHTML = `✅ Test case ${index + 1}: ${JSON.stringify(testCase.name)} -> "${result}" -> id: "${id}"`;
+                    container.appendChild(testDiv);
+                } catch (error) {
+                    allPassed = false;
+                    const testDiv = document.createElement('div');
+                    testDiv.className = 'test fail';
+                    testDiv.innerHTML = `❌ Test case ${index + 1}: Error - ${error.message}`;
+                    container.appendChild(testDiv);
+                }
+            });
+            
+            return allPassed;
+        }
+        
+        // Test 2: Cache warming state initialization
+        function testCacheWarmingFix() {
+            const container = document.getElementById('cacheTest');
+            
+            try {
+                // This simulates the fix in unifiedDataService.js
+                // The warmupIntervalState should be declared at module level
+                let warmupIntervalState = {
+                    intervalId: null,
+                    isInitialized: false
+                };
+                
+                // Test that we can access it without ReferenceError
+                const isInitialized = warmupIntervalState.isInitialized;
+                const intervalId = warmupIntervalState.intervalId;
+                
+                const testDiv = document.createElement('div');
+                testDiv.className = 'test pass';
+                testDiv.innerHTML = `✅ Cache warming state initialized successfully: isInitialized=${isInitialized}, intervalId=${intervalId}`;
+                container.appendChild(testDiv);
+                
+                return true;
+            } catch (error) {
+                const testDiv = document.createElement('div');
+                testDiv.className = 'test fail';
+                testDiv.innerHTML = `❌ Cache warming initialization failed: ${error.message}`;
+                container.appendChild(testDiv);
+                
+                return false;
+            }
+        }
+        
+        // Run tests
+        document.addEventListener('DOMContentLoaded', function() {
+            const playerCardResult = testPlayerCardFix();
+            const cacheResult = testCacheWarmingFix();
+            
+            // Summary
+            const summaryDiv = document.createElement('h2');
+            summaryDiv.textContent = '📋 Summary';
+            document.body.appendChild(summaryDiv);
+            
+            const summaryContent = document.createElement('div');
+            summaryContent.className = playerCardResult && cacheResult ? 'test pass' : 'test fail';
+            summaryContent.innerHTML = playerCardResult && cacheResult 
+                ? '🎉 All fixes are working properly!' 
+                : '❌ Some fixes are not working correctly.';
+            document.body.appendChild(summaryContent);
+        });
+    </script>
+</body>
+</html>

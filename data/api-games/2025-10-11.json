@@ -1,0 +1,434 @@
+[
+  {
+    "name": {
+      "default": "J. Armia",
+      "full": "Joel Armia"
+    },
+    "team": "LAK",
+    "team_full": "Los Angeles",
+    "position": "R",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "WPG",
+    "opponent_full": "Winnipeg Jets",
+    "game_score": "3-2",
+    "game_result": "L",
+    "player_id": 8476469,
+    "game_id": 2025020022
+  },
+  {
+    "name": {
+      "default": "J. Korpisalo",
+      "full": "Joonas Korpisalo"
+    },
+    "team": "BOS",
+    "team_full": "Boston",
+    "position": "G",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "BUF",
+    "opponent_full": "Buffalo Sabres",
+    "game_score": "3-1",
+    "game_result": "W",
+    "player_id": 8476914,
+    "game_id": 2025020024
+  },
+  {
+    "name": {
+      "default": "M. Maccelli",
+      "full": "Matias Maccelli"
+    },
+    "team": "TOR",
+    "team_full": "Toronto",
+    "position": "L",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "DET",
+    "opponent_full": "Detroit Red Wings",
+    "game_score": "6-3",
+    "game_result": "L",
+    "player_id": 8481711,
+    "game_id": 2025020025
+  },
+  {
+    "name": {
+      "default": "L. Meriläinen",
+      "full": "Leevi Meriläinen"
+    },
+    "team": "OTT",
+    "team_full": "Ottawa",
+    "position": "G",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "FLA",
+    "opponent_full": "Florida Panthers",
+    "game_score": "6-2",
+    "game_result": "L",
+    "player_id": 8482447,
+    "game_id": 2025020027
+  },
+  {
+    "name": {
+      "default": "A. Lundell",
+      "full": "Anton Lundell"
+    },
+    "team": "FLA",
+    "team_full": "Florida",
+    "position": "C",
+    "goals": 1,
+    "assists": 1,
+    "points": 2,
+    "opponent": "OTT",
+    "opponent_full": "Ottawa Senators",
+    "game_score": "6-2",
+    "game_result": "W",
+    "player_id": 8482113,
+    "game_id": 2025020027
+  },
+  {
+    "name": {
+      "default": "E. Luostarinen",
+      "full": "Eetu Luostarinen"
+    },
+    "team": "FLA",
+    "team_full": "Florida",
+    "position": "C",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "OTT",
+    "opponent_full": "Ottawa Senators",
+    "game_score": "6-2",
+    "game_result": "W",
+    "player_id": 8480185,
+    "game_id": 2025020027
+  },
+  {
+    "name": {
+      "default": "J. Parssinen",
+      "full": "Juuso Parssinen"
+    },
+    "team": "NYR",
+    "team_full": "New York",
+    "position": "C",
+    "goals": 0,
+    "assists": 1,
+    "points": 1,
+    "opponent": "PIT",
+    "opponent_full": "Pittsburgh Penguins",
+    "game_score": "1-6",
+    "game_result": "W",
+    "player_id": 8481704,
+    "game_id": 2025020029
+  },
+  {
+    "name": {
+      "default": "S. Aho",
+      "full": "Sebastian Aho"
+    },
+    "team": "CAR",
+    "team_full": "Carolina",
+    "position": "C",
+    "goals": 0,
+    "assists": 1,
+    "points": 1,
+    "opponent": "PHI",
+    "opponent_full": "Philadelphia Flyers",
+    "game_score": "4-3",
+    "game_result": "W",
+    "player_id": 8478427,
+    "game_id": 2025020030
+  },
+  {
+    "name": {
+      "default": "J. Kotkaniemi",
+      "full": "Jesperi Kotkaniemi"
+    },
+    "team": "CAR",
+    "team_full": "Carolina",
+    "position": "C",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "PHI",
+    "opponent_full": "Philadelphia Flyers",
+    "game_score": "4-3",
+    "game_result": "W",
+    "player_id": 8480829,
+    "game_id": 2025020030
+  },
+  {
+    "name": {
+      "default": "P. Laine",
+      "full": "Patrik Laine"
+    },
+    "team": "MTL",
+    "team_full": "Montréal",
+    "position": "L",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "CHI",
+    "opponent_full": "Chicago Blackhawks",
+    "game_score": "2-3",
+    "game_result": "W",
+    "player_id": 8479339,
+    "game_id": 2025020031
+  },
+  {
+    "name": {
+      "default": "T. Teravainen",
+      "full": "Teuvo Teravainen"
+    },
+    "team": "CHI",
+    "team_full": "Chicago",
+    "position": "C",
+    "goals": 0,
+    "assists": 2,
+    "points": 2,
+    "opponent": "MTL",
+    "opponent_full": "Montréal Canadiens",
+    "game_score": "2-3",
+    "game_result": "L",
+    "player_id": 8476882,
+    "game_id": 2025020031
+  },
+  {
+    "name": {
+      "default": "E. Haula",
+      "full": "Erik Haula"
+    },
+    "team": "NSH",
+    "team_full": "Nashville",
+    "position": "L",
+    "goals": 1,
+    "assists": 0,
+    "points": 1,
+    "opponent": "UTA",
+    "opponent_full": "Utah Mammoth",
+    "game_score": "2-3",
+    "game_result": "L",
+    "player_id": 8475287,
+    "game_id": 2025020032
+  },
+  {
+    "name": {
+      "default": "J. Annunen",
+      "full": "Justus Annunen"
+    },
+    "team": "NSH",
+    "team_full": "Nashville",
+    "position": "G",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "UTA",
+    "opponent_full": "Utah Mammoth",
+    "game_score": "2-3",
+    "game_result": "L",
+    "player_id": 8481020,
+    "game_id": 2025020032
+  },
+  {
+    "name": {
+      "default": "J. Saros",
+      "full": "Juuse Saros"
+    },
+    "team": "NSH",
+    "team_full": "Nashville",
+    "position": "G",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "UTA",
+    "opponent_full": "Utah Mammoth",
+    "game_score": "2-3",
+    "game_result": "L",
+    "player_id": 8477424,
+    "game_id": 2025020032
+  },
+  {
+    "name": {
+      "default": "R. Hintz",
+      "full": "Roope Hintz"
+    },
+    "team": "DAL",
+    "team_full": "Dallas",
+    "position": "C",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "COL",
+    "opponent_full": "Colorado Avalanche",
+    "game_score": "4-5",
+    "game_result": "W",
+    "player_id": 8478449,
+    "game_id": 2025020034
+  },
+  {
+    "name": {
+      "default": "M. Rantanen",
+      "full": "Mikko Rantanen"
+    },
+    "team": "DAL",
+    "team_full": "Dallas",
+    "position": "R",
+    "goals": 0,
+    "assists": 1,
+    "points": 1,
+    "opponent": "COL",
+    "opponent_full": "Colorado Avalanche",
+    "game_score": "4-5",
+    "game_result": "W",
+    "player_id": 8478420,
+    "game_id": 2025020034
+  },
+  {
+    "name": {
+      "default": "A. Lehkonen",
+      "full": "Artturi Lehkonen"
+    },
+    "team": "COL",
+    "team_full": "Colorado",
+    "position": "L",
+    "goals": 1,
+    "assists": 0,
+    "points": 1,
+    "opponent": "DAL",
+    "opponent_full": "Dallas Stars",
+    "game_score": "4-5",
+    "game_result": "L",
+    "player_id": 8477476,
+    "game_id": 2025020034
+  },
+  {
+    "name": {
+      "default": "J. Kiviranta",
+      "full": "Joel Kiviranta"
+    },
+    "team": "COL",
+    "team_full": "Colorado",
+    "position": "L",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "DAL",
+    "opponent_full": "Dallas Stars",
+    "game_score": "4-5",
+    "game_result": "L",
+    "player_id": 8481641,
+    "game_id": 2025020034
+  },
+  {
+    "name": {
+      "default": "A. Raty",
+      "full": "Aatu Raty"
+    },
+    "team": "VAN",
+    "team_full": "Vancouver",
+    "position": "C",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "EDM",
+    "opponent_full": "Edmonton Oilers",
+    "game_score": "3-1",
+    "game_result": "L",
+    "player_id": 8482691,
+    "game_id": 2025020035
+  },
+  {
+    "name": {
+      "default": "K. Lankinen",
+      "full": "Kevin Lankinen"
+    },
+    "team": "VAN",
+    "team_full": "Vancouver",
+    "position": "G",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "EDM",
+    "opponent_full": "Edmonton Oilers",
+    "game_score": "3-1",
+    "game_result": "L",
+    "player_id": 8480947,
+    "game_id": 2025020035
+  },
+  {
+    "name": {
+      "default": "K. Kapanen",
+      "full": "Kasperi Kapanen"
+    },
+    "team": "EDM",
+    "team_full": "Edmonton",
+    "position": "R",
+    "goals": 0,
+    "assists": 1,
+    "points": 1,
+    "opponent": "VAN",
+    "opponent_full": "Vancouver Canucks",
+    "game_score": "3-1",
+    "game_result": "W",
+    "player_id": 8477953,
+    "game_id": 2025020035
+  },
+  {
+    "name": {
+      "default": "M. Granlund",
+      "full": "Mikael Granlund"
+    },
+    "team": "ANA",
+    "team_full": "Anaheim",
+    "position": "C",
+    "goals": 0,
+    "assists": 2,
+    "points": 2,
+    "opponent": "SJS",
+    "opponent_full": "San Jose Sharks",
+    "game_score": "6-7",
+    "game_result": "W",
+    "player_id": 8475798,
+    "game_id": 2025020036
+  },
+  {
+    "name": {
+      "default": "E. Tolvanen",
+      "full": "Eeli Tolvanen"
+    },
+    "team": "SEA",
+    "team_full": "Seattle",
+    "position": "R",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "VGK",
+    "opponent_full": "Vegas Golden Knights",
+    "game_score": "2-1",
+    "game_result": "W",
+    "player_id": 8480009,
+    "game_id": 2025020037
+  },
+  {
+    "name": {
+      "default": "J. Nyman",
+      "full": "Jani Nyman"
+    },
+    "team": "SEA",
+    "team_full": "Seattle",
+    "position": "R",
+    "goals": 0,
+    "assists": 0,
+    "points": 0,
+    "opponent": "VGK",
+    "opponent_full": "Vegas Golden Knights",
+    "game_score": "2-1",
+    "game_result": "W",
+    "player_id": 8483497,
+    "game_id": 2025020037
+  }
+]
