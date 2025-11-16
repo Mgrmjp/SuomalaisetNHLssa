@@ -201,6 +201,12 @@ def process_player(player_stats, game_details, team_info, opponent_info, game_da
         if (not toi_raw or toi_raw in ("00:00", "0:00")) and shots_against_raw == 0:
             return None
 
+    def build_headshot(player_info, player_id, team_abbrev):
+        headshot = player_info.get("headshot") or player_info.get("headshotUrl")
+        if headshot:
+            return headshot
+        return f"https://assets.nhle.com/mugs/nhl/latest/{team_abbrev}/{player_id}.png"
+
     goalie_extra = {k: v for k, v in goalie_extra_raw.items() if k != "goalie_time_on_ice"}
 
     stats = {
@@ -248,6 +254,7 @@ def process_player(player_stats, game_details, team_info, opponent_info, game_da
         "game_date": game_date,
         "game_status": "OFF",
         "created_at": datetime.now().isoformat(),
+        "headshot_url": build_headshot(player_info, player_id, team_info["abbrev"]),
         **stats
     }
 

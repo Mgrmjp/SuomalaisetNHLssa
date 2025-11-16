@@ -87,3 +87,6 @@ temp/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Python virtual env
+.venv/

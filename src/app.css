@@ -9,7 +9,6 @@ html, body {
 /* Ensure light theme colors are always used */
 :root {
     --color-finnish-blue: #003580;
-    --color-finnish-gold: #ffb81c;
 }
 
 /* Custom utilities */
@@ -23,18 +22,6 @@ html, body {
 
 .border-finnish-blue {
     border-color: var(--color-finnish-blue);
-}
-
-.finnish-gold {
-    color: var(--color-finnish-gold);
-}
-
-.bg-finnish-gold {
-    background-color: var(--color-finnish-gold);
-}
-
-.border-finnish-gold {
-    border-color: var(--color-finnish-gold);
 }
 
 /* Simple shadows */
@@ -53,44 +40,44 @@ html, body {
     }
 
     html, body {
-        color-scheme: light !important;
-        background-color: #f9fafb !important;
-        color: #111827 !important;
+        color-scheme: light;
+        background-color: #f9fafb;
+        color: #111827;
     }
 }
 
 /* Ensure consistent light theme colors */
 .bg-white {
-    background-color: #ffffff !important;
+    background-color: #ffffff;
 }
 
 .text-gray-900 {
-    color: #111827 !important;
+    color: #111827;
 }
 
 .text-gray-600 {
-    color: #4b5563 !important;
+    color: #4b5563;
 }
 
 .text-gray-500 {
-    color: #6b7280 !important;
+    color: #6b7280;
 }
 
 .border-gray-200 {
-    border-color: #e5e7eb !important;
+    border-color: #e5e7eb;
 }
 
 .border-gray-300 {
-    border-color: #d1d5db !important;
+    border-color: #d1d5db;
 }
 
 .bg-gray-50 {
-    background-color: #f9fafb !important;
+    background-color: #f9fafb;
 }
 
 /* Override any dark mode form controls */
 input, button, select, textarea {
-    color-scheme: light !important;
+    color-scheme: light;
 }
 
 /* Ensure scrollbars are light themed */

@@ -1,0 +1,14 @@
+.spinner-ring-reverse {
+	animation-direction: reverse;
+	animation-delay: 0.5s;
+	opacity: 0.8;
+}
+
+.spinner-ring-delayed {
+	animation-delay: 1s;
+	opacity: 0.6;
+}
+
+.progress-bar {
+	transition: width 0.3s ease;
+}

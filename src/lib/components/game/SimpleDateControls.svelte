@@ -62,7 +62,7 @@ function formatLocalDate(date) {
 </script>
 
 <div class="date-controls w-full max-w-3xl mx-auto space-y-4">
-	<div class="date-controls__card w-full bg-white/85 border border-gray-200 rounded-xl shadow-sm backdrop-blur p-4 md:p-5">
+	<div class="date-controls__card w-full bg-white border border-gray-200 rounded-xl shadow-lg p-4 md:p-5">
 		<div class="flex items-center gap-3 md:gap-4 flex-wrap">
 			<button
 				type="button"
@@ -80,11 +80,11 @@ function formatLocalDate(date) {
 			<div class="flex-1 flex flex-col gap-3">
 				<div class="flex flex-wrap items-center justify-between gap-3">
 					<div>
-						<div class="text-sm font-semibold text-finnish-gold-800">Valittu päivämäärä</div>
+						<div class="text-sm font-semibold text-blue-800">Valittu päivämäärä</div>
 						<div class="text-xl font-bold text-gray-900">{formatDotted(currentDateValue)}</div>
 					</div>
 					{#if relativeLabel}
-						<span class="px-2 py-1 text-xs font-semibold text-finnish-gold-900 bg-white/80 border border-finnish-gold-300 rounded-full">{relativeLabel}</span>
+						<span class="px-2 py-1 text-xs font-semibold text-blue-900 bg-white/80 border border-blue-300 rounded-full">{relativeLabel}</span>
 					{/if}
 					<button
 						type="button"
@@ -131,7 +131,12 @@ function formatLocalDate(date) {
 	.date-controls__card {
 		position: relative;
 		overflow: visible;
-		z-index: 100;
+		z-index: 10;
+		background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+		border: 1px solid #e2e8f0;
+		box-shadow:
+			0 10px 22px rgba(15, 23, 42, 0.1),
+			inset 0 1px 0 rgba(255, 255, 255, 0.75);
 	}
 
 	.nav-btn {
@@ -169,37 +174,65 @@ function formatLocalDate(date) {
 
 	:global(.picker-input:focus) {
 		outline: none;
-		border-color: #f59e0b;
-		box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+		border-color: #3b82f6;
+		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
 	}
 
 	/* Flowbite calendar day colors */
 	:global(.datepicker .day) {
-		color: #0f172a !important;
+		color: #0f172a;
 	}
 
 	:global(.datepicker .day:hover:not([aria-disabled='true'])) {
-		background-color: #f3f4f6 !important;
-		color: #0f172a !important;
+		background-color: #f3f4f6;
+		color: #0f172a;
 	}
 
+	/* Match the card's light background when a day is selected */
+	:global(.datepicker .day.selected),
 	:global(.datepicker .day[aria-selected='true']) {
-		background-color: #fbbf24 !important;
-		color: #0f172a !important;
-		border-color: #d97706 !important;
+		background-color: #2563eb;
+		color: #fff;
+		border-color: #2563eb;
 	}
 
-	:global(.datepicker .day[aria-selected='false'][aria-disabled='true']) {
-		color: #cbd5e1 !important;
+	:global(.datepicker .day.selected:hover),
+	:global(.datepicker .day[aria-selected='true']:hover) {
+		background-color: #1d4ed8;
+		color: #fff;
 	}
 
-	/* Keep the calendar above surrounding cards */
+	/* Fallback if the day isn't nested under .datepicker in the DOM */
+	:global(button.day[aria-selected='true']) {
+		background-color: #2563eb;
+		color: #fff;
+		border-color: #2563eb;
+	}
+
+	:global(button.day[aria-selected='true']:hover) {
+		background-color: #1d4ed8;
+		color: #fff;
+	}
+
+	/* Higher specificity than Flowbite utilities without !important */
+	.date-controls :global(button.day[aria-selected='true']) {
+		background-color: #2563eb;
+		color: #fff;
+		border-color: #2563eb;
+		box-shadow: inset 0 0 0 1px #2563eb;
+	}
+
+	.date-controls :global(button.day[aria-selected='true']:hover) {
+		background-color: #1d4ed8;
+		color: #fff;
+	}
+
 	:global(.datepicker) {
 		position: relative;
-		z-index: 30;
+		z-index: 15;
 	}
 
 	:global(.datepicker-dropdown) {
-		z-index: 200 !important;
+		z-index: 25;
 	}
 </style>

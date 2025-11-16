@@ -135,7 +135,7 @@ export function getRelativeFinnishDate(date, referenceDate = new Date()) {
         case 0:
             return 'tänään'
         case -1:
-            return 'eilen'
+            return 'Viime illan / yön pelit'
         case 1:
             return 'huomenna'
         case -2:

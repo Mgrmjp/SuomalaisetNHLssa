@@ -1,4 +1,6 @@
 <script>
+import './LoadingSpinner.css'
+
 /** @type {string} */
 export let message = 'Loading...'
 /** @type {string} */
@@ -16,8 +18,8 @@ $: progressPercentage = Math.min(100, Math.max(0, progress))
 <div class="flex flex-col items-center justify-center {sizeClasses} text-center bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-200 shadow-lg" role="status" aria-label={message}>
   <div class="relative {spinnerSize}">
     <div class="absolute inset-0 border-4 border-transparent border-t-blue-500 border-r-blue-500 rounded-full animate-spin"></div>
-    <div class="absolute inset-0 border-4 border-transparent border-l-white border-b-white rounded-full animate-spin" style="animation-direction: reverse; animation-delay: 0.5s; opacity: 0.8;"></div>
-    <div class="absolute inset-0 border-2 border-yellow-400 rounded-full animate-spin" style="animation-delay: 1s; opacity: 0.6;"></div>
+    <div class="absolute inset-0 border-4 border-transparent border-l-white border-b-white rounded-full animate-spin spinner-ring-reverse"></div>
+    <div class="absolute inset-0 border-2 border-yellow-400 rounded-full animate-spin spinner-ring-delayed"></div>
   </div>
 
   <div class="flex flex-col gap-3 max-w-xs">
@@ -27,7 +29,7 @@ $: progressPercentage = Math.min(100, Math.max(0, progress))
       <div class="relative">
         <div class="w-full bg-gray-200 rounded-full h-2">
           <div
-            class="bg-blue-500 h-2 rounded-full transition-all duration-300"
+            class="bg-blue-500 h-2 rounded-full progress-bar"
             style="width: {progressPercentage}%"
             role="progressbar"
             aria-valuenow={progressPercentage}
