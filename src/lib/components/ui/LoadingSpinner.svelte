@@ -15,11 +15,11 @@ $: spinnerSize = size === 'small' ? 'w-8 h-8' : size === 'large' ? 'w-16 h-16' :
 $: progressPercentage = Math.min(100, Math.max(0, progress))
 </script>
 
-<div class="flex flex-col items-center justify-center {sizeClasses} text-center bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-200 shadow-lg" role="status" aria-label={message}>
+<div class="flex flex-col items-center justify-center {sizeClasses} text-center bg-white rounded-lg border border-gray-200 shadow-md" role="status" aria-label={message}>
   <div class="relative {spinnerSize}">
-    <div class="absolute inset-0 border-4 border-transparent border-t-blue-500 border-r-blue-500 rounded-full animate-spin"></div>
+    <div class="absolute inset-0 border-4 border-transparent border-t-gray-400 border-r-gray-400 rounded-full animate-spin"></div>
     <div class="absolute inset-0 border-4 border-transparent border-l-white border-b-white rounded-full animate-spin spinner-ring-reverse"></div>
-    <div class="absolute inset-0 border-2 border-yellow-400 rounded-full animate-spin spinner-ring-delayed"></div>
+    <div class="absolute inset-0 border-2 border-gray-300 rounded-full animate-spin spinner-ring-delayed"></div>
   </div>
 
   <div class="flex flex-col gap-3 max-w-xs">

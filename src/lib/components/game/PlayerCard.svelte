@@ -100,45 +100,15 @@ let showComprehensiveDetails = false
 let isLogoHovered = false
 let isFlipped = false
 
-// Team mapping with full names including cities
-const teamMapping = {
-  "ANA": "Anaheim Ducks",
-  "ARI": "Arizona Coyotes",
-  "BOS": "Boston Bruins",
-  "BUF": "Buffalo Sabres",
-  "CAR": "Carolina Hurricanes",
-  "CBJ": "Columbus Blue Jackets",
-  "CGY": "Calgary Flames",
-  "CHI": "Chicago Blackhawks",
-  "COL": "Colorado Avalanche",
-  "DAL": "Dallas Stars",
-  "DET": "Detroit Red Wings",
-  "EDM": "Edmonton Oilers",
-  "FLA": "Florida Panthers",
-  "LAK": "Los Angeles Kings",
-  "MIN": "Minnesota Wild",
-  "MTL": "Montreal Canadiens",
-  "NJD": "New Jersey Devils",
-  "NSH": "Nashville Predators",
-  "NYI": "New York Islanders",
-  "NYR": "New York Rangers",
-  "OTT": "Ottawa Senators",
-  "PHI": "Philadelphia Flyers",
-  "PIT": "Pittsburgh Penguins",
-  "SEA": "Seattle Kraken",
-  "SJS": "San Jose Sharks",
-  "STL": "St. Louis Blues",
-  "TBL": "Tampa Bay Lightning",
-  "TOR": "Toronto Maple Leafs",
-  "VAN": "Vancouver Canucks",
-  "VGK": "Vegas Golden Knights",
-  "WPG": "Winnipeg Jets",
-  "WSH": "Washington Capitals"
-}
-
+// Team names are now fetched from API and stored in team_full field
 function getTeamWithCity(teamAbbrev) {
   if (!teamAbbrev) return 'Unknown Team'
-  return teamMapping[teamAbbrev] || teamAbbrev
+  // Use team_full from API data if available, otherwise fallback to abbreviation
+  const fullTeamName = player?.team_full || player?.opponent_full
+  if (fullTeamName && fullTeamName !== teamAbbrev) {
+    return fullTeamName
+  }
+  return teamAbbrev
 }
 
 function toggleSeasonStats(event) {
@@ -203,24 +173,65 @@ $: statCount = [
 	(player.penalty_minutes || 0) > 0
 ].filter(Boolean).length
 
-$: skaterGridClass = `player-card__stats-grid--skater-${Math.min(statCount, 5)}`
+$: skaterGridClass = statCount === 1
+	? 'player-card__stats-grid--single'
+	: `player-card__stats-grid--skater-${Math.min(statCount, 5)}`
+
+// Goalie stats count
+$: goalieStatCount = [
+	player.saves !== undefined,
+	player.shots_against !== undefined,
+	goalieSavePct !== null,
+	(player.empty_net_goals || 0) > 0
+].filter(Boolean).length
+
+$: goalieGridClass = goalieStatCount === 1
+	? 'player-card__stats-grid--single'
+	: goalieStatCount === 2
+	? 'player-card__stats-grid--goalie-2'
+	: goalieStatCount === 3
+	? 'player-card__stats-grid--goalie-3'
+	: 'player-card__stats-grid--goalie-4'
 
 // Goalie helpers
 $: isGoalie = (player.position || '').toUpperCase() === 'G' || (player.position || '').toUpperCase() === 'GOALIE'
 $: goalieSavePct = getSavePercentage(player)
 
+// Game result helpers
+$: gameResult = player.game_result || ''
+$: resultDotColor = getResultDotColor(gameResult)
+
+function getResultDotColor(result) {
+	switch(result) {
+		case 'W':
+		case 'SOW':
+			return 'bg-green-500'
+		case 'L':
+		case 'SOL':
+			return 'bg-red-500'
+		case 'OTW':
+		case 'OTL':
+			return 'bg-amber-500'
+		default:
+			return 'bg-gray-400'
+	}
+}
+
 function getSavePercentage(player) {
 	const provided = player.save_percentage ?? player.savePercentage
 	// Use provided percentage if it's a positive number
 	if (typeof provided === 'number' && provided > 0) {
-		return Number(provided.toFixed(3))
+		// If it's already a percentage (like 0.857), convert to percentage format
+		// If it's a percentage value (like 85.7), keep it as is
+		return Number(provided > 1 ? provided : (provided * 100).toFixed(1))
 	}
 
 	const saves = Number(player.saves ?? player.goalie_saves)
 	const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst)
 
 	if (Number.isFinite(saves) && Number.isFinite(shotsAgainst) && shotsAgainst > 0) {
-		return Number((saves / shotsAgainst).toFixed(3))
+		// Calculate and return as percentage (e.g., 85.7)
+		return Number(((saves / shotsAgainst) * 100).toFixed(1))
 	}
 
 	return null
@@ -265,7 +276,14 @@ function getSavePercentage(player) {
 						on:blur={() => isLogoHovered = false}
 						title={teamWithCity}
 					>
-						<TeamLogo team={player.team || 'NHL'} size="48" />
+						<!-- Filtered duplicate logo for shine effect - BEHIND main logo -->
+						<div class="absolute inset-0 z-0 opacity-70 scale-125 transform-gpu filter drop-shadow-[0_0_12px_rgba(59,130,246,0.6)] brightness-110 saturate-150 hue-rotate-15 blur-sm">
+							<TeamLogo team={player.team || 'NHL'} size="48" />
+						</div>
+						<!-- Main logo on top -->
+						<div class="relative z-10">
+							<TeamLogo team={player.team || 'NHL'} size="48" />
+						</div>
 						{#if isLive}
 							<div class="player-card__live-indicator absolute -top-1 -right-1">
 								<span class="player-card__live-badge bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
@@ -282,7 +300,7 @@ function getSavePercentage(player) {
 				<!-- Game Stats -->
 				{#if isGoalie}
 					<div class="player-card__stats mb-4 w-full">
-						<div class="player-card__stats-grid player-card__stats-grid--goalie grid gap-1 text-left w-full">
+						<div class={`player-card__stats-grid ${goalieGridClass} grid gap-1 text-left w-full`}>
 							{#if player.saves !== undefined}
 								<div class="player-card__stat-item player-card__stat-item--saves flex flex-col justify-center min-w-0 text-center">
 									<div class="player-card__stat-value text-sm font-bold text-gray-900 truncate">{player.saves}</div>
@@ -297,15 +315,24 @@ function getSavePercentage(player) {
 							{/if}
 							{#if goalieSavePct !== null}
 								<div class="player-card__stat-item player-card__stat-item--save-pct flex flex-col justify-center min-w-0 text-center">
-									<div class="player-card__stat-value text-sm font-bold text-gray-900 truncate">{goalieSavePct}</div>
+									<div class="player-card__stat-value text-sm font-bold text-gray-900 truncate">{goalieSavePct}%</div>
 									<div class="player-card__stat-label text-xs text-gray-600 mt-1 truncate">Torj.%</div>
+								</div>
+							{/if}
+							{#if (player.empty_net_goals || 0) > 0}
+								<div class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center">
+									<div class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1">
+										🥅
+										<span>{player.empty_net_goals}</span>
+									</div>
+									<div class="player-card__stat-label text-xs text-red-600 mt-1 truncate">Tyhjä maali</div>
 								</div>
 							{/if}
 						</div>
 					</div>
-				{:else if player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined}
+				{:else if player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
 					<div class="player-card__stats mb-4 w-full">
-						<div class="player-card__stats-grid {skaterGridClass} grid gap-1 text-left w-full">
+						<div class={`player-card__stats-grid ${skaterGridClass} grid gap-1 text-left w-full`}>
 							{#if player.goals > 0}
 								<div class="player-card__stat-item player-card__stat-item--goals flex flex-col justify-center min-w-0 text-center">
 									<div class="player-card__stat-value text-sm font-bold text-gray-900 truncate">{player.goals}</div>
@@ -322,6 +349,15 @@ function getSavePercentage(player) {
 								<div class="player-card__stat-item player-card__stat-item--points flex flex-col justify-center min-w-0 text-center">
 									<div class="player-card__stat-value text-sm font-bold text-finnish-blue-900 truncate">{player.points}</div>
 									<div class="player-card__stat-label text-xs text-finnish-blue-600 mt-1 truncate">Pisteet</div>
+								</div>
+							{/if}
+							{#if (player.empty_net_goals || 0) > 0}
+								<div class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center">
+									<div class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1">
+										🥅
+										<span>{player.empty_net_goals}</span>
+									</div>
+									<div class="player-card__stat-label text-xs text-red-600 mt-1 truncate">Tyhjä maali</div>
 								</div>
 							{/if}
 							{#if player.plus_minus !== undefined}
@@ -343,6 +379,7 @@ function getSavePercentage(player) {
 				<!-- Game Score -->
 				{#if player.game_score}
 					<div class="player-card__game-score">
+
 						<div class="player-card__game-score-display flex items-center justify-center space-x-3">
 							<div class="player-card__team-info flex items-center space-x-2">
 								<TeamLogo team={player.team || 'NHL'} size="20" />
@@ -366,7 +403,17 @@ function getSavePercentage(player) {
 							{/if}
 						</div>
 					{/if}
-					<div class="player-card__footer mt-auto flex justify-end pt-3 border-t border-gray-100">
+					<div class="player-card__footer mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
+						<!-- Result Dot -->
+						{#if gameResult}
+							<div class="relative inline-block">
+								<div class={`w-2.5 h-2.5 rounded-full ring-2 ring-gray-300 ${resultDotColor} shadow-md`} title={gameResult}></div>
+								<div class="absolute top-0 left-0 w-2.5 h-2.5 flex items-center justify-center">
+									<div class="w-1 h-1 rounded-full bg-yellow-300 shadow-md filter brightness-150 contrast-200 mix-blend-overlay"></div>
+								</div>
+							</div>
+						{/if}
+
 						<button
 							class="player-card__details-button-inline"
 							on:click={toggleComprehensiveDetails}
@@ -403,7 +450,14 @@ function getSavePercentage(player) {
 
 				<!-- Top Right Team Logo -->
 					<div class="player-card__team-logo absolute top-4 right-4 z-10">
-						<TeamLogo team={player.team || 'NHL'} size="48" />
+						<!-- Filtered duplicate logo for shine effect - BEHIND main logo -->
+						<div class="absolute inset-0 z-0 opacity-70 scale-125 transform-gpu filter drop-shadow-[0_0_12px_rgba(59,130,246,0.6)] brightness-110 saturate-150 hue-rotate-15 blur-sm">
+							<TeamLogo team={player.team || 'NHL'} size="48" />
+						</div>
+						<!-- Main logo on top -->
+						<div class="relative z-10">
+							<TeamLogo team={player.team || 'NHL'} size="48" />
+						</div>
 					</div>
 
 					<!-- Spacer for top content -->
@@ -423,7 +477,7 @@ function getSavePercentage(player) {
 								{#if player.hits !== undefined && player.hits >= 0}
 									<div class="player-card__stat-item player-card__stat-item--hits flex flex-col justify-center min-w-0 text-center">
 										<div class="player-card__stat-value text-sm font-bold text-gray-900 truncate">{player.hits}</div>
-										<div class="player-card__stat-label text-xs text-gray-600 mt-1 truncate">Iskut</div>
+										<div class="player-card__stat-label text-xs text-gray-600 mt-1 truncate">Taklaukset</div>
 									</div>
 								{/if}
 									{#if player.blocked_shots !== undefined && player.blocked_shots >= 0}
@@ -444,6 +498,15 @@ function getSavePercentage(player) {
 										<div class="player-card__stat-label text-xs text-gray-600 mt-1 truncate">Menetykset</div>
 									</div>
 								{/if}
+								{#if (player.empty_net_goals || 0) > 0}
+									<div class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center">
+										<div class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1">
+											🥅
+											<span>{player.empty_net_goals}</span>
+										</div>
+										<div class="player-card__stat-label text-xs text-red-600 mt-1 truncate">Tyhjä maali</div>
+									</div>
+								{/if}
 								{#if player.faceoff_wins !== undefined && player.faceoffs_taken !== undefined && player.faceoffs_taken > 0}
 									<div class="player-card__stat-item player-card__stat-item--faceoffs flex flex-col justify-center min-w-0 text-center">
 										<div class="player-card__stat-value text-sm font-bold text-gray-900 truncate">{player.faceoff_wins}/{player.faceoffs_taken}</div>
@@ -462,7 +525,17 @@ function getSavePercentage(player) {
 							</div>
 						{/if}
 
-						<div class="player-card__footer mt-auto flex justify-end pt-3 border-t border-gray-100">
+						<div class="player-card__footer mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
+							<!-- Result Dot -->
+							{#if gameResult}
+								<div class="relative inline-block">
+									<div class={`w-2.5 h-2.5 rounded-full ring-2 ring-gray-300 ${resultDotColor} shadow-md`} title={gameResult}></div>
+									<div class="absolute top-0 left-0 w-2.5 h-2.5 flex items-center justify-center">
+										<div class="w-1 h-1 rounded-full bg-yellow-300 shadow-md filter brightness-150 contrast-200 mix-blend-overlay"></div>
+									</div>
+								</div>
+							{/if}
+
 							<button
 								class="player-card__details-button-inline"
 								on:click={toggleComprehensiveDetails}

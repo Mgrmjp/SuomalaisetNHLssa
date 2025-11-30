@@ -354,6 +354,48 @@ $: hasContextStats = player.shifts > 0 || player.average_ice_time || iceTime || 
 						</div>
 					{/if}
 
+					<!-- Recent Results Section -->
+					{#if player.recent_results && player.recent_results.length > 0}
+						<div class="stat-panel">
+							<div class="stat-panel__header">
+								<div class="stat-panel__icon">
+									<svg viewBox="0 0 20 20" fill="currentColor">
+										<path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+									</svg>
+								</div>
+								<div>
+									<h3 class="stat-panel__title">Viimeisimmät tulokset</h3>
+									<p class="stat-panel__subtitle">Viimeisten pelien tulokset</p>
+								</div>
+							</div>
+							<div class="recent-results-grid">
+								{#each player.recent_results as game}
+									<div class="recent-result-item">
+										<div class="recent-result-date">
+											{new Date(game.date).toLocaleDateString('fi-FI', { month: 'short', day: 'numeric' })}
+										</div>
+										<div class="recent-result-opponent">
+											<TeamLogo team={game.opponent} size="16" />
+											<span>{game.opponent}</span>
+										</div>
+										<div class="recent-result-score">
+											{game.team_score}-{game.opponent_score}
+										</div>
+										<div class="recent-result-indicator">
+											{#if game.result === 'W'}
+												<div class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm"></div>
+											{:else if game.result === 'L'}
+												<div class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm"></div>
+											{:else}
+												<div class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm"></div>
+											{/if}
+										</div>
+									</div>
+								{/each}
+							</div>
+						</div>
+					{/if}
+
 				<!-- Advanced Skater Statistics -->
 				
 

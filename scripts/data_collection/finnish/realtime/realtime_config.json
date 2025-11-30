@@ -1,0 +1,37 @@
+{
+  "monitoring": {
+    "state_check_interval": 60,
+    "live_game_update_interval": 30,
+    "max_concurrent_updates": 5
+  },
+  "api": {
+    "base_url": "https://api-web.nhle.com",
+    "request_timeout": 10,
+    "retry_attempts": 2,
+    "retry_delay": 2,
+    "rate_limit_delay": 0.5
+  },
+  "data": {
+    "games_directory": "../../../data/prepopulated/games",
+    "finnish_cache": "../../cache/finnish-players.json",
+    "state_file": "state/active_games.json",
+    "log_file": "logs/realtime_monitor.log",
+    "error_log": "logs/error.log"
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "max_file_size_mb": 10,
+    "backup_count": 5,
+    "console_output": true
+  },
+  "service": {
+    "name": "nhl-realtime",
+    "description": "Real-time NHL Finnish player monitoring",
+    "working_directory": "/home/miikka/dev/suomalaisetnhlssa",
+    "user": "miikka",
+    "exec_start": "python3 /home/miikka/dev/suomalaisetnhlssa/scripts/data_collection/finnish/realtime/realtime_monitor.py",
+    "restart": "always",
+    "restart_sec": 10
+  }
+}

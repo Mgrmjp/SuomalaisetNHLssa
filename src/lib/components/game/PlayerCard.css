@@ -291,8 +291,16 @@
 	margin-top: 0.2rem;
 }
 /* Grid layout classes for stats */
-.player-card__stats-grid--goalie {
+.player-card__stats-grid--goalie-2 {
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.player-card__stats-grid--goalie-3 {
 	grid-template-columns: repeat(3, 1fr);
+}
+
+.player-card__stats-grid--goalie-4 {
+	grid-template-columns: repeat(4, 1fr);
 }
 
 .player-card__stats-grid--skater-1 {
@@ -318,6 +326,13 @@
 .player-card__advanced-stats-grid {
 	grid-template-columns: repeat(3, 1fr);
 }
+
+/* Center single stat when only one is present */
+.player-card__stats-grid--single {
+	grid-template-columns: repeat(1, 1fr);
+	justify-content: center;
+}
+
 /* Image transition for LQIP */
 .player-card__modal-photo {
 	transition: filter 0.3s ease, opacity 0.3s ease;

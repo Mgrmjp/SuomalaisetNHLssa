@@ -21,10 +21,19 @@ A modern web application that tracks and displays scoring statistics for Finnish
 
 ## 🚀 Quick Start
 
+### Core Specification
+
+**Main Purpose:** Track Finnish NHL player game data
+
+This project focuses specifically on **Finnish players in the NHL** (30-35 players), not all players. Data collection is optimized for Finnish players only, making it 10-15x faster than comprehensive systems.
+
+📖 **Full Specification:** See [FINNISH_PLAYER_DATA_SPEC.md](./FINNISH_PLAYER_DATA_SPEC.md) for complete technical details.
+
 ### Prerequisites
 
 - Node.js 18+ and npm
 - Git
+- Python 3.9+ (for data collection scripts)
 
 ### Installation
 
@@ -36,6 +45,9 @@ cd suomalaisetnhlssa
 # Install dependencies
 npm install
 
+# Install Python dependencies for data collection
+pip install requests
+
 # Start development server
 npm run dev
 ```
@@ -44,10 +56,23 @@ The application will be available at `http://localhost:5173`.
 
 ### Basic Usage
 
-1. **View Today's Stats**: The app loads with the previous day's data by default
-2. **Navigate Dates**: Use the date picker or Previous/Next buttons to browse different dates
-3. **View Player Details**: Click on any player card to see detailed statistics
-4. **Theme Switching**: Toggle between light and dark modes using the theme button
+1. **View Finnish Players**: See only Finnish NHL players
+2. **Navigate Dates**: Use the date picker to browse different dates
+3. **Player Details**: Click on player cards to see stats (goals, assists, ice time, etc.)
+4. **Theme Switching**: Toggle between light and dark modes
+
+### Data Collection (Finnish Players)
+
+```bash
+# Fetch Finnish players for specific date
+python3 scripts/data_collection/finnish/fetch.py 2025-11-01
+
+# Fetch date range
+bash scripts/shell_wrappers/fetch-finnish-games.sh 2025-11-01 2025-11-30
+
+# Update Finnish players cache (when roster changes)
+python3 scripts/data_collection/finnish/build_cache.py
+```
 
 ## 📊 Pre-populated Data
 

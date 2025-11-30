@@ -18,13 +18,13 @@
     "data:fetch": "python3 scripts/data/fetch-nhl-data.py",
     "data:fetch:date": "python3 scripts/data/fetch-nhl-data.py",
     "data:fetch:season": "python3 scripts/data/fetch-nhl-data.py",
-    "players:update": "node scripts/utils/player-cli.js update",
-    "players:validate": "node scripts/utils/player-cli.js validate",
-    "players:stats": "node scripts/utils/player-cli.js stats",
-    "players:changes": "node scripts/utils/player-cli.js changes",
-    "players:backup": "node scripts/utils/player-cli.js backup",
-    "players:restore": "node scripts/utils/player-cli.js restore",
-    "players:clean": "node scripts/utils/player-cli.js clean"
+    "players:update": "node scripts/node_utils/player-cli.js update",
+    "players:validate": "node scripts/node_utils/player-cli.js validate",
+    "players:stats": "node scripts/node_utils/player-cli.js stats",
+    "players:changes": "node scripts/node_utils/player-cli.js changes",
+    "players:backup": "node scripts/node_utils/player-cli.js backup",
+    "players:restore": "node scripts/node_utils/player-cli.js restore",
+    "players:clean": "node scripts/node_utils/player-cli.js clean"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.5",

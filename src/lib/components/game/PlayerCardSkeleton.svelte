@@ -44,9 +44,10 @@
 		--skeleton-border: rgba(226, 232, 240, 0.7);
 		--skeleton-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
 		--skeleton-highlight: rgba(59, 130, 246, 0.12);
-		--skeleton-muted: #e5e7eb;
-		--skeleton-muted-2: #f1f5f9;
+		--skeleton-base: #e2e8f0;
+		--skeleton-highlight-2: #f1f5f9;
 		--skeleton-accent: #cbd5e1;
+		--skeleton-speed: 1.5s;
 	}
 
 	.skeleton-card {
@@ -99,7 +100,9 @@
 		width: 52px;
 		height: 52px;
 		border-radius: 12px;
-		background: linear-gradient(135deg, var(--skeleton-muted), var(--skeleton-muted-2));
+		background: linear-gradient(100deg, var(--skeleton-base) 40%, var(--skeleton-highlight-2) 50%, var(--skeleton-base) 60%);
+		background-size: 200% 100%;
+		animation: pulse var(--skeleton-speed) ease-in-out infinite;
 		position: relative;
 		overflow: hidden;
 	}
@@ -113,7 +116,9 @@
 		width: 44px;
 		height: 44px;
 		border-radius: 12px;
-		background: linear-gradient(135deg, var(--skeleton-muted-2), var(--skeleton-muted));
+		background: linear-gradient(100deg, var(--skeleton-highlight-2) 40%, var(--skeleton-base) 50%, var(--skeleton-highlight-2) 60%);
+		background-size: 200% 100%;
+		animation: pulse var(--skeleton-speed) ease-in-out infinite;
 		position: relative;
 		overflow: hidden;
 	}
@@ -126,7 +131,9 @@
 		position: relative;
 		overflow: hidden;
 		border-radius: 999px;
-		background: var(--skeleton-muted);
+		background: linear-gradient(100deg, var(--skeleton-base) 40%, var(--skeleton-highlight-2) 50%, var(--skeleton-base) 60%);
+		background-size: 200% 100%;
+		animation: pulse var(--skeleton-speed) ease-in-out infinite;
 	}
 
 	.skeleton-line {
@@ -151,7 +158,9 @@
 		width: 96px;
 		height: 14px;
 		border-radius: 999px;
-		background: var(--skeleton-muted-2);
+		background: linear-gradient(100deg, var(--skeleton-highlight-2) 40%, var(--skeleton-base) 50%, var(--skeleton-highlight-2) 60%);
+		background-size: 200% 100%;
+		animation: pulse var(--skeleton-speed) ease-in-out infinite;
 	}
 
 	.skeleton-stats {
@@ -203,41 +212,54 @@
 		width: 10px;
 		height: 10px;
 		border-radius: 999px;
-		background: var(--skeleton-accent);
+		background: linear-gradient(100deg, var(--skeleton-accent) 40%, var(--skeleton-highlight-2) 50%, var(--skeleton-accent) 60%);
+		background-size: 200% 100%;
+		animation: pulse var(--skeleton-speed) ease-in-out infinite;
 	}
 
 	.skeleton-divider {
 		height: 1px;
 		background: linear-gradient(90deg, transparent, rgba(226, 232, 240, 0.9), transparent);
+		animation: fadeIn 0.4s ease-in-out;
 	}
 
 	.skeleton-score {
 		width: 64px;
 		height: 24px;
 		border-radius: 10px;
-		background: var(--skeleton-accent);
+		background: linear-gradient(100deg, var(--skeleton-accent) 40%, var(--skeleton-highlight-2) 50%, var(--skeleton-accent) 60%);
+		background-size: 200% 100%;
+		animation: pulse var(--skeleton-speed) ease-in-out infinite;
 	}
 
-	/* Shimmer effect */
-	.skeleton-card :global(.shimmer)::after,
-	.skeleton-line::after,
-	.skeleton-pill::after,
-	.skeleton-chip::after,
-	.skeleton-dot::after,
-	.skeleton-score::after,
-	.skeleton-avatar::after,
-	.skeleton-logo::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		transform: translateX(-100%);
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
-		animation: shimmer 1.8s infinite;
-	}
-
-	@keyframes shimmer {
-		100% {
-			transform: translateX(100%);
+	/* Modern pulse animation with gradient shift */
+	@keyframes pulse {
+		0% {
+			background-position: 200% 0;
 		}
+		100% {
+			background-position: -200% 0;
+		}
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* Stagger animation delays for more natural loading */
+	.skeleton-stat:nth-child(1) { animation-delay: 0.1s; }
+	.skeleton-stat:nth-child(2) { animation-delay: 0.15s; }
+	.skeleton-stat:nth-child(3) { animation-delay: 0.2s; }
+	.skeleton-stat:nth-child(4) { animation-delay: 0.25s; }
+
+	.skeleton-card :global(.shimmer)::after {
+		display: none; /* Disable old shimmer */
 	}
 </style>

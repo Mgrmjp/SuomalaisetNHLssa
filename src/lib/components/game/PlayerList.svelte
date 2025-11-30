@@ -117,7 +117,7 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
 {:else}
 	<section id="scoringList" class="py-8">
 		<div class="container mx-auto px-4">
-		{#if !hasAnyPlayers}
+		{#if !hasAnyPlayers && $isLoading === false}
 			<div class="grid grid-cols-1 place-items-center">
 				<div class="bg-white rounded-lg border border-gray-200 p-6 flex flex-col items-center justify-center text-center min-h-[220px] max-w-sm w-full">
 					<div class="text-3xl">🏒</div>

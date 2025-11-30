@@ -1,0 +1,40 @@
+{
+  "date": "2025-10-22",
+  "games": [
+    {
+      "gameId": 2025020108,
+      "homeTeam": "NJD",
+      "awayTeam": "MIN",
+      "homeScore": 4,
+      "awayScore": 1,
+      "gameState": "OFF",
+      "startTime": "2025-10-22T23:00:00Z",
+      "finnish_players_count": 0
+    },
+    {
+      "gameId": 2025020109,
+      "homeTeam": "BUF",
+      "awayTeam": "DET",
+      "homeScore": 4,
+      "awayScore": 2,
+      "gameState": "OFF",
+      "startTime": "2025-10-22T23:30:00Z",
+      "finnish_players_count": 0
+    },
+    {
+      "gameId": 2025020110,
+      "homeTeam": "CGY",
+      "awayTeam": "MTL",
+      "homeScore": 1,
+      "awayScore": 2,
+      "gameState": "OFF",
+      "startTime": "2025-10-23T00:30:00Z",
+      "finnish_players_count": 0
+    }
+  ],
+  "players": [],
+  "total_players": 0,
+  "total_games": 3,
+  "generated_at": "2025-11-22T18:10:24.657949",
+  "source": "NHL API - Finnish Players Only (Cached)"
+}

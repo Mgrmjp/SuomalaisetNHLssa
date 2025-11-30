@@ -1,0 +1,28 @@
+[Unit]
+Description=Real-time NHL Finnish Player Monitoring Service
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=miikka
+Group=miikka
+WorkingDirectory=/home/miikka/dev/suomalaisetnhlssa
+ExecStart=/usr/bin/python3 /home/miikka/dev/suomalaisetnhlssa/scripts/data_collection/finnish/realtime/realtime_monitor.py --daemon
+Restart=always
+RestartSec=10
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/home/miikka/dev/suomalaisetnhlssa/data/prepopulated/games
+ReadWritePaths=/home/miikka/dev/suomalaisetnhlssa/scripts/data_collection/finnish/realtime
+
+# Resource limits
+LimitNOFILE=65536
+MemoryLimit=256M
+
+[Install]
+WantedBy=multi-user.target
