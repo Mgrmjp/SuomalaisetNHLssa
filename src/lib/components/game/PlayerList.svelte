@@ -118,14 +118,22 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
 	<section id="scoringList" class="py-8">
 		<div class="container mx-auto px-4">
 		{#if !hasAnyPlayers && $isLoading === false}
-			<div class="grid grid-cols-1 place-items-center">
-				<div class="bg-white rounded-lg border border-gray-200 p-6 flex flex-col items-center justify-center text-center min-h-[220px] max-w-sm w-full">
-					<div class="text-3xl">🏒</div>
-					<h3 class="text-lg font-semibold text-gray-900 mt-2">Ei suomalaista pisteidentekijää</h3>
-					<p class="text-sm text-gray-600">
-						Yhtään suomalaispelaajaa ei ole merkitty pisteille tai dataa ei ole vielä saatavilla päivälle
-						<span class="font-semibold text-gray-900">{$displayDate}</span>.
-					</p>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+				<div class="bg-white rounded-lg shadow-lg p-6 border-4 border-finnish-blue-200 relative overflow-hidden min-h-[220px] flex items-center justify-center">
+					<!-- Subtle background pattern -->
+					<div class="absolute inset-0 bg-gradient-to-br from-finnish-blue-50/30 to-transparent opacity-50"></div>
+
+					<!-- Content -->
+					<div class="relative z-10 text-center">
+						<div class="w-16 h-16 bg-finnish-blue-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+							<span class="text-3xl">🏒</span>
+						</div>
+						<h3 class="text-lg font-semibold text-gray-900 mb-2">Ei suomalaista pisteidentekijää</h3>
+						<p class="text-sm text-gray-600 leading-relaxed max-w-sm mx-auto">
+							Yhtään suomalaispelaajaa ei ole merkitty pisteille tai dataa ei ole vielä saatavilla päivälle
+							<span class="font-semibold text-finnish-blue-900">{$displayDate}</span>.
+						</p>
+					</div>
 				</div>
 			</div>
 		{:else}

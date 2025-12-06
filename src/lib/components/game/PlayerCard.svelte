@@ -1,7 +1,11 @@
 <script>
 import { base } from '$app/paths'
+import { games } from '$lib/stores/gameData.js'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import ComprehensivePlayerDetails from '$lib/components/game/ComprehensivePlayerDetails.svelte'
+import { formatGameMatchup, formatGameScore, formatGameVenue } from '$lib/utils/gameFormatHelpers.mjs'
+import { getTeamColorVariables } from '$lib/utils/teamColors.js'
+import { onMount } from 'svelte'
 import './PlayerCard.css'
 
 export let player
@@ -100,6 +104,20 @@ let showComprehensiveDetails = false
 let isLogoHovered = false
 let isFlipped = false
 
+// Convert hex to rgba with opacity for subtle borders
+function hexToRgba(hex, opacity = 0.7) {
+	if (!hex || !hex.startsWith('#')) return `rgba(0, 0, 0, ${opacity})`
+
+	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+	if (!result) return `rgba(0, 0, 0, ${opacity})`
+
+	const r = parseInt(result[1], 16)
+	const g = parseInt(result[2], 16)
+	const b = parseInt(result[3], 16)
+
+	return `rgba(${r}, ${g}, ${b}, ${opacity})`
+}
+
 // Team names are now fetched from API and stored in team_full field
 function getTeamWithCity(teamAbbrev) {
   if (!teamAbbrev) return 'Unknown Team'
@@ -158,6 +176,43 @@ $: isLive = player.game_status === 'Live' || player.game_status === 'In Progress
 $: teamWithCity = getTeamWithCity(player.team || 'NHL')
 $: opponentWithCity = getTeamWithCity(player.opponent || 'NHL')
 $: playerHeadshot = playerPhotoUrl
+$: gamesData = $games
+
+// Team color variables
+let teamColorVars = {
+	'--team-primary-color': '#000000',
+	'--team-secondary-color': '#FFFFFF',
+	'--team-accent-color': '#000000'
+}
+
+// Animation control
+let enableAnimatedBorders = true
+
+// Load team colors when component mounts or player changes
+onMount(async () => {
+	if (player?.team) {
+		try {
+			teamColorVars = await getTeamColorVariables(player.team)
+		} catch (error) {
+			console.warn(`Failed to load team colors for ${player.team}:`, error)
+		}
+	}
+})
+
+// Update colors when player changes
+$: if (player?.team) {
+	loadTeamColors()
+}
+
+async function loadTeamColors() {
+	if (player?.team) {
+		try {
+			teamColorVars = await getTeamColorVariables(player.team)
+		} catch (error) {
+			console.warn(`Failed to load team colors for ${player.team}:`, error)
+		}
+	}
+}
 $: playerInitials = displayName
 	.split(' ')
 	.map((part) => part.charAt(0).toUpperCase())
@@ -199,21 +254,66 @@ $: goalieSavePct = getSavePercentage(player)
 
 // Game result helpers
 $: gameResult = player.game_result || ''
-$: resultDotColor = getResultDotColor(gameResult)
+$: resultIndicator = getResultIndicator(gameResult)
 
-function getResultDotColor(result) {
+function getResultIndicator(result) {
 	switch(result) {
 		case 'W':
+			return {
+				bg: 'bg-gradient-to-br from-green-500 to-green-600',
+				text: 'W',
+				label: 'Voitto',
+				textColor: 'text-white',
+				border: 'ring-green-300'
+			}
 		case 'SOW':
-			return 'bg-green-500'
+			return {
+				bg: 'bg-gradient-to-br from-emerald-500 to-emerald-600',
+				text: 'SV',
+				label: 'Voitto VL',
+				textColor: 'text-white',
+				border: 'ring-emerald-300'
+			}
 		case 'L':
+			return {
+				bg: 'bg-gradient-to-br from-red-500 to-red-600',
+				text: 'L',
+				label: 'Häviö',
+				textColor: 'text-white',
+				border: 'ring-red-300'
+			}
 		case 'SOL':
-			return 'bg-red-500'
+			return {
+				bg: 'bg-gradient-to-br from-rose-500 to-rose-600',
+				text: 'SO',
+				label: 'Häviö VL',
+				textColor: 'text-white',
+				border: 'ring-rose-300'
+			}
 		case 'OTW':
+			return {
+				bg: 'bg-gradient-to-br from-amber-500 to-orange-500',
+				text: 'OT',
+				label: 'Voitto JA',
+				textColor: 'text-white',
+				border: 'ring-amber-300'
+			}
 		case 'OTL':
-			return 'bg-amber-500'
+			return {
+				bg: 'bg-gradient-to-br from-orange-500 to-orange-600',
+				text: 'OT',
+				label: 'Häviö JA',
+				textColor: 'text-white',
+				border: 'ring-orange-300'
+			}
 		default:
-			return 'bg-gray-400'
+			return {
+				bg: 'bg-gradient-to-br from-gray-400 to-gray-500',
+				text: '?',
+				label: 'Ei tietoa',
+				textColor: 'text-white',
+				border: 'ring-gray-300'
+			}
 	}
 }
 
@@ -243,10 +343,10 @@ function getSavePercentage(player) {
 	<div class="player-card" class:flipped={isFlipped}>
 		<div class="player-card__inner">
 			<!-- Front of Card -->
-				<div class="player-card__face player-card__face--front bg-white w-full overflow-hidden relative cursor-pointer rounded-lg shadow-lg border border-gray-200" on:click={handleCardClick} role="button" tabindex="0" on:keydown={(e) => e.key === 'Enter' && handleCardClick(e)} aria-label="Click to flip player card">
+				<div class="player-card__face player-card__face--front bg-white w-full overflow-hidden relative cursor-pointer rounded-lg shadow-lg" style={`border: 1.5px solid transparent; background: linear-gradient(white, white) padding-box, linear-gradient(135deg, ${hexToRgba(teamColorVars['--team-primary-color'], 0.7)}, ${hexToRgba(teamColorVars['--team-secondary-color'], 0.8)}, ${hexToRgba(teamColorVars['--team-accent-color'], 0.6)}) border-box; ${Object.entries(teamColorVars).map(([key, value]) => `${key}: ${value}`).join('; ')}`} on:click={handleCardClick} role="button" tabindex="0" on:keydown={(e) => e.key === 'Enter' && handleCardClick(e)} aria-label="Click to flip player card">
 						<!-- Enhanced Double Border -->
 						<div class="player-card__border-outer"></div>
-						<div class="player-card__border-middle"></div>
+						<div class="player-card__border-middle" class:player-card__border-middle--animated={enableAnimatedBorders}></div>
 						<div class="player-card__border-inner"></div>
 						<div class="player-card__content relative bg-white rounded-lg p-4 h-full flex flex-col overflow-visible">
 				                <div class="player-card__logo-bg team-logo-bg">
@@ -379,38 +479,56 @@ function getSavePercentage(player) {
 				<!-- Game Score -->
 				{#if player.game_score}
 					<div class="player-card__game-score">
-
+						<div class="player-card__game-matchup text-sm font-medium text-gray-700 mb-1 text-center">
+							{formatGameMatchup(player, gamesData)}
+						</div>
 						<div class="player-card__game-score-display flex items-center justify-center space-x-3">
-							<div class="player-card__team-info flex items-center space-x-2">
-								<TeamLogo team={player.team || 'NHL'} size="20" />
-								<span class="player-card__team-name text-sm font-medium">{player.team}</span>
-							</div>
-							<div class="player-card__score text-lg font-bold">{player.game_score}</div>
-							{#if player.opponent}
-								<div class="player-card__team-info flex items-center space-x-2">
-									<span class="player-card__team-name text-sm font-medium">{player.opponent}</span>
-									<TeamLogo team={player.opponent || 'NHL'} size="20" />
-								</div>
-							{/if}
-						</div>
-							{#if player.game_venue || player.game_city}
-								{#if player.game_venue && player.game_city}
-									                                    <div class="player-card__game-venue text-xs text-gray-500 mt-2 text-center min-w-0">📍 {player.game_venue} — {player.game_city}</div>								{:else if player.game_venue}
-									<div class="player-card__game-venue text-xs text-gray-500 mt-2 text-center">📍 {player.game_venue}</div>
+							{#if gamesData && gamesData.findGameById && player.game_id}
+								{@const game = gamesData.findGameById(player.game_id)}
+								{#if game && game.homeTeam && game.awayTeam && game.homeScore !== undefined && game.awayScore !== undefined}
+									<!-- Away team score with logo as background -->
+									<div class="relative flex items-center justify-center text-lg font-bold" style="width: 60px; height: 40px;">
+										<div
+											class="absolute inset-0"
+											style="background-image: url('/nhl-logos/{game.awayTeam.toLowerCase()}.svg'); background-size: 60px; background-position: center; background-repeat: no-repeat; opacity: 0.15;"
+										></div>
+										<span class="relative z-10">{game.awayScore}</span>
+									</div>
+									<!-- VS separator -->
+									<span class="text-sm text-gray-500 mx-1">-</span>
+									<!-- Home team score with logo as background -->
+									<div class="relative flex items-center justify-center text-lg font-bold" style="width: 60px; height: 40px;">
+										<div
+											class="absolute inset-0"
+											style="background-image: url('/nhl-logos/{game.homeTeam.toLowerCase()}.svg'); background-size: 60px; background-position: center; background-repeat: no-repeat; opacity: 0.15;"
+										></div>
+										<span class="relative z-10">{game.homeScore}</span>
+									</div>
 								{:else}
-									<div class="player-card__game-venue text-xs text-gray-500 mt-2 text-center">📍 {player.game_city}</div>
+									<!-- Fallback to original score display -->
+									<div class="player-card__score text-lg font-bold">{formatGameScore(player, gamesData)}</div>
 								{/if}
+							{:else}
+								<!-- Fallback to original score display -->
+								<div class="player-card__score text-lg font-bold">{formatGameScore(player, gamesData)}</div>
 							{/if}
 						</div>
-					{/if}
+						{#if formatGameVenue(player)}
+							<div class="player-card__game-venue text-xs text-gray-500 mt-2 text-center min-w-0">
+								📍 {formatGameVenue(player)}
+							</div>
+						{/if}
+					</div>
+				{/if}
 					<div class="player-card__footer mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
-						<!-- Result Dot -->
+						<!-- Enhanced Result Indicator -->
 						{#if gameResult}
-							<div class="relative inline-block">
-								<div class={`w-2.5 h-2.5 rounded-full ring-2 ring-gray-300 ${resultDotColor} shadow-md`} title={gameResult}></div>
-								<div class="absolute top-0 left-0 w-2.5 h-2.5 flex items-center justify-center">
-									<div class="w-1 h-1 rounded-full bg-yellow-300 shadow-md filter brightness-150 contrast-200 mix-blend-overlay"></div>
+							<div class="relative group">
+								<div class={`w-6 h-6 rounded-lg ${resultIndicator.bg} ${resultIndicator.textColor} flex items-center justify-center text-xs font-bold shadow-lg ring-2 ${resultIndicator.border} transition-all duration-200 group-hover:scale-110`} title={resultIndicator.label}>
+									{resultIndicator.text}
 								</div>
+								<!-- Subtle shine effect -->
+								<div class="absolute inset-0 rounded-lg bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
 							</div>
 						{/if}
 
@@ -430,10 +548,10 @@ function getSavePercentage(player) {
 			</div>
 
 			<!-- Back of Card -->
-					<div class="player-card__face player-card__face--back bg-white w-full overflow-hidden relative cursor-pointer rounded-lg shadow-lg border border-gray-200" on:click={handleCardClick} role="button" tabindex="0" on:keydown={(e) => e.key === 'Enter' && handleCardClick(e)} aria-label="Click to flip player card back">
+					<div class="player-card__face player-card__face--back bg-white w-full overflow-hidden relative cursor-pointer rounded-lg shadow-lg" style={`border: 1.5px solid transparent; background: linear-gradient(white, white) padding-box, linear-gradient(225deg, ${hexToRgba(teamColorVars['--team-accent-color'], 0.6)}, ${hexToRgba(teamColorVars['--team-secondary-color'], 0.8)}, ${hexToRgba(teamColorVars['--team-primary-color'], 0.7)}) border-box; ${Object.entries(teamColorVars).map(([key, value]) => `${key}: ${value}`).join('; ')}`} on:click={handleCardClick} role="button" tabindex="0" on:keydown={(e) => e.key === 'Enter' && handleCardClick(e)} aria-label="Click to flip player card back">
 						<!-- Enhanced Double Border -->
 						<div class="player-card__border-outer player-card__border-outer--back"></div>
-						<div class="player-card__border-middle player-card__border-middle--back"></div>
+						<div class="player-card__border-middle player-card__border-middle--back" class:player-card__border-middle--animated={enableAnimatedBorders}></div>
 						<div class="player-card__border-inner player-card__border-inner--back"></div>
 						<div class="player-card__content relative bg-white rounded-lg h-full flex flex-col overflow-visible">
 					<!-- Top Left Player Info -->
@@ -526,13 +644,14 @@ function getSavePercentage(player) {
 						{/if}
 
 						<div class="player-card__footer mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
-							<!-- Result Dot -->
+							<!-- Enhanced Result Indicator -->
 							{#if gameResult}
-								<div class="relative inline-block">
-									<div class={`w-2.5 h-2.5 rounded-full ring-2 ring-gray-300 ${resultDotColor} shadow-md`} title={gameResult}></div>
-									<div class="absolute top-0 left-0 w-2.5 h-2.5 flex items-center justify-center">
-										<div class="w-1 h-1 rounded-full bg-yellow-300 shadow-md filter brightness-150 contrast-200 mix-blend-overlay"></div>
+								<div class="relative group">
+									<div class={`w-6 h-6 rounded-lg ${resultIndicator.bg} ${resultIndicator.textColor} flex items-center justify-center text-xs font-bold shadow-lg ring-2 ${resultIndicator.border} transition-all duration-200 group-hover:scale-110`} title={resultIndicator.label}>
+										{resultIndicator.text}
 									</div>
+									<!-- Subtle shine effect -->
+									<div class="absolute inset-0 rounded-lg bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
 								</div>
 							{/if}
 

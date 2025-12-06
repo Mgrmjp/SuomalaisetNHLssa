@@ -67,6 +67,28 @@ async function loadPrepopulatedData(date) {
 }
 
 /**
+ * Load full pre-populated data including games for a specific date
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @returns {Promise<Object|null>} Full data object including players and games or null
+ */
+async function loadFullPrepopulatedData(date) {
+    try {
+        const response = await fetch(`/data/prepopulated/games/${date}.json`)
+
+        if (!response.ok) {
+            return null
+        }
+
+        const data = await response.json()
+        logger.log(`📁 Loaded full pre-populated data for ${date}: ${data.total_players} players, ${data.games?.length || 0} games`)
+        return data
+    } catch (error) {
+        logger.debug(`No pre-populated data found for ${date}:`, error.message)
+        return null
+    }
+}
+
+/**
  * Get available pre-populated dates
  * @returns {Promise<string[]>} Array of available dates in YYYY-MM-DD format
  */
@@ -127,6 +149,43 @@ export async function getFinnishPlayersForDate(date) {
     // No API fallback - if no prepopulated data exists, return empty array
     logger.log(`📁 No pre-populated data found for ${date}`)
     return []
+}
+
+/**
+ * Get games data for a specific date
+ * @param {string} date - Date in YYYY-MM-DD format
+ * @returns {Promise<Object>} Object with games array and a function to find game by ID
+ */
+export async function getGamesForDate(date) {
+    // Input validation
+    if (!date || typeof date !== 'string') {
+        logger.warn('Invalid or no date provided to getGamesForDate:', date)
+        return { games: [], findGameById: () => null }
+    }
+
+    if (!isValidDateFormat(date)) {
+        logger.warn(`Invalid date format provided: ${date}. Expected YYYY-MM-DD`)
+        return { games: [], findGameById: () => null }
+    }
+
+    logger.log(`🏒 Loading games data for ${date}`)
+
+    // Load full pre-populated data to get games
+    const fullData = await loadFullPrepopulatedData(date)
+    if (fullData && fullData.games) {
+        logger.log(`✅ Using games data for ${date}: ${fullData.games.length} games`)
+
+        // Create a lookup function to find games by ID
+        const gamesMap = new Map(fullData.games.map(game => [game.gameId, game]))
+
+        return {
+            games: fullData.games,
+            findGameById: (gameId) => gamesMap.get(gameId) || null
+        }
+    }
+
+    logger.log(`📁 No games data found for ${date}`)
+    return { games: [], findGameById: () => null }
 }
 
 // getGameDataForDate removed - API calls disabled

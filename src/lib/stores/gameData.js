@@ -1,6 +1,7 @@
 import { derived, readonly, writable } from 'svelte/store'
 
-import { getFinnishPlayersForDate } from '$lib/services/dataService.js'
+import { getFinnishPlayersForDate, getGamesForDate } from '$lib/services/dataService.js'
+import { StandingsService } from '$lib/services/standingsService.js'
 import logger from '$lib/utils/logger.js'
 import { formatDate as formatDateUtil } from '$lib/utils/dateHelpers.js'
 
@@ -64,6 +65,7 @@ export { currentDate as currentDateReadOnly }
 // Note: Data is loaded from prepopulated JSON files - no API calls
 
 export const players = writable([])
+export const games = writable({})  // Store games data with findGameById function
 
 // Derived store for display date with formatting - European friendly
 export const displayDate = derived([selectedDate, currentDate], ([$selectedDate, $currentDate]) => {
@@ -92,6 +94,58 @@ export const displayDate = derived([selectedDate, currentDate], ([$selectedDate,
 
 // Store for calendar view visibility
 export const showCalendarView = writable(false)
+
+// Standings stores
+const selectedViewStore = writable('players') // 'players' | 'standings'
+const standingsStore = writable({})
+const standingsLoadingStore = writable(false)
+
+// Public readonly stores for standings
+export const selectedView = readonly(selectedViewStore)
+export const standings = readonly(standingsStore)
+export const standingsLoading = readonly(standingsLoadingStore)
+
+// Standings service instance
+const standingsService = new StandingsService()
+
+// Function to set the current view
+export function setView(view) {
+	if (view === 'players' || view === 'standings') {
+		selectedViewStore.set(view)
+	}
+}
+
+/**
+ * Load standings data
+ * @param {string} seasonStart - Season start date (YYYY-MM-DD)
+ * @returns {Promise<object>} Standings data
+ */
+export async function loadStandings(seasonStart = '2025-10-01') {
+	standingsLoadingStore.set(true)
+
+	try {
+		const standingsData = await standingsService.calculateSeasonStandings(seasonStart)
+		standingsStore.set(standingsData)
+		logger.log('✅ Standings loaded successfully')
+		return standingsData
+	} catch (error) {
+		logger.log(`❌ Error loading standings: ${error.message}`)
+		standingsStore.set({})
+		throw error
+	} finally {
+		standingsLoadingStore.set(false)
+	}
+}
+
+/**
+ * Clear standings cache and reload
+ * @param {string} seasonStart - Season start date
+ * @returns {Promise<object>} Updated standings data
+ */
+export async function refreshStandings(seasonStart = '2025-10-01') {
+	standingsService.clearCache()
+	return await loadStandings(seasonStart)
+}
 
 // Store for active button state - optimized
 export const activeButton = derived(
@@ -189,12 +243,19 @@ export async function loadPlayersForDate(date) {
 
     try {
         // Get data from prepopulated JSON files only
-        const fetchedPlayers = await getFinnishPlayersForDate(date)
+        const [fetchedPlayers, gamesData] = await Promise.all([
+            getFinnishPlayersForDate(date),
+            getGamesForDate(date)
+        ])
 
         // Update the players store
         players.set(fetchedPlayers)
+
+        // Update the games store
+        games.set(gamesData)
+
         logger.log(
-            `✅ Loaded ${fetchedPlayers.length} players from prepopulated data for ${date}`
+            `✅ Loaded ${fetchedPlayers.length} players and ${gamesData.games.length} games from prepopulated data for ${date}`
         )
 
         return fetchedPlayers

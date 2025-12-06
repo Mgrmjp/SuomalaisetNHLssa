@@ -1,9 +1,8 @@
 <!doctype html>
-<html lang="fi" style="color-scheme: light;">
+<html lang="fi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light" />
     <title>Suomalaiset NHL-pelaajat</title>
     
     <!-- Google Fonts - Inter for modern typography -->
@@ -12,8 +11,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     %sveltekit.head%
+
+    <!-- Alpine.js for dynamic interactions -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   </head>
-  <body data-sveltekit-preload-data="hover">
+  <body data-sveltekit-preload-data="hover" x-data="{
+    showAdvancedStats: false,
+    toggleAdvancedStats() {
+      this.showAdvancedStats = !this.showAdvancedStats
+      document.querySelectorAll('[data-advanced-stats-toggle]').forEach(el => {
+        el.click()
+      })
+    }
+  }">
     <div style="display: contents">%sveltekit.body%</div>
 
     <!-- Unregister any existing service workers -->

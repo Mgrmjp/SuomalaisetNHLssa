@@ -17,6 +17,7 @@ NHL_API_BASE = "https://api-web.nhle.com"
 # Geocoding cache for venue addresses (avoid repeated API calls)
 _VENUE_ADDRESS_CACHE = {}
 
+
 def geocode_venue_address(venue_name, city):
     """
     Get full address for a venue using OpenStreetMap Nominatim API
@@ -488,22 +489,35 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
     home_score = game_data.get("homeTeam", {}).get("score", 0)
     away_score = game_data.get("awayTeam", {}).get("score", 0)
 
-    # Get venue info from game data (already fetched)
+    # Get venue info from schedule data (primary source - this has correct venue info)
     venue_info = {}
-    home_team_data = game_data.get("homeTeam", {})
-    if home_team_data and home_team_data.get("venue"):
-        venue = home_team_data.get("venue", {})
-        venue_info["venue"] = venue.get("name", "")
-        venue_info["city"] = venue.get("city", "")
-    elif schedule_data and "week_data" in schedule_data:
-        # Fallback to schedule data - get venue and city from home team
+    
+    if schedule_data and "week_data" in schedule_data:
+        # Primary: Get venue from schedule data - this contains the actual venue where game was played
         for game in schedule_data["week_data"].get("games", []):
             if game.get("id") == game_id:
-                venue_info["venue"] = game.get("venue", {}).get("default", "")
-                # City is in the home team's placeName
+                venue_name = game.get("venue", {}).get("default", "")
+                venue_info["venue"] = venue_name
+                
+                # Get city from home team's placeName in schedule data
                 home_team_in_schedule = game.get("homeTeam", {})
                 venue_info["city"] = home_team_in_schedule.get("placeName", {}).get("default", "")
                 break
+    
+    # Fallback: Try to get venue from game data if schedule fails
+    if not venue_info.get("venue") and game_data:
+        # Use the venue and venueLocation fields from boxscore API
+        venue_name = game_data.get("venue", {}).get("default", "")
+        venue_location = game_data.get("venueLocation", {}).get("default", "")
+        
+        if venue_name:
+            venue_info["venue"] = venue_name
+            
+            # Use venueLocation from API
+            if venue_location:
+                venue_info["city"] = venue_location
+            else:
+                venue_info["city"] = ""
 
     # Get full venue address via geocoding
     if venue_info.get("venue") and venue_info.get("city"):
@@ -516,9 +530,11 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
 
     # Get team names directly from game data
     team_names = {}
+    home_team_data = game_data.get("homeTeam", {})
+    away_team_data = game_data.get("awayTeam", {})
+    
     home_team_name = home_team_data.get("commonName", {}).get("default", "")
     home_team_place = home_team_data.get("placeName", {}).get("default", "")
-    away_team_data = game_data.get("awayTeam", {})
     away_team_name = away_team_data.get("commonName", {}).get("default", "")
     away_team_place = away_team_data.get("placeName", {}).get("default", "")
 

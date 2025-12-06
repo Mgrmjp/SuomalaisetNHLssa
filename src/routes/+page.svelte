@@ -4,6 +4,8 @@ import SimpleDateControls from '$lib/components/game/SimpleDateControls.svelte'
 import MonthView from '$lib/components/game/MonthView.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import ViewToggle from '$lib/components/ui/ViewToggle.svelte'
+import StandingsView from '$lib/components/standings/StandingsView.svelte'
 import {
     players,
     showCalendarView,
@@ -12,6 +14,7 @@ import {
     currentDateReadOnly,
     formatDate,
     setDate,
+    selectedView,
 } from '$lib/stores/gameData.js'
 
 const sparkles = Array.from({ length: 28 }, () => ({
@@ -47,7 +50,7 @@ onMount(() => {
 	<meta name="description" content="Seuraa suomalaisten NHL-pelaajien suorituksia reaaliajassa" />
 </svelte:head>
 
-<div class="w-full max-w-6xl mx-auto px-4 py-8 relative">
+<div class="w-full max-w-6xl mx-auto px-4 py-8 relative" style="z-index: 1; position: relative;">
 	<div class="text-center mb-8 hero-header space-y-3 relative overflow-hidden">
 		<Snowfall />
 		<div class="sparkles pointer-events-none" aria-hidden="true">
@@ -71,7 +74,11 @@ onMount(() => {
 			<SimpleDateControls />
 		</div>
 
-		{#if $players && $players.length > 0}
+		<!-- View Toggle -->
+		<ViewToggle />
+
+		<!-- Hero Stats - Only show on Players view -->
+		{#if $selectedView === 'players' && $players && $players.length > 0}
 			<div class="flex flex-wrap justify-center gap-8 hero-stats">
 				<div class="text-center hero-stat hero-stat--goals">
 					<div class="flex justify-center mb-1 hero-stat__icon-wrap">
@@ -124,10 +131,16 @@ onMount(() => {
 			</div>
 				{/if}
 
-		<!-- Player List -->
+		<!-- Content based on selected view -->
+		{#if $selectedView === 'players'}
+			<!-- Player List -->
 			<PlayerList />
-		</div>
+		{:else if $selectedView === 'standings'}
+			<!-- Standings View -->
+			<StandingsView />
+		{/if}
 	</div>
+</div>
 
 <style>
 	.sparkles {
@@ -225,46 +238,5 @@ onMount(() => {
 		.hero-stat:hover .hero-stat__label::after {
 			opacity: 1;
 			transition-delay: 0.25s;
-		}
-		.snowfall {
-			position: absolute;
-			inset: 0;
-			overflow: hidden;
-			pointer-events: none;
-		}
-
-		.snowflake {
-			position: absolute;
-			left: calc(var(--i) * 2.5%);
-			top: -10px;
-			width: 4.5px;
-			height: 4.5px;
-			background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.9));
-			border: 1px solid rgba(148, 163, 184, 0.4);
-			border-radius: 999px;
-			box-shadow:
-				0 0 8px rgba(148, 163, 184, 0.35),
-				0 0 0 1px rgba(255, 255, 255, 0.8);
-			opacity: 0.95;
-			animation: snowfall var(--dur) linear infinite;
-			animation-delay: var(--delay);
-			filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
-		}
-
-		@keyframes snowfall {
-			0% {
-				transform: translate3d(0, -10px, 0);
-				opacity: 0;
-			}
-			10% {
-				opacity: 0.95;
-			}
-			90% {
-				opacity: 0.9;
-			}
-			100% {
-				transform: translate3d(10px, 110vh, 0);
-				opacity: 0;
-			}
 		}
 	</style>
