@@ -34,6 +34,8 @@ jobs:
           pip install -r scripts/data_collection/requirements.txt
 
       - name: Fetch today's data
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
           . .venv/bin/activate
           python scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d)
