@@ -37,6 +37,7 @@ jobs:
         env:
           PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
         run: |
+          export PERPLEXITY_API_KEY="${{ secrets.PERPLEXITY_API_KEY }}"
           . .venv/bin/activate
           python scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d)
 
