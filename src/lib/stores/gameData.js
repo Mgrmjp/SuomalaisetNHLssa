@@ -23,9 +23,21 @@ let availableDatesLoaded = false
 async function fetchAvailableDates() {
     if (availableDatesLoaded) return
 
+    // Get base path for static deployments
+    const getBasePath = () => {
+        if (typeof window !== 'undefined') {
+            const path = window.location.pathname
+            // Extract base path (e.g., /SuomalaisetNHLssa from /SuomalaisetNHLssa/)
+            const match = path.match(/^\/[^/]+/)
+            return match ? match[0] : ''
+        }
+        return ''
+    }
+
     try {
-        // Try server API first (for dev mode)
-        const response = await fetch('/api/available-dates')
+        // Try server API first (for dev mode), with base path for GitHub Pages
+        const basePath = getBasePath()
+        const response = await fetch(basePath + '/api/available-dates')
         if (response.ok) {
             const dates = await response.json()
             availableDatesStore.set(dates)
@@ -58,7 +70,7 @@ async function fetchAvailableDates() {
             availableDatesLoaded = true
             console.log(`📅 Loaded ${dates.length} available game dates from static scan`)
         } else {
-            // Hardcoded fallback if no dates found
+            // Hardcoded fallback if no dates found - updated to include latest dates
             const fallbackDates = [
                 '2025-09-30', '2025-10-01', '2025-10-02', '2025-10-03', '2025-10-04',
                 '2025-10-05', '2025-10-06', '2025-10-07', '2025-10-08', '2025-10-09',
@@ -69,7 +81,13 @@ async function fetchAvailableDates() {
                 '2025-10-30', '2025-10-31', '2025-11-01', '2025-11-02', '2025-11-03',
                 '2025-11-04', '2025-11-05', '2025-11-06', '2025-11-07', '2025-11-08',
                 '2025-11-09', '2025-11-10', '2025-11-11', '2025-11-12', '2025-11-13',
-                '2025-11-14', '2025-11-15'
+                '2025-11-14', '2025-11-15', '2025-12-01', '2025-12-02', '2025-12-03',
+                '2025-12-04', '2025-12-05', '2025-12-06', '2025-12-07', '2025-12-08',
+                '2025-12-09', '2025-12-10', '2025-12-11', '2025-12-12', '2025-12-13',
+                '2025-12-14', '2025-12-15', '2025-12-16', '2025-12-17', '2025-12-18',
+                '2025-12-19', '2025-12-20', '2025-12-21', '2025-12-22', '2025-12-23',
+                '2025-12-24', '2025-12-25', '2025-12-26', '2025-12-27', '2025-12-28',
+                '2025-12-29', '2025-12-30', '2025-12-31', '2026-01-03'
             ]
             availableDatesStore.set(fallbackDates)
             availableDatesLoaded = true
@@ -96,7 +114,7 @@ export const earliestPrepopulatedDate = derived(
 )
 export const latestPrepopulatedDate = derived(
     availableDates,
-    ($availableDates) => $availableDates[$availableDates.length - 1] || null
+    ($availableDates) => $availableDates[$availableDates.length - 1] || '2026-01-03'
 )
 
 // Type definitions
