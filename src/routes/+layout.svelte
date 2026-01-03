@@ -1,5 +1,6 @@
 <script>
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
+import { base } from '$app/paths'
 import '../app.css'
 // import PlayerPatternBackground from '$lib/components/ui/PlayerPatternBackground.svelte'
 // import Footer from '$lib/components/ui/Footer.svelte'
@@ -9,7 +10,7 @@ import '../app.css'
 	<meta name="description" content="Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset." />
 	<meta name="keywords" content="NHL, suomalaiset pelaajat, jääkiekko, pistet, maalit, syötöt, Leijonat" />
 	<meta name="language" content="fi" />
-	<link rel="icon" type="image/svg+xml" href="/logo.svg" />
+	<link rel="icon" type="image/svg+xml" href={base + "/logo.svg"} />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link

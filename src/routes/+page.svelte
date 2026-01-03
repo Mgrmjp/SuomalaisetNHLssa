@@ -5,6 +5,7 @@ import SimpleDateControls from '$lib/components/game/SimpleDateControls.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import StandingsView from '$lib/components/standings/StandingsView.svelte'
 import ViewToggle from '$lib/components/ui/ViewToggle.svelte'
+import { base } from '$app/paths'
 import { onMount } from 'svelte'
 import {
     currentDateReadOnly,
@@ -69,7 +70,7 @@ onMount(() => {
 			{/each}
 		</div>
 		<div class="relative space-y-3 p-6">
-			<img src="/logo.svg" alt="Suomalaiset NHL-pelaajat" class="w-16 h-16 mx-auto mb-4" />
+			<img src={base + "/logo.svg"} alt="Suomalaiset NHL-pelaajat" class="w-16 h-16 mx-auto mb-4" />
 			<h1 class="text-3xl font-bold text-gray-900 hero-title">Miten suomalaisilla kulkee NHL:ssä?</h1>
 			<p class="text-gray-700 hero-subtitle">Tutki päivän ottelut, pisteet ja onnistumiset</p>
 		</div>
@@ -156,7 +157,7 @@ onMount(() => {
 
 	<!-- Footer link -->
 	<footer class="text-center py-4 text-sm text-gray-500">
-		<a href="/tietoa" class="hover:text-gray-700 transition-colors">Tietoa sivustosta</a>
+		<a href={base + "/tietoa"} class="hover:text-gray-700 transition-colors">Tietoa sivustosta</a>
 	</footer>
 </div>
 

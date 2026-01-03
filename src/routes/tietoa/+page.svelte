@@ -1,3 +1,7 @@
+<script>
+import { base } from '$app/paths'
+</script>
+
 <svelte:head>
 	<title>Tietoa - Suomalaiset NHL-pelaajat</title>
 </svelte:head>
@@ -7,7 +11,7 @@
 		<!-- Back link -->
 		<div class="mb-6">
 			<a
-				href="/"
+				href={base + "/"}
 				class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
 			>
 				<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

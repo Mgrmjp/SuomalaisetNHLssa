@@ -4,6 +4,13 @@
  * Centralized API fetching logic with consistent error handling and retry logic
  */
 
+// Base path for static assets (for GitHub Pages compatibility)
+let appBase = ''
+if (typeof window !== 'undefined') {
+    // Get base path from current URL
+    appBase = window.location.pathname.replace(/\/[^/]*$/, '') || ''
+}
+
 /**
  * Fetch data from NHL API with retry logic
  *
@@ -41,7 +48,9 @@ export async function fetchFromAPI(url, options = {}, retries = 3, delay = 1000)
  */
 export async function fetchLocalJSON(path) {
     try {
-        const response = await fetch(path)
+        // Prepend base path if path starts with /
+        const fullPath = path.startsWith('/') ? appBase + path : path
+        const response = await fetch(fullPath)
         if (!response.ok) return null
         return await response.json()
     } catch (error) {
