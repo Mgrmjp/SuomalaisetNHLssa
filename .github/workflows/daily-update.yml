@@ -37,6 +37,12 @@ jobs:
 
       - name: Fetch today's data
         run: |
+          echo "Checking PERPLEXITY_API_KEY..."
+          if [ -z "$PERPLEXITY_API_KEY" ]; then
+            echo "ERROR: PERPLEXITY_API_KEY is empty or not set"
+            exit 1
+          fi
+          echo "PERPLEXITY_API_KEY is set (length: ${#PERPLEXITY_API_KEY})"
           source .venv/bin/activate
           python scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d)
 
