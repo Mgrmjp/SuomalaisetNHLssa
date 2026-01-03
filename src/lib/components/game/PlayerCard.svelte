@@ -630,7 +630,7 @@ function getSavePercentage(player) {
                                         >
                                             <div
                                                 class="player-card__team-score-logo-bg player-card__team-score-logo-bg--away absolute inset-0"
-                                                style="background-image: url('/nhl-logos/{game.awayTeam.toLowerCase()}.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat; opacity: 0.15;"
+                                                style="background-image: url('{base}/nhl-logos/{game.awayTeam.toLowerCase()}.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat; opacity: 0.15;"
                                             ></div>
                                             <span class="player-card__team-score-value relative z-10">{game.awayScore}</span>
                                         </div>
@@ -643,7 +643,7 @@ function getSavePercentage(player) {
                                         >
                                             <div
                                                 class="player-card__team-score-logo-bg player-card__team-score-logo-bg--home absolute inset-0"
-                                                style="background-image: url('/nhl-logos/{game.homeTeam.toLowerCase()}.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat; opacity: 0.15;"
+                                                style="background-image: url('{base}/nhl-logos/{game.homeTeam.toLowerCase()}.svg'); background-size: 32px; background-position: center; background-repeat: no-repeat; opacity: 0.15;"
                                             ></div>
                                             <span class="player-card__team-score-value relative z-10">{game.homeScore}</span>
                                         </div>

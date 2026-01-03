@@ -196,7 +196,18 @@ function _calculateColorVibrancyScore(hexColor, frequency) {
  */
 async function extractTeamColors(teamAbbr) {
     const normalizedTeam = teamAbbr.toLowerCase()
-    const svgPath = `/nhl-logos/${normalizedTeam}.svg`
+
+    // Get base path for GitHub Pages
+    const getBasePath = () => {
+        if (typeof window !== 'undefined') {
+            const path = window.location.pathname
+            const match = path.match(/^\/[^/]+/)
+            return match ? match[0] : ''
+        }
+        return ''
+    }
+
+    const svgPath = `${getBasePath()}/nhl-logos/${normalizedTeam}.svg`
 
     try {
         // In browser environment, we'll fetch the SVG content
