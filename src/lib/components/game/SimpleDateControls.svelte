@@ -86,7 +86,7 @@ $: minDate = $earliestPrepopulatedDate || '2020-10-01'
 // Check if at first or last available date
 $: isPrevDisabled = $availableDates.length > 0 && currentDateValue === $availableDates[0]
 $: isNextDisabled = $availableDates.length > 0 && currentDateValue === maxDate
-$: relativeLabel = getRelativeFinnishDate(currentDateValue, new Date(`${maxDate}T00:00:00`))
+$: relativeLabel = currentDateValue ? getRelativeFinnishDate(currentDateValue, new Date(`${maxDate}T00:00:00`)) : ''
 
 /** @param {string} date */
 function _formatDotted(date) {
@@ -159,7 +159,7 @@ $: if (pickerInstance && pickerValue) {
                     <div>
                         <div class="text-sm font-semibold text-blue-800">Valittu päivämäärä</div>
                         <div class="text-xl font-bold text-gray-900">
-                            {_formatDotted(currentDateValue)}
+                            {currentDateValue ? _formatDotted(currentDateValue) : '-'}
                         </div>
                     </div>
                     <button
