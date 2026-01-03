@@ -14,6 +14,9 @@ import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
+# Import Finnish text correction utilities
+from finnish_text_utils import normalize_finnish_player_data
+
 # NHL API endpoints
 NHL_API_BASE = "https://api-web.nhle.com"
 
@@ -139,6 +142,9 @@ def main():
         player_info = get_player_info(player_id)
 
         if player_info and player_info.get("birthCountry") == "FIN":
+            # Apply Finnish text corrections using Groq LLM
+            player_info = normalize_finnish_player_data(player_info)
+
             finnish_players[player_id] = {
                 "playerId": player_id,
                 "name": f"{player_info.get('firstName', {}).get('default', '')} {player_info.get('lastName', {}).get('default', '')}".strip(),

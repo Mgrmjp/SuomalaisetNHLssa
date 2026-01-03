@@ -1,6 +1,6 @@
-import { json } from '@sveltejs/kit'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+import { json } from '@sveltejs/kit'
 
 // Security: Define allowed formats to prevent command injection
 const ALLOWED_FORMATS = ['full', 'simple', 'names']
@@ -28,6 +28,16 @@ function validateFormat(format) {
 }
 
 /**
+ * Extract team abbreviation from headshot URL
+ * Format: https://assets.nhle.com/mugs/nhl/20252026/TEAM/playerId.png
+ */
+function extractTeamFromHeadshot(headshot) {
+    if (!headshot || typeof headshot !== 'string') return ''
+    const match = headshot.match(/\/mugs\/nhl\/\d+\/([A-Z]+)\/\d+\.png/)
+    return match ? match[1] : ''
+}
+
+/**
  * Load Finnish players from the pre-populated JSON database
  */
 async function loadFinnishPlayers() {
@@ -36,7 +46,37 @@ async function loadFinnishPlayers() {
         // This uses the file that's populated by the Python script via build process
         const dbPath = path.join(process.cwd(), 'data', 'players', 'finnish-roster.json')
         const data = await readFile(dbPath, 'utf8')
-        return JSON.parse(data)
+        const parsed = JSON.parse(data)
+
+        // Handle cache format (object keyed by player ID) vs array format
+        if (Array.isArray(parsed)) {
+            return parsed
+        }
+
+        // Convert object format to array
+        return Object.values(parsed).map((p) => {
+            const teamFromHeadshot = extractTeamFromHeadshot(p.headshot)
+            return {
+                id: p.playerId || p.id,
+                name: p.name,
+                position: p.position,
+                team: p.teamAbbrev || p.team || teamFromHeadshot || '',
+                team_abbrev: p.teamAbbrev || p.team || teamFromHeadshot || '',
+                jersey_number: p.sweaterNumber || p.jersey_number,
+                shoots_catches: p.shootsCatches || p.shoots_catches || '',
+                height: p.heightInches || p.height || null,
+                weight: p.weightLbs || p.weight || null,
+                birth_date: p.birthDate || p.birth_date || null,
+                birth_city: p.birthCity?.default || p.birthplace || p.birth_city || null,
+                birth_country: p.birthCountry || p.birth_country || null,
+                draft_year: p.draftYear || p.draft_year || null,
+                draft_round: p.draftRound || p.draft_round || null,
+                draft_overall: p.draftOverall || p.draft_overall || null,
+                is_rookie: p.isRookie || p.is_rookie || false,
+                is_active: p.isActive !== false,
+                headshot: p.headshot || null,
+            }
+        })
     } catch (error) {
         console.error('Error reading finnish-roster.json, returning empty array:', error)
         // Return empty array if file doesn't exist (expected during initial setup)

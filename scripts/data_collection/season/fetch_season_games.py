@@ -9,33 +9,23 @@ Date format: YYYY-MM-DD (defaults to current season)
 """
 
 import json
-import os
 import sys
-import requests
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# NHL API endpoints
-NHL_API_BASE = "https://api-web.nhle.com"
+# Import shared configuration and utilities
+# Add parent directory to path for imports
+_parent_dir = str(Path(__file__).parent.parent)
+if _parent_dir not in sys.path:
+    sys.path.insert(0, _parent_dir)
 
-def fetch_from_api(url, max_retries=3):
-    """Fetch data from NHL API with retry logic"""
-    for attempt in range(max_retries):
-        try:
-            response = requests.get(url, timeout=12)
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            if attempt == max_retries - 1:
-                print(f"Error fetching {url}: {e}")
-                return None
-            time.sleep(3)  # Wait before retry
-    return None
+from config import SEASON_DIR, NHL_API_BASE
+from utils import fetch_from_api, rate_limit, save_json, schedule_url, game_boxscore_url
 
 def get_schedule_for_date(date):
     """Get NHL schedule for a specific date"""
-    url = f"{NHL_API_BASE}/v1/schedule/{date}"
+    url = schedule_url(date)
     data = fetch_from_api(url)
     if not data:
         return None
@@ -51,7 +41,7 @@ def get_schedule_for_date(date):
 
 def get_game_details(game_id):
     """Get detailed game information including player stats"""
-    url = f"{NHL_API_BASE}/v1/gamecenter/{game_id}/boxscore"
+    url = game_boxscore_url(game_id)
     return fetch_from_api(url)
 
 def extract_all_player_data(game_data, game_id, home_team, away_team, game_date):
@@ -262,6 +252,7 @@ def generate_season_data(start_date, end_date):
                     "homeScore": home_score,
                     "awayScore": away_score,
                     "gameState": game_state,
+                    "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
                     "startTime": game.get("startTimeUTC", ""),
                     "players_count": len(players)
                 })
@@ -283,18 +274,19 @@ def generate_season_data(start_date, end_date):
                     "homeScore": 0,
                     "awayScore": 0,
                     "gameState": "ERROR",
+                    "gameType": game.get("gameType", 2),
                     "startTime": game.get("startTimeUTC", ""),
                     "players_count": 0,
                     "error": True
                 })
 
             # Rate limiting between games
-            time.sleep(1)
+            rate_limit(1.0)
 
         current_date += timedelta(days=1)
 
         # Rate limiting between days
-        time.sleep(2)
+        rate_limit(2.0)
 
     return {
         "season": "2025-26",
@@ -332,16 +324,10 @@ def main():
     print(f"Fetching ALL NHL games data for 2025-26 season...")
     data = generate_season_data(start_date, end_date)
 
-    # Create output directory
-    output_dir = Path("data/prepopulated/season")
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Save to file
+    # Save using shared utilities
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_file = output_dir / f"season-2025-26-{timestamp}.json"
-
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
+    output_file = SEASON_DIR / f"season-2025-26-{timestamp}.json"
+    save_json(data, output_file)
 
     print(f"\n✅ Generated season data:")
     print(f"   📅 Period: {data['date_range']['start']} to {data['date_range']['end']}")

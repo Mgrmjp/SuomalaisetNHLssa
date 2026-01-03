@@ -1,24 +1,24 @@
 <script>
-	export let count = 50
-	export let delayRange = 15
-	export let minDuration = 8
-	export let maxDuration = 20
+export const count = 50
+export const delayRange = 15
+export const minDuration = 8
+export const maxDuration = 20
 
-	const flakes = Array.from({ length: count }, (_, i) => ({
-		index: i,
-		delay: Math.random() * delayRange,
-		duration: minDuration + Math.random() * (maxDuration - minDuration),
-		horizontalDrift: (Math.random() - 0.5) * 100, // More natural horizontal drift
-		size: 2 + Math.random() * 4, // More size variation
-		opacity: 0.2 + Math.random() * 0.5, // More opacity variation
-		amplitude: 10 + Math.random() * 20, // Sway amplitude
-		frequency: 0.5 + Math.random() * 1, // Sway frequency
-		rotationSpeed: (Math.random() - 0.5) * 2, // Gentle rotation
-	}))
+const _flakes = Array.from({ length: count }, (_, i) => ({
+    index: i,
+    delay: Math.random() * delayRange,
+    duration: minDuration + Math.random() * (maxDuration - minDuration),
+    horizontalDrift: (Math.random() - 0.5) * 100, // More natural horizontal drift
+    size: 2 + Math.random() * 4, // More size variation
+    opacity: 0.2 + Math.random() * 0.5, // More opacity variation
+    amplitude: 10 + Math.random() * 20, // Sway amplitude
+    frequency: 0.5 + Math.random() * 1, // Sway frequency
+    rotationSpeed: (Math.random() - 0.5) * 2, // Gentle rotation
+}))
 </script>
 
 <div class="snowfall pointer-events-none" aria-hidden="true">
-	{#each flakes as flake}
+	{#each _flakes as flake}
 		<span
 			class="snowflake"
 			style={`

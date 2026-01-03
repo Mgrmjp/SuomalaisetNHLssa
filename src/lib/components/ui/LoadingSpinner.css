@@ -1,14 +1,52 @@
-.spinner-ring-reverse {
-	animation-direction: reverse;
-	animation-delay: 0.5s;
-	opacity: 0.8;
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
 }
 
-.spinner-ring-delayed {
-	animation-delay: 1s;
-	opacity: 0.6;
+.loading-spinner__dots {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.progress-bar {
-	transition: width 0.3s ease;
+.loading-spinner__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #64748b;
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+.loading-spinner__dot--1 {
+    animation-delay: 0s;
+}
+
+.loading-spinner__dot--2 {
+    animation-delay: 0.15s;
+}
+
+.loading-spinner__dot--3 {
+    animation-delay: 0.3s;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+}
+
+.loading-spinner__message {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
 }

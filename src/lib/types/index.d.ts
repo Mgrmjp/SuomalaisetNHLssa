@@ -25,7 +25,7 @@ export interface Player {
     goals: number
     assists: number
     points: number
-    empty_net_goals?: number  // Number of empty net goals scored (skaters) or allowed (goalies)
+    empty_net_goals?: number // Number of empty net goals scored (skaters) or allowed (goalies)
     opponent: string
     opponent_full: string
     game_score: string
@@ -43,10 +43,10 @@ export interface Player {
     game_date?: string
     game_status?: string
     headshot_url?: string
-    saves?: number  // For goalies
-    shots_against?: number  // For goalies
-    save_percentage?: number  // For goalies
-    goals_against?: number  // For goalies
+    saves?: number // For goalies
+    shots_against?: number // For goalies
+    save_percentage?: number // For goalies
+    goals_against?: number // For goalies
     penalty_minutes?: number
     plus_minus?: number
     time_on_ice?: string
@@ -60,7 +60,7 @@ export interface Player {
     even_strength_goals?: number
     shifts?: number
     created_at?: string
-    recent_results?: RecentGame[]  // Last 10 games
+    recent_results?: RecentGame[] // Last 10 games
 }
 
 // Game data types

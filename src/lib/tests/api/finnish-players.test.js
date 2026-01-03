@@ -3,19 +3,21 @@
  * Tests for /api/finnish-players endpoint
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 // Mock the server endpoint
 const mockGet = vi.fn()
 vi.doMock('../../../src/routes/api/finnish-players/+server.js', () => ({
     GET: mockGet,
 }))
+
 import {
+    assertValidPlayer,
     createMockFetch,
+    createMockResponse,
+    measureResponseTime,
     mockFinnishPlayers,
     setupApiTestEnvironment,
-    assertValidPlayer,
-    measureResponseTime,
-    createMockResponse,
 } from '../apiTestUtils.js'
 
 describe('Finnish Players API', () => {
@@ -282,7 +284,7 @@ describe('Finnish Players API', () => {
         it('should handle invalid URL parameters', async () => {
             const url = new URL('http://localhost/api/finnish-players?format=invalid')
             const response = await mockGet({ url })
-            const data = await response.json()
+            const _data = await response.json()
 
             // Should fall back to default format
             expect(response.status).toBe(200)

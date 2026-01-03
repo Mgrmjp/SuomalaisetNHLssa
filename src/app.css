@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import "flowbite/dist/flowbite.css";
 
 /* Force light theme */
-html, body {
+html,
+body {
     color-scheme: light;
 }
 
@@ -14,6 +14,70 @@ html, body {
 /* Custom utilities */
 .finnish-blue {
     color: var(--color-finnish-blue);
+}
+
+/* Subtle noise texture overlay for depth */
+.noise-overlay {
+    position: relative;
+}
+
+.noise-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    mix-blend-mode: overlay;
+}
+
+/* Apply noise globally to body */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    mix-blend-mode: overlay;
+}
+
+/* Stronger noise for cards and modals */
+.noise-overlay-strong {
+    position: relative;
+}
+
+.noise-overlay-strong::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    mix-blend-mode: overlay;
+}
+
+/* Subtle noise for dark backgrounds like header */
+.noise-overlay-dark {
+    position: relative;
+}
+
+.noise-overlay-dark::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    z-index: 1;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    mix-blend-mode: soft-light;
 }
 
 .bg-finnish-blue {
@@ -39,7 +103,8 @@ html, body {
         color-scheme: light;
     }
 
-    html, body {
+    html,
+    body {
         color-scheme: light;
         background-color: #f9fafb;
         color: #111827;
@@ -76,7 +141,10 @@ html, body {
 }
 
 /* Override any dark mode form controls */
-input, button, select, textarea {
+input,
+button,
+select,
+textarea {
     color-scheme: light;
 }
 
@@ -108,16 +176,17 @@ input, button, select, textarea {
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3),
-                0 2px 4px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 4px 12px rgba(59, 130, 246, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     font-weight: 500;
     letter-spacing: 0.025em;
     font-size: 14px;
 }
 
 .gradient-button-primary::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -143,24 +212,27 @@ input, button, select, textarea {
     background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4),
-                0 4px 8px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .gradient-button-primary:active {
     transform: translateY(0) scale(0.98);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35),
-                0 2px 4px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 4px 12px rgba(37, 99, 235, 0.35),
+        0 2px 4px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .gradient-button-primary:focus {
     outline: none;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3),
-                0 2px 4px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                0 0 0 3px rgba(59, 130, 246, 0.4);
+    box-shadow:
+        0 4px 12px rgba(59, 130, 246, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        0 0 0 3px rgba(59, 130, 246, 0.4);
 }
 
 /* Size variants */
@@ -184,10 +256,11 @@ input, button, select, textarea {
 }
 
 .gradient-button-primary:hover.glow {
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5),
-                0 4px 8px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                0 0 20px rgba(37, 99, 235, 0.2);
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        0 0 20px rgba(37, 99, 235, 0.2);
 }
 
 /* Modern Gradient Buttons - Secondary Variant */
@@ -200,16 +273,17 @@ input, button, select, textarea {
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3),
-                0 2px 4px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 4px 12px rgba(107, 114, 128, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     font-weight: 500;
     letter-spacing: 0.025em;
     font-size: 14px;
 }
 
 .gradient-button-secondary::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -235,16 +309,18 @@ input, button, select, textarea {
     background: linear-gradient(135deg, #5b6471 0%, #8b92a0 50%, #c1c5cc 100%);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(91, 100, 113, 0.4),
-                0 4px 8px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 8px 20px rgba(91, 100, 113, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .gradient-button-secondary:active {
     transform: translateY(0) scale(0.98);
-    box-shadow: 0 4px 12px rgba(91, 100, 113, 0.35),
-                0 2px 4px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 4px 12px rgba(91, 100, 113, 0.35),
+        0 2px 4px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Modern Gradient Buttons - Success Variant */
@@ -257,16 +333,17 @@ input, button, select, textarea {
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3),
-                0 2px 4px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 4px 12px rgba(16, 185, 129, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     font-weight: 500;
     letter-spacing: 0.025em;
     font-size: 14px;
 }
 
 .gradient-button-success::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -292,16 +369,18 @@ input, button, select, textarea {
     background: linear-gradient(135deg, #0ea968 0%, #24c385 50%, #5ed4a7 100%);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(14, 169, 104, 0.4),
-                0 4px 8px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 8px 20px rgba(14, 169, 104, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .gradient-button-success:active {
     transform: translateY(0) scale(0.98);
-    box-shadow: 0 4px 12px rgba(14, 169, 104, 0.35),
-                0 2px 4px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 4px 12px rgba(14, 169, 104, 0.35),
+        0 2px 4px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Modern Gradient Buttons - Danger Variant */
@@ -314,16 +393,17 @@ input, button, select, textarea {
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3),
-                0 2px 4px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 4px 12px rgba(239, 68, 68, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     font-weight: 500;
     letter-spacing: 0.025em;
     font-size: 14px;
 }
 
 .gradient-button-danger::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -349,16 +429,18 @@ input, button, select, textarea {
     background: linear-gradient(135deg, #dc2626 0%, #ef5a5a 50%, #f8a2a2 100%);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4),
-                0 4px 8px rgba(0, 0, 0, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow:
+        0 8px 20px rgba(220, 38, 38, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .gradient-button-danger:active {
     transform: translateY(0) scale(0.98);
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35),
-                0 2px 4px rgba(0, 0, 0, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    box-shadow:
+        0 4px 12px rgba(220, 38, 38, 0.35),
+        0 2px 4px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* Modern Gradient Buttons - Ghost Variant */
@@ -371,16 +453,17 @@ input, button, select, textarea {
     position: relative;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.15),
-                0 1px 2px rgba(0, 0, 0, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    box-shadow:
+        0 2px 8px rgba(148, 163, 184, 0.15),
+        0 1px 2px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
     font-weight: 500;
     letter-spacing: 0.025em;
     font-size: 14px;
 }
 
 .gradient-button-ghost::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -50%;
     left: -50%;
@@ -407,16 +490,18 @@ input, button, select, textarea {
     color: #334155;
     border-color: rgba(148, 163, 184, 0.5);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(148, 163, 184, 0.25),
-                0 2px 4px rgba(0, 0, 0, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    box-shadow:
+        0 4px 12px rgba(148, 163, 184, 0.25),
+        0 2px 4px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .gradient-button-ghost:active {
     transform: translateY(0) scale(0.98);
-    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.2),
-                0 1px 2px rgba(0, 0, 0, 0.06),
-                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    box-shadow:
+        0 2px 8px rgba(148, 163, 184, 0.2),
+        0 1px 2px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 /* Size variants for all button types */

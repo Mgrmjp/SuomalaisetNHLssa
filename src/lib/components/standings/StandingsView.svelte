@@ -1,171 +1,140 @@
 <script>
-	import { onMount } from 'svelte'
-	import ConferenceStandings from './ConferenceStandings.svelte'
-	import { standings, standingsLoading, loadStandings } from '$lib/stores/gameData.js'
+import { onMount } from 'svelte'
+import ConferenceStandings from '$lib/components/standings/ConferenceStandings.svelte'
+import { loadStandings, standings, standingsLoading } from '$lib/stores/gameData.js'
 
-	let standingsData = {}
-	let loading = true
-	let error = null
-	let activeConference = 'eastern' // 'eastern' or 'western'
-	let showAdvancedStats = false // Advanced stats toggle
+let _error = $state(null)
+let _activeConference = $state('eastern') // 'eastern' or 'western'
+let _showAdvancedStats = $state(false) // Advanced stats toggle
 
-	// Subscribe to standings store
-	$: if ($standings) {
-		standingsData = $standings
-	}
+// Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
+let _loading = $state($standingsLoading)
+let _standingsData = $state($standings || {})
 
-	// Subscribe to loading state
-	$: loading = $standingsLoading
+$effect(() => {
+    _loading = $standingsLoading
+    _standingsData = $standings || {}
+    console.log('🔍 $effect fired:', {
+        _loading,
+        $standingsLoading,
+        hasAnyData,
+        easternKeys: Object.keys($standings?.eastern || {}).length,
+        westernKeys: Object.keys($standings?.western || {}).length
+    })
+})
 
-	// Load standings on component mount
-	onMount(async () => {
-		try {
-			await loadStandings()
-		} catch (err) {
-			error = err.message || 'Failed to load standings'
-			console.error('Standings loading error:', err)
-		}
-	})
+// Conference data - using Svelte 5 $derived runes
+const easternConference = $derived($standings?.eastern || {})
+const westernConference = $derived($standings?.western || {})
+const hasEasternData = $derived(Object.keys(easternConference).length > 0)
+const hasWesternData = $derived(Object.keys(westernConference).length > 0)
+const hasAnyData = $derived(hasEasternData || hasWesternData)
 
-	// Conference data
-	$: easternConference = standingsData.eastern || {}
-	$: westernConference = standingsData.western || {}
-	$: hasEasternData = Object.keys(easternConference).length > 0
-	$: hasWesternData = Object.keys(westernConference).length > 0
-	$: hasAnyData = hasEasternData || hasWesternData
+// Debug $derived
+$effect(() => {
+    console.log('🔍 $derived values:', {
+        hasAnyData,
+        hasEasternData,
+        hasWesternData,
+        _loading,
+        loadingCondition: _loading && !hasAnyData
+    })
+})
 
-	// Refresh standings
-	async function refreshStandingsData() {
-		error = null
-		try {
-			await loadStandings()
-		} catch (err) {
-			error = err.message || 'Failed to refresh standings'
-			console.error('Standings refresh error:', err)
-		}
-	}
+// Load standings on component mount
+onMount(async () => {
+    try {
+        await loadStandings()
+    } catch (err) {
+        _error = err.message || 'Failed to load standings'
+        console.error('Standings loading error:', err)
+    }
+})
 
-	// Conference switching
-	function switchConference(conference) {
-		activeConference = conference
-	}
+// Refresh standings
+async function _refreshStandingsData() {
+    _error = null
+    try {
+        await loadStandings()
+    } catch (err) {
+        _error = err.message || 'Failed to refresh standings'
+        console.error('Standings refresh error:', err)
+    }
+}
+
+// Conference switching
+function _switchConference(conference) {
+    _activeConference = conference
+}
 </script>
 
 <div class="standings-view">
-	<!-- Header with title and refresh -->
+	<!-- Header -->
 	<div class="mb-8 text-center">
-		<h1 class="text-3xl font-bold text-gray-900 mb-2">
+		<h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
 			NHL Sarjataulukot 2024-25
 		</h1>
 		<p class="text-gray-600 mb-6">
-			Konferenssit ja divisioonat reaaliajassa
+			Konferenssit ja divisioonat
 		</p>
 
-		<!-- Controls Section -->
 		{#if hasAnyData}
-			<div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+			<!-- Controls -->
+			<div class="flex flex-wrap justify-center items-center gap-4 mb-6">
 				<!-- Conference Toggle -->
-				<div class="inline-flex rounded-lg border border-gray-200 bg-gray-100 p-1">
+				<div class="flex bg-gray-100 rounded-lg p-1 gap-x-1">
 					<button
 						type="button"
-						class="{activeConference === 'eastern'
-							? 'bg-white text-gray-900 shadow-sm cursor-pointer'
-							: 'text-gray-700 hover:bg-white hover:text-gray-900 cursor-pointer'
-						} relative inline-flex items-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						on:click={() => switchConference('eastern')}
+						class="px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-gray-600 hover:text-gray-900 hover:bg-white"
+						class:bg-white={_activeConference === 'eastern'}
+						class:text-gray-900={_activeConference === 'eastern'}
+						class:shadow={_activeConference === 'eastern'}
+						on:click={() => _activeConference = 'eastern'}
 					>
-						Itäinen konferenssi
+						Itäinen
 					</button>
 					<button
 						type="button"
-						class="{activeConference === 'western'
-							? 'bg-white text-gray-900 shadow-sm cursor-pointer'
-							: 'text-gray-700 hover:bg-white hover:text-gray-900 cursor-pointer'
-						} relative inline-flex items-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200 focus:z-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-						on:click={() => switchConference('western')}
+						class="px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-gray-600 hover:text-gray-900 hover:bg-white"
+						class:bg-white={_activeConference === 'western'}
+						class:text-gray-900={_activeConference === 'western'}
+						class:shadow={_activeConference === 'western'}
+						on:click={() => _activeConference = 'western'}
 					>
-						Läntinen konferenssi
+						Läntinen
 					</button>
 				</div>
 
 				<!-- Advanced Stats Toggle -->
-				<div class="flex items-center">
-					<button
-						type="button"
-						on:click={() => showAdvancedStats = !showAdvancedStats}
-						class="{showAdvancedStats
-							? 'bg-blue-600 text-white cursor-pointer'
-							: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 cursor-pointer'
-						} relative inline-flex items-center rounded-md border px-3 py-2 text-sm font-medium transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-					>
-						<svg
-							class="{showAdvancedStats ? 'text-white' : 'text-gray-500'} -ml-0.5 mr-2 h-4 w-4"
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-						>
-							<path d="M9 19v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6" />
-							<path d="M3 12h4l3 9 4-18 3 9h4" />
-						</svg>
-						Lisätilastot
-					</button>
-				</div>
+				<button
+					type="button"
+					class="px-4 py-2 rounded-md text-sm font-medium border transition-colors cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-50"
+					class:bg-blue-50={_showAdvancedStats}
+					class:border-blue-300={_showAdvancedStats}
+					class:text-blue-700={_showAdvancedStats}
+					on:click={() => _showAdvancedStats = !_showAdvancedStats}
+				>
+					Lisätilastot
+				</button>
+			</div>
+
+			<!-- Refresh Button -->
+			<div class="flex justify-center">
+				<button
+					type="button"
+					on:click={_refreshStandingsData}
+					disabled={_loading}
+					class="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white text-sm font-medium rounded-md transition-colors disabled:cursor-not-allowed cursor-pointer"
+				>
+					{_loading ? 'Päivitetään...' : 'Päivitä sarjataulukot'}
+				</button>
 			</div>
 		{/if}
-
-		<!-- Refresh Button -->
-		<div class="flex justify-center mb-6">
-			<button
-				type="button"
-				on:click={refreshStandingsData}
-				disabled={loading}
-				class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200"
-			>
-				{#if loading}
-					<svg
-						class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500"
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-					>
-						<circle
-							class="opacity-25"
-							cx="12"
-							cy="12"
-							r="10"
-							stroke="currentColor"
-							stroke-width="4"
-						></circle>
-						<path
-							class="opacity-75"
-							fill="currentColor"
-							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-						></path>
-					</svg>
-					Päivitetään...
-				{:else}
-					<svg
-						class="-ml-1 mr-2 h-4 w-4 text-gray-500"
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-					>
-						<path d="M23 4v6h-6M1 20v-6h6" />
-						<path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-					</svg>
-				{/if}
-				Päivitä sarjataulukot
-			</button>
-		</div>
 	</div>
 
 	<!-- Main Content -->
 	<div class="max-w-7xl mx-auto">
-		{#if loading && !hasAnyData}
+		{#if _loading && !hasAnyData}
 			<!-- Initial Loading State -->
 			<div class="text-center py-16">
 				<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
@@ -197,7 +166,7 @@
 					Hetkinen, sarjataulukot ladataan ottelutiedoista.
 				</p>
 			</div>
-		{:else if error}
+		{:else if _error}
 			<!-- Error State -->
 			<div class="text-center py-16">
 				<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
@@ -222,13 +191,13 @@
 				</p>
 				<button
 					type="button"
-					on:click={refreshStandingsData}
+					on:click={_refreshStandingsData}
 					class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
 				>
 					Yritä uudelleen
 				</button>
 			</div>
-		{:else if !hasAnyData && !loading}
+		{:else if !hasAnyData && !_loading}
 			<!-- No Data State -->
 			<div class="text-center py-16">
 				<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
@@ -255,21 +224,21 @@
 			</div>
 		{:else}
 			<!-- Active Conference -->
-			{#if activeConference === 'eastern'}
+			{#if _activeConference === 'eastern'}
 				<ConferenceStandings
 					conferenceData={easternConference}
 					conferenceName="eastern"
-					{loading}
-					{error}
-					{showAdvancedStats}
+					{_loading}
+					{_error}
+					{_showAdvancedStats}
 				/>
-			{:else if activeConference === 'western'}
+			{:else if _activeConference === 'western'}
 				<ConferenceStandings
 					conferenceData={westernConference}
 					conferenceName="western"
-					{loading}
-					{error}
-					{showAdvancedStats}
+					{_loading}
+					{_error}
+					{_showAdvancedStats}
 				/>
 			{/if}
 		{/if}
@@ -287,44 +256,7 @@
 </div>
 
 <style>
-	/* Component container */
 	.standings-view {
 		min-height: 400px;
 	}
-
-	/* Animation classes */
-	@keyframes spin {
-		from {
-			transform: rotate(0deg);
-		}
-		to {
-			transform: rotate(360deg);
-		}
-	}
-
-	.animate-spin {
-		animation: spin 1s linear infinite;
-	}
-
-	/* Responsive adjustments */
-	@media (max-width: 640px) {
-		.text-3xl {
-			font-size: 1.875rem;
-		}
-
-		.text-xl {
-			font-size: 1.25rem;
-		}
-
-		.px-4 {
-			padding-left: 0.75rem;
-			padding-right: 0.75rem;
-		}
-
-		.py-2 {
-			padding-top: 0.5rem;
-			padding-bottom: 0.5rem;
-		}
-	}
-
-	</style>
+</style>

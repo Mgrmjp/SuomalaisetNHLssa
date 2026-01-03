@@ -1,27 +1,60 @@
 #!/usr/bin/env python3
 """
 Enhanced Finnish NHL Players Data Fetcher with Empty Net Goal Tracking
+
+Refactored to use shared config and utilities from parent package.
 """
 
 import json
 import sys
 import time
-import re
-import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
-# NHL API endpoints
-NHL_API_BASE = "https://api-web.nhle.com"
+# Import shared configuration and utilities
+import sys
+from pathlib import Path
 
-# Geocoding cache for venue addresses (avoid repeated API calls)
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from config import (
+    GAMES_DIR,
+    FINNISH_CACHE_FILE,
+    NOMINATIM_BASE,
+    NOMINATIM_TIMEOUT,
+)
+from utils import (
+    fetch_from_api,
+    rate_limit,
+    save_json,
+    load_json,
+    schedule_url,
+    game_boxscore_url,
+    play_by_play_url,
+    player_landing_url,
+    extract_team_name,
+    get_player_name,
+)
+# Import Finnish text correction utilities
+from finnish_text_utils import normalize_finnish_player_data
+
+# =============================================================================
+# Geocoding for venue addresses
+# =============================================================================
 _VENUE_ADDRESS_CACHE = {}
 
 
 def geocode_venue_address(venue_name, city):
     """
-    Get full address for a venue using OpenStreetMap Nominatim API
-    Returns: {street, state, country, full_address} or None
+    Get full address for a venue using OpenStreetMap Nominatim API.
+
+    Args:
+        venue_name: Name of the venue
+        city: City where venue is located
+
+    Returns:
+        Dict with {street, state, country, full_address} or None
     """
     global _VENUE_ADDRESS_CACHE
 
@@ -31,14 +64,11 @@ def geocode_venue_address(venue_name, city):
 
     try:
         import requests
-        # Use Nominatim (OpenStreetMap) - free geocoding service
-        headers = {
-            'User-Agent': 'FinnishNHLPlayers/1.0'
-        }
+        headers = {'User-Agent': 'FinnishNHLPlayers/1.0'}
         query = f"{venue_name}, {city}, USA"
-        url = f"https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q={requests.utils.quote(query)}&limit=1"
+        url = f"{NOMINATIM_BASE}?format=json&addressdetails=1&q={requests.utils.quote(query)}&limit=1"
 
-        response = requests.get(url, headers=headers, timeout=5)
+        response = requests.get(url, headers=headers, timeout=NOMINATIM_TIMEOUT)
         response.raise_for_status()
         results = response.json()
 
@@ -46,7 +76,6 @@ def geocode_venue_address(venue_name, city):
             result = results[0]
             address = result.get('address', {})
 
-            # Extract address components
             street = address.get('road', '')
             house_number = address.get('house_number', '')
             city_name = address.get('city', address.get('town', address.get('village', '')))
@@ -54,7 +83,6 @@ def geocode_venue_address(venue_name, city):
             country = address.get('country', '')
             postcode = address.get('postcode', '')
 
-            # Build full address
             full_parts = []
             if house_number and street:
                 full_parts.append(f"{house_number} {street}")
@@ -86,128 +114,49 @@ def geocode_venue_address(venue_name, city):
 
     return None
 
-# Global rate limiter
-_last_request_time = 0
-_min_request_interval = 1.0  # Minimum seconds between requests
 
-def rate_limit():
-    """Implement rate limiting between API requests"""
-    global _last_request_time
-    current_time = time.time()
-    time_since_last = current_time - _last_request_time
-    
-    if time_since_last < _min_request_interval:
-        sleep_time = _min_request_interval - time_since_last
-        time.sleep(sleep_time)
-    
-    _last_request_time = time.time()
-
-def fetch_from_api(url, max_retries=5):
-    """
-    Fetch data from NHL API with retry logic and exponential backoff
-    
-    Args:
-        url: API endpoint URL
-        max_retries: Maximum number of retry attempts
-        
-    Returns:
-        JSON response data or None if all retries fail
-    """
-    rate_limit()  # Apply rate limiting before each request
-    
-    for attempt in range(max_retries):
-        try:
-            import requests
-            response = requests.get(url, timeout=10)
-            
-            # Handle 429 Too Many Requests specifically
-            if response.status_code == 429:
-                if attempt == max_retries - 1:
-                    print(f"Error fetching {url}: 429 Too Many Requests (max retries exceeded)")
-                    return None
-                
-                # Exponential backoff with jitter for 429 errors
-                base_delay = 2 ** attempt
-                jitter = random.uniform(0.1, 0.5) * base_delay
-                delay = base_delay + jitter
-                print(f"Rate limited on {url}. Retrying in {delay:.2f} seconds... (attempt {attempt + 1}/{max_retries})")
-                time.sleep(delay)
-                continue
-                
-            response.raise_for_status()
-            return response.json()
-            
-        except Exception as e:
-            if attempt == max_retries - 1:
-                print(f"Error fetching {url}: {e}")
-                return None
-            
-            # Exponential backoff for other errors
-            base_delay = 2 ** attempt
-            jitter = random.uniform(0.1, 0.3) * base_delay
-            delay = base_delay + jitter
-            print(f"Error fetching {url}: {e}. Retrying in {delay:.2f} seconds... (attempt {attempt + 1}/{max_retries})")
-            time.sleep(delay)
-    
-    return None
-
-# Cache for teams data (fetched once per session)
+# =============================================================================
+# Cache for teams data
+# =============================================================================
 _TEAMS_DATA_CACHE = None
+
 
 def get_teams_data():
     """
     Fetch and cache teams data from NHL API.
-    Returns dict mapping team abbrev to {venue_name, venue_city, team_name, location_name}
+
+    Returns:
+        Dict mapping team abbrev to {venue_name, venue_city, team_name, location_name}
     """
     global _TEAMS_DATA_CACHE
 
     if _TEAMS_DATA_CACHE is not None:
         return _TEAMS_DATA_CACHE
 
-    # Use a sample game to get teams data since there's no dedicated teams endpoint
-    # We'll fetch from a recent game's boxscore
     sample_game_id = 2025020376  # Use a known game ID
-    game_data = fetch_from_api(f"{NHL_API_BASE}/v1/gamecenter/{sample_game_id}/boxscore")
+    game_data = fetch_from_api(game_boxscore_url(sample_game_id))
 
     teams_cache = {}
 
     if game_data:
-        # Process home team
-        home_team = game_data.get("homeTeam", {})
-        home_abbrev = home_team.get("abbrev", "")
-        if home_abbrev:
-            home_name = home_team.get("commonName", {}).get("default", "")
-            home_place = home_team.get("placeName", {}).get("default", "")
-            venue = home_team.get("venue", {})
-            teams_cache[home_abbrev] = {
-                "venue_name": venue.get("name", ""),
-                "venue_city": venue.get("city", ""),
-                "team_name": home_name,
-                "location_name": home_place
-            }
-
-        # Process away team
-        away_team = game_data.get("awayTeam", {})
-        away_abbrev = away_team.get("abbrev", "")
-        if away_abbrev:
-            away_name = away_team.get("commonName", {}).get("default", "")
-            away_place = away_team.get("placeName", {}).get("default", "")
-            venue = away_team.get("venue", {})
-            teams_cache[away_abbrev] = {
-                "venue_name": venue.get("name", ""),
-                "venue_city": venue.get("city", ""),
-                "team_name": away_name,
-                "location_name": away_place
-            }
+        for team_key in ["homeTeam", "awayTeam"]:
+            team = game_data.get(team_key, {})
+            abbrev = team.get("abbrev", "")
+            if abbrev:
+                teams_cache[abbrev] = {
+                    "venue_name": team.get("venue", {}).get("name", ""),
+                    "venue_city": team.get("venue", {}).get("city", ""),
+                    "team_name": team.get("commonName", {}).get("default", ""),
+                    "location_name": team.get("placeName", {}).get("default", "")
+                }
 
     _TEAMS_DATA_CACHE = teams_cache
     return teams_cache
 
-# Backward compatibility alias
+
 def get_teams_venue_data():
     """Legacy alias for get_teams_data()"""
     teams_data = get_teams_data()
-    # Return only venue info for backward compatibility
     venue_data = {}
     for abbrev, data in teams_data.items():
         venue_data[abbrev] = {
@@ -216,34 +165,41 @@ def get_teams_venue_data():
         }
     return venue_data
 
+
 def load_finnish_player_cache():
-    """Load cached Finnish player information"""
-    cache_file = Path(__file__).parent / "cache" / "finnish-players.json"
-    if cache_file.exists():
-        try:
-            with open(cache_file, 'r', encoding='utf-8') as f:
-                str_cache = json.load(f)
-                return {int(k): v for k, v in str_cache.items()}
-        except Exception as e:
-            print(f"Error loading cache: {e}")
+    """Load cached Finnish player information with text corrections."""
+    if FINNISH_CACHE_FILE.exists():
+        data = load_json(FINNISH_CACHE_FILE)
+        if data:
+            # Apply corrections to all cached players
+            corrected_cache = {}
+            for player_id, player_data in data.items():
+                corrected_cache[int(player_id)] = normalize_finnish_player_data(
+                    player_data.copy()
+                )
+            return corrected_cache
     return {}
 
-def get_play_by_play_data(game_id):
-    """Get play-by-play data to detect empty net goals"""
-    url = f"{NHL_API_BASE}/v1/gamecenter/{game_id}/play-by-play"
-    return fetch_from_api(url)
 
+# =============================================================================
+# Empty Net Goal Detection
+# =============================================================================
 def detect_empty_net_goals(play_by_play_data, game_id, finnish_cache, game_data=None):
     """
-    Parse play-by-play data to find empty net goals
+    Parse play-by-play data to find empty net goals.
 
     NHL API indicates empty net goals via:
     1. zoneCode: 'N' (Neutral zone)
     2. highlightClipSharingUrl containing 'empty-net'
 
+    Args:
+        play_by_play_data: Play-by-play data from API
+        game_id: Game identifier
+        finnish_cache: Finnish player cache
+        game_data: Optional game data for goalie detection
+
     Returns:
-    - empty_net_goals_scored: dict of scoring players (for skaters)
-    - empty_net_goals_allowed: dict of goalie IDs (for goalies)
+        Tuple of (empty_net_goals_scored dict, empty_net_goals_allowed dict)
     """
     empty_net_goals_scored = {}
     empty_net_goals_allowed = {}
@@ -254,116 +210,87 @@ def detect_empty_net_goals(play_by_play_data, game_id, finnish_cache, game_data=
     # Create reverse cache mapping: playerId -> position (for goalie detection)
     finnish_positions = {}
     for pid, info in finnish_cache.items():
-        if info.get('position') == 'G' or info.get('position') == 'Goalie':
+        if info.get('position') in ('G', 'Goalie'):
             finnish_positions[pid] = 'G'
 
     for play in play_by_play_data['plays']:
-        # Look for goal events
         if play.get('typeDescKey') == 'goal':
             details = play.get('details', {})
             zone_code = details.get('zoneCode', '')
             highlight_url = details.get('highlightClipSharingUrl', '')
 
             # Detect empty net goals using multiple indicators
-            is_empty_net = False
+            is_empty_net = (zone_code == 'N' or 'empty-net' in (highlight_url or '').lower())
 
-            # Method 1: zoneCode 'N' means Neutral zone (empty net)
-            if zone_code == 'N':
-                is_empty_net = True
-
-            # Method 2: Highlight URL contains "empty-net"
-            if 'empty-net' in (highlight_url or '').lower():
-                is_empty_net = True
-
-            # If it's an empty net goal
             if is_empty_net:
-                # Track scoring player (for skater stats)
+                # Track scoring player
                 player_id = details.get('scoringPlayerId')
                 if player_id:
-                    if player_id not in empty_net_goals_scored:
-                        empty_net_goals_scored[player_id] = 0
-                    empty_net_goals_scored[player_id] += 1
+                    empty_net_goals_scored[player_id] = empty_net_goals_scored.get(player_id, 0) + 1
 
-                # Track goalie who allowed it (for goalie stats)
+                # Track goalie who allowed it
                 goalie_id = details.get('goalieInNetId')
                 if goalie_id and goalie_id in finnish_positions:
-                    # This is a Finnish goalie who allowed an empty net goal
-                    if goalie_id not in empty_net_goals_allowed:
-                        empty_net_goals_allowed[goalie_id] = 0
-                    empty_net_goals_allowed[goalie_id] += 1
+                    empty_net_goals_allowed[goalie_id] = empty_net_goals_allowed.get(goalie_id, 0) + 1
                 elif not goalie_id and game_data:
-                    # Empty net goal - no goalieInNetId means net was empty
-                    # Determine which team had the empty net by checking eventOwnerTeamId
+                    # Determine which team had the empty net
                     event_owner_team_id = details.get('eventOwnerTeamId')
                     home_team_id = game_data.get('homeTeam', {}).get('id')
                     away_team_id = game_data.get('awayTeam', {}).get('id')
-                    
+
                     if event_owner_team_id and home_team_id and away_team_id:
-                        # The team with eventOwnerTeamId scored the goal
-                        # So the OTHER team had the empty net
                         defending_team_id = away_team_id if event_owner_team_id == home_team_id else home_team_id
 
-                        # Get all goalies who played in the game
+                        # Find Finnish goalies from defending team who played
                         player_stats = game_data.get('playerByGameStats', {})
-                        game_goalies = set()
-                        
                         for team_side in ['awayTeam', 'homeTeam']:
                             team_data = player_stats.get(team_side, {})
-                            for goalie in team_data.get('goalies', []):
-                                game_goalies.add(goalie.get('playerId'))
-
-                        # Find Finnish goalies from the defending team who played in the game
-                        for team_side in ['awayTeam', 'homeTeam']:
-                            team_data = player_stats.get(team_side, {})
-                            goalie_team_id = game_data.get(team_side, {}).get('id')
-                            
-                            if goalie_team_id == defending_team_id:
-                                # This is the defending team - check their goalies
+                            if game_data.get(team_side, {}).get('id') == defending_team_id:
                                 for goalie in team_data.get('goalies', []):
                                     goalie_id = goalie.get('playerId')
                                     toi = goalie.get('toi', '00:00')
-                                    
-                                    # Only count goalies who actually played (TOI > 0)
-                                    if goalie_id in finnish_positions and toi != '00:00' and toi != '0':
-                                        if goalie_id not in empty_net_goals_allowed:
-                                            empty_net_goals_allowed[goalie_id] = 0
-                                        empty_net_goals_allowed[goalie_id] += 1
 
-    # Always return, even if we didn't find any empty net goals
+                                    if goalie_id in finnish_positions and toi not in ('00:00', '0'):
+                                        empty_net_goals_allowed[goalie_id] = empty_net_goals_allowed.get(goalie_id, 0) + 1
+
     return empty_net_goals_scored, empty_net_goals_allowed
+
 
 def detect_shorthanded_goals(play_by_play_data, finnish_cache):
     """
-    Detect shorthanded goals from play-by-play data
-    
-    NHL API indicates shorthanded goals via:
-    - highlightClipSharingUrl containing 'shg' (shorthanded goal)
-    
+    Detect shorthanded goals from play-by-play data.
+
+    Args:
+        play_by_play_data: Play-by-play data from API
+        finnish_cache: Finnish player cache
+
     Returns:
-    - shorthanded_goals: dict of player IDs to goal counts (for skaters)
+        Dict of player IDs to shorthanded goal counts
     """
     shorthanded_goals = {}
-    
+
     if not play_by_play_data or 'plays' not in play_by_play_data:
         return shorthanded_goals
-    
+
     for play in play_by_play_data['plays']:
         if play.get('typeDescKey') == 'goal':
             details = play.get('details', {})
             url = details.get('highlightClipSharingUrl', '')
-            
-            # Detect shorthanded goals from URL
+
             if 'shg' in (url or '').lower():
                 player_id = details.get('scoringPlayerId')
                 if player_id and player_id in finnish_cache:
                     shorthanded_goals[player_id] = shorthanded_goals.get(player_id, 0) + 1
-    
+
     return shorthanded_goals
 
+
+# =============================================================================
+# NHL API Data Fetching
+# =============================================================================
 def get_schedule_for_date(date):
-    """Get NHL schedule for a specific date"""
-    url = f"{NHL_API_BASE}/v1/schedule/{date}"
-    data = fetch_from_api(url)
+    """Get NHL schedule for a specific date."""
+    data = fetch_from_api(schedule_url(date))
     if not data:
         return None
 
@@ -376,68 +303,68 @@ def get_schedule_for_date(date):
         }
     return {"games": [], "date": date}
 
+
 def get_game_details(game_id):
-    """Get detailed game information including player stats"""
-    url = f"{NHL_API_BASE}/v1/gamecenter/{game_id}/boxscore"
-    return fetch_from_api(url)
+    """Get detailed game information including player stats."""
+    return fetch_from_api(game_boxscore_url(game_id))
+
+
+def get_play_by_play_data(game_id):
+    """Get play-by-play data to detect empty net goals."""
+    return fetch_from_api(play_by_play_url(game_id))
+
 
 def get_player_recent_games(player_id, player_team, limit=10):
     """
-    Fetch recent games for a player
-    Returns list of recent game results
-    
-    Note: The NHL API has changed - /v1/player/{id}/gamelog endpoint no longer exists.
-    We now use /v1/player/{id}/landing endpoint which provides last5Games data.
+    Fetch recent games for a player.
+
+    Args:
+        player_id: Player ID
+        player_team: Player's team abbreviation
+        limit: Maximum number of recent games to fetch
+
+    Returns:
+        List of recent game results
     """
     try:
-        # NHL API endpoint for player landing page (contains recent games)
-        url = f"{NHL_API_BASE}/v1/player/{player_id}/landing"
-        data = fetch_from_api(url)
+        data = fetch_from_api(player_landing_url(player_id))
 
         if not data or 'last5Games' not in data:
             return []
 
         recent_games = []
         for game in data['last5Games'][:limit]:
-            # Extract basic game info
             game_date = game.get('gameDate', '')
             opponent_abbrev = game.get('opponentAbbrev', '')
             game_id = game.get('gameId')
-            
-            # Try to get actual game scores by fetching game details
+
             team_score = 0
             opponent_score = 0
-            result = 'OT'  # Default
-            
+            result = 'OT'
+
             if game_id:
                 game_details = get_game_details(game_id)
                 if game_details:
                     home_team = game_details.get("homeTeam", {})
                     away_team = game_details.get("awayTeam", {})
-                    
-                    # Determine which team is the player's team
+
                     player_is_home = home_team.get("abbrev", "") == player_team
-                    
+
                     if player_is_home:
                         team_score = home_team.get("score", 0)
                         opponent_score = away_team.get("score", 0)
-                        opponent_full = f"{away_team.get('placeName', {}).get('default', '')} {away_team.get('commonName', {}).get('default', '')}".strip()
+                        opponent_full = extract_team_name(away_team)
                     else:
                         team_score = away_team.get("score", 0)
                         opponent_score = home_team.get("score", 0)
-                        opponent_full = f"{home_team.get('placeName', {}).get('default', '')} {home_team.get('commonName', {}).get('default', '')}".strip()
-                    
-                    # Determine actual result
+                        opponent_full = extract_team_name(home_team)
+
                     if team_score > opponent_score:
                         result = 'W'
                     elif team_score < opponent_score:
                         result = 'L'
-                    else:
-                        result = 'OT'
                 else:
-                    # Fallback if game details fetch fails
                     opponent_full = opponent_abbrev
-                    # Use plus/minus as a rough indicator
                     plus_minus = game.get('plusMinus', 0)
                     if plus_minus > 0:
                         result = 'W'
@@ -463,8 +390,24 @@ def get_player_recent_games(player_id, player_team, limit=10):
         print(f"Warning: Failed to fetch recent games for player {player_id}: {e}")
         return []
 
+
+# =============================================================================
+# Finnish Player Data Extraction
+# =============================================================================
 def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, finnish_cache):
-    """Extract Finnish player data with empty net goal tracking"""
+    """
+    Extract Finnish player data with empty net goal tracking.
+
+    Args:
+        game_data: Game boxscore data
+        game_id: Game ID
+        date_str: Game date (YYYY-MM-DD)
+        schedule_data: Schedule data for venue info
+        finnish_cache: Finnish player cache
+
+    Returns:
+        Tuple of (finnish_players list, game_info dict)
+    """
     finnish_players = []
 
     if not game_data:
@@ -474,13 +417,11 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
     if not player_stats:
         return finnish_players, {}
 
-    # Get empty net goal data (both scored and allowed)
+    # Get empty net and shorthanded goal data
     play_by_play_data = get_play_by_play_data(game_id)
     empty_net_goals_scored, empty_net_goals_allowed = detect_empty_net_goals(
         play_by_play_data, game_id, finnish_cache, game_data
     )
-    
-    # Get shorthanded goal data
     shorthanded_goals = detect_shorthanded_goals(play_by_play_data, finnish_cache) if play_by_play_data else {}
 
     # Get game context
@@ -489,35 +430,21 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
     home_score = game_data.get("homeTeam", {}).get("score", 0)
     away_score = game_data.get("awayTeam", {}).get("score", 0)
 
-    # Get venue info from schedule data (primary source - this has correct venue info)
+    # Get venue info from schedule data
     venue_info = {}
-    
+
     if schedule_data and "week_data" in schedule_data:
-        # Primary: Get venue from schedule data - this contains the actual venue where game was played
         for game in schedule_data["week_data"].get("games", []):
             if game.get("id") == game_id:
-                venue_name = game.get("venue", {}).get("default", "")
-                venue_info["venue"] = venue_name
-                
-                # Get city from home team's placeName in schedule data
+                venue_info["venue"] = game.get("venue", {}).get("default", "")
                 home_team_in_schedule = game.get("homeTeam", {})
                 venue_info["city"] = home_team_in_schedule.get("placeName", {}).get("default", "")
                 break
-    
-    # Fallback: Try to get venue from game data if schedule fails
+
+    # Fallback to game data for venue info
     if not venue_info.get("venue") and game_data:
-        # Use the venue and venueLocation fields from boxscore API
-        venue_name = game_data.get("venue", {}).get("default", "")
-        venue_location = game_data.get("venueLocation", {}).get("default", "")
-        
-        if venue_name:
-            venue_info["venue"] = venue_name
-            
-            # Use venueLocation from API
-            if venue_location:
-                venue_info["city"] = venue_location
-            else:
-                venue_info["city"] = ""
+        venue_info["venue"] = game_data.get("venue", {}).get("default", "")
+        venue_info["city"] = game_data.get("venueLocation", {}).get("default", "")
 
     # Get full venue address via geocoding
     if venue_info.get("venue") and venue_info.get("city"):
@@ -528,39 +455,24 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             venue_info["state"] = venue_address.get("state", "")
             venue_info["postcode"] = venue_address.get("postcode", "")
 
-    # Get team names directly from game data
+    # Get team names
     team_names = {}
-    home_team_data = game_data.get("homeTeam", {})
-    away_team_data = game_data.get("awayTeam", {})
-    
-    home_team_name = home_team_data.get("commonName", {}).get("default", "")
-    home_team_place = home_team_data.get("placeName", {}).get("default", "")
-    away_team_name = away_team_data.get("commonName", {}).get("default", "")
-    away_team_place = away_team_data.get("placeName", {}).get("default", "")
-
-    # Compose full team names (e.g., "Boston Bruins")
-    team_names[home_team] = f"{home_team_place} {home_team_name}" if home_team_place and home_team_name else home_team
-    team_names[away_team] = f"{away_team_place} {away_team_name}" if away_team_place and away_team_name else away_team
+    team_names[home_team] = extract_team_name(game_data.get("homeTeam", {}))
+    team_names[away_team] = extract_team_name(game_data.get("awayTeam", {}))
 
     # Collect all player IDs
     all_players = []
-
     for team_side in ["awayTeam", "homeTeam"]:
         team_stats = player_stats.get(team_side, {})
         for player_category in ["forwards", "defense", "goalies"]:
             for player in team_stats.get(player_category, []):
                 all_players.append((team_side, player))
 
-    # Process only Finnish players using cache
+    # Process only Finnish players
     finnish_player_data = {}
-
     for team_side, player in all_players:
         player_id = player.get("playerId")
-
-        if player_id in finnish_player_data:
-            continue
-
-        if player_id in finnish_cache:
+        if player_id not in finnish_player_data and player_id in finnish_cache:
             finnish_player_data[player_id] = {
                 "player_cache": finnish_cache[player_id],
                 "game_stats": player,
@@ -580,7 +492,7 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             opponent_score = home_score
             player_team_full = team_names.get(away_team, away_team)
             opponent_team_full = team_names.get(home_team, home_team)
-        else:  # homeTeam
+        else:
             player_team = home_team
             opponent = away_team
             player_score = home_score
@@ -598,23 +510,18 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             except:
                 age = None
 
-        # Count empty net goals for this player
-        player_name = player_cache.get("name", "")
+        # Count empty net goals
         position = player_cache.get("position", "")
-
-        # For goalies, count empty net goals ALLOWED
-        # For skaters, count empty net goals SCORED
-        if position == "G" or position == "Goalie":
+        if position in ("G", "Goalie"):
             empty_net_count = empty_net_goals_allowed.get(player_id, 0)
         else:
-            # Try both player_id and player_name as keys (for backward compatibility)
-            empty_net_count = empty_net_goals_scored.get(player_id, 0) or empty_net_goals_scored.get(player_name, 0)
+            empty_net_count = empty_net_goals_scored.get(player_id, 0)
 
-        # Build record with empty net goal tracking
+        # Build record
         record = {
             "playerId": player_id,
             "name": player_cache.get("name", ""),
-            "position": player_cache.get("position", game_stats.get("position", "N/A")),
+            "position": position or game_stats.get("position", "N/A"),
             "team": player_team,
             "team_full": player_team_full,
             "age": age,
@@ -638,7 +545,7 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             "goals": game_stats.get("goals", 0),
             "assists": game_stats.get("assists", 0),
             "points": game_stats.get("points", 0),
-            "empty_net_goals": empty_net_count,  # 🆕 NEW FIELD
+            "empty_net_goals": empty_net_count,
             "penalty_minutes": game_stats.get("pim", 0),
             "shots": game_stats.get("sog", 0),
             "plus_minus": game_stats.get("plusMinus", 0),
@@ -663,9 +570,8 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             record["save_percentage"] = round(game_stats.get("savePctg", 0.0), 3) if game_stats.get("savePctg") else 0.0
             record["goals_against"] = game_stats.get("goalsAgainst", 0)
 
-        # Get recent games for this player (last 10 games)
-        # Add small delay to avoid rate limiting on player API calls
-        time.sleep(0.5)  # 0.5 second delay between player requests
+        # Get recent games (with delay to avoid rate limiting)
+        time.sleep(0.5)
         record["recent_results"] = get_player_recent_games(player_id, player_team, limit=10)
 
         finnish_players.append(record)
@@ -677,24 +583,28 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
         "away_score": away_score
     }
 
-def generate_finnish_players_data(game_date):
-    """Generate data for Finnish players on a specific date"""
 
+def generate_finnish_players_data(game_date):
+    """Generate data for Finnish players on a specific date."""
     finnish_cache = load_finnish_player_cache()
-    print(f"Loaded {len(finnish_cache)} Finnish player records from cache")
-    print()
+    print(f"Loaded {len(finnish_cache)} Finnish player records from cache\n")
 
     schedule = get_schedule_for_date(game_date)
     if not schedule:
-        return {"date": game_date, "games": [], "players": [], "total_players": 0, "source": "NHL API - Enhanced"}
+        return {
+            "date": game_date,
+            "games": [],
+            "players": [],
+            "total_players": 0,
+            "source": "NHL API - Enhanced"
+        }
 
     games = schedule.get("games", [])
     all_finnish_players = []
     game_summaries = []
 
     print(f"Fetching Finnish players for {game_date}...")
-    print(f"Found {len(games)} games")
-    print()
+    print(f"Found {len(games)} games\n")
 
     for i, game in enumerate(games, 1):
         game_id = game.get("id")
@@ -703,9 +613,8 @@ def generate_finnish_players_data(game_date):
 
         print(f"[{i}/{len(games)}] {away_team} @ {home_team}")
 
-        # Add delay between games to avoid rate limiting
         if i > 1:
-            time.sleep(1.5)  # 1.5 second delay between games
+            time.sleep(1.5)  # Rate limiting between games
 
         game_details = get_game_details(game_id)
 
@@ -722,6 +631,7 @@ def generate_finnish_players_data(game_date):
                 "homeScore": game_info.get("home_score", 0),
                 "awayScore": game_info.get("away_score", 0),
                 "gameState": game.get("gameState", "UNKNOWN"),
+                "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
                 "startTime": game.get("startTimeUTC", ""),
                 "finnish_players_count": len(finnish_players),
                 "empty_net_goals": len([p for p in finnish_players if p.get('empty_net_goals', 0) > 0])
@@ -729,11 +639,11 @@ def generate_finnish_players_data(game_date):
 
             if finnish_players:
                 print(f"      ✅ Found {len(finnish_players)} Finnish players")
-                finnish_names = [f"{p['name']} ({p['points']}pts)" for p in finnish_players if p['points'] > 0]
+                scorers = [f"{p['name']} ({p['points']}pts)" for p in finnish_players if p['points'] > 0]
                 empty_net_scorers = [p['name'] for p in finnish_players if p.get('empty_net_goals', 0) > 0]
-                
-                if finnish_names:
-                    print(f"         Scorers: {', '.join(finnish_names)}")
+
+                if scorers:
+                    print(f"         Scorers: {', '.join(scorers)}")
                 if empty_net_scorers:
                     print(f"         🥅 Empty Net: {', '.join(empty_net_scorers)}")
             else:
@@ -753,6 +663,10 @@ def generate_finnish_players_data(game_date):
         "source": "NHL API - Enhanced with Empty Net Goal Tracking"
     }
 
+
+# =============================================================================
+# Main Entry Point
+# =============================================================================
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         date_str = sys.argv[1]
@@ -766,12 +680,9 @@ if __name__ == "__main__":
 
     data = generate_finnish_players_data(date_str)
 
-    # Save to file
-    output_file = Path(__file__).parent.parent.parent / "data" / "prepopulated" / "games" / f"{date_str}.json"
-    output_file.parent.mkdir(parents=True, exist_ok=True)
-
-    with open(output_file, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    # Save using shared utilities
+    output_file = GAMES_DIR / f"{date_str}.json"
+    save_json(data, output_file)
 
     print()
     print("=" * 80)

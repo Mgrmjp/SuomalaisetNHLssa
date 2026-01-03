@@ -1,6 +1,7 @@
 <script>
 import { browser } from '$app/environment'
 import { setDate } from '$lib/stores/gameData.js'
+
 $: headerHeight = browser ? (window.innerWidth < 768 ? '60px' : '64px') : '64px'
 
 let showMobileMenu = false
@@ -28,7 +29,7 @@ function _goToToday() {
 
 <svelte:window on:click={_handleClickOutside} />
 
-<header class="bg-finnish-blue-900 text-white py-4 shadow-lg transition-all duration-300 hover:shadow-xl">
+<header class="noise-overlay-dark bg-finnish-blue-900 text-white py-4 shadow-lg transition-all duration-300 hover:shadow-xl">
 	<nav class="container mx-auto px-4" aria-label="Päävalikko">
 		<div class="flex items-center justify-between">
 			<!-- Logo -->

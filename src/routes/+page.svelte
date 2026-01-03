@@ -1,37 +1,37 @@
 <script>
-import { onMount } from 'svelte'
-import SimpleDateControls from '$lib/components/game/SimpleDateControls.svelte'
-import MonthView from '$lib/components/game/MonthView.svelte'
+import FinnishRoster from '$lib/components/game/FinnishRoster.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
+import SimpleDateControls from '$lib/components/game/SimpleDateControls.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
-import ViewToggle from '$lib/components/ui/ViewToggle.svelte'
 import StandingsView from '$lib/components/standings/StandingsView.svelte'
+import ViewToggle from '$lib/components/ui/ViewToggle.svelte'
+import { onMount } from 'svelte'
 import {
-    players,
-    showCalendarView,
-    isLoading,
-    selectedDate,
     currentDateReadOnly,
     formatDate,
-    setDate,
+    latestPrepopulatedDate,
+    players,
+    selectedDate,
     selectedView,
+    setDate
 } from '$lib/stores/gameData.js'
 
-const sparkles = Array.from({ length: 28 }, () => ({
-	left: `${Math.random() * 100}%`,
-	top: `${Math.random() * 90}%`,
-	delay: `${Math.random() * 2}s`,
-	duration: `${3.5 + Math.random() * 3}s`,
-	size: `${3 + Math.random() * 6}px`,
-	blur: `${Math.random() > 0.5 ? 0 : 1}px`
+const _sparkles = Array.from({ length: 28 }, () => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 90}%`,
+    delay: `${Math.random() * 2}s`,
+    duration: `${3.5 + Math.random() * 3}s`,
+    size: `${3 + Math.random() * 6}px`,
+    blur: `${Math.random() > 0.5 ? 0 : 1}px`,
 }))
 
 // Reactive variables
 $: totalGoals = $players?.reduce((sum, player) => sum + player.goals, 0) || 0
 $: totalAssists = $players?.reduce((sum, player) => sum + player.assists, 0) || 0
 $: totalPoints = $players?.reduce((sum, player) => sum + player.points, 0) || 0
-$: totalPenaltyMinutes = $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
-$: playersWithPoints = $players?.filter((player) => player.points > 0).length || 0
+$: totalPenaltyMinutes =
+    $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
+$: totalPlayers = $players?.length || 0
 
 // Default to last night's games on first load
 onMount(() => {
@@ -41,20 +41,27 @@ onMount(() => {
     const today = formatDate($currentDateReadOnly)
     const lastNight = new Date(today)
     lastNight.setDate(lastNight.getDate() - 1)
-    setDate(formatDate(lastNight))
+    const desiredDate = formatDate(lastNight)
+    // Clamp to the latest prepopulated date to avoid 404s when data lags behind current time
+    const clampedDate =
+        latestPrepopulatedDate &&
+        new Date(`${desiredDate}T00:00:00`) > new Date(`${latestPrepopulatedDate}T00:00:00`)
+            ? latestPrepopulatedDate
+            : desiredDate
+    setDate(clampedDate)
 })
 </script>
 
 <svelte:head>
 	<title>Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot</title>
-	<meta name="description" content="Seuraa suomalaisten NHL-pelaajien suorituksia reaaliajassa" />
+	<meta name="description" content="Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset." />
 </svelte:head>
 
 <div class="w-full max-w-6xl mx-auto px-4 py-8 relative" style="z-index: 1; position: relative;">
 	<div class="text-center mb-8 hero-header space-y-3 relative overflow-hidden">
 		<Snowfall />
 		<div class="sparkles pointer-events-none" aria-hidden="true">
-			{#each sparkles as sparkle, idx}
+			{#each _sparkles as sparkle, idx}
 				<span
 					class="sparkle"
 					style={`--spark-left:${sparkle.left};--spark-top:${sparkle.top};--spark-delay:${sparkle.delay};--spark-duration:${sparkle.duration};--spark-size:${sparkle.size};--spark-blur:${sparkle.blur};`}
@@ -62,9 +69,9 @@ onMount(() => {
 			{/each}
 		</div>
 		<div class="relative space-y-3 p-6">
-			<h1 class="text-3xl font-bold text-gray-900 hero-title">Suomalaiset NHL-pelaajat</h1>
-			<p class="text-gray-700 hero-subtitle">Päivittäin päivittyvä seuranta suomalaisille NHL-pelaajille</p>
-			<p class="text-sm text-gray-600">Tämän päivän ja eilisen tilastot, pisteet ja peliajat yhdellä silmäyksellä</p>
+			<img src="/logo.svg" alt="Suomalaiset NHL-pelaajat" class="w-16 h-16 mx-auto mb-4" />
+			<h1 class="text-3xl font-bold text-gray-900 hero-title">Miten suomalaisilla kulkee NHL:ssä?</h1>
+			<p class="text-gray-700 hero-subtitle">Tutki päivän ottelut, pisteet ja onnistumiset</p>
 		</div>
 	</div>
 
@@ -79,6 +86,9 @@ onMount(() => {
 
 		<!-- Hero Stats - Only show on Players view -->
 		{#if $selectedView === 'players' && $players && $players.length > 0}
+			<div class="text-center mb-4">
+				<p class="text-sm text-gray-600">Valitun päivän yhteistilastot</p>
+			</div>
 			<div class="flex flex-wrap justify-center gap-8 hero-stats">
 				<div class="text-center hero-stat hero-stat--goals">
 					<div class="flex justify-center mb-1 hero-stat__icon-wrap">
@@ -125,8 +135,8 @@ onMount(() => {
 							<path fill="currentColor" d="M5 6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2m7-2a2 2 0 1 0 2 2c0-1.11-.89-2-2-2m7-2c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2M3.5 11c-.83 0-1.5.67-1.5 1.5V17h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2C9.67 9 9 9.67 9 10.5V15h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2c-.83 0-1.5.67-1.5 1.5V13h1v5h4v-5h1V8.5c0-.83-.67-1.5-1.5-1.5z"/>
 						</svg>
 					</div>
-					<div class="text-xl font-bold text-gray-800">{playersWithPoints}</div>
-					<div class="text-xs text-gray-600 hero-stat__label" data-full="Pisteillä (With points)">Pisteillä</div>
+					<div class="text-xl font-bold text-gray-800">{totalPlayers}</div>
+					<div class="text-xs text-gray-600 hero-stat__label" data-full="Pelaajaa kokoonpanossa (Players in lineup)">Kokoonpanossa</div>
 				</div>
 			</div>
 				{/if}
@@ -138,8 +148,16 @@ onMount(() => {
 		{:else if $selectedView === 'standings'}
 			<!-- Standings View -->
 			<StandingsView />
+		{:else if $selectedView === 'roster'}
+			<!-- Finnish Roster View -->
+			<FinnishRoster />
 		{/if}
 	</div>
+
+	<!-- Footer link -->
+	<footer class="text-center py-4 text-sm text-gray-500">
+		<a href="/tietoa" class="hover:text-gray-700 transition-colors">Tietoa sivustosta</a>
+	</footer>
 </div>
 
 <style>

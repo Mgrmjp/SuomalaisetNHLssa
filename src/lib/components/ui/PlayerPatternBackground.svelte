@@ -1,42 +1,150 @@
 <script>
-// Pull names from prepopulated game JSON files
-const gameFiles = import.meta.glob('../../../data/prepopulated/games/*.json', {
-	eager: true,
-	import: 'default'
-})
+import { onMount } from 'svelte'
+import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
+
+// Available game dates
+const gameDates = [
+    '2025-09-30',
+    '2025-10-01',
+    '2025-10-02',
+    '2025-10-03',
+    '2025-10-04',
+    '2025-10-05',
+    '2025-10-06',
+    '2025-10-07',
+    '2025-10-08',
+    '2025-10-09',
+    '2025-10-10',
+    '2025-10-11',
+    '2025-10-12',
+    '2025-10-13',
+    '2025-10-14',
+    '2025-10-15',
+    '2025-10-16',
+    '2025-10-17',
+    '2025-10-18',
+    '2025-10-19',
+    '2025-10-20',
+    '2025-10-21',
+    '2025-10-22',
+    '2025-10-23',
+    '2025-10-24',
+    '2025-10-25',
+    '2025-10-26',
+    '2025-10-27',
+    '2025-10-28',
+    '2025-10-29',
+    '2025-10-30',
+    '2025-10-31',
+    '2025-11-01',
+    '2025-11-02',
+    '2025-11-03',
+    '2025-11-04',
+    '2025-11-05',
+    '2025-11-06',
+    '2025-11-07',
+    '2025-11-08',
+    '2025-11-09',
+    '2025-11-10',
+    '2025-11-11',
+    '2025-11-12',
+    '2025-11-13',
+    '2025-11-14',
+    '2025-11-15',
+    '2025-11-16',
+    '2025-11-17',
+    '2025-11-18',
+    '2025-11-19',
+    '2025-11-20',
+    '2025-11-21',
+    '2025-11-22',
+    '2025-11-23',
+    '2025-11-24',
+    '2025-11-25',
+    '2025-11-26',
+    '2025-11-27',
+    '2025-11-28',
+    '2025-11-29',
+    '2025-11-30',
+    '2025-12-01',
+    '2025-12-02',
+    '2025-12-03',
+    '2025-12-04',
+    '2025-12-05',
+    '2025-12-06',
+    '2025-12-07',
+    '2025-12-08',
+    '2025-12-09',
+    '2025-12-10',
+    '2025-12-11',
+    '2025-12-12',
+    '2025-12-13',
+    '2025-12-14',
+    '2025-12-15',
+    '2025-12-16',
+    '2025-12-17',
+    '2025-12-18',
+    '2025-12-19',
+    '2025-12-20',
+    '2025-12-21',
+    '2025-12-22',
+    '2025-12-23',
+    '2025-12-24',
+    '2025-12-25',
+    '2025-12-26',
+    '2025-12-27',
+    '2025-12-28',
+    '2025-12-29',
+    '2025-12-30',
+    '2025-12-31',
+]
+
+let _patternEntries = []
 
 const weightSteps = [500, 600, 700, 800]
 
 function hashString(input) {
-	let hash = 0
-	for (let i = 0; i < input.length; i++) {
-		hash = (hash << 5) - hash + input.charCodeAt(i)
-		hash |= 0
-	}
-	return hash
+    let hash = 0
+    for (let i = 0; i < input.length; i++) {
+        hash = (hash << 5) - hash + input.charCodeAt(i)
+        hash |= 0
+    }
+    return hash
 }
 
-const nameSet = new Set()
-Object.values(gameFiles).forEach((file) => {
-	const players = Array.isArray(file?.players) ? file.players : []
-	players.forEach((p) => {
-		if (p?.name) {
-			nameSet.add(p.name)
-		}
-	})
-})
+onMount(async () => {
+    const nameSet = new Set()
 
-const playerNames = Array.from(nameSet).slice(0, 120)
+    // Load a sample of game files to extract player names (limit to avoid too many requests)
+    const sampleDates = gameDates.filter((_, i) => i % 5 === 0) // Every 5th date
 
-// Build lightweight entries with deterministic weight per name
-const patternEntries = [...playerNames, ...playerNames].map((name, idx) => {
-	const weight = weightSteps[Math.abs(hashString(name)) % weightSteps.length]
-	return {
-		name,
-		offset: (idx % 3) * 6,
-		rotation: -6,
-		weight
-	}
+    for (const date of sampleDates) {
+        try {
+            const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
+            if (data?.players) {
+                data.players.forEach((p) => {
+                    if (p?.name) {
+                        nameSet.add(p.name)
+                    }
+                })
+            }
+        } catch (_e) {
+            // Skip errors, just continue with other dates
+        }
+    }
+
+    const playerNames = Array.from(nameSet).slice(0, 120)
+
+    // Build lightweight entries with deterministic weight per name
+    _patternEntries = [...playerNames, ...playerNames].map((name, idx) => {
+        const weight = weightSteps[Math.abs(hashString(name)) % weightSteps.length]
+        return {
+            name,
+            offset: (idx % 3) * 6,
+            rotation: -6,
+            weight,
+        }
+    })
 })
 </script>
 

@@ -2,7 +2,7 @@
 import { base } from '$app/paths'
 
 export let team
-export let size = '24'
+export const size = '48'
 
 // Use local NHL team logos (with base path) to avoid remote fetches
 

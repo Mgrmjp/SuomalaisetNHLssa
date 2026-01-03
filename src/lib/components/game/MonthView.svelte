@@ -1,11 +1,5 @@
 <script>
-import {
-    formatDate,
-    setDate,
-    selectedDate,
-    currentDateReadOnly,
-    availableDates,
-} from '$lib/stores/gameData.js'
+import { currentDateReadOnly, formatDate, selectedDate, setDate } from '$lib/stores/gameData.js'
 
 // Generate calendar days for the current selected date's month
 $: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly))
@@ -68,7 +62,7 @@ function generateCalendarDays(selectedDateStr) {
     while (current <= endDate) {
         const dateStr = formatDate(current)
         const hasData = $availableDates.includes(dateStr)
-        
+
         // Test data for demonstration (remove in production)
         const testData = {
             '2024-10-25': 3,
@@ -79,7 +73,7 @@ function generateCalendarDays(selectedDateStr) {
             '2024-10-15': 1,
             '2024-10-12': 3,
         }
-        let finnishScorers = testData[dateStr] || 0
+        const finnishScorers = testData[dateStr] || 0
 
         days.push({
             date: new Date(current),

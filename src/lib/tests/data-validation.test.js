@@ -3,15 +3,13 @@
  * Comprehensive tests for data validation, edge cases, and error scenarios
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { isValidDateFormat, isWithinNhlSeasonRange } from '../../nhl-api-node.js'
 import {
-    mockGameData,
-    mockFinnishPlayers,
-    mockGameScores,
-    setupApiTestEnvironment,
-    assertValidPlayer,
     assertValidGameData,
+    assertValidPlayer,
+    mockGameData,
+    setupApiTestEnvironment,
 } from './apiTestUtils.js'
 
 describe('Data Validation', () => {
@@ -240,7 +238,7 @@ describe('Data Validation', () => {
             ]
 
             mockGameData.forEach((player) => {
-                const isFinnish = finnishNames.some((name) =>
+                const _isFinnish = finnishNames.some((name) =>
                     player.name.toLowerCase().includes(name.toLowerCase())
                 )
                 // This is a basic check - in real implementation, we'd use nationality field

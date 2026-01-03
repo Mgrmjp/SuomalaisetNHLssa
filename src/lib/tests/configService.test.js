@@ -6,15 +6,15 @@
  */
 
 import {
-    initializeConfig,
-    getConfig,
     getApiConfig,
     getBusinessConfig,
-    getUiConfig,
-    isFinnishNationalityCode,
+    getConfig,
+    getConfigHealth,
     getPlayerApiUrl,
     getTeamLogoUrl,
-    getConfigHealth,
+    getUiConfig,
+    initializeConfig,
+    isFinnishNationalityCode,
     reloadConfig,
 } from '$lib/services/configService.js'
 

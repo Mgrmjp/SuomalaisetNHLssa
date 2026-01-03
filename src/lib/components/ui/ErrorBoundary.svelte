@@ -1,6 +1,5 @@
 <script>
 import { onMount } from 'svelte'
-import { fade, fly, slide } from 'svelte/transition'
 
 export let error = null
 export let errorInfo = null

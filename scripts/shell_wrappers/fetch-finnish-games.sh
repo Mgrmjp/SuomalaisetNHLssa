@@ -9,7 +9,7 @@ echo "🏒 Fetching Finnish NHL players data"
 echo "Date range: $START_DATE to $END_DATE"
 echo ""
 
-# Create output directory
+# Create output directory (at project root, not scripts/)
 mkdir -p data/prepopulated/games
 
 # Loop through dates
@@ -19,7 +19,7 @@ end_date=$(date -d "$END_DATE" +%Y-%m-%d)
 while [ "$(date -d "$current_date" +%Y%m%d)" -le "$(date -d "$end_date" +%Y%m%d)" ]; do
     echo "Processing $current_date..."
 
-    python3 scripts/data_collection/finnish/fetch.py "$current_date"
+    .venv/bin/python3 scripts/data_collection/finnish/fetch.py "$current_date"
 
     # Move to next day
     current_date=$(date -d "$current_date + 1 day" +%Y-%m-%d)

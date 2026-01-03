@@ -4,28 +4,27 @@
 // @ts-nocheck
 
 import { isValidDateFormat } from '$lib/api/nhlApi.js'
-import { formatDate } from '$lib/utils/dateHelpers.js'
 import playerDetectionService from '$lib/services/playerDetectionService.js'
+import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
+import { formatDate } from '$lib/utils/dateHelpers.js'
 import logger from '$lib/utils/logger.js'
 
 // API configuration removed - using only prepopulated data
-
 
 /**
  * Get Finnish player IDs for tracking
  * @returns {Promise<Set<number>>} Set of Finnish player IDs
  */
-async function getFinnishPlayerIds() {
+async function _getFinnishPlayerIds() {
     return await playerDetectionService.getFinnishPlayerIds()
 }
-
 
 /**
  * Check if a player ID is Finnish
  * @param {number} playerId - Player ID to check
  * @returns {Promise<boolean>} True if player is Finnish
  */
-async function hasFinnishPlayerId(playerId) {
+async function _hasFinnishPlayerId(playerId) {
     return await playerDetectionService.isFinnishPlayer(playerId)
 }
 
@@ -34,7 +33,7 @@ async function hasFinnishPlayerId(playerId) {
  * @param {number} playerId - Player ID
  * @returns {Promise<Object|null>} Finnish player info or null
  */
-async function getFinnishPlayerById(playerId) {
+async function _getFinnishPlayerById(playerId) {
     return await playerDetectionService.getFinnishPlayerById(playerId)
 }
 
@@ -50,20 +49,12 @@ async function getFinnishPlayerById(playerId) {
  * @returns {Promise<any[]>} Array of Finnish player performances from pre-populated data
  */
 async function loadPrepopulatedData(date) {
-    try {
-        const response = await fetch(`/data/prepopulated/games/${date}.json`)
-
-        if (!response.ok) {
-            return null
-        }
-
-        const data = await response.json()
+    const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
+    if (data) {
         logger.log(`📁 Loaded pre-populated data for ${date}: ${data.total_players} players`)
         return data.players || []
-    } catch (error) {
-        logger.debug(`No pre-populated data found for ${date}:`, error.message)
-        return null
     }
+    return null
 }
 
 /**
@@ -72,20 +63,14 @@ async function loadPrepopulatedData(date) {
  * @returns {Promise<Object|null>} Full data object including players and games or null
  */
 async function loadFullPrepopulatedData(date) {
-    try {
-        const response = await fetch(`/data/prepopulated/games/${date}.json`)
-
-        if (!response.ok) {
-            return null
-        }
-
-        const data = await response.json()
-        logger.log(`📁 Loaded full pre-populated data for ${date}: ${data.total_players} players, ${data.games?.length || 0} games`)
+    const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
+    if (data) {
+        logger.log(
+            `📁 Loaded full pre-populated data for ${date}: ${data.total_players} players, ${data.games?.length || 0} games`
+        )
         return data
-    } catch (error) {
-        logger.debug(`No pre-populated data found for ${date}:`, error.message)
-        return null
     }
+    return null
 }
 
 /**
@@ -95,30 +80,21 @@ async function loadFullPrepopulatedData(date) {
 export async function getAvailablePrepopulatedDates() {
     const availableDates = []
 
-    try {
-        // Check for known pre-populated dates
-        const datesToCheck = ['2025-11-08', '2025-11-09', '2025-11-13']
+    // Check for known pre-populated dates
+    const datesToCheck = ['2025-11-08', '2025-11-09', '2025-11-13']
 
-        for (const date of datesToCheck) {
-            try {
-                const response = await fetch(`/data/prepopulated/games/${date}.json`)
-                if (response.ok) {
-                    availableDates.push(date)
-                }
-            } catch (error) {
-                logger.debug(`No pre-populated data found for ${date}`)
-            }
+    for (const date of datesToCheck) {
+        const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
+        if (data) {
+            availableDates.push(date)
         }
-
-        if (availableDates.length > 0) {
-            logger.log(`📅 Available pre-populated dates: ${availableDates.join(', ')}`)
-        }
-
-        return availableDates.sort()
-    } catch (error) {
-        logger.debug('Error checking pre-populated dates:', error.message)
-        return []
     }
+
+    if (availableDates.length > 0) {
+        logger.log(`📅 Available pre-populated dates: ${availableDates.join(', ')}`)
+    }
+
+    return availableDates.sort()
 }
 
 /**
@@ -172,15 +148,15 @@ export async function getGamesForDate(date) {
 
     // Load full pre-populated data to get games
     const fullData = await loadFullPrepopulatedData(date)
-    if (fullData && fullData.games) {
+    if (fullData?.games) {
         logger.log(`✅ Using games data for ${date}: ${fullData.games.length} games`)
 
         // Create a lookup function to find games by ID
-        const gamesMap = new Map(fullData.games.map(game => [game.gameId, game]))
+        const gamesMap = new Map(fullData.games.map((game) => [game.gameId, game]))
 
         return {
             games: fullData.games,
-            findGameById: (gameId) => gamesMap.get(gameId) || null
+            findGameById: (gameId) => gamesMap.get(gameId) || null,
         }
     }
 
@@ -200,7 +176,6 @@ export async function getFinnishRoster() {
     logger.log(`✅ Found ${players.length} Finnish players in roster`)
     return players
 }
-
 
 /**
  * Get recent dates that might have data

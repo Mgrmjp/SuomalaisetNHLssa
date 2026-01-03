@@ -8,8 +8,10 @@
       "homeScore": 4,
       "awayScore": 1,
       "gameState": "OFF",
+      "gameType": 2,
       "startTime": "2025-10-22T23:00:00Z",
-      "finnish_players_count": 0
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
     },
     {
       "gameId": 2025020109,
@@ -18,8 +20,10 @@
       "homeScore": 4,
       "awayScore": 2,
       "gameState": "OFF",
+      "gameType": 2,
       "startTime": "2025-10-22T23:30:00Z",
-      "finnish_players_count": 0
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
     },
     {
       "gameId": 2025020110,
@@ -28,13 +32,14 @@
       "homeScore": 1,
       "awayScore": 2,
       "gameState": "OFF",
+      "gameType": 2,
       "startTime": "2025-10-23T00:30:00Z",
-      "finnish_players_count": 0
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
     }
   ],
   "players": [],
   "total_players": 0,
-  "total_games": 3,
-  "generated_at": "2025-11-22T18:10:24.657949",
-  "source": "NHL API - Finnish Players Only (Cached)"
+  "generated_at": "2026-01-01T14:25:42.817015",
+  "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
