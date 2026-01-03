@@ -1,37 +1,36 @@
 """
 Finnish text normalization utilities for player and city names.
-Handles auto-correction of ASCII approximations to proper Finnish letters (ä, ö, å) using Google Gemini Flash LLM.
+Handles auto-correction of ASCII approximations to proper Finnish letters (ä, ö, å) using OpenAI gpt-5-nano.
 """
 
 import os
-import google.generativeai as genai
+from openai import OpenAI
 
-_gemini_client = None
+_openai_client = None
 _correction_cache = {}  # Cache corrections to avoid duplicate API calls
 
 
-def get_gemini_client():
-    """Initialize Gemini client (lazy loading)."""
-    global _gemini_client
-    if _gemini_client is None:
-        api_key = os.environ.get("GEMINI_API_KEY")
+def get_openai_client():
+    """Initialize OpenAI client (lazy loading)."""
+    global _openai_client
+    if _openai_client is None:
+        api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
-            raise ValueError("GEMINI_API_KEY environment variable not set")
-        genai.configure(api_key=api_key)
-        _gemini_client = genai.GenerativeModel('gemini-2.0-flash-exp')
-    return _gemini_client
+            raise ValueError("OPENAI_API_KEY environment variable not set")
+        _openai_client = OpenAI(api_key=api_key)
+    return _openai_client
 
 
-def correct_with_gemini(text, context_type="city"):
+def correct_with_openai(text, context_type="city"):
     """
-    Use Gemini Flash LLM to validate/correct Finnish text.
+    Use OpenAI gpt-5-nano to validate/correct Finnish text.
 
     Args:
         text: Text to validate/correct
         context_type: "city" or "name" for prompt context
 
     Returns:
-        Corrected text from Gemini LLM
+        Corrected text from OpenAI
     """
     if not text or not isinstance(text, str):
         return text
@@ -41,7 +40,7 @@ def correct_with_gemini(text, context_type="city"):
     if cache_key in _correction_cache:
         return _correction_cache[cache_key]
 
-    client = get_gemini_client()
+    client = get_openai_client()
 
     prompt = f"""You are a Finnish language expert. Determine if this {context_type} name needs Finnish letter corrections (ä, ö, å).
 
@@ -71,28 +70,17 @@ Juuse -> Juuse
 
 Output:"""
 
-    response = client.generate_content(
-        prompt,
-        generation_config=genai.types.GenerationConfig(
-            temperature=0.1,
-            max_output_tokens=50,
-        )
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.1,
+        max_tokens=50
     )
 
-    # Handle response safely - check if response is valid
-    if not response.candidates or len(response.candidates) == 0:
+    if not response.choices or not response.choices[0].message.content:
         return text
 
-    candidate = response.candidates[0]
-
-    # Check finish reason - 2 means SAFETY/other issue
-    if candidate.finish_reason != 1:  # 1 = STOP (normal completion)
-        return text
-
-    if not candidate.content or not candidate.content.parts:
-        return text
-
-    corrected = candidate.content.parts[0].text.strip()
+    corrected = response.choices[0].message.content.strip()
 
     # Clean up any extra text LLM might add (take first line or first word)
     if '\n' in corrected:
@@ -121,7 +109,7 @@ Output:"""
 
 def correct_finnish_name(name_dict):
     """
-    Correct Finnish player name using Gemini Flash LLM.
+    Correct Finnish player name using OpenAI.
 
     Args:
         name_dict: Dict like {'default': 'Parssinen', 'fi': 'Pärssinen'}
@@ -132,17 +120,17 @@ def correct_finnish_name(name_dict):
     if not name_dict or not isinstance(name_dict, dict):
         return ""
 
-    # Use default locale as input (Gemini will handle correction)
+    # Use default locale as input (OpenAI will handle correction)
     default = name_dict.get('default', '')
     if not default:
         return ""
 
-    return correct_with_gemini(default, "name")
+    return correct_with_openai(default, "name")
 
 
 def correct_finnish_city(city_dict):
     """
-    Correct Finnish city name using Gemini Flash LLM.
+    Correct Finnish city name using OpenAI.
 
     Args:
         city_dict: Dict like {'default': 'Siilinjarvi', 'fi': 'Siilinjärvi'}
@@ -153,12 +141,12 @@ def correct_finnish_city(city_dict):
     if not city_dict or not isinstance(city_dict, dict):
         return ""
 
-    # Use default locale as input (Gemini will handle correction)
+    # Use default locale as input (OpenAI will handle correction)
     default = city_dict.get('default', '')
     if not default:
         return ""
 
-    return correct_with_gemini(default, "city")
+    return correct_with_openai(default, "city")
 
 
 def normalize_finnish_player_data(player_data):
