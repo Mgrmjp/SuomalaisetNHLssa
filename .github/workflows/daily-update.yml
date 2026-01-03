@@ -34,11 +34,9 @@ jobs:
           pip install -r scripts/data_collection/requirements.txt
 
       - name: Fetch today's data
-        env:
-          PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
         run: |
           export PERPLEXITY_API_KEY="${{ secrets.PERPLEXITY_API_KEY }}"
-          . .venv/bin/activate
+          source .venv/bin/activate
           python scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d)
 
       - name: Commit and push updated data
