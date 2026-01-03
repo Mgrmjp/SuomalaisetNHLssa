@@ -5,6 +5,7 @@ import { base } from '$app/paths'
 import { games } from '$lib/stores/gameData.js'
 import { formatGameMatchup, formatGameVenue } from '$lib/utils/gameFormatHelpers.mjs'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
+import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import './PlayerCard.css'
 
@@ -171,7 +172,8 @@ function _handleCardClick(event) {
 }
 
 $: displayName = player.name?.default || player.name || 'Unknown Player'
-$: isLive = player.game_status === 'Live' || player.game_status === 'In Progress'
+$: isLive = isPlayerGameLive(player, gamesData)
+$: showResult = shouldShowGameResult(player, gamesData)
 $: teamWithCity = getTeamWithCity(player.team || 'NHL')
 $: opponentWithCity = getTeamWithCity(player.opponent || 'NHL')
 $: playerHeadshot = playerPhotoUrl
@@ -673,7 +675,7 @@ function getSavePercentage(player) {
                         class="player-card__footer mt-auto flex items-center justify-between pt-3 border-t border-gray-100"
                     >
                         <!-- Enhanced Result Indicator -->
-                        {#if gameResult}
+                        {#if showResult && gameResult}
                             <div class="relative group">
                                 <div
                                     class={`w-6 h-6 rounded-lg ${resultIndicator.bg} ${resultIndicator.textColor} flex items-center justify-center text-xs font-bold shadow-lg transition-all duration-200`}
@@ -902,7 +904,7 @@ function getSavePercentage(player) {
                             class="player-card__footer mt-auto flex items-center justify-between pt-3 border-t border-gray-100"
                         >
                             <!-- Enhanced Result Indicator -->
-                            {#if gameResult}
+                            {#if showResult && gameResult}
                                 <div class="relative group">
                                     <div
                                         class={`w-6 h-6 rounded-lg ${resultIndicator.bg} ${resultIndicator.textColor} flex items-center justify-center text-xs font-bold shadow-lg transition-all duration-200`}

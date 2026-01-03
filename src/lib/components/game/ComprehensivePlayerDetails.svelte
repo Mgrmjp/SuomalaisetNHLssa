@@ -1,5 +1,7 @@
 <script>
 import { base } from '$app/paths'
+import { games } from '$lib/stores/gameData.js'
+import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
 
 export let player
 export let showComprehensiveDetails = false
@@ -96,7 +98,8 @@ function _toggleSeasonStats(event) {
 }
 
 $: displayName = player.name?.default || player.name || 'Unknown Player'
-$: isLive = player.game_status === 'Live' || player.game_status === 'In Progress'
+$: gamesData = $games
+$: isLive = isPlayerGameLive(player, gamesData)
 $: headshotUrl = player.headshot_url || null
 $: playerInitials = displayName
     .split(' ')
