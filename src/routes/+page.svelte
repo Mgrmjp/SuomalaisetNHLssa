@@ -17,6 +17,8 @@ import {
     setDate
 } from '$lib/stores/gameData.js'
 
+import { get } from 'svelte/store'
+
 const _sparkles = Array.from({ length: 28 }, () => ({
     left: `${Math.random() * 100}%`,
     top: `${Math.random() * 90}%`,
@@ -41,8 +43,9 @@ onMount(() => {
 
     // Use the latest available date - this is the most recent data we have
     // If latestPrepopulatedDate is not yet loaded, it defaults to '2026-01-03'
-    if (latestPrepopulatedDate) {
-        setDate(latestPrepopulatedDate)
+    const latestDate = get(latestPrepopulatedDate)
+    if (latestDate) {
+        setDate(latestDate)
     }
 })
 </script>
