@@ -4,8 +4,7 @@ Handles auto-correction of ASCII approximations to proper Finnish letters (Ã¤, Ã
 """
 
 import os
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 
 _gemini_client = None
 _correction_cache = {}  # Cache corrections to avoid duplicate API calls
@@ -18,7 +17,8 @@ def get_gemini_client():
         api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
             raise ValueError("GEMINI_API_KEY environment variable not set")
-        _gemini_client = genai.Client(api_key=api_key)
+        genai.configure(api_key=api_key)
+        _gemini_client = genai.GenerativeModel('gemini-2.0-flash-exp')
     return _gemini_client
 
 
@@ -71,20 +71,28 @@ Juuse -> Juuse
 
 Output:"""
 
-    response = client.models.generate_content(
-        model='gemini-3-flash-preview',
-        contents=prompt,
-        config=types.GenerateContentConfig(
+    response = client.generate_content(
+        prompt,
+        generation_config=genai.types.GenerationConfig(
             temperature=0.1,
             max_output_tokens=50,
         )
     )
 
-    # Handle response safely
-    if not response or not response.candidates or not response.candidates[0].content:
+    # Handle response safely - check if response is valid
+    if not response.candidates or len(response.candidates) == 0:
         return text
 
-    corrected = response.candidates[0].content.parts[0].text.strip()
+    candidate = response.candidates[0]
+
+    # Check finish reason - 2 means SAFETY/other issue
+    if candidate.finish_reason != 1:  # 1 = STOP (normal completion)
+        return text
+
+    if not candidate.content or not candidate.content.parts:
+        return text
+
+    corrected = candidate.content.parts[0].text.strip()
 
     # Clean up any extra text LLM might add (take first line or first word)
     if '\n' in corrected:
