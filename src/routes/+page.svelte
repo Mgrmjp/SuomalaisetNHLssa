@@ -34,22 +34,16 @@ $: totalPenaltyMinutes =
     $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
 $: totalPlayers = $players?.length || 0
 
-// Default to last night's games on first load
+// Default to the latest prepopulated date on first load
 onMount(() => {
     // Avoid reloading if user already selected a date
     if ($selectedDate) return
 
-    const today = formatDate($currentDateReadOnly)
-    const lastNight = new Date(today)
-    lastNight.setDate(lastNight.getDate() - 1)
-    const desiredDate = formatDate(lastNight)
-    // Clamp to the latest prepopulated date to avoid 404s when data lags behind current time
-    const clampedDate =
-        latestPrepopulatedDate &&
-        new Date(`${desiredDate}T00:00:00`) > new Date(`${latestPrepopulatedDate}T00:00:00`)
-            ? latestPrepopulatedDate
-            : desiredDate
-    setDate(clampedDate)
+    // Use the latest available date - this is the most recent data we have
+    // If latestPrepopulatedDate is not yet loaded, it defaults to '2026-01-03'
+    if (latestPrepopulatedDate) {
+        setDate(latestPrepopulatedDate)
+    }
 })
 </script>
 
