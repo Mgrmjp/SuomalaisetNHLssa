@@ -74,7 +74,7 @@ Juuse -> Juuse
 Output:"""
 
     response = client.chat.completions.create(
-        model="llama-3.1-sonar-small-128k-chat",
+        model="sonar-small-online",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
         max_tokens=50
