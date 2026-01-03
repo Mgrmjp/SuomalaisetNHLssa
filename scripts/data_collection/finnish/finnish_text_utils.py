@@ -1,39 +1,37 @@
 """
 Finnish text normalization utilities for player and city names.
-Handles auto-correction of ASCII approximations to proper Finnish letters (ä, ö, å) using Perplexity LLM.
+Handles auto-correction of ASCII approximations to proper Finnish letters (ä, ö, å) using Google Gemini Flash LLM.
 """
 
 import os
-from openai import OpenAI
+import google.generativeai as genai
 
-_perplexity_client = None
+_gemini_client = None
 _correction_cache = {}  # Cache corrections to avoid duplicate API calls
 
 
-def get_perplexity_client():
-    """Initialize Perplexity client (lazy loading)."""
-    global _perplexity_client
-    if _perplexity_client is None:
-        api_key = os.environ.get("PERPLEXITY_API_KEY")
+def get_gemini_client():
+    """Initialize Gemini client (lazy loading)."""
+    global _gemini_client
+    if _gemini_client is None:
+        api_key = os.environ.get("GEMINI_API_KEY")
         if not api_key:
-            raise ValueError("PERPLEXITY_API_KEY environment variable not set")
-        _perplexity_client = OpenAI(
-            api_key=api_key,
-            base_url="https://api.perplexity.ai"
-        )
-    return _perplexity_client
+            raise ValueError("GEMINI_API_KEY environment variable not set")
+        genai.configure(api_key=api_key)
+        _gemini_client = genai.GenerativeModel('gemini-3-flash-preview')
+    return _gemini_client
 
 
-def correct_with_perplexity(text, context_type="city"):
+def correct_with_gemini(text, context_type="city"):
     """
-    Use Perplexity LLM to validate/correct Finnish text.
+    Use Gemini Flash LLM to validate/correct Finnish text.
 
     Args:
         text: Text to validate/correct
         context_type: "city" or "name" for prompt context
 
     Returns:
-        Corrected text from Perplexity LLM
+        Corrected text from Gemini LLM
     """
     if not text or not isinstance(text, str):
         return text
@@ -43,7 +41,7 @@ def correct_with_perplexity(text, context_type="city"):
     if cache_key in _correction_cache:
         return _correction_cache[cache_key]
 
-    client = get_perplexity_client()
+    client = get_gemini_client()
 
     prompt = f"""You are a Finnish language expert. Determine if this {context_type} name needs Finnish letter corrections (ä, ö, å).
 
@@ -73,13 +71,14 @@ Juuse -> Juuse
 
 Output:"""
 
-    response = client.chat.completions.create(
-        model="sonar-small-online",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.1,
-        max_tokens=50
+    response = client.generate_content(
+        prompt,
+        generation_config=genai.types.GenerationConfig(
+            temperature=0.1,
+            max_output_tokens=50,
+        )
     )
-    corrected = response.choices[0].message.content.strip()
+    corrected = response.text.strip()
 
     # Clean up any extra text LLM might add (take first line or first word)
     if '\n' in corrected:
@@ -108,7 +107,7 @@ Output:"""
 
 def correct_finnish_name(name_dict):
     """
-    Correct Finnish player name using Perplexity LLM.
+    Correct Finnish player name using Gemini Flash LLM.
 
     Args:
         name_dict: Dict like {'default': 'Parssinen', 'fi': 'Pärssinen'}
@@ -119,17 +118,17 @@ def correct_finnish_name(name_dict):
     if not name_dict or not isinstance(name_dict, dict):
         return ""
 
-    # Use default locale as input (Perplexity will handle correction)
+    # Use default locale as input (Gemini will handle correction)
     default = name_dict.get('default', '')
     if not default:
         return ""
 
-    return correct_with_perplexity(default, "name")
+    return correct_with_gemini(default, "name")
 
 
 def correct_finnish_city(city_dict):
     """
-    Correct Finnish city name using Perplexity LLM.
+    Correct Finnish city name using Gemini Flash LLM.
 
     Args:
         city_dict: Dict like {'default': 'Siilinjarvi', 'fi': 'Siilinjärvi'}
@@ -140,12 +139,12 @@ def correct_finnish_city(city_dict):
     if not city_dict or not isinstance(city_dict, dict):
         return ""
 
-    # Use default locale as input (Perplexity will handle correction)
+    # Use default locale as input (Gemini will handle correction)
     default = city_dict.get('default', '')
     if not default:
         return ""
 
-    return correct_with_perplexity(default, "city")
+    return correct_with_gemini(default, "city")
 
 
 def normalize_finnish_player_data(player_data):
