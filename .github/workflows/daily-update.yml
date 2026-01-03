@@ -17,6 +17,8 @@ permissions:
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -35,7 +37,6 @@ jobs:
 
       - name: Fetch today's data
         run: |
-          export PERPLEXITY_API_KEY="${{ secrets.PERPLEXITY_API_KEY }}"
           source .venv/bin/activate
           python scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d)
 
