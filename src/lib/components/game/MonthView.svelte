@@ -99,7 +99,7 @@
     <div class="flex items-center justify-between mb-3">
         <button
             class="p-1 rounded bg-finnish-blue-500 text-white hover:bg-finnish-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-xs"
-            on:click={() => _navigateMonth("prev")}
+            onclick={() => _navigateMonth("prev")}
             disabled={currentMonth.getMonth() === $currentDateReadOnly.getMonth() &&
                 currentMonth.getFullYear() === $currentDateReadOnly.getFullYear()}
         >
@@ -108,7 +108,7 @@
         <h2 class="text-base font-bold text-gray-900">{_getMonthYearDisplay()}</h2>
         <button
             class="p-1 rounded bg-finnish-blue-500 text-white hover:bg-finnish-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-xs"
-            on:click={() => _navigateMonth("next")}
+            onclick={() => _navigateMonth("next")}
             disabled={currentMonth.getMonth() === $currentDateReadOnly.getMonth() &&
                 currentMonth.getFullYear() === $currentDateReadOnly.getFullYear()}
         >
@@ -135,9 +135,8 @@
                     class="relative aspect-square p-0.5 rounded-lg text-center transition-all duration-200 text-xs font-semibold flex flex-col items-center justify-center"
                     class:opacity-20={!day.isCurrentMonth}
                     class:bg-finnish-blue-500={day.isToday && !day.isSelected}
-                    class:text-white={day.isToday && !day.isSelected}
                     class:bg-finnish-blue-800={day.isSelected}
-                    class:text-white={day.isSelected}
+                    class:text-white={day.isToday || day.isSelected}
                     class:shadow-lg={day.isSelected}
                     class:scale-105={day.isSelected}
                     class:z-10={day.isSelected}
@@ -145,7 +144,7 @@
                     class:hover:bg-gray-100={!day.isFuture && !day.isSelected}
                     class:cursor-not-allowed={day.isFuture}
                     disabled={day.isFuture}
-                    on:click={() => _selectDate(day.dateStr)}
+                    onclick={() => _selectDate(day.dateStr)}
                     title={day.hasData ? "Pelejä tänä päivänä" : "Ei pelejä"}
                 >
                     <span>{day.date.getDate()}</span>

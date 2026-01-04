@@ -157,7 +157,7 @@
         <div class="flex items-center gap-3 md:gap-4 flex-wrap">
             <button
                 type="button"
-                on:click={_goToPreviousDay}
+                onclick={_goToPreviousDay}
                 class="nav-btn"
                 disabled={isPrevDisabled}
                 aria-label="Edellinen päivä"
@@ -184,7 +184,7 @@
                     <div class="flex gap-2">
                         <button
                             type="button"
-                            on:click={_toggleCalendar}
+                            onclick={_toggleCalendar}
                             class="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 bg-gray-50 rounded-lg transition-all duration-200 border border-gray-100 flex items-center justify-center"
                             title="Näytä kalenteri"
                         >
@@ -204,7 +204,7 @@
                         </button>
                         <button
                             type="button"
-                            on:click={_goToToday}
+                            onclick={_goToToday}
                             class="px-4 py-2 text-sm font-semibold text-white rounded-lg gradient-button-primary gradient-button-primary--hover:scale cursor-pointer shadow-sm"
                         >
                             Tänään
@@ -238,7 +238,7 @@
 
             <button
                 type="button"
-                on:click={_goToNextDay}
+                onclick={_goToNextDay}
                 class="nav-btn"
                 disabled={isNextDisabled}
                 aria-label="Seuraava päivä"

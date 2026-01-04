@@ -1,4 +1,4 @@
-import { derived, readable, readonly, writable } from 'svelte/store'
+import { derived, get, readable, readonly, writable } from 'svelte/store'
 
 import { getFinnishPlayersForDate, getGamesForDate } from '$lib/services/dataService.js'
 import { StandingsService } from '$lib/services/standingsService.js'
@@ -379,4 +379,21 @@ export async function loadPlayersForDate(date) {
 export async function setDate(date) {
     selectedDateStore.set(date)
     return await loadPlayersForDate(date)
+}
+
+/**
+ * Reset the application to its default state
+ * (latest date, players view, calendar closed)
+ */
+export async function resetToDefault() {
+    const latestDate = get(latestPrepopulatedDate)
+    
+    // Reset view and calendar
+    selectedViewStore.set('players')
+    showCalendarView.set(false)
+    
+    // Reset date (this will also trigger loadPlayersForDate)
+    if (latestDate) {
+        return await setDate(latestDate)
+    }
 }
