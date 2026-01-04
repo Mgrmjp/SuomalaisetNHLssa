@@ -128,7 +128,7 @@ function calculateAdvancedStats(stats) {
         .join("; ")}
 >
     <!-- Rank -->
-    <td class="px-3 py-3 text-sm font-medium text-gray-900 text-center w-12">
+    <td class="px-3 py-3 text-sm font-medium text-gray-900 text-center w-12 sticky left-0 z-10 bg-white border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
         <div class="flex items-center justify-center">
             <span class="text-gray-600">
                 {rank}
@@ -140,7 +140,7 @@ function calculateAdvancedStats(stats) {
     </td>
 
     <!-- Team -->
-    <td class="px-3 py-3 text-sm">
+    <td class="px-3 py-3 text-sm sticky left-12 z-10 bg-white border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
         <div class="flex items-center space-x-3">
             <div class="flex-shrink-0">
                 <TeamLogo {team} size="24" />

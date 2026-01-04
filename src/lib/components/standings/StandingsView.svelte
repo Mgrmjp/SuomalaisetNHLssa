@@ -1,74 +1,80 @@
 <script>
-import { onMount } from 'svelte'
-// biome-ignore lint/correctness/noUnusedImports: used in template
-import ConferenceStandings from '$lib/components/standings/ConferenceStandings.svelte'
-// biome-ignore lint/correctness/noUnusedImports: used for types/stores
-import { loadStandings, standings, standingsLoading } from '$lib/stores/gameData.js'
+    import { onMount } from "svelte";
+    // biome-ignore lint/correctness/noUnusedImports: used in template
+    import ConferenceStandings from "$lib/components/standings/ConferenceStandings.svelte";
+    // biome-ignore lint/correctness/noUnusedImports: used for types/stores
+    import { loadStandings, standings, standingsLoading } from "$lib/stores/gameData.js";
+    import { getCurrentSeason } from "$lib/api/nhlApi.js";
 
-let _error = $state(null)
-// biome-ignore lint/style/useConst: Svelte 5 state
-let _activeConference = $state('eastern') // 'eastern' or 'western'
-// biome-ignore lint/style/useConst: Svelte 5 state
-let _showAdvancedStats = $state(false) // Advanced stats toggle
+    let _error = $state(null);
+    // biome-ignore lint/style/useConst: Svelte 5 state
+    let _activeConference = $state("eastern"); // 'eastern' or 'western'
+    // biome-ignore lint/style/useConst: Svelte 5 state
+    let _showAdvancedStats = $state(false); // Advanced stats toggle
 
-// Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
-let _loading = $state($standingsLoading)
+    // Get current season
+    const _currentSeason = getCurrentSeason();
 
-$effect(() => {
-    _loading = $standingsLoading
-    console.log('🔍 $effect fired:', {
-        _loading,
-        $standingsLoading,
-        hasAnyData,
-        easternKeys: Object.keys($standings?.eastern || {}).length,
-        westernKeys: Object.keys($standings?.western || {}).length,
-    })
-})
+    // Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
+    let _loading = $state($standingsLoading);
 
-// Conference data - using Svelte 5 $derived runes
-const easternConference = $derived($standings?.eastern || {})
-const westernConference = $derived($standings?.western || {})
-const hasEasternData = $derived(Object.keys(easternConference).length > 0)
-const hasWesternData = $derived(Object.keys(westernConference).length > 0)
-const hasAnyData = $derived(hasEasternData || hasWesternData)
+    $effect(() => {
+        _loading = $standingsLoading;
+        console.log("🔍 $effect fired:", {
+            _loading,
+            $standingsLoading,
+            hasAnyData,
+            easternKeys: Object.keys($standings?.eastern || {}).length,
+            westernKeys: Object.keys($standings?.western || {}).length,
+        });
+    });
 
-// Debug $derived
-$effect(() => {
-    console.log('🔍 $derived values:', {
-        hasAnyData,
-        hasEasternData,
-        hasWesternData,
-        _loading,
-        loadingCondition: _loading && !hasAnyData,
-    })
-})
+    // Conference data - using Svelte 5 $derived runes
+    const easternConference = $derived($standings?.eastern || {});
+    const westernConference = $derived($standings?.western || {});
+    const hasEasternData = $derived(Object.keys(easternConference).length > 0);
+    const hasWesternData = $derived(Object.keys(westernConference).length > 0);
+    const hasAnyData = $derived(hasEasternData || hasWesternData);
 
-// Load standings on component mount
-onMount(async () => {
-    try {
-        await loadStandings()
-    } catch (err) {
-        _error = /** @type {Error} */ (err).message || 'Failed to load standings'
-        console.error('Standings loading error:', err)
+    // Debug $derived
+    $effect(() => {
+        console.log("🔍 $derived values:", {
+            hasAnyData,
+            hasEasternData,
+            hasWesternData,
+            _loading,
+            loadingCondition: _loading && !hasAnyData,
+        });
+    });
+
+    // Load standings on component mount
+    onMount(async () => {
+        try {
+            await loadStandings();
+        } catch (err) {
+            _error = /** @type {Error} */ (err).message || "Failed to load standings";
+            console.error("Standings loading error:", err);
+        }
+    });
+
+    // Refresh standings
+    async function _refreshStandingsData() {
+        _error = null;
+        try {
+            await loadStandings();
+        } catch (err) {
+            _error = /** @type {Error} */ (err).message || "Failed to refresh standings";
+            console.error("Standings refresh error:", err);
+        }
     }
-})
-
-// Refresh standings
-async function _refreshStandingsData() {
-    _error = null
-    try {
-        await loadStandings()
-    } catch (err) {
-        _error = /** @type {Error} */ (err).message || 'Failed to refresh standings'
-        console.error('Standings refresh error:', err)
-    }
-}
 </script>
 
 <div class="standings-view">
     <!-- Header -->
     <div class="mb-8 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">NHL Sarjataulukot 2024-25</h1>
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+            NHL Sarjataulukot {_currentSeason}
+        </h1>
         <p class="text-gray-600 mb-6">Konferenssit ja divisioonat</p>
 
         {#if hasAnyData}

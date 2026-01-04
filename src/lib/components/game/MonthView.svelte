@@ -1,115 +1,111 @@
 <script>
-    // biome-ignore lint/correctness/noUnusedImports: used in template
-    import {
-        formatDate,
-        setDate,
-        showCalendarView,
-        selectedDate,
-        currentDateReadOnly,
-        availableDates,
-    } from "$lib/stores/gameData.js";
+// biome-ignore lint/correctness/noUnusedImports: used in template
+import {
+    formatDate,
+    setDate,
+    showCalendarView,
+    selectedDate,
+    currentDateReadOnly,
+    availableDates,
+} from '$lib/stores/gameData.js'
 
-    // Generate calendar days for the current selected date's month
-    $: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly));
-    $: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $currentDateReadOnly;
+// Generate calendar days for the current selected date's month
+$: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly))
+$: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $currentDateReadOnly
 
-    // Get the month and year display string
-    function _getMonthYearDisplay() {
-        return currentMonth.toLocaleDateString("fi-FI", {
-            month: "long",
-            year: "numeric",
-        });
+// Get the month and year display string
+function _getMonthYearDisplay() {
+    return currentMonth.toLocaleDateString('fi-FI', {
+        month: 'long',
+        year: 'numeric',
+    })
+}
+
+// Navigate between months
+/** @param {'prev' | 'next'} direction */
+function _navigateMonth(direction) {
+    const newMonth = new Date(currentMonth)
+    if (direction === 'prev') {
+        newMonth.setMonth(newMonth.getMonth() - 1)
+    } else {
+        newMonth.setMonth(newMonth.getMonth() + 1)
+        // Don't go beyond current date
+        if (newMonth > $currentDateReadOnly) return
     }
 
-    // Navigate between months
-    /** @param {'prev' | 'next'} direction */
-    function _navigateMonth(direction) {
-        const newMonth = new Date(currentMonth);
-        if (direction === "prev") {
-            newMonth.setMonth(newMonth.getMonth() - 1);
-        } else {
-            newMonth.setMonth(newMonth.getMonth() + 1);
-            // Don't go beyond current date
-            if (newMonth > $currentDateReadOnly) return;
-        }
+    // Keep the same day of month if possible, otherwise go to last day of month
+    const originalDay = currentMonth.getDate()
+    const daysInNewMonth = new Date(newMonth.getFullYear(), newMonth.getMonth() + 1, 0).getDate()
+    newMonth.setDate(Math.min(originalDay, daysInNewMonth))
 
-        // Keep the same day of month if possible, otherwise go to last day of month
-        const originalDay = currentMonth.getDate();
-        const daysInNewMonth = new Date(
-            newMonth.getFullYear(),
-            newMonth.getMonth() + 1,
-            0,
-        ).getDate();
-        newMonth.setDate(Math.min(originalDay, daysInNewMonth));
+    // Update the selected date
+    setDate(formatDate(newMonth))
+}
 
-        // Update the selected date
-        setDate(formatDate(newMonth));
+// Select a specific date
+/** @param {string} dateStr */
+function _selectDate(dateStr) {
+    setDate(dateStr)
+    showCalendarView.set(false)
+}
+
+/** @param {string} selectedDateStr */
+function generateCalendarDays(selectedDateStr) {
+    const date = new Date(`${selectedDateStr}T00:00:00`)
+    const year = date.getFullYear()
+    const month = date.getMonth()
+
+    // First day of month
+    const firstDay = new Date(year, month, 1)
+    // Last day of month
+    const lastDay = new Date(year, month + 1, 0)
+
+    // Start from Monday of the first week
+    const startDate = new Date(firstDay)
+    const dayOfWeek = firstDay.getDay() // 0-6 (Sun-Sat)
+    const diff = (dayOfWeek + 6) % 7 // distance from Monday (0=Mon, 6=Sun)
+    startDate.setDate(startDate.getDate() - diff)
+
+    // End on Sunday of the last week
+    const endDate = new Date(lastDay)
+    const endDayOfWeek = lastDay.getDay()
+    const endDiff = (7 - endDayOfWeek) % 7 // distance to Sunday
+    endDate.setDate(endDate.getDate() + endDiff)
+
+    const days = []
+    const current = new Date(startDate)
+
+    while (current <= endDate) {
+        const dateStr = formatDate(current)
+        const hasData = $availableDates.includes(dateStr)
+
+        days.push({
+            date: new Date(current),
+            dateStr,
+            isCurrentMonth: current.getMonth() === month,
+            isToday: formatDate(current) === formatDate($currentDateReadOnly),
+            isSelected: formatDate(current) === selectedDateStr,
+            hasData: hasData,
+            isFuture: current > $currentDateReadOnly,
+        })
+        current.setDate(current.getDate() + 1)
     }
 
-    // Select a specific date
-    /** @param {string} dateStr */
-    function _selectDate(dateStr) {
-        setDate(dateStr);
-        showCalendarView.set(false);
-    }
-
-    /** @param {string} selectedDateStr */
-    function generateCalendarDays(selectedDateStr) {
-        const date = new Date(`${selectedDateStr}T00:00:00`);
-        const year = date.getFullYear();
-        const month = date.getMonth();
-
-        // First day of month
-        const firstDay = new Date(year, month, 1);
-        // Last day of month
-        const lastDay = new Date(year, month + 1, 0);
-
-        // Start from Monday of the first week
-        const startDate = new Date(firstDay);
-        const dayOfWeek = firstDay.getDay(); // 0-6 (Sun-Sat)
-        const diff = (dayOfWeek + 6) % 7; // distance from Monday (0=Mon, 6=Sun)
-        startDate.setDate(startDate.getDate() - diff);
-
-        // End on Sunday of the last week
-        const endDate = new Date(lastDay);
-        const endDayOfWeek = lastDay.getDay();
-        const endDiff = (7 - endDayOfWeek) % 7; // distance to Sunday
-        endDate.setDate(endDate.getDate() + endDiff);
-
-        const days = [];
-        const current = new Date(startDate);
-
-        while (current <= endDate) {
-            const dateStr = formatDate(current);
-            const hasData = $availableDates.includes(dateStr);
-
-            days.push({
-                date: new Date(current),
-                dateStr,
-                isCurrentMonth: current.getMonth() === month,
-                isToday: formatDate(current) === formatDate($currentDateReadOnly),
-                isSelected: formatDate(current) === selectedDateStr,
-                hasData: hasData,
-                isFuture: current > $currentDateReadOnly,
-            });
-            current.setDate(current.getDate() + 1);
-        }
-
-        return days;
-    }
+    return days
+}
 </script>
 
-<div class="calendar-month bg-white rounded-2xl shadow-xl p-3 sm:p-4 border border-gray-100">
-    <div class="calendar-month__header flex items-center justify-between mb-4">
+<div class="calendar-month bg-white rounded-2xl shadow-xl p-2 sm:p-4 border border-gray-100 mx-auto max-w-md">
+    <div class="calendar-month__header flex items-center justify-between mb-4 px-1">
         <button
-            class="calendar-month__nav-btn calendar-month__nav-btn--prev w-8 h-8 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
+            class="calendar-month__nav-btn calendar-month__nav-btn--prev w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
             onclick={() => _navigateMonth("prev")}
             disabled={currentMonth.getMonth() === $currentDateReadOnly.getMonth() &&
                 currentMonth.getFullYear() === $currentDateReadOnly.getFullYear()}
             data-dashlane-label="true"
             aria-label="Edellinen kuukausi"
         >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 ><path
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -118,18 +114,20 @@
                 /></svg
             >
         </button>
-        <h2 class="calendar-month__title text-lg font-bold text-gray-900 tracking-tight">
+        <h2
+            class="calendar-month__title text-base sm:text-lg font-bold text-gray-900 tracking-tight"
+        >
             {_getMonthYearDisplay()}
         </h2>
         <button
-            class="calendar-month__nav-btn calendar-month__nav-btn--next w-8 h-8 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
+            class="calendar-month__nav-btn calendar-month__nav-btn--next w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
             onclick={() => _navigateMonth("next")}
             disabled={currentMonth.getMonth() === $currentDateReadOnly.getMonth() &&
                 currentMonth.getFullYear() === $currentDateReadOnly.getFullYear()}
             data-dashlane-label="true"
             aria-label="Seuraava kuukausi"
         >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 ><path
                     stroke-linecap="round"
                     stroke-linejoin="round"

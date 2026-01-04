@@ -23,7 +23,7 @@ export function isValidDateFormat(date) {
 
 /**
  * Get current season year range
- * @returns {string} Season string in format "2024-25"
+ * @returns {string} Season string in format "2025-26"
  */
 export function getCurrentSeason() {
     const now = new Date()

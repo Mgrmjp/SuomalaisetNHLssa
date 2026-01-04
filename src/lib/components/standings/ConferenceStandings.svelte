@@ -91,9 +91,9 @@ $effect(() => {
         </div>
 
         <!-- Divisions Grid -->
-        <div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-1">
+        <div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-1 w-full overflow-hidden">
             {#each divisions as [divisionName, teams]}
-                <div class="division-container">
+                <div class="min-w-0 w-full overflow-hidden">
                     <DivisionStandings
                         {teams}
                         {divisionName}

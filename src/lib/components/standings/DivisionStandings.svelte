@@ -64,7 +64,7 @@ const headers = $derived(showAdvancedStats ? [...baseHeaders, ...advancedHeaders
 </script>
 
 <div
-    class="division-container bg-white rounded-lg shadow-lg overflow-hidden relative"
+    class="division-container bg-white rounded-lg shadow-lg overflow-hidden relative w-full max-w-full"
     style={Object.entries(divisionLeaderColors)
         .map(([key, value]) => `${key}: ${value}`)
         .join("; ")}
@@ -77,16 +77,14 @@ const headers = $derived(showAdvancedStats ? [...baseHeaders, ...advancedHeaders
     </div>
 
     {#if hasTeams}
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto w-full">
             <table class="w-full text-sm">
                 <!-- Table Header -->
                 <thead class="bg-gray-100 border-b border-gray-200">
                     <tr>
                         {#each headers as header}
                             <th
-                                class="px-3 py-2 text-xs font-medium text-gray-600 uppercase tracking-wider {header.width} {header.center
-                                    ? 'text-center'
-                                    : 'text-left'}"
+                                class="px-3 py-2 text-xs font-medium text-gray-600 uppercase tracking-wider {header.width} {header.center ? 'text-center' : 'text-left'} {header.key === 'rank' ? 'sticky left-0 z-20 bg-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.05)]' : ''} {header.key === 'team' ? 'sticky left-12 z-20 bg-gray-100 border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.05)]' : ''}"
                             >
                                 {header.label}
                             </th>
