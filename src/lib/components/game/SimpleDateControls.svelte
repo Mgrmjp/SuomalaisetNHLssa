@@ -260,7 +260,6 @@
         {/if}
     </div>
 </div>
-```
 
 <style>
     .date-controls__card {
