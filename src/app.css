@@ -33,7 +33,7 @@ body {
     mix-blend-mode: overlay;
 }
 
-/* Apply noise globally to body */
+/* Apply noise globally to body - DISABLED for performance
 body::before {
     content: "";
     position: fixed;
@@ -45,6 +45,7 @@ body::before {
     background-repeat: repeat;
     mix-blend-mode: overlay;
 }
+*/
 
 /* Stronger noise for cards and modals */
 .noise-overlay-strong {

@@ -17,7 +17,7 @@ import {
     setDate,
 } from '$lib/stores/gameData.js'
 
-const _sparkles = Array.from({ length: 28 }, () => ({
+const _sparkles = Array.from({ length: 12 }, () => ({
     left: `${Math.random() * 100}%`,
     top: `${Math.random() * 90}%`,
     delay: `${Math.random() * 2}s`,
@@ -60,7 +60,7 @@ onMount(() => {
     <div class="text-center mb-8 hero-header space-y-3 relative overflow-hidden">
         <Snowfall />
         <div class="sparkles pointer-events-none" aria-hidden="true">
-            {#each _sparkles as sparkle, idx}
+            {#each _sparkles as sparkle}
                 <span
                     class="sparkle"
                     style={`--spark-left:${sparkle.left};--spark-top:${sparkle.top};--spark-delay:${sparkle.delay};--spark-duration:${sparkle.duration};--spark-size:${sparkle.size};--spark-blur:${sparkle.blur};`}

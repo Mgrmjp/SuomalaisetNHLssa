@@ -136,11 +136,11 @@
     box-shadow:
         0 8px 18px rgba(15, 23, 42, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
 }
 
-/* Noise texture for card content */
+/* Noise texture for card content - DISABLED for performance
 .player-card__content::after {
     content: "";
     position: absolute;
@@ -153,6 +153,7 @@
     mix-blend-mode: overlay;
     border-radius: inherit;
 }
+*/
 
 .player-card__content::before {
     content: "";
@@ -213,10 +214,12 @@
         background-position: 0% 50%;
         filter: brightness(1);
     }
+
     50% {
         background-position: 100% 50%;
         filter: brightness(1.1);
     }
+
     100% {
         background-position: 0% 50%;
         filter: brightness(1);
@@ -235,7 +238,8 @@
 /* Performance optimization for mobile devices */
 @media (max-width: 768px) {
     .player-card__border-middle--animated {
-        animation-duration: 12s; /* Slower on mobile for battery optimization */
+        animation-duration: 12s;
+        /* Slower on mobile for battery optimization */
     }
 }
 
@@ -273,10 +277,12 @@
         background-position: 0% 50%;
         filter: brightness(1) hue-rotate(0deg);
     }
+
     50% {
         background-position: 100% 50%;
         filter: brightness(1.05) hue-rotate(10deg);
     }
+
     100% {
         background-position: 0% 50%;
         filter: brightness(1) hue-rotate(0deg);
@@ -307,6 +313,7 @@
 .player-card__player-name {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: 1.2;
@@ -444,6 +451,7 @@
 .player-card__modal-subtitle {
     margin-top: 0.2rem;
 }
+
 /* Grid layout classes for stats */
 .player-card__stats-grid--goalie-2 {
     grid-template-columns: repeat(2, 1fr);

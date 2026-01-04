@@ -1,5 +1,5 @@
 <script>
-export const count = 50
+export const count = 20
 export const delayRange = 15
 export const minDuration = 8
 export const maxDuration = 20
