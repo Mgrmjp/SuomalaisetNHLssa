@@ -134,7 +134,7 @@
             {#each calendarDays as day}
                 <button
                     class="relative aspect-square p-0.5 rounded-lg text-center transition-all duration-200 text-xs font-semibold flex flex-col items-center justify-center"
-                    class:opacity-20={!day.isCurrentMonth}
+                    class:opacity-20={!day.isCurrentMonth && !day.isSelected}
                     class:bg-finnish-blue-500={day.isToday && !day.isSelected}
                     class:bg-finnish-blue-800={day.isSelected}
                     class:text-white={day.isToday || day.isSelected}
@@ -149,7 +149,7 @@
                     title={day.hasData ? "Pelejä tänä päivänä" : "Ei pelejä"}
                 >
                     <span>{day.date.getDate()}</span>
-                    {#if day.hasData && day.isCurrentMonth}
+                    {#if day.hasData && (day.isCurrentMonth || day.isSelected)}
                         <div
                             class="w-1 h-1 rounded-full mt-0.5"
                             class:bg-finnish-blue-400={!day.isSelected && !day.isToday}
