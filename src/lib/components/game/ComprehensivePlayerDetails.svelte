@@ -2,16 +2,18 @@
     import { base } from "$app/paths";
 
     import { isPlayerGameLive } from "$lib/utils/gameStateHelpers.mjs";
+    import { games } from "$lib/stores/gameData.js";
+    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
 
     export let player;
     export let showComprehensiveDetails = false;
 
     // Reactive variables for player photo
-    let _playerPhotoUrl = null;
-    let _photoError = false;
-    let _imageLoading = true;
-    let _lqipUrl = null;
-    let _imageLoaded = false;
+    let playerPhotoUrl = null;
+    let photoError = false;
+    let imageLoading = true;
+    let lqipUrl = null;
+    let imageLoaded = false;
 
     // Get player headshot URL
     function getPlayerHeadshotUrl(playerId) {
@@ -38,12 +40,12 @@
     function preloadPlayerImage(playerId) {
         if (!playerId) return;
 
-        _imageLoading = true;
-        _imageLoaded = false;
-        _playerPhotoUrl = null;
+        imageLoading = true;
+        imageLoaded = false;
+        playerPhotoUrl = null;
 
         // Set LQIP immediately
-        _lqipUrl = getPlayerHeadshotUrl(playerId);
+        lqipUrl = getPlayerHeadshotUrl(playerId);
 
         // Load full image after delay
         setTimeout(() => {
@@ -51,19 +53,19 @@
             const url = player.headshot_url;
 
             img.onload = () => {
-                _playerPhotoUrl = url;
-                _photoError = false;
-                _imageLoading = false;
+                playerPhotoUrl = url;
+                photoError = false;
+                imageLoading = false;
                 // Add delay before removing blur
                 setTimeout(() => {
-                    _imageLoaded = true;
+                    imageLoaded = true;
                 }, 100);
             };
 
             img.onerror = () => {
-                _photoError = true;
-                _playerPhotoUrl = null;
-                _imageLoading = false;
+                photoError = true;
+                playerPhotoUrl = null;
+                imageLoading = false;
             };
 
             img.src = url;

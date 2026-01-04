@@ -96,7 +96,7 @@
     }
 </script>
 
-<div class="p-1">
+<div class="bg-white rounded-xl shadow-md p-3 border border-gray-100">
     <div class="flex items-center justify-between mb-3">
         <button
             class="p-1 rounded bg-finnish-blue-500 text-white hover:bg-finnish-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 text-xs"
