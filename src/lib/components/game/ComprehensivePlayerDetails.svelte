@@ -1,138 +1,138 @@
 <script>
-    import { base } from "$app/paths";
+import { base } from '$app/paths'
 
-    import { isPlayerGameLive } from "$lib/utils/gameStateHelpers.mjs";
-    import { games } from "$lib/stores/gameData.js";
-    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
+import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
+import { games } from '$lib/stores/gameData.js'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 
-    export let player;
-    export let showComprehensiveDetails = false;
+export let player
+export let showComprehensiveDetails = false
 
-    // Reactive variables for player photo
-    let playerPhotoUrl = null;
-    let photoError = false;
-    let imageLoading = true;
-    let lqipUrl = null;
-    let imageLoaded = false;
+// Reactive variables for player photo
+let playerPhotoUrl = null
+let photoError = false
+let imageLoading = true
+let lqipUrl = null
+let imageLoaded = false
 
-    // Get player headshot URL
-    function getPlayerHeadshotUrl(playerId) {
-        if (!playerId) return null;
-        return `${base}/headshots/thumbs/${playerId}.jpg`;
-    }
+// Get player headshot URL
+function getPlayerHeadshotUrl(playerId) {
+    if (!playerId) return null
+    return `${base}/headshots/thumbs/${playerId}.jpg`
+}
 
-    // Generate LQIP (Low Quality Image Placeholder)
-    function _generateLQIP(playerId) {
-        if (!playerId) return null;
-        const canvas = document.createElement("canvas");
-        canvas.width = 64;
-        canvas.height = 64;
-        const ctx = canvas.getContext("2d");
+// Generate LQIP (Low Quality Image Placeholder)
+function _generateLQIP(playerId) {
+    if (!playerId) return null
+    const canvas = document.createElement('canvas')
+    canvas.width = 64
+    canvas.height = 64
+    const ctx = canvas.getContext('2d')
 
-        const hue = (parseInt(playerId, 10) * 137.508) % 360;
-        ctx.fillStyle = `hsl(${hue}, 30%, 85%)`;
-        ctx.fillRect(0, 0, 64, 64);
+    const hue = (parseInt(playerId, 10) * 137.508) % 360
+    ctx.fillStyle = `hsl(${hue}, 30%, 85%)`
+    ctx.fillRect(0, 0, 64, 64)
 
-        return canvas.toDataURL();
-    }
+    return canvas.toDataURL()
+}
 
-    // Preload player image
-    function preloadPlayerImage(playerId) {
-        if (!playerId) return;
+// Preload player image
+function preloadPlayerImage(playerId) {
+    if (!playerId) return
 
-        imageLoading = true;
-        imageLoaded = false;
-        playerPhotoUrl = null;
+    imageLoading = true
+    imageLoaded = false
+    playerPhotoUrl = null
 
-        // Set LQIP immediately
-        lqipUrl = getPlayerHeadshotUrl(playerId);
+    // Set LQIP immediately
+    lqipUrl = getPlayerHeadshotUrl(playerId)
 
-        // Load full image after delay
-        setTimeout(() => {
-            const img = new Image();
-            const url = player.headshot_url;
+    // Load full image after delay
+    setTimeout(() => {
+        const img = new Image()
+        const url = player.headshot_url
 
-            img.onload = () => {
-                playerPhotoUrl = url;
-                photoError = false;
-                imageLoading = false;
-                // Add delay before removing blur
-                setTimeout(() => {
-                    imageLoaded = true;
-                }, 100);
-            };
-
-            img.onerror = () => {
-                photoError = true;
-                playerPhotoUrl = null;
-                imageLoading = false;
-            };
-
-            img.src = url;
-        }, 500);
-    }
-
-    // Preload image when player changes
-    $: if (player?.playerId) {
-        preloadPlayerImage(player.playerId);
-    }
-
-    function _closeComprehensiveDetails(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        showComprehensiveDetails = false;
-    }
-
-    function _handleBackdropClick(event) {
-        if (event.target === event.currentTarget) {
-            showComprehensiveDetails = false;
+        img.onload = () => {
+            playerPhotoUrl = url
+            photoError = false
+            imageLoading = false
+            // Add delay before removing blur
+            setTimeout(() => {
+                imageLoaded = true
+            }, 100)
         }
-    }
 
-    function _toggleSeasonStats(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
+        img.onerror = () => {
+            photoError = true
+            playerPhotoUrl = null
+            imageLoading = false
         }
-        // This will be handled by the parent component
-        const seasonStatsEvent = new CustomEvent("toggle-season-stats");
-        window.dispatchEvent(seasonStatsEvent);
-    }
 
-    $: displayName = player.name?.default || player.name || "Unknown Player";
-    $: gamesData = $games;
-    $: isLive = isPlayerGameLive(player, gamesData);
-    $: headshotUrl = player.headshot_url || null;
-    $: playerInitials = displayName
-        .split(" ")
-        .map((part) => part.charAt(0).toUpperCase())
-        .join("")
-        .slice(0, 2);
-    $: iceTime = player.time_on_ice || player.ice_time;
-    $: hasGameStats =
-        player.goals > 0 ||
-        player.assists > 0 ||
-        player.points > 0 ||
-        (player.penalty_minutes || 0) > 0 ||
-        player.plus_minus !== undefined;
-    $: hasAdvancedStats =
-        player.position !== "G" &&
-        (player.faceoffs_taken > 0 ||
-            player.takeaways > 0 ||
-            player.giveaways > 0 ||
-            player.blocked_shots > 0 ||
-            player.hits > 0 ||
-            player.power_play_goals > 0 ||
-            player.short_handed_goals > 0 ||
-            player.even_strength_goals > 0 ||
-            player.power_play_assists > 0 ||
-            player.short_handed_assists > 0);
-    $: hasContextStats =
-        player.shifts > 0 ||
-        player.average_ice_time ||
-        iceTime ||
-        (player.blocked_shots > 0 && player.position === "D") ||
-        player.shots > 0;
+        img.src = url
+    }, 500)
+}
+
+// Preload image when player changes
+$: if (player?.playerId) {
+    preloadPlayerImage(player.playerId)
+}
+
+function _closeComprehensiveDetails(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    showComprehensiveDetails = false
+}
+
+function _handleBackdropClick(event) {
+    if (event.target === event.currentTarget) {
+        showComprehensiveDetails = false
+    }
+}
+
+function _toggleSeasonStats(event) {
+    if (event) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
+    // This will be handled by the parent component
+    const seasonStatsEvent = new CustomEvent('toggle-season-stats')
+    window.dispatchEvent(seasonStatsEvent)
+}
+
+$: displayName = player.name?.default || player.name || 'Unknown Player'
+$: gamesData = $games
+$: isLive = isPlayerGameLive(player, gamesData)
+$: headshotUrl = player.headshot_url || null
+$: playerInitials = displayName
+    .split(' ')
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('')
+    .slice(0, 2)
+$: iceTime = player.time_on_ice || player.ice_time
+$: hasGameStats =
+    player.goals > 0 ||
+    player.assists > 0 ||
+    player.points > 0 ||
+    (player.penalty_minutes || 0) > 0 ||
+    player.plus_minus !== undefined
+$: hasAdvancedStats =
+    player.position !== 'G' &&
+    (player.faceoffs_taken > 0 ||
+        player.takeaways > 0 ||
+        player.giveaways > 0 ||
+        player.blocked_shots > 0 ||
+        player.hits > 0 ||
+        player.power_play_goals > 0 ||
+        player.short_handed_goals > 0 ||
+        player.even_strength_goals > 0 ||
+        player.power_play_assists > 0 ||
+        player.short_handed_assists > 0)
+$: hasContextStats =
+    player.shifts > 0 ||
+    player.average_ice_time ||
+    iceTime ||
+    (player.blocked_shots > 0 && player.position === 'D') ||
+    player.shots > 0
 </script>
 
 <!-- Comprehensive Details Modal -->
@@ -181,10 +181,10 @@
                             {/if}
                         </div>
                         <div class="player-identity__meta">
-                            <h2 class="text-2xl font-bold text-gray-900">
+                            <h2 class="player-identity__name text-2xl font-bold text-gray-900">
                                 {displayName}
                             </h2>
-                            <div class="text-lg text-gray-600">
+                            <div class="player-identity__basic-info text-lg text-gray-600">
                                 {player.position && player.position !== "N/A"
                                     ? player.position
                                     : ""}{player.jersey_number ? " #" + player.jersey_number : ""} •
@@ -195,18 +195,28 @@
                                     <div class="personal-info-panel__grid">
                                         {#if player.age}
                                             <div class="personal-info-panel__card">
-                                                <div class="text-sm text-gray-600">Ikä</div>
-                                                <div class="text-base font-semibold text-gray-900">
+                                                <div
+                                                    class="personal-info-panel__label text-sm text-gray-600"
+                                                >
+                                                    Ikä
+                                                </div>
+                                                <div
+                                                    class="personal-info-panel__value text-base font-semibold text-gray-900"
+                                                >
                                                     {player.age} vuotta
                                                 </div>
                                             </div>
                                         {/if}
                                         {#if player.birth_date}
                                             <div class="personal-info-panel__card">
-                                                <div class="text-sm text-gray-600">
+                                                <div
+                                                    class="personal-info-panel__label text-sm text-gray-600"
+                                                >
                                                     Syntymäpäivä
                                                 </div>
-                                                <div class="text-base font-semibold text-gray-900">
+                                                <div
+                                                    class="personal-info-panel__value text-base font-semibold text-gray-900"
+                                                >
                                                     {new Date(player.birth_date).toLocaleDateString(
                                                         "fi-FI",
                                                     )}
@@ -215,18 +225,28 @@
                                         {/if}
                                         {#if player.birthplace}
                                             <div class="personal-info-panel__card">
-                                                <div class="text-sm text-gray-600">
+                                                <div
+                                                    class="personal-info-panel__label text-sm text-gray-600"
+                                                >
                                                     Syntymäpaikka
                                                 </div>
-                                                <div class="text-base font-semibold text-gray-900">
+                                                <div
+                                                    class="personal-info-panel__value text-base font-semibold text-gray-900"
+                                                >
                                                     {player.birthplace}
                                                 </div>
                                             </div>
                                         {/if}
                                         {#if player.jersey_number}
                                             <div class="personal-info-panel__card">
-                                                <div class="text-sm text-gray-600">Pelinumero</div>
-                                                <div class="text-base font-semibold text-gray-900">
+                                                <div
+                                                    class="personal-info-panel__label text-sm text-gray-600"
+                                                >
+                                                    Pelinumero
+                                                </div>
+                                                <div
+                                                    class="personal-info-panel__value text-base font-semibold text-gray-900"
+                                                >
                                                     #{player.jersey_number}
                                                 </div>
                                             </div>
@@ -260,7 +280,7 @@
                                     />
                                 </svg>
                             </div>
-                            <div>
+                            <div class="stat-panel__header-content">
                                 <h3 class="stat-panel__title">Pelin tilastot</h3>
                                 <p class="stat-panel__subtitle">
                                     {player.team}
@@ -442,7 +462,7 @@
                                     />
                                 </svg>
                             </div>
-                            <div>
+                            <div class="stat-panel__header-content">
                                 <h3 class="stat-panel__title">Viimeisimmät pelit</h3>
                                 <p class="stat-panel__subtitle">
                                     Pelaajan tilastot viimeisistä 5 pelistä
@@ -485,17 +505,17 @@
                                     <div class="recent-result-indicator">
                                         {#if game.result === "W"}
                                             <div
-                                                class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm"
+                                                class="recent-result-item__dot w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm"
                                                 title="Voitto"
                                             ></div>
                                         {:else if game.result === "L"}
                                             <div
-                                                class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm"
+                                                class="recent-result-item__dot w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm"
                                                 title="Tappio"
                                             ></div>
                                         {:else}
                                             <div
-                                                class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm"
+                                                class="recent-result-item__dot w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm"
                                                 title="Tasapeli"
                                             ></div>
                                         {/if}

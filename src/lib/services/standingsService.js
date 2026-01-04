@@ -180,7 +180,7 @@ export class StandingsService {
 
             console.log('📊 Final standings structure:', {
                 eastern: Object.keys(standings.eastern || {}),
-                western: Object.keys(standings.western || {})
+                western: Object.keys(standings.western || {}),
             })
 
             // Cache the results

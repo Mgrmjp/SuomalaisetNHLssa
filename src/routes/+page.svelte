@@ -1,51 +1,51 @@
 <script>
-    import FinnishRoster from "$lib/components/game/FinnishRoster.svelte";
-    import PlayerList from "$lib/components/game/PlayerList.svelte";
-    import SimpleDateControls from "$lib/components/game/SimpleDateControls.svelte";
-    import Snowfall from "$lib/components/ui/Snowfall.svelte";
-    import StandingsView from "$lib/components/standings/StandingsView.svelte";
-    import ViewToggle from "$lib/components/ui/ViewToggle.svelte";
-    import { base } from "$app/paths";
-    import { onMount } from "svelte";
-    import { get } from "svelte/store";
-    import {
-        latestPrepopulatedDate,
-        players,
-        resetToDefault,
-        selectedDate,
-        selectedView,
-        setDate,
-    } from "$lib/stores/gameData.js";
+import FinnishRoster from '$lib/components/game/FinnishRoster.svelte'
+import PlayerList from '$lib/components/game/PlayerList.svelte'
+import SimpleDateControls from '$lib/components/game/SimpleDateControls.svelte'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import StandingsView from '$lib/components/standings/StandingsView.svelte'
+import ViewToggle from '$lib/components/ui/ViewToggle.svelte'
+import { base } from '$app/paths'
+import { onMount } from 'svelte'
+import { get } from 'svelte/store'
+import {
+    latestPrepopulatedDate,
+    players,
+    resetToDefault,
+    selectedDate,
+    selectedView,
+    setDate,
+} from '$lib/stores/gameData.js'
 
-    const _sparkles = Array.from({ length: 28 }, () => ({
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 90}%`,
-        delay: `${Math.random() * 2}s`,
-        duration: `${3.5 + Math.random() * 3}s`,
-        size: `${3 + Math.random() * 6}px`,
-        blur: `${Math.random() > 0.5 ? 0 : 1}px`,
-    }));
+const _sparkles = Array.from({ length: 28 }, () => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 90}%`,
+    delay: `${Math.random() * 2}s`,
+    duration: `${3.5 + Math.random() * 3}s`,
+    size: `${3 + Math.random() * 6}px`,
+    blur: `${Math.random() > 0.5 ? 0 : 1}px`,
+}))
 
-    // Reactive variables
-    $: totalGoals = $players?.reduce((sum, player) => sum + player.goals, 0) || 0;
-    $: totalAssists = $players?.reduce((sum, player) => sum + player.assists, 0) || 0;
-    $: totalPoints = $players?.reduce((sum, player) => sum + player.points, 0) || 0;
-    $: totalPenaltyMinutes =
-        $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0;
-    $: totalPlayers = $players?.length || 0;
+// Reactive variables
+$: totalGoals = $players?.reduce((sum, player) => sum + player.goals, 0) || 0
+$: totalAssists = $players?.reduce((sum, player) => sum + player.assists, 0) || 0
+$: totalPoints = $players?.reduce((sum, player) => sum + player.points, 0) || 0
+$: totalPenaltyMinutes =
+    $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
+$: totalPlayers = $players?.length || 0
 
-    // Default to the latest prepopulated date on first load
-    onMount(() => {
-        // Avoid reloading if user already selected a date
-        if ($selectedDate) return;
+// Default to the latest prepopulated date on first load
+onMount(() => {
+    // Avoid reloading if user already selected a date
+    if ($selectedDate) return
 
-        // Use the latest available date - this is the most recent data we have
-        // If latestPrepopulatedDate is not yet loaded, it defaults to '2026-01-03'
-        const latestDate = get(latestPrepopulatedDate);
-        if (latestDate) {
-            setDate(latestDate);
-        }
-    });
+    // Use the latest available date - this is the most recent data we have
+    // If latestPrepopulatedDate is not yet loaded, it defaults to '2026-01-03'
+    const latestDate = get(latestPrepopulatedDate)
+    if (latestDate) {
+        setDate(latestDate)
+    }
+})
 </script>
 
 <svelte:head>

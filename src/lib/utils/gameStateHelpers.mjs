@@ -9,13 +9,13 @@
  * Game state constants from NHL API
  */
 export const GAME_STATE = {
-	OFF: 'OFF', // Game is over/final
-	FINAL: 'FINAL', // Alternative final state
-	PRE: 'PRE', // Pre-game (scheduled, not started)
-	FUT: 'FUT', // Future game (scheduled)
-	LIVE: 'LIVE', // Game is live/in-progress
-	CRIT: 'CRIT', // Critical/late game situation
-	IRT: 'IRT' // In review timeout
+    OFF: 'OFF', // Game is over/final
+    FINAL: 'FINAL', // Alternative final state
+    PRE: 'PRE', // Pre-game (scheduled, not started)
+    FUT: 'FUT', // Future game (scheduled)
+    LIVE: 'LIVE', // Game is live/in-progress
+    CRIT: 'CRIT', // Critical/late game situation
+    IRT: 'IRT', // In review timeout
 }
 
 /**
@@ -25,11 +25,11 @@ export const GAME_STATE = {
  * @returns {string|null} Game state code or null if not found
  */
 export function getGameStateForPlayer(player, gamesData) {
-	if (!player?.game_id || !gamesData?.findGameById) {
-		return null
-	}
-	const game = gamesData.findGameById(player.game_id)
-	return game?.gameState || null
+    if (!player?.game_id || !gamesData?.findGameById) {
+        return null
+    }
+    const game = gamesData.findGameById(player.game_id)
+    return game?.gameState || null
 }
 
 /**
@@ -39,8 +39,8 @@ export function getGameStateForPlayer(player, gamesData) {
  * @returns {boolean} True if game is live
  */
 export function isPlayerGameLive(player, gamesData) {
-	const state = getGameStateForPlayer(player, gamesData)
-	return state === GAME_STATE.LIVE || state === GAME_STATE.CRIT || state === GAME_STATE.IRT
+    const state = getGameStateForPlayer(player, gamesData)
+    return state === GAME_STATE.LIVE || state === GAME_STATE.CRIT || state === GAME_STATE.IRT
 }
 
 /**
@@ -50,8 +50,8 @@ export function isPlayerGameLive(player, gamesData) {
  * @returns {boolean} True if game is complete and result should be shown
  */
 export function shouldShowGameResult(player, gamesData) {
-	const state = getGameStateForPlayer(player, gamesData)
-	return state === GAME_STATE.OFF || state === GAME_STATE.FINAL
+    const state = getGameStateForPlayer(player, gamesData)
+    return state === GAME_STATE.OFF || state === GAME_STATE.FINAL
 }
 
 /**
@@ -61,6 +61,6 @@ export function shouldShowGameResult(player, gamesData) {
  * @returns {boolean} True if game is upcoming
  */
 export function isGameUpcoming(player, gamesData) {
-	const state = getGameStateForPlayer(player, gamesData)
-	return state === GAME_STATE.PRE || state === GAME_STATE.FUT
+    const state = getGameStateForPlayer(player, gamesData)
+    return state === GAME_STATE.PRE || state === GAME_STATE.FUT
 }

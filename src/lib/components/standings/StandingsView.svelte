@@ -1,68 +1,68 @@
 <script>
-    import { onMount } from "svelte";
-    // biome-ignore lint/correctness/noUnusedImports: used in template
-    import ConferenceStandings from "$lib/components/standings/ConferenceStandings.svelte";
-    // biome-ignore lint/correctness/noUnusedImports: used for types/stores
-    import { loadStandings, standings, standingsLoading } from "$lib/stores/gameData.js";
+import { onMount } from 'svelte'
+// biome-ignore lint/correctness/noUnusedImports: used in template
+import ConferenceStandings from '$lib/components/standings/ConferenceStandings.svelte'
+// biome-ignore lint/correctness/noUnusedImports: used for types/stores
+import { loadStandings, standings, standingsLoading } from '$lib/stores/gameData.js'
 
-    let _error = $state(null);
-    // biome-ignore lint/style/useConst: Svelte 5 state
-    let _activeConference = $state("eastern"); // 'eastern' or 'western'
-    // biome-ignore lint/style/useConst: Svelte 5 state
-    let _showAdvancedStats = $state(false); // Advanced stats toggle
+let _error = $state(null)
+// biome-ignore lint/style/useConst: Svelte 5 state
+let _activeConference = $state('eastern') // 'eastern' or 'western'
+// biome-ignore lint/style/useConst: Svelte 5 state
+let _showAdvancedStats = $state(false) // Advanced stats toggle
 
-    // Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
-    let _loading = $state($standingsLoading);
+// Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
+let _loading = $state($standingsLoading)
 
-    $effect(() => {
-        _loading = $standingsLoading;
-        console.log("🔍 $effect fired:", {
-            _loading,
-            $standingsLoading,
-            hasAnyData,
-            easternKeys: Object.keys($standings?.eastern || {}).length,
-            westernKeys: Object.keys($standings?.western || {}).length,
-        });
-    });
+$effect(() => {
+    _loading = $standingsLoading
+    console.log('🔍 $effect fired:', {
+        _loading,
+        $standingsLoading,
+        hasAnyData,
+        easternKeys: Object.keys($standings?.eastern || {}).length,
+        westernKeys: Object.keys($standings?.western || {}).length,
+    })
+})
 
-    // Conference data - using Svelte 5 $derived runes
-    const easternConference = $derived($standings?.eastern || {});
-    const westernConference = $derived($standings?.western || {});
-    const hasEasternData = $derived(Object.keys(easternConference).length > 0);
-    const hasWesternData = $derived(Object.keys(westernConference).length > 0);
-    const hasAnyData = $derived(hasEasternData || hasWesternData);
+// Conference data - using Svelte 5 $derived runes
+const easternConference = $derived($standings?.eastern || {})
+const westernConference = $derived($standings?.western || {})
+const hasEasternData = $derived(Object.keys(easternConference).length > 0)
+const hasWesternData = $derived(Object.keys(westernConference).length > 0)
+const hasAnyData = $derived(hasEasternData || hasWesternData)
 
-    // Debug $derived
-    $effect(() => {
-        console.log("🔍 $derived values:", {
-            hasAnyData,
-            hasEasternData,
-            hasWesternData,
-            _loading,
-            loadingCondition: _loading && !hasAnyData,
-        });
-    });
+// Debug $derived
+$effect(() => {
+    console.log('🔍 $derived values:', {
+        hasAnyData,
+        hasEasternData,
+        hasWesternData,
+        _loading,
+        loadingCondition: _loading && !hasAnyData,
+    })
+})
 
-    // Load standings on component mount
-    onMount(async () => {
-        try {
-            await loadStandings();
-        } catch (err) {
-            _error = /** @type {Error} */ (err).message || "Failed to load standings";
-            console.error("Standings loading error:", err);
-        }
-    });
-
-    // Refresh standings
-    async function _refreshStandingsData() {
-        _error = null;
-        try {
-            await loadStandings();
-        } catch (err) {
-            _error = /** @type {Error} */ (err).message || "Failed to refresh standings";
-            console.error("Standings refresh error:", err);
-        }
+// Load standings on component mount
+onMount(async () => {
+    try {
+        await loadStandings()
+    } catch (err) {
+        _error = /** @type {Error} */ (err).message || 'Failed to load standings'
+        console.error('Standings loading error:', err)
     }
+})
+
+// Refresh standings
+async function _refreshStandingsData() {
+    _error = null
+    try {
+        await loadStandings()
+    } catch (err) {
+        _error = /** @type {Error} */ (err).message || 'Failed to refresh standings'
+        console.error('Standings refresh error:', err)
+    }
+}
 </script>
 
 <div class="standings-view">

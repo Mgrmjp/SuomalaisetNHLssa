@@ -1,47 +1,47 @@
 <script>
-    // biome-ignore lint/correctness/noUnusedImports: used in template
-    import DivisionStandings from "$lib/components/standings/DivisionStandings.svelte";
-    import { CONFERENCE_NAMES, calculateWildCardTeams } from "$lib/utils/nhlStructure.js";
+// biome-ignore lint/correctness/noUnusedImports: used in template
+import DivisionStandings from '$lib/components/standings/DivisionStandings.svelte'
+import { CONFERENCE_NAMES, calculateWildCardTeams } from '$lib/utils/nhlStructure.js'
 
-    const {
-        conferenceData = {},
-        conferenceName = "",
-        loading = false,
-        error = null,
-        showAdvancedStats = false,
-    } = $props();
+const {
+    conferenceData = {},
+    conferenceName = '',
+    loading = false,
+    error = null,
+    showAdvancedStats = false,
+} = $props()
 
-    // Format conference name for display
-    const displayName = $derived(CONFERENCE_NAMES[conferenceName] || conferenceName);
+// Format conference name for display
+const displayName = $derived(CONFERENCE_NAMES[conferenceName] || conferenceName)
 
-    // Check if conference has data
-    const hasData = $derived(conferenceData && Object.keys(conferenceData).length > 0);
-    const divisions = $derived(hasData ? Object.entries(conferenceData) : []);
-    const hasDivisions = $derived(divisions.length > 0);
+// Check if conference has data
+const hasData = $derived(conferenceData && Object.keys(conferenceData).length > 0)
+const divisions = $derived(hasData ? Object.entries(conferenceData) : [])
+const hasDivisions = $derived(divisions.length > 0)
 
-    // Calculate Wild Card teams for this conference
-    const allConferenceData = $derived(hasData ? { [conferenceName]: conferenceData } : {});
-    const wildCardData = $derived(hasData ? calculateWildCardTeams(allConferenceData) : {});
-    const wildCardTeams = $derived(wildCardData[conferenceName] || []);
+// Calculate Wild Card teams for this conference
+const allConferenceData = $derived(hasData ? { [conferenceName]: conferenceData } : {})
+const wildCardData = $derived(hasData ? calculateWildCardTeams(allConferenceData) : {})
+const wildCardTeams = $derived(wildCardData[conferenceName] || [])
 
-    // Loading state
-    const isLoading = $derived(loading || !hasData);
+// Loading state
+const isLoading = $derived(loading || !hasData)
 
-    // Error state
-    // biome-ignore lint/correctness/noUnusedVariables: used in template
-    const hasError = $derived(error !== null);
+// Error state
+// biome-ignore lint/correctness/noUnusedVariables: used in template
+const hasError = $derived(error !== null)
 
-    // Debug logging
-    $effect(() => {
-        console.log("🔍 ConferenceStandings:", {
-            conferenceName,
-            hasData,
-            isLoading,
-            loading,
-            divisionsCount: divisions.length,
-            conferenceDataKeys: Object.keys(conferenceData || {}).length,
-        });
-    });
+// Debug logging
+$effect(() => {
+    console.log('🔍 ConferenceStandings:', {
+        conferenceName,
+        hasData,
+        isLoading,
+        loading,
+        divisionsCount: divisions.length,
+        conferenceDataKeys: Object.keys(conferenceData || {}).length,
+    })
+})
 </script>
 
 <div class="conference-standings">

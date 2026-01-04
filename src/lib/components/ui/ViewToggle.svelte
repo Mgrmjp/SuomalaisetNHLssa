@@ -1,17 +1,17 @@
 <script>
-    import { selectedView, setView } from "$lib/stores/gameData.js";
+import { selectedView, setView } from '$lib/stores/gameData.js'
 
-    /**
-     * Handle view change
-     * @param {string} view - 'players', 'standings', or 'roster'
-     */
-    function _handleViewChange(view) {
-        setView(view);
-    }
+/**
+ * Handle view change
+ * @param {string} view - 'players', 'standings', or 'roster'
+ */
+function _handleViewChange(view) {
+    setView(view)
+}
 
-    $: playersActive = $selectedView === "players";
-    $: standingsActive = $selectedView === "standings";
-    $: rosterActive = $selectedView === "roster";
+$: playersActive = $selectedView === 'players'
+$: standingsActive = $selectedView === 'standings'
+$: rosterActive = $selectedView === 'roster'
 </script>
 
 <div class="flex justify-center mb-6">
