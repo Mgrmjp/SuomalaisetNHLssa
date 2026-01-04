@@ -1,52 +1,39 @@
-# Finnish NHL Player Tracker
+# Suomalaiset NHL:ssä — Finnish NHL Player Tracker
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Svelte](https://img.shields.io/badge/Svelte-4.2.8-orange)](https://svelte.dev/)
-[![SvelteKit](https://img.shields.io/badge/SvelteKit-1.30.4-red)](https://kit.svelte.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3.2-blue)](https://www.typescriptlang.org/)
+[![Svelte](https://img.shields.io/badge/Svelte-5.0.0-orange)](https://svelte.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-blue)](https://tailwindcss.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue)](https://www.typescriptlang.org/)
+[![Status](https://img.shields.io/badge/Status-Automated-brightgreen)](https://github.com/miikka/suomalaisetnhlssa/actions)
 
-A modern web application that tracks and displays scoring statistics for Finnish NHL players on a daily basis. Built with SvelteKit, TypeScript, and Tailwind CSS for optimal performance and developer experience.
+A high-performance web application tracking scoring statistics for Finnish NHL players. Automatically updated daily to ensure you never miss a point from your favorite players.
 
 ## ✨ Features
 
-- **Daily Player Statistics**: View Finnish NHL players who scored points (goals/assists) on any selected date
-- **Smart Data Sourcing**: Automatically uses pre-populated data when available, falls back to live NHL API
-- **Real-time Data Integration**: Fetches live data from the official NHL API when pre-populated data isn't available
-- **Direct API Integration**: Real-time data fetching with optimized HTTP requests
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Dark/Light Theme**: Automatic theme switching with system preferences
-- **Finnish Identity**: Designed with Finnish colors, typography, and user experience in mind
-- **Accessibility First**: WCAG compliant with keyboard navigation and screen reader support
-- **Performance Optimized**: Lazy loading, efficient state management, and minimal bundle size
+- **🎯 Finnish Focus**: Specifically optimized for Finnish players (30-35 players), making data processing 10x faster than general trackers.
+- **🔄 Automated Updates**: Daily and real-time data sync via GitHub Actions.
+- **⚡ Performance First**: Built with Svelte 5 and Tailwind CSS 4 for a lightning-fast user experience.
+- **📱 Responsive & Accessible**: Premium UI designed with Finnish aesthetics, fully responsive and WCAG compliant.
+- **🌓 Adaptive Theme**: Sleek dark and light modes that follow your system preferences.
+- **📅 Historical Browsing**: Integrated calendar to view highlights and scores from any date in the season.
 
 ## 🚀 Quick Start
 
-### Core Specification
-
-**Main Purpose:** Track Finnish NHL player game data
-
-This project focuses specifically on **Finnish players in the NHL** (30-35 players), not all players. Data collection is optimized for Finnish players only, making it 10-15x faster than comprehensive systems.
-
-📖 **Full Specification:** See [FINNISH_PLAYER_DATA_SPEC.md](./FINNISH_PLAYER_DATA_SPEC.md) for complete technical details.
-
 ### Prerequisites
 
-- Node.js 18+ and npm
-- Git
-- Python 3.9+ (for data collection scripts)
+- **Node.js**: 20+
+- **npm**: Latest version recommended
+- **Python**: 3.9+ (for internal data collection scripts)
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/miikka/suomalaisetnhlssa.git
 cd suomalaisetnhlssa
 
 # Install dependencies
 npm install
-
-# Install Python dependencies for data collection
-pip install requests
 
 # Start development server
 npm run dev
@@ -54,266 +41,49 @@ npm run dev
 
 The application will be available at `http://localhost:5173`.
 
-### Basic Usage
-
-1. **View Finnish Players**: See only Finnish NHL players
-2. **Navigate Dates**: Use the date picker to browse different dates
-3. **Player Details**: Click on player cards to see stats (goals, assists, ice time, etc.)
-4. **Theme Switching**: Toggle between light and dark modes
-
-### Data Collection (Finnish Players)
-
-```bash
-# Fetch Finnish players for specific date
-python3 scripts/data_collection/finnish/fetch.py 2025-11-01
-
-# Fetch date range
-bash scripts/shell_wrappers/fetch-finnish-games.sh 2025-11-01 2025-11-30
-
-# Update Finnish players cache (when roster changes)
-python3 scripts/data_collection/finnish/build_cache.py
-```
-
-## 📊 Pre-populated Data
-
-The application supports pre-populated data for development, testing, and offline scenarios:
-
-### How It Works
-
-- **Automatic Detection**: The app first checks for pre-populated data before making API calls
-- **Seamless Fallback**: If no pre-populated data exists, it automatically fetches from the live NHL API
-- **Performance**: Pre-populated data loads instantly without API requests
-- **Offline Support**: Pre-populated data works without internet connection
-
-### Generating Pre-populated Data
-
-```bash
-# Generate data for a specific date and make it web-available
-./scripts/generate_prepopulated.sh 2025-11-09 --save
-
-# Generate sample data for testing
-./scripts/generate_prepopulated.sh 2025-11-09 --save --sample
-
-# Check available pre-populated dates
-./scripts/generate_prepopulated.sh
-```
-
-### Manual Data Generation
-
-```bash
-# Generate data (saves to data/prepopulated/)
-python3 scripts/prepopulate_data.py --date 2025-11-09 --save
-
-# Copy to static directory manually
-cp data/prepopulated/finnish-players-2025-11-09.json static/data/prepopulated/
-```
-
-### Available Pre-populated Dates
-
-The application currently includes pre-populated data for:
-- `2025-11-08`: Sample data with 3 players (Mikko Rantanen, Sebastian Aho, Patrik Laine)
-- `2025-11-09`: Real data with 1 player (Teuvo Teravainen)
-
 ## 🛠️ Development
-
-### Available Scripts
-
-```bash
-# Development
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-
-# Testing
-npm run test         # Run tests
-npm run test:watch   # Run tests in watch mode
-
-# Code Quality
-npm run lint         # Run Biome linter
-npm run format       # Format code with Biome
-npm run check        # Run Svelte type checking
-
-# Data Management
-npm run data:fetch         # Fetch current season data
-npm run data:fetch:date    # Fetch data for specific date
-npm run data:fetch:season  # Fetch entire season data
-npm run players:update      # Update Finnish player database
-npm run players:validate   # Validate Finnish player data
-npm run players:stats      # Show player database statistics
-
-
-
-# Testing
-npm run test:simplified    # Run simplified system tests
-```
 
 ### Project Structure
 
-```
+```text
 suomalaisetnhlssa/
-├── src/
-│   ├── lib/
-│   │   ├── components/      # Reusable Svelte components
-│   │   ├── services/        # Simplified business logic and API services
-│   │   │   ├── simpleCacheService.js      # Simple key-value cache with TTL
-│   │   │   ├── playerDetectionService.js  # Finnish player detection and management
-│   │   │   └── dataService.js            # Main data service integration
-│   │   ├── stores/          # Svelte stores for state management
-│   │   ├── utils/           # Utility functions and helpers
-│   │   └── types/           # TypeScript type definitions
-│   ├── routes/              # SvelteKit pages and API routes
-│   └── app.html            # Root HTML template
-├── static/                  # Static assets
-├── tests/                   # Test files
-├── docs/                    # Detailed documentation
-├── scripts/                 # Build and data scripts
-│   ├── finnish-players-cli.js  # Simplified CLI for player management
-│   ├── test-simplified-system.js # Comprehensive test suite
-│   └── data-manager.js         # Legacy data manager (deprecated)
-├── data/                    # Static data files
-│   ├── players/               # Finnish player database
-│   └── backups/              # Database backups
-└── test-results/             # Test output and reports
+├── src/                # Svelte 5 frontend
+│   ├── lib/            # Shared components and services
+│   └── routes/         # SvelteKit pages
+├── scripts/            # Data collection and management tools
+├── static/             # Static assets and cached data
+└── tests/              # Vitest & Playwright tests
 ```
 
-## 🏗️ Architecture
-
-### Simplified System Overview
-
-The application has been simplified to improve maintainability and reduce complexity:
-
-- **Direct Data Service**: Simplified data fetching without caching layers in [`dataService.js`](src/lib/services/dataService.js)
-- **Direct Player Detection**: Replaced pattern matching with curated database in [`playerDetectionService.js`](src/lib/services/playerDetectionService.js)
-- **Unified Data Service**: Consolidated data operations in [`dataService.js`](src/lib/services/dataService.js)
-- **Streamlined CLI**: Simplified command-line interface with [`finnish-players-cli.js`](scripts/finnish-players-cli.js)
-
-### Tech Stack
-
-- **Framework**: Svelte 4 with SvelteKit 1.30.4
-- **Language**: TypeScript 5.3.2
-- **Styling**: Tailwind CSS 4.1.16 with PostCSS
-- **Build Tool**: Vite 4.5.0
-- **Testing**: Vitest 3.2.4 with jsdom
-- **Code Quality**: Biome 2.2.5 for linting and formatting
-- **Data**: NHL API integration with simplified caching
-
-### Key Features
-
-- **Component-based Architecture**: Modular, reusable Svelte components
-- **State Management**: Svelte stores with derived values for reactive updates
-- **Simplified API Integration**: Official NHL API endpoints with straightforward caching
-- **Performance Optimization**: Lazy loading, code splitting, and efficient data fetching
-- **Responsive Design**: Mobile-first approach with Finnish design principles
-- **Accessibility**: Semantic HTML, ARIA attributes, and keyboard navigation
-
-## 📊 Data Sources
-
-- **NHL API**: Real-time game data, player statistics, and team information
-- **Finnish Player Database**: Curated list of Finnish NHL players in [`data/players/finnish-players-db.json`](data/players/finnish-players-db.json)
-- **Direct Data Fetching**: Real-time API integration without caching
-
-## 🎨 Design System
-
-The application follows Finnish design principles:
-
-- **Colors**: Finnish flag colors (blue and white) with modern palette
-- **Typography**: Optimized for Finnish language readability
-- **Spacing**: Consistent spacing system following Finnish design standards
-- **Components**: Finnish-themed UI components with accessibility features
-
-## 🧪 Testing
-
-The project includes comprehensive testing for the simplified system:
-
-- **System Tests**: Comprehensive validation of simplified components with [`test-simplified-system.js`](scripts/test-simplified-system.js)
-- **Unit Tests**: Store logic, utilities, and data services
-- **Component Tests**: UI component behavior and accessibility
-- **Integration Tests**: User workflows and API integration
+### Key Commands
 
 ```bash
-# Run all tests
-npm run test
-
-# Run simplified system tests
-npm run test:simplified
-
-# Run tests with coverage
-npm run test -- --coverage
-
-# Run tests in watch mode during development
-npm run test:watch
+npm run dev      # Start dev server
+npm run build    # Build for production (Static Adapter)
+npm run lint     # Lint check with Biome
+npm run format   # Format code
+npm run test     # Run unit tests
+npm run check    # Type-check Svelte files
 ```
 
-## 📚 Documentation
+## 📊 Data & Automation
 
-- [Migration Guide](./MIGRATION_GUIDE.md) - Guide for upgrading from old system
-- [Caching Simplification](./CACHING_SIMPLIFICATION_MIGRATION_GUIDE.md) - Details on caching changes
-- [Scripts Documentation](./scripts/README.md) - CLI tools and scripts documentation
-- [Development Guide](./docs/DEVELOPMENT.md) - Development setup and workflow
-- [Deployment Guide](./docs/DEPLOYMENT.md) - Deployment instructions
+The project uses a hybrid data approach:
+1. **GitHub Actions**: Periodically runs Python scripts in `.venv` to fetch and commit the latest NHL data.
+2. **NHL API**: Dynamic fallback for dates not yet cached in the repository.
+3. **Curated Database**: A dedicated database of Finnish player IDs ensures 100% accuracy and high speed.
 
-## 🚀 Deployment
+## 🎨 Design Principles
 
-### Static Site Deployment
-
-The application is configured for static site deployment:
-
-```bash
-# Build for production
-npm run build
-
-# The build output is in the `build/` directory
-# Deploy to any static hosting service (Vercel, Netlify, etc.)
-```
-
-### Environment Variables
-
-Create a `.env` file for configuration:
-
-```env
-# NHL API Configuration
-NHL_API_BASE_URL=https://api-web.nhle.com
-
-# Cache Configuration
-CACHE_TTL=3600000  # 1 hour in milliseconds
-MAX_CACHE_SIZE=100
-
-# Feature Flags
-ENABLE_REAL_API=true
-```
+Inspired by Finnish minimalism and the blue-and-white identity, the UI focuses on clarity, premium micro-animations, and a "Finnish-first" user experience.
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](./docs/CONTRIBUTING.md) for details.
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-feature`
-3. Make your changes and test thoroughly
-4. Run linting and tests: `npm run lint && npm test`
-5. Commit your changes: `git commit -m "Add new feature"`
-6. Push to your fork: `git push origin feature/new-feature`
-7. Open a pull request
+Contributions are welcome! Please ensure you run `npm run validate` before submitting a pull request to check linting, types, and tests.
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- NHL for providing the official API
-- Finnish hockey fans for inspiration and feedback
-- Svelte and SvelteKit communities for excellent tools and documentation
-- The Finnish design community for aesthetic guidance
-
-## 📞 Support
-
-For questions, issues, or suggestions:
-
-- Open an issue on GitHub
-- Check the [documentation](./docs/)
-- Review the [FAQ](./docs/FAQ.md) (coming soon)
 
 ---
 
