@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @ts-nocheck
 
 /**
  * Comprehensive Test Suite for Finnish Player Detection System

@@ -1,11 +1,12 @@
 <script>
+    // biome-ignore lint/correctness/noUnusedImports: used in template
     import {
-        availableDates,
-        currentDateReadOnly,
         formatDate,
-        selectedDate,
         setDate,
         showCalendarView,
+        selectedDate,
+        currentDateReadOnly,
+        availableDates,
     } from "$lib/stores/gameData.js";
 
     // Generate calendar days for the current selected date's month

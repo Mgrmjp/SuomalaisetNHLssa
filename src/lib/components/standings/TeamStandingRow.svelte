@@ -1,123 +1,125 @@
 <script>
-import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import { getTeamColorVariables } from '$lib/utils/teamColors.js'
-import teamMapping from '$lib/utils/teamMapping.js'
+    // biome-ignore lint/correctness/noUnusedImports: used in template
+    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
+    import { getTeamColorVariables } from "$lib/utils/teamColors.js";
+    import teamMapping from "$lib/utils/teamMapping.js";
 
-let {
-    team,
-    teamData = {},
-    rank,
-    showPlayoffIndicator = false,
-    isWildCard = false,
-    showAdvancedStats = false
-} = $props()
+    const {
+        team,
+        teamData = {},
+        rank,
+        showPlayoffIndicator = false,
+        isWildCard = false,
+        showAdvancedStats = false,
+    } = $props();
 
-// Get team full name
-const teamName = $derived(teamMapping[team] || team)
+    // Get team full name
+    const teamName = $derived(teamMapping[team] || team);
 
-// Determine playoff indicator
-const isPlayoffTeam = $derived(rank <= 3 || isWildCard) // Top 3 in division OR Wild Card
+    // Determine playoff indicator
+    const isPlayoffTeam = $derived(rank <= 3 || isWildCard); // Top 3 in division OR Wild Card
 
-// Use teamData for all team statistics
-const teamStats = $derived(teamData)
+    // Use teamData for all team statistics
+    const teamStats = $derived(teamData);
 
-// Team color variables
-let teamColorVars = $state({
-    '--team-primary-color': '#000000',
-    '--team-secondary-color': '#FFFFFF',
-    '--team-accent-color': '#000000',
-})
+    // Team color variables
+    let teamColorVars = $state({
+        "--team-primary-color": "#000000",
+        "--team-secondary-color": "#FFFFFF",
+        "--team-accent-color": "#000000",
+    });
 
-// Load team colors when team changes
-$effect(async () => {
-    if (team) {
-        try {
-            teamColorVars = await getTeamColorVariables(team)
-        } catch (error) {
-            console.warn(`Failed to load team colors for ${team}:`, error)
+    // Load team colors when team changes
+    $effect(async () => {
+        if (team) {
+            try {
+                teamColorVars = await getTeamColorVariables(team);
+            } catch (error) {
+                console.warn(`Failed to load team colors for ${team}:`, error);
+            }
+        }
+    });
+
+    // Format streak with enhanced gradient styling
+    const streakDisplay = $derived(getEnhancedStreakDisplay(teamData.streak));
+
+    // Format last 10 games
+    const last10Display = $derived(teamData.last10 || "0-0-0");
+
+    // Calculate advanced stats
+    const advancedStats = $derived(calculateAdvancedStats(teamData));
+
+    // Row classes
+    const rowClasses = $derived("border-b border-gray-100 bg-white hover:bg-gray-50");
+
+    // Enhanced streak display with gradients matching PlayerCard style
+    function getEnhancedStreakDisplay(streak) {
+        if (!streak || streak.length < 2) return null;
+
+        const type = streak[0];
+
+        switch (type) {
+            case "W":
+                return {
+                    text: streak,
+                    bg: "bg-gradient-to-br from-green-500 to-green-600",
+                    textColor: "text-white",
+                    ring: "ring-green-300",
+                };
+            case "L":
+                return {
+                    text: streak,
+                    bg: "bg-gradient-to-br from-red-500 to-red-600",
+                    textColor: "text-white",
+                    ring: "ring-red-300",
+                };
+            case "OT":
+                return {
+                    text: streak,
+                    bg: "bg-gradient-to-br from-amber-500 to-orange-500",
+                    textColor: "text-white",
+                    ring: "ring-amber-300",
+                };
+            default:
+                return null;
         }
     }
-})
 
-// Format streak with enhanced gradient styling
-const streakDisplay = $derived(getEnhancedStreakDisplay(teamData.streak))
+    // Calculate advanced statistics
+    function calculateAdvancedStats(stats) {
+        const gamesPlayed = stats.gamesPlayed || 1;
 
-// Format last 10 games
-const last10Display = $derived(teamData.last10 || '0-0-0')
+        // Power Play Percentage (placeholder - would need real PP data)
+        const powerPlayGoals = stats.powerPlayGoals || 0;
+        const powerPlayOpportunities = stats.powerPlayOpportunities || 1;
+        const powerPlayPercentage = ((powerPlayGoals / powerPlayOpportunities) * 100).toFixed(1);
 
-// Calculate advanced stats
-const advancedStats = $derived(calculateAdvancedStats(teamData))
+        // Penalty Kill Percentage (placeholder - would need real PK data)
+        const penaltyKillGoalsAllowed = stats.penaltyKillGoalsAllowed || 0;
+        const penaltyKillTimesShorthanded = stats.penaltyKillTimesShorthanded || 1;
+        const penaltyKillPercentage = (
+            ((penaltyKillTimesShorthanded - penaltyKillGoalsAllowed) /
+                penaltyKillTimesShorthanded) *
+            100
+        ).toFixed(1);
 
-// Row classes
-const rowClasses = $derived('border-b border-gray-100 bg-white hover:bg-gray-50')
+        // Goal Differential
+        const goalDifferential = stats.goalDifferential || stats.goalsFor - stats.goalsAgainst || 0;
 
-// Enhanced streak display with gradients matching PlayerCard style
-function getEnhancedStreakDisplay(streak) {
-    if (!streak || streak.length < 2) return null
+        // Goals For Per Game
+        const goalsForPerGame = ((stats.goalsFor || 0) / gamesPlayed).toFixed(2);
 
-    const type = streak[0]
+        // Goals Against Per Game
+        const goalsAgainstPerGame = ((stats.goalsAgainst || 0) / gamesPlayed).toFixed(2);
 
-    switch (type) {
-        case 'W':
-            return {
-                text: streak,
-                bg: 'bg-gradient-to-br from-green-500 to-green-600',
-                textColor: 'text-white',
-                ring: 'ring-green-300',
-            }
-        case 'L':
-            return {
-                text: streak,
-                bg: 'bg-gradient-to-br from-red-500 to-red-600',
-                textColor: 'text-white',
-                ring: 'ring-red-300',
-            }
-        case 'OT':
-            return {
-                text: streak,
-                bg: 'bg-gradient-to-br from-amber-500 to-orange-500',
-                textColor: 'text-white',
-                ring: 'ring-amber-300',
-            }
-        default:
-            return null
+        return {
+            powerPlayPercentage,
+            penaltyKillPercentage,
+            goalDifferential,
+            goalsForPerGame,
+            goalsAgainstPerGame,
+        };
     }
-}
-
-// Calculate advanced statistics
-function calculateAdvancedStats(stats) {
-    const gamesPlayed = stats.gamesPlayed || 1
-
-    // Power Play Percentage (placeholder - would need real PP data)
-    const powerPlayGoals = stats.powerPlayGoals || 0
-    const powerPlayOpportunities = stats.powerPlayOpportunities || 1
-    const powerPlayPercentage = ((powerPlayGoals / powerPlayOpportunities) * 100).toFixed(1)
-
-    // Penalty Kill Percentage (placeholder - would need real PK data)
-    const penaltyKillGoalsAllowed = stats.penaltyKillGoalsAllowed || 0
-    const penaltyKillTimesShorthanded = stats.penaltyKillTimesShorthanded || 1
-    const penaltyKillPercentage = (
-        ((penaltyKillTimesShorthanded - penaltyKillGoalsAllowed) / penaltyKillTimesShorthanded) *
-        100
-    ).toFixed(1)
-
-    // Goal Differential
-    const goalDifferential = stats.goalDifferential || stats.goalsFor - stats.goalsAgainst || 0
-
-    // Goals For Per Game
-    const goalsForPerGame = ((stats.goalsFor || 0) / gamesPlayed).toFixed(2)
-
-    // Goals Against Per Game
-    const goalsAgainstPerGame = ((stats.goalsAgainst || 0) / gamesPlayed).toFixed(2)
-
-    return {
-        powerPlayPercentage,
-        penaltyKillPercentage,
-        goalDifferential,
-        goalsForPerGame,
-        goalsAgainstPerGame,
-    }
-}
 </script>
 
 <tr
@@ -133,10 +135,7 @@ function calculateAdvancedStats(stats) {
                 {rank}
             </span>
             {#if showPlayoffIndicator && isPlayoffTeam}
-                <div
-                    class="ml-1 w-2 h-2 bg-gray-800 rounded-full"
-                    title="Playoff Position"
-                ></div>
+                <div class="ml-1 w-2 h-2 bg-gray-800 rounded-full" title="Playoff Position"></div>
             {/if}
         </div>
     </td>
@@ -215,7 +214,13 @@ function calculateAdvancedStats(stats) {
 
         <!-- Goal Differential -->
         <td class="px-3 py-3 text-sm text-center w-14">
-            <span class={advancedStats.goalDifferential > 0 ? 'text-green-700' : advancedStats.goalDifferential < 0 ? 'text-red-700' : 'text-gray-700'}>
+            <span
+                class={advancedStats.goalDifferential > 0
+                    ? "text-green-700"
+                    : advancedStats.goalDifferential < 0
+                      ? "text-red-700"
+                      : "text-gray-700"}
+            >
                 {advancedStats.goalDifferential > 0 ? "+" : ""}{advancedStats.goalDifferential}
             </span>
         </td>

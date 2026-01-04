@@ -1,19 +1,21 @@
 <script>
     import { onMount } from "svelte";
+    // biome-ignore lint/correctness/noUnusedImports: used in template
     import ConferenceStandings from "$lib/components/standings/ConferenceStandings.svelte";
+    // biome-ignore lint/correctness/noUnusedImports: used for types/stores
     import { loadStandings, standings, standingsLoading } from "$lib/stores/gameData.js";
 
     let _error = $state(null);
+    // biome-ignore lint/style/useConst: Svelte 5 state
     let _activeConference = $state("eastern"); // 'eastern' or 'western'
+    // biome-ignore lint/style/useConst: Svelte 5 state
     let _showAdvancedStats = $state(false); // Advanced stats toggle
 
     // Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
     let _loading = $state($standingsLoading);
-    let _standingsData = $state($standings || {});
 
     $effect(() => {
         _loading = $standingsLoading;
-        _standingsData = $standings || {};
         console.log("🔍 $effect fired:", {
             _loading,
             $standingsLoading,
@@ -46,7 +48,7 @@
         try {
             await loadStandings();
         } catch (err) {
-            _error = err.message || "Failed to load standings";
+            _error = /** @type {Error} */ (err).message || "Failed to load standings";
             console.error("Standings loading error:", err);
         }
     });
@@ -57,14 +59,9 @@
         try {
             await loadStandings();
         } catch (err) {
-            _error = err.message || "Failed to refresh standings";
+            _error = /** @type {Error} */ (err).message || "Failed to refresh standings";
             console.error("Standings refresh error:", err);
         }
-    }
-
-    // Conference switching
-    function _switchConference(conference) {
-        _activeConference = conference;
     }
 </script>
 

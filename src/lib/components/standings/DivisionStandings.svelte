@@ -1,63 +1,68 @@
 <script>
-import TeamStandingRow from '$lib/components/standings/TeamStandingRow.svelte'
-import { DIVISION_NAMES } from '$lib/utils/nhlStructure.js'
-import { getTeamColorVariables } from '$lib/utils/teamColors.js'
-import teamMapping from '$lib/utils/teamMapping.js'
+    // biome-ignore lint/correctness/noUnusedImports: used in template
+    import TeamStandingRow from "$lib/components/standings/TeamStandingRow.svelte";
+    import { DIVISION_NAMES } from "$lib/utils/nhlStructure.js";
+    import { getTeamColorVariables } from "$lib/utils/teamColors.js";
 
-let {
-    teams = [],
-    divisionName = '',
-    showPlayoffIndicator = true,
-    wildCardTeams = [],
-    showAdvancedStats = false
-} = $props()
+    const {
+        teams = [],
+        divisionName = "",
+        showPlayoffIndicator = true,
+        wildCardTeams = [],
+        showAdvancedStats = false,
+    } = $props();
 
-// Format division name for display
-const displayName = $derived(DIVISION_NAMES[divisionName] || divisionName)
-const hasTeams = $derived(teams && teams.length > 0)
+    // Format division name for display
+    const displayName = $derived(DIVISION_NAMES[divisionName] || divisionName);
+    const hasTeams = $derived(teams && teams.length > 0);
 
-// Load division-leading team colors for container styling
-let divisionLeaderColors = $state({
-    '--team-primary-color': '#003580',
-    '--team-secondary-color': '#6366f1',
-    '--team-accent-color': '#8b5cf6',
-})
+    // Load division-leading team colors for container styling
+    let divisionLeaderColors = $state({
+        "--team-primary-color": "#003580",
+        "--team-secondary-color": "#6366f1",
+        "--team-accent-color": "#8b5cf6",
+    });
 
-// Load team colors when teams change
-$effect(async () => {
-    if (teams && teams.length > 0) {
-        const leaderTeam = teams[0].team
-        try {
-            divisionLeaderColors = await getTeamColorVariables(leaderTeam)
-        } catch (error) {
-            console.warn(`Failed to load colors for division leader ${leaderTeam}:`, error)
-        }
-    }
-})
+    // Load team colors when teams change
+    $effect(() => {
+        (async () => {
+            if (teams && teams.length > 0) {
+                const leaderTeam = teams[0].team;
+                try {
+                    divisionLeaderColors = await getTeamColorVariables(leaderTeam);
+                } catch (error) {
+                    console.warn(`Failed to load colors for division leader ${leaderTeam}:`, error);
+                }
+            }
+        })();
+    });
 
-// Table headers
-const baseHeaders = [
-    { key: 'rank', label: 'Sija', center: true, width: 'w-12' },
-    { key: 'team', label: 'Joukkue', center: false, width: '' },
-    { key: 'gamesPlayed', label: 'O', center: true, width: 'w-12' },
-    { key: 'wins', label: 'V', center: true, width: 'w-12' },
-    { key: 'losses', label: 'H', center: true, width: 'w-12' },
-    { key: 'ot', label: 'JA', center: true, width: 'w-12' },
-    { key: 'points', label: 'P', center: true, width: 'w-12' },
-    { key: 'pointsPct', label: 'P%', center: true, width: 'w-14' },
-    { key: 'streak', label: 'Sarja', center: true, width: 'w-14' },
-    { key: 'last10', label: 'V10', center: true, width: 'w-20' },
-]
+    // Table headers
+    const baseHeaders = [
+        { key: "rank", label: "Sija", center: true, width: "w-12" },
+        { key: "team", label: "Joukkue", center: false, width: "" },
+        { key: "gamesPlayed", label: "O", center: true, width: "w-12" },
+        { key: "wins", label: "V", center: true, width: "w-12" },
+        { key: "losses", label: "H", center: true, width: "w-12" },
+        { key: "ot", label: "JA", center: true, width: "w-12" },
+        { key: "points", label: "P", center: true, width: "w-12" },
+        { key: "pointsPct", label: "P%", center: true, width: "w-14" },
+        { key: "streak", label: "Sarja", center: true, width: "w-14" },
+        { key: "last10", label: "V10", center: true, width: "w-20" },
+    ];
 
-const advancedHeaders = [
-    { key: 'powerPlayPercentage', label: 'YV%', center: true, width: 'w-14' },
-    { key: 'penaltyKillPercentage', label: 'AV%', center: true, width: 'w-14' },
-    { key: 'goalDifferential', label: '+/-', center: true, width: 'w-14' },
-    { key: 'goalsForPerGame', label: 'TM/O', center: true, width: 'w-14' },
-    { key: 'goalsAgainstPerGame', label: 'VM/O', center: true, width: 'w-14' },
-]
+    const advancedHeaders = [
+        { key: "powerPlayPercentage", label: "YV%", center: true, width: "w-14" },
+        { key: "penaltyKillPercentage", label: "AV%", center: true, width: "w-14" },
+        { key: "goalDifferential", label: "+/-", center: true, width: "w-14" },
+        { key: "goalsForPerGame", label: "TM/O", center: true, width: "w-14" },
+        { key: "goalsAgainstPerGame", label: "VM/O", center: true, width: "w-14" },
+    ];
 
-const headers = $derived(showAdvancedStats ? [...baseHeaders, ...advancedHeaders] : baseHeaders)
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
+    const headers = $derived(
+        showAdvancedStats ? [...baseHeaders, ...advancedHeaders] : baseHeaders,
+    );
 </script>
 
 <div
