@@ -1,4 +1,6 @@
-// biome-ignore lint/correctness/noUnusedImports: used in template import {base} from '$app/paths'
+<script>
+    import { base } from "$app/paths";
+</script>
 
 <svelte:head>
     <title>Tietoa - Suomalaiset NHL-pelaajat</title>
