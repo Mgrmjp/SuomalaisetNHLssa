@@ -198,9 +198,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@data': '/data'
-    },
-    // Force browser conditions so Svelte resolves to the client runtime during dev
-    conditions: ['browser', 'development']
+    }
   },
   css: {
     postcss: './postcss.config.js',
