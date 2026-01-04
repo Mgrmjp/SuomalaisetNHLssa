@@ -10,6 +10,10 @@ const config = {
       precompress: false,
       strict: true,
     }),
+    prerender: {
+      // Explicitly generate API endpoints needed by the static site
+      entries: ['*', '/api/available-dates'],
+    },
   },
 };
 

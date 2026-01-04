@@ -2,6 +2,9 @@ import { json } from '@sveltejs/kit'
 import { readdir, readFile } from 'fs/promises'
 import { join } from 'path'
 
+// Pre-render this endpoint so it exists in static builds
+export const prerender = true
+
 /** @type {import('./$types').RequestHandler} */
 export async function GET() {
     try {
