@@ -1,149 +1,149 @@
 <script>
-import flatpickr from 'flatpickr'
-import { onDestroy, onMount } from 'svelte'
-import 'flatpickr/dist/flatpickr.css'
-import { Finnish } from 'flatpickr/dist/l10n/fi.js'
-import {
-    availableDates,
-    currentDateReadOnly,
-    earliestPrepopulatedDate,
-    latestPrepopulatedDate,
-    selectedDate,
-    setDate,
-    showCalendarView,
-} from '$lib/stores/gameData.js'
-import MonthView from './MonthView.svelte'
+    import flatpickr from "flatpickr";
+    import { onDestroy, onMount } from "svelte";
+    import "flatpickr/dist/flatpickr.css";
+    import { Finnish } from "flatpickr/dist/l10n/fi.js";
+    import {
+        availableDates,
+        currentDateReadOnly,
+        latestPrepopulatedDate,
+        selectedDate,
+        setDate,
+        showCalendarView,
+    } from "$lib/stores/gameData.js";
+    import MonthView from "./MonthView.svelte";
 
-// availableDates is now a derived store, so we need to use $availableDates
-import { getRelativeFinnishDate } from '$lib/utils/dateUtils.js'
+    // availableDates is now a derived store, so we need to use $availableDates
 
-$: currentDateValue = $selectedDate || formatLocalDate($currentDateReadOnly)
-$: pickerValue = currentDateValue ? new Date(`${currentDateValue}T00:00:00`) : new Date()
+    $: currentDateValue = $selectedDate || formatLocalDate($currentDateReadOnly);
+    $: pickerValue = currentDateValue ? new Date(`${currentDateValue}T00:00:00`) : new Date();
 
-function _goToPreviousDay() {
-    const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
-    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
+    function _goToPreviousDay() {
+        const currentDateObj = new Date(`${currentDateValue}T00:00:00`);
+        const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`));
 
-    // Find the previous available date
-    const previousDates = availableDateObjects
-        .filter((d) => d < currentDateObj)
-        .sort((a, b) => b - a)
+        // Find the previous available date
+        const previousDates = availableDateObjects
+            .filter((d) => d.getTime() < currentDateObj.getTime())
+            .sort((a, b) => b.getTime() - a.getTime());
 
-    if (previousDates.length > 0) {
-        setDate(formatLocalDate(previousDates[0]))
-    }
-}
-
-function _goToToday() {
-    const today = formatLocalDate($currentDateReadOnly)
-
-    // Find the nearest available date (today or most recent past date with games)
-    const todayDate = new Date(`${today}T00:00:00`)
-    const sortedDates = $availableDates.map((d) => new Date(`${d}T00:00:00`)).sort((a, b) => b - a)
-
-    // Find the most recent date with games (today or earlier)
-    let nearestDate = sortedDates.find((d) => d <= todayDate)
-
-    // If no past dates found, use the earliest available date
-    if (!nearestDate && sortedDates.length > 0) {
-        nearestDate = sortedDates[sortedDates.length - 1]
+        if (previousDates.length > 0 && previousDates[0]) {
+            setDate(formatLocalDate(previousDates[0]));
+        }
     }
 
-    if (nearestDate) {
-        setDate(formatLocalDate(nearestDate))
+    function _goToToday() {
+        const today = formatLocalDate($currentDateReadOnly);
+
+        // Find the nearest available date (today or most recent past date with games)
+        const todayDate = new Date(`${today}T00:00:00`);
+        const sortedDates = $availableDates
+            .map((d) => new Date(`${d}T00:00:00`))
+            .sort((a, b) => b.getTime() - a.getTime());
+
+        // Find the most recent date with games (today or earlier)
+        let nearestDate = sortedDates.find((d) => d <= todayDate);
+
+        // If no past dates found, use the earliest available date
+        if (!nearestDate && sortedDates.length > 0) {
+            nearestDate = sortedDates[sortedDates.length - 1];
+        }
+
+        if (nearestDate) {
+            setDate(formatLocalDate(nearestDate));
+        }
     }
-}
 
-function _goToNextDay() {
-    const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
-    const today = formatLocalDate($currentDateReadOnly)
-    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
+    function _goToNextDay() {
+        const currentDateObj = new Date(`${currentDateValue}T00:00:00`);
+        const today = formatLocalDate($currentDateReadOnly);
+        const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`));
 
-    // Find the next available date (but not past today)
-    const nextDates = availableDateObjects
-        .filter((d) => d > currentDateObj && formatLocalDate(d) <= today)
-        .sort((a, b) => a - b)
+        // Find the next available date (but not past today)
+        const nextDates = availableDateObjects
+            .filter((d) => d > currentDateObj && formatLocalDate(d) <= today)
+            .sort((a, b) => a.getTime() - b.getTime());
 
-    if (nextDates.length > 0) {
-        setDate(formatLocalDate(nextDates[0]))
+        if (nextDates.length > 0 && nextDates[0]) {
+            setDate(formatLocalDate(nextDates[0]));
+        }
     }
-}
 
-/** @param {Date | string} date */
-function formatLocalDate(date) {
-    const d = typeof date === 'string' ? new Date(`${date}T00:00:00`) : date
-    const year = d.getFullYear()
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-}
+    /** @param {Date | string} date */
+    function formatLocalDate(date) {
+        const d = typeof date === "string" ? new Date(`${date}T00:00:00`) : date;
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
 
-$: todayIso = formatLocalDate(new Date())
+    $: todayIso = formatLocalDate(new Date());
 
-function minDateString(a, b) {
-    const aDate = new Date(`${a}T00:00:00`)
-    const bDate = new Date(`${b}T00:00:00`)
-    return aDate <= bDate ? a : b
-}
+    /** @param {string} a
+     * @param {string} b */
+    function minDateString(a, b) {
+        const aDate = new Date(`${a}T00:00:00`);
+        const bDate = new Date(`${b}T00:00:00`);
+        return aDate <= bDate ? a : b;
+    }
 
-$: maxDate = $latestPrepopulatedDate ? minDateString(todayIso, $latestPrepopulatedDate) : todayIso
-$: minDate = $earliestPrepopulatedDate || '2020-10-01'
+    $: maxDate = $latestPrepopulatedDate
+        ? minDateString(todayIso, $latestPrepopulatedDate)
+        : todayIso;
 
-// Check if at first or last available date
-$: isPrevDisabled = $availableDates.length > 0 && currentDateValue === $availableDates[0]
-$: isNextDisabled = $availableDates.length > 0 && currentDateValue === maxDate
-$: relativeLabel = currentDateValue
-    ? getRelativeFinnishDate(currentDateValue, new Date(`${maxDate}T00:00:00`))
-    : ''
+    // Check if at first or last available date
+    $: isPrevDisabled = $availableDates.length > 0 && currentDateValue === $availableDates[0];
+    $: isNextDisabled = $availableDates.length > 0 && currentDateValue === maxDate;
 
-/** @param {string} date */
-function _formatDotted(date) {
-    return new Date(`${date}T00:00:00`).toLocaleDateString('fi-FI', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    })
-}
+    /** @param {string} date */
+    function _formatDotted(date) {
+        return new Date(`${date}T00:00:00`).toLocaleDateString("fi-FI", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+        });
+    }
 
-/** @type {any} */
-let pickerInstance
-/** @type {any} */
-let inputElement
+    /** @type {any} */
+    let pickerInstance;
+    /** @type {any} */
+    let inputElement;
 
-onMount(() => {
-    pickerInstance = flatpickr(inputElement, {
-        locale: Finnish,
-        dateFormat: 'd.m.Y',
-        defaultDate: pickerValue,
-        enable: $availableDates.map((d) => new Date(`${d}T00:00:00`)),
-        onChange: (selectedDates) => {
-            if (selectedDates[0]) {
-                setDate(formatLocalDate(selectedDates[0]))
-            }
-        },
-    })
-})
+    onMount(() => {
+        pickerInstance = flatpickr(inputElement, {
+            locale: Finnish,
+            dateFormat: "d.m.Y",
+            defaultDate: pickerValue,
+            enable: $availableDates.map((d) => new Date(`${d}T00:00:00`)),
+            onChange: (selectedDates) => {
+                if (selectedDates[0]) {
+                    setDate(formatLocalDate(selectedDates[0]));
+                }
+            },
+        });
+    });
 
-onDestroy(() => {
-    if (pickerInstance) pickerInstance.destroy()
-})
+    onDestroy(() => {
+        if (pickerInstance) pickerInstance.destroy();
+    });
 
-// Update flatpickr when available dates change
-$: if (pickerInstance && $availableDates.length > 0) {
-    pickerInstance.set(
-        'enable',
-        $availableDates.map((d) => new Date(`${d}T00:00:00`))
-    )
-}
+    // Update flatpickr when available dates change
+    $: if (pickerInstance && $availableDates.length > 0) {
+        pickerInstance.set(
+            "enable",
+            $availableDates.map((d) => new Date(`${d}T00:00:00`)),
+        );
+    }
 
-// Sync picker instance with reactive pickerValue
-$: if (pickerInstance && pickerValue) {
-    pickerInstance.setDate(pickerValue, false)
-}
+    // Sync picker instance with reactive pickerValue
+    $: if (pickerInstance && pickerValue) {
+        pickerInstance.setDate(pickerValue, false);
+    }
 
-function _toggleCalendar() {
-    showCalendarView.update((v) => !v)
-}
+    function _toggleCalendar() {
+        showCalendarView.update((v) => !v);
+    }
 </script>
 
 <div class="date-controls w-full max-w-4xl mx-auto space-y-4">
@@ -260,6 +260,7 @@ function _toggleCalendar() {
         {/if}
     </div>
 </div>
+```
 
 <style>
     .date-controls__card {
@@ -301,27 +302,96 @@ function _toggleCalendar() {
         border: 1px solid #e2e8f0;
         background: #fff;
         cursor: pointer;
-        font-weight: 600;
-        color: #0f172a;
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
     }
 
     /* flatpickr customization */
     :global(.flatpickr-calendar) {
         box-shadow:
-            0 10px 25px -5px rgba(0, 0, 0, 0.1),
+            0 20px 25px -5px rgba(0, 0, 0, 0.1),
             0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 12px !important;
-        padding: 5px;
+        border: 1px solid #f3f4f6 !important;
+        border-radius: 16px !important;
+        padding: 8px !important;
+        font-family: inherit !important;
+        width: fit-content !important;
+        min-width: 300px !important;
     }
 
-    :global(.flatpickr-day.selected) {
-        background: #2563eb !important;
+    /* Fix year display artifacts */
+    :global(.flatpickr-current-month .numInputWrapper span.arrowUp),
+    :global(.flatpickr-current-month .numInputWrapper span.arrowDown) {
+        display: none !important;
+    }
+
+    :global(.flatpickr-current-month input.cur-year) {
+        padding: 0 0 0 0.5ch !important;
+        margin: 0 !important;
+        background: transparent !important;
+    }
+
+    :global(.flatpickr-current-month input.cur-year::-webkit-inner-spin-button),
+    :global(.flatpickr-current-month input.cur-year::-webkit-outer-spin-button) {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
+    }
+
+    /* Fix arrow hover color */
+    :global(.flatpickr-prev-month:hover svg),
+    :global(.flatpickr-next-month:hover svg) {
+        fill: #2563eb !important; /* blue-600 */
+    }
+
+    :global(.flatpickr-months) {
+        padding-top: 5px !important;
+        padding-bottom: 5px !important;
+    }
+
+    :global(.flatpickr-month) {
+        height: 40px !important;
+    }
+
+    :global(.flatpickr-current-month) {
+        font-size: 110% !important;
+        font-weight: 700 !important;
+    }
+
+    :global(.flatpickr-day) {
+        border-radius: 9999px !important; /* rounded-full */
+        margin-top: 2px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    :global(.flatpickr-day.selected),
+    :global(.flatpickr-day.startRange),
+    :global(.flatpickr-day.endRange),
+    :global(.flatpickr-day.selected.inRange),
+    :global(.flatpickr-day.startRange.inRange),
+    :global(.flatpickr-day.endRange.inRange),
+    :global(.flatpickr-day.selected:focus),
+    :global(.flatpickr-day.startRange:focus),
+    :global(.flatpickr-day.endRange:focus),
+    :global(.flatpickr-day.selected:hover),
+    :global(.flatpickr-day.startRange:hover),
+    :global(.flatpickr-day.endRange:hover),
+    :global(.flatpickr-day.selected.prevMonthDay),
+    :global(.flatpickr-day.startRange.prevMonthDay),
+    :global(.flatpickr-day.endRange.prevMonthDay),
+    :global(.flatpickr-day.selected.nextMonthDay),
+    :global(.flatpickr-day.startRange.nextMonthDay),
+    :global(.flatpickr-day.endRange.nextMonthDay) {
+        background: #2563eb !important; /* blue-600 */
         border-color: #2563eb !important;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3) !important;
     }
 
     :global(.flatpickr-day:hover) {
-        background: #f1f5f9 !important;
+        background: #f3f4f6 !important; /* gray-100 */
+        transform: scale(1.05);
+    }
+
+    :global(.flatpickr-day.selected:hover) {
+        transform: scale(1.05);
+        background: #1d4ed8 !important; /* blue-700 */
+        border-color: #1d4ed8 !important;
     }
 </style>
