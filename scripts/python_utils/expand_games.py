@@ -157,7 +157,7 @@ def main():
     print("=" * 60)
 
     # Find existing Finnish player data files
-    data_dir = Path("data/prepopulated/games")
+    data_dir = Path("static/data/prepopulated/games")
     existing_files = list(data_dir.glob("2025-11-*.json"))
     existing_files.sort()
 
@@ -168,7 +168,7 @@ def main():
     print(f"📁 Found {len(existing_files)} existing files")
 
     # Create output directory
-    output_dir = Path("data/prepopulated/all-players")
+    output_dir = Path("static/data/prepopulated/all-players")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     all_players = []

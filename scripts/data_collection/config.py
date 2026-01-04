@@ -11,7 +11,7 @@ from pathlib import Path
 # =============================================================================
 # Scripts are in scripts/data_collection/, so we go up 3 levels to reach project root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
-DATA_DIR = PROJECT_ROOT / "data"
+DATA_DIR = PROJECT_ROOT / "static" / "data"
 PREPOPULATED_DIR = DATA_DIR / "prepopulated"
 
 # Output directories for different data types

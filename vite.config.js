@@ -123,47 +123,25 @@ export default defineConfig({
     },
     proxy: {
       // Proxy NHL API calls to external NHL API
-      '/api/v1': {
-        target: 'https://api-web.nhle.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        secure: true,
-        // @ts-ignore - Vite proxy types don't include onError but it works at runtime
-        onError: (
-          /** @param {Error} err */
-          err,
-          /** @param {import('http').IncomingMessage & {url?: string}} req */
-          req,
-          /** @param {import('http').ServerResponse} res */
-          res
-        ) => {
-          console.error('\n🔄 NHL API PROXY ERROR 🔄');
-          console.error('='.repeat(40));
-          console.error(`Target URL: https://api-web.nhle.com${req.url}`);
-          console.error(`Error: ${err.message}`);
-          console.error(`Timestamp: ${new Date().toISOString()}`);
-          if (err.code) {
-            console.error(`Error Code: ${err.code}`);
-          }
-          console.error('='.repeat(40));
-        },
-      },
-      // Proxy other API calls to external NHL API, but exclude our custom endpoints
+      // Proxy all NHL API calls
       '/api': {
         target: 'https://api-web.nhle.com',
         changeOrigin: true,
+        secure: true,
         rewrite: (path) => {
-          // Don't rewrite paths for our custom endpoints
-          if (path.includes('/finnish-players')) {
-            return path; // Return as-is so SvelteKit handles it
+          // Keep local endpoints as is for SvelteKit
+          const localEndpoints = ['/api/finnish-players', '/api/available-dates', '/api/player-photo'];
+          if (localEndpoints.some(endpoint => path.startsWith(endpoint))) {
+            return path;
           }
+          // Proxy everything else but remove /api prefix
           return path.replace(/^\/api/, '');
         },
-        secure: true,
-        bypass: (/** @param {import('http').IncomingMessage & {url?: string}} req */req) => {
-          // Bypass proxy for our custom Python API endpoints
-          if (req.url.includes('/finnish-players')) {
-            return true;
+        bypass: (req) => {
+          // Skip proxy for local SvelteKit API routes
+          const localEndpoints = ['/api/finnish-players', '/api/available-dates', '/api/player-photo'];
+          if (localEndpoints.some(endpoint => req.url?.startsWith(endpoint))) {
+             return req.url; // Return the URL to bypass the proxy
           }
           return null;
         },

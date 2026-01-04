@@ -44,7 +44,7 @@ async function loadFinnishPlayers() {
     try {
         // Load the pre-populated Finnish players data
         // This uses the file that's populated by the Python script via build process
-        const dbPath = path.join(process.cwd(), 'data', 'players', 'finnish-roster.json')
+        const dbPath = path.join(process.cwd(), 'static', 'data', 'players', 'finnish-roster.json')
         const data = await readFile(dbPath, 'utf8')
         const parsed = JSON.parse(data)
 

@@ -1,95 +1,99 @@
 <script>
-// biome-ignore lint/correctness/noUnusedImports: used in template
-import {
-    formatDate,
-    setDate,
-    showCalendarView,
-    selectedDate,
-    currentDateReadOnly,
-    availableDates,
-} from '$lib/stores/gameData.js'
+    // biome-ignore lint/correctness/noUnusedImports: used in template
+    import {
+        formatDate,
+        setDate,
+        showCalendarView,
+        selectedDate,
+        currentDateReadOnly,
+        availableDates,
+    } from "$lib/stores/gameData.js";
 
-// Generate calendar days for the current selected date's month
-$: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly))
-$: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $currentDateReadOnly
+    // Generate calendar days for the current selected date's month
+    $: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly));
+    $: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $currentDateReadOnly;
 
-// Get the month and year display string
-function _getMonthYearDisplay() {
-    return currentMonth.toLocaleDateString('fi-FI', {
-        month: 'long',
-        year: 'numeric',
-    })
-}
-
-// Navigate between months
-function _navigateMonth(direction) {
-    const newMonth = new Date(currentMonth)
-    if (direction === 'prev') {
-        newMonth.setMonth(newMonth.getMonth() - 1)
-    } else {
-        newMonth.setMonth(newMonth.getMonth() + 1)
-        // Don't go beyond current date
-        if (newMonth > $currentDateReadOnly) return
+    // Get the month and year display string
+    function _getMonthYearDisplay() {
+        return currentMonth.toLocaleDateString("fi-FI", {
+            month: "long",
+            year: "numeric",
+        });
     }
 
-    // Keep the same day of month if possible, otherwise go to last day of month
-    const originalDay = currentMonth.getDate()
-    const daysInNewMonth = new Date(newMonth.getFullYear(), newMonth.getMonth() + 1, 0).getDate()
-    newMonth.setDate(Math.min(originalDay, daysInNewMonth))
+    // Navigate between months
+    function _navigateMonth(direction) {
+        const newMonth = new Date(currentMonth);
+        if (direction === "prev") {
+            newMonth.setMonth(newMonth.getMonth() - 1);
+        } else {
+            newMonth.setMonth(newMonth.getMonth() + 1);
+            // Don't go beyond current date
+            if (newMonth > $currentDateReadOnly) return;
+        }
 
-    // Update the selected date
-    setDate(formatDate(newMonth))
-}
+        // Keep the same day of month if possible, otherwise go to last day of month
+        const originalDay = currentMonth.getDate();
+        const daysInNewMonth = new Date(
+            newMonth.getFullYear(),
+            newMonth.getMonth() + 1,
+            0,
+        ).getDate();
+        newMonth.setDate(Math.min(originalDay, daysInNewMonth));
 
-// Select a specific date
-function _selectDate(dateStr) {
-    setDate(dateStr)
-    showCalendarView.set(false)
-}
-
-function generateCalendarDays(selectedDateStr) {
-    const date = new Date(`${selectedDateStr}T00:00:00`)
-    const year = date.getFullYear()
-    const month = date.getMonth()
-
-    // First day of month
-    const firstDay = new Date(year, month, 1)
-    // Last day of month
-    const lastDay = new Date(year, month + 1, 0)
-
-    // Start from Monday of the first week
-    const startDate = new Date(firstDay)
-    const dayOfWeek = firstDay.getDay() // 0-6 (Sun-Sat)
-    const diff = (dayOfWeek + 6) % 7 // distance from Monday (0=Mon, 6=Sun)
-    startDate.setDate(startDate.getDate() - diff)
-
-    // End on Sunday of the last week
-    const endDate = new Date(lastDay)
-    const endDayOfWeek = lastDay.getDay()
-    const endDiff = (7 - endDayOfWeek) % 7 // distance to Sunday
-    endDate.setDate(endDate.getDate() + endDiff)
-
-    const days = []
-    const current = new Date(startDate)
-
-    while (current <= endDate) {
-        const dateStr = formatDate(current)
-        const hasData = $availableDates.includes(dateStr)
-
-        days.push({
-            date: new Date(current),
-            dateStr,
-            isCurrentMonth: current.getMonth() === month,
-            isToday: formatDate(current) === formatDate($currentDateReadOnly),
-            isSelected: formatDate(current) === selectedDateStr,
-            hasData: hasData,
-            isFuture: current > $currentDateReadOnly,
-        })
-        current.setDate(current.getDate() + 1)
+        // Update the selected date
+        setDate(formatDate(newMonth));
     }
 
-    return days
-}
+    // Select a specific date
+    function _selectDate(dateStr) {
+        setDate(dateStr);
+        showCalendarView.set(false);
+    }
+
+    function generateCalendarDays(selectedDateStr) {
+        const date = new Date(`${selectedDateStr}T00:00:00`);
+        const year = date.getFullYear();
+        const month = date.getMonth();
+
+        // First day of month
+        const firstDay = new Date(year, month, 1);
+        // Last day of month
+        const lastDay = new Date(year, month + 1, 0);
+
+        // Start from Monday of the first week
+        const startDate = new Date(firstDay);
+        const dayOfWeek = firstDay.getDay(); // 0-6 (Sun-Sat)
+        const diff = (dayOfWeek + 6) % 7; // distance from Monday (0=Mon, 6=Sun)
+        startDate.setDate(startDate.getDate() - diff);
+
+        // End on Sunday of the last week
+        const endDate = new Date(lastDay);
+        const endDayOfWeek = lastDay.getDay();
+        const endDiff = (7 - endDayOfWeek) % 7; // distance to Sunday
+        endDate.setDate(endDate.getDate() + endDiff);
+
+        const days = [];
+        const current = new Date(startDate);
+
+        while (current <= endDate) {
+            const dateStr = formatDate(current);
+            const hasData = $availableDates.includes(dateStr);
+
+            days.push({
+                date: new Date(current),
+                dateStr,
+                isCurrentMonth: current.getMonth() === month,
+                isToday: formatDate(current) === formatDate($currentDateReadOnly),
+                isSelected: formatDate(current) === selectedDateStr,
+                hasData: hasData,
+                isFuture: current > $currentDateReadOnly,
+            });
+            current.setDate(current.getDate() + 1);
+        }
+
+        return days;
+    }
 </script>
 
 <div class="calendar-month bg-white rounded-xl shadow-md p-3 border border-gray-100">
@@ -99,6 +103,7 @@ function generateCalendarDays(selectedDateStr) {
             onclick={() => _navigateMonth("prev")}
             disabled={currentMonth.getMonth() === $currentDateReadOnly.getMonth() &&
                 currentMonth.getFullYear() === $currentDateReadOnly.getFullYear()}
+            data-dashlane-label="true"
         >
             «
         </button>
@@ -110,6 +115,7 @@ function generateCalendarDays(selectedDateStr) {
             onclick={() => _navigateMonth("next")}
             disabled={currentMonth.getMonth() === $currentDateReadOnly.getMonth() &&
                 currentMonth.getFullYear() === $currentDateReadOnly.getFullYear()}
+            data-dashlane-label="true"
         >
             »
         </button>
@@ -132,8 +138,8 @@ function generateCalendarDays(selectedDateStr) {
             {#each calendarDays as day}
                 <button
                     class="calendar-month__day relative aspect-square p-0.5 rounded-lg text-center transition-all duration-200 text-xs font-semibold flex flex-col items-center justify-center"
-                    class:calendar-month__day--other-month={!day.isCurrentMonth && !day.isSelected}
-                    class:calendar-month__day--today={day.isToday && !day.isSelected}
+                    class:calendar-month__day--other-month={!day.isCurrentMonth}
+                    class:calendar-month__day--today={day.isToday}
                     class:calendar-month__day--selected={day.isSelected}
                     class:opacity-20={!day.isCurrentMonth && !day.isSelected}
                     class:bg-finnish-blue-500={day.isToday && !day.isSelected}
@@ -149,8 +155,11 @@ function generateCalendarDays(selectedDateStr) {
                     onclick={() => _selectDate(day.dateStr)}
                     title={day.hasData ? "Pelejä tänä päivänä" : "Ei pelejä"}
                 >
-                    <span class="calendar-month__day-number" style:color={(day.isToday || day.isSelected) ? '#ffffff' : undefined}>{day.date.getDate()}</span>
-                    {#if day.hasData && (day.isCurrentMonth || day.isSelected)}
+                    <span
+                        class="calendar-month__day-number"
+                        class:text-white={day.isToday || day.isSelected}>{day.date.getDate()}</span
+                    >
+                    {#if day.hasData}
                         <div
                             class="calendar-month__day-dot w-1 h-1 rounded-full mt-0.5"
                             class:bg-finnish-blue-400={!day.isSelected && !day.isToday}

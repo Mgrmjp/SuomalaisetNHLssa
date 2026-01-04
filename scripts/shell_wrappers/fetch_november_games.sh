@@ -71,7 +71,7 @@ echo -e "${BLUE}🔍 Checking for existing files...${NC}"
 for day in {1..30}; do
     # Use printf with explicit decimal to avoid octal issues
     date_str=$(printf "2025-11-%02d" $day)
-    if [ -f "data/prepopulated/games/$date_str.json" ]; then
+    if [ -f "static/data/prepopulated/games/$date_str.json" ]; then
         echo -e "${GREEN}✓${NC} $date_str already exists"
         COMPLETED_DATES+=("$date_str (EXISTS)")
         CURRENT_DAY=$((CURRENT_DAY + 1))
@@ -89,7 +89,7 @@ for day in {1..30}; do
     date_str=$(printf "2025-11-%02d" $day)
 
     # Skip if file already exists
-    if [ -f "data/prepopulated/games/$date_str.json" ]; then
+    if [ -f "static/data/prepopulated/games/$date_str.json" ]; then
         continue
     fi
 
@@ -112,8 +112,8 @@ echo -e "${GREEN}✅ Prepopulation complete for November 2025!${NC}"
 # Show summary
 echo
 echo -e "${BLUE}📊 Summary:${NC}"
-echo "Total files: $(ls -1 data/prepopulated/games/2025-11-*.json 2>/dev/null | wc -l)"
-echo "Output directory: data/prepopulated/games/"
+echo "Total files: $(ls -1 static/data/prepopulated/games/2025-11-*.json 2>/dev/null | wc -l)"
+echo "Output directory: static/data/prepopulated/games/"
 
 echo
 echo -e "${BLUE}📋 Processed dates:${NC}"

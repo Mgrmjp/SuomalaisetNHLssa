@@ -24,7 +24,7 @@ START_DATE=$(date -d "$END_DATE - 6 days" +%Y-%m-%d)
 
 for date in $(seq 0 6); do
     file_date=$(date -d "$START_DATE + $date days" +%Y-%m-%d)
-    file="data/prepopulated/games/${file_date}.json"
+    file="static/data/prepopulated/games/${file_date}.json"
 
     if [ -f "$file" ]; then
         players=$(jq -r '.total_players // 0' "$file")

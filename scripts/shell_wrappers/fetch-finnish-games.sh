@@ -10,7 +10,7 @@ echo "Date range: $START_DATE to $END_DATE"
 echo ""
 
 # Create output directory (at project root, not scripts/)
-mkdir -p data/prepopulated/games
+mkdir -p static/data/prepopulated/games
 
 # Loop through dates
 current_date=$(date -d "$START_DATE" +%Y-%m-%d)
@@ -29,4 +29,4 @@ while [ "$(date -d "$current_date" +%Y%m%d)" -le "$(date -d "$end_date" +%Y%m%d)
 done
 
 echo ""
-echo "✅ Done! Finnish players data saved to data/prepopulated/games/"
+echo "✅ Done! Finnish players data saved to static/data/prepopulated/games/"
