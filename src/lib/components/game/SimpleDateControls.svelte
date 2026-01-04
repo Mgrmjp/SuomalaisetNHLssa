@@ -150,7 +150,7 @@
     }
 </script>
 
-<div class="date-controls w-full max-w-3xl mx-auto space-y-4">
+<div class="date-controls w-full max-w-4xl mx-auto space-y-4">
     <div
         class="date-controls__card w-full bg-white border border-gray-200 rounded-xl shadow-lg p-4 md:p-5"
     >
