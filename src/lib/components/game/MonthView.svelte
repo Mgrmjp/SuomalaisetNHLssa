@@ -149,7 +149,7 @@ function generateCalendarDays(selectedDateStr) {
                     onclick={() => _selectDate(day.dateStr)}
                     title={day.hasData ? "Pelejä tänä päivänä" : "Ei pelejä"}
                 >
-                    <span class="calendar-month__day-number">{day.date.getDate()}</span>
+                    <span class="calendar-month__day-number" class:text-white={day.isToday || day.isSelected}>{day.date.getDate()}</span>
                     {#if day.hasData && (day.isCurrentMonth || day.isSelected)}
                         <div
                             class="calendar-month__day-dot w-1 h-1 rounded-full mt-0.5"
