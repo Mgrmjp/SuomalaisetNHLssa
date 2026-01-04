@@ -1,0 +1,72 @@
+name: Realtime Data Update
+
+on:
+  schedule:
+    # Run every 10 minutes (GitHub Action minimum is ~5-10m)
+    # This covers the main NHL game windows in UTC
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  realtime-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r scripts/data_collection/requirements.txt
+
+      - name: Poll for live games
+        run: |
+          # The script checks if games are live on today's date
+          # It automatically handles the late-night/early-morning date logic
+          python scripts/data_collection/realtime_poll.py --once
+
+      - name: Commit and push updated data
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/prepopulated/games/
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: automated realtime data update $(date +'%Y-%m-%d %H:%M')"
+            git push
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './build'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

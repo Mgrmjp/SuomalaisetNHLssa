@@ -24,7 +24,8 @@
         "players:changes": "node scripts/node_utils/player-cli.js changes",
         "players:backup": "node scripts/node_utils/player-cli.js backup",
         "players:restore": "node scripts/node_utils/player-cli.js restore",
-        "players:clean": "node scripts/node_utils/player-cli.js clean"
+        "players:clean": "node scripts/node_utils/player-cli.js clean",
+        "data:realtime": ".venv/bin/python3 scripts/data_collection/realtime_poll.py"
     },
     "devDependencies": {
         "@biomejs/biome": "^2.2.5",

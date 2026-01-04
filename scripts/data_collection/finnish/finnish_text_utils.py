@@ -16,7 +16,8 @@ def get_openai_client():
     if _openai_client is None:
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
-            raise ValueError("OPENAI_API_KEY environment variable not set")
+            # Silently fail if API key not found - will skip corrections
+            return None
         _openai_client = OpenAI(api_key=api_key)
     return _openai_client
 
@@ -41,6 +42,9 @@ def correct_with_openai(text, context_type="city"):
         return _correction_cache[cache_key]
 
     client = get_openai_client()
+    if not client:
+        # Skip correction if OpenAI is not available
+        return text
 
     prompt = f"""You are a Finnish language expert. Determine if this {context_type} name needs Finnish letter corrections (ä, ö, å).
 
