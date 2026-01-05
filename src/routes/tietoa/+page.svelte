@@ -4,6 +4,15 @@ import { base } from '$app/paths'
 
 <svelte:head>
     <title>Tietoa - Suomalaiset NHL-pelaajat</title>
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+      kofiWidgetOverlay.draw('miikkamgr', {
+        'type': 'floating-chat',
+        'floating-chat.donateButton.text': 'Support me',
+        'floating-chat.donateButton.background-color': '#794bc4',
+        'floating-chat.donateButton.text-color': '#fff'
+      });
+    </script>
 </svelte:head>
 
 <div class="w-full max-w-3xl mx-auto px-4 py-8">
