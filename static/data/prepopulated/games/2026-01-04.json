@@ -31,7 +31,7 @@
       "awayTeam": "COL",
       "homeScore": 2,
       "awayScore": 1,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 2,
       "startTime": "2026-01-04T22:00:00Z",
       "finnish_players_count": 4,
@@ -54,7 +54,7 @@
       "homeTeam": "CHI",
       "awayTeam": "VGK",
       "homeScore": 1,
-      "awayScore": 1,
+      "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-01-05T00:00:00Z",
@@ -84,7 +84,7 @@
       "game_id": 2025020659,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:45:55.384285",
+      "created_at": "2026-01-05T01:16:33.367347",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
       "goals": 1,
       "assists": 0,
@@ -106,6 +106,17 @@
       "shifts": 24,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-04",
+          "opponent": "FLA",
+          "opponent_full": "Florida Panthers",
+          "team_score": 1,
+          "opponent_score": 2,
+          "result": "L",
+          "goals": 1,
+          "assists": 0,
+          "points": 1
+        },
         {
           "date": "2026-01-03",
           "opponent": "CAR",
@@ -149,17 +160,6 @@
           "goals": 1,
           "assists": 0,
           "points": 1
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "UTA",
-          "opponent_full": "Utah Mammoth",
-          "team_score": 1,
-          "opponent_score": 0,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
         }
       ]
     },
@@ -184,7 +184,7 @@
       "game_id": 2025020657,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:45:25.628880",
+      "created_at": "2026-01-05T01:16:03.574225",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8478420.png",
       "goals": 0,
       "assists": 1,
@@ -284,7 +284,7 @@
       "game_id": 2025020657,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:45:31.465063",
+      "created_at": "2026-01-05T01:16:09.391165",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8480036.png",
       "goals": 0,
       "assists": 1,
@@ -384,7 +384,7 @@
       "game_id": 2025020657,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:45:19.897684",
+      "created_at": "2026-01-05T01:15:57.735805",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8478449.png",
       "goals": 0,
       "assists": 1,
@@ -484,7 +484,7 @@
       "game_id": 2025020658,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:45:46.634812",
+      "created_at": "2026-01-05T01:16:24.470690",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/PIT/8482758.png",
       "goals": 1,
       "assists": 0,
@@ -584,7 +584,7 @@
       "game_id": 2025020659,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:46:01.132041",
+      "created_at": "2026-01-05T01:16:39.195102",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8482113.png",
       "goals": 0,
       "assists": 0,
@@ -606,6 +606,17 @@
       "shifts": 25,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-04",
+          "opponent": "COL",
+          "opponent_full": "Colorado Avalanche",
+          "team_score": 2,
+          "opponent_score": 1,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0
+        },
         {
           "date": "2026-01-02",
           "opponent": "NYR",
@@ -649,17 +660,6 @@
           "goals": 0,
           "assists": 0,
           "points": 0
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "CAR",
-          "opponent_full": "Carolina Hurricanes",
-          "team_score": 5,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 1,
-          "assists": 0,
-          "points": 1
         }
       ]
     },
@@ -684,7 +684,7 @@
       "game_id": 2025020659,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:46:07.142834",
+      "created_at": "2026-01-05T01:16:45.165249",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8480185.png",
       "goals": 0,
       "assists": 0,
@@ -706,6 +706,17 @@
       "shifts": 25,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-04",
+          "opponent": "COL",
+          "opponent_full": "Colorado Avalanche",
+          "team_score": 2,
+          "opponent_score": 1,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0
+        },
         {
           "date": "2026-01-02",
           "opponent": "NYR",
@@ -749,17 +760,6 @@
           "goals": 1,
           "assists": 0,
           "points": 1
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "CAR",
-          "opponent_full": "Carolina Hurricanes",
-          "team_score": 5,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 2,
-          "points": 2
         }
       ]
     },
@@ -784,7 +784,7 @@
       "game_id": 2025020657,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:45:37.458757",
+      "created_at": "2026-01-05T01:16:15.358144",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8476902.png",
       "goals": 0,
       "assists": 0,
@@ -884,7 +884,7 @@
       "game_id": 2025020660,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:46:27.729355",
+      "created_at": "2026-01-05T01:17:05.906856",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8477996.png",
       "goals": 0,
       "assists": 0,
@@ -893,7 +893,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "02:42",
+      "time_on_ice": "03:22",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -903,7 +903,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 3,
+      "shifts": 4,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -984,7 +984,7 @@
       "game_id": 2025020659,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:46:12.974877",
+      "created_at": "2026-01-05T01:16:51.105966",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8478859.png",
       "goals": 0,
       "assists": 0,
@@ -1006,6 +1006,17 @@
       "shifts": 29,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-04",
+          "opponent": "COL",
+          "opponent_full": "Colorado Avalanche",
+          "team_score": 2,
+          "opponent_score": 1,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0
+        },
         {
           "date": "2026-01-02",
           "opponent": "NYR",
@@ -1049,17 +1060,6 @@
           "goals": 0,
           "assists": 0,
           "points": 0
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "CAR",
-          "opponent_full": "Carolina Hurricanes",
-          "team_score": 5,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 1,
-          "assists": 0,
-          "points": 1
         }
       ]
     },
@@ -1084,16 +1084,16 @@
       "game_id": 2025020660,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:46:21.856705",
+      "created_at": "2026-01-05T01:16:59.862155",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 0,
       "assists": 0,
       "points": 0,
       "empty_net_goals": 0,
       "penalty_minutes": 0,
-      "shots": 2,
+      "shots": 1,
       "plus_minus": 1,
-      "time_on_ice": "06:00",
+      "time_on_ice": "08:33",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -1103,7 +1103,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 7,
+      "shifts": 10,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -1176,15 +1176,15 @@
       "status": "Active",
       "opponent": "VGK",
       "opponent_full": "Vegas Golden Knights",
-      "game_score": "1-1",
-      "game_result": "T",
+      "game_score": "1-2",
+      "game_result": "L",
       "game_venue": "United Center",
       "game_city": "Chicago",
       "game_address": "1901 West Madison Street, Chicago, Illinois, United States",
       "game_id": 2025020661,
       "game_date": "2026-01-04",
       "game_status": "OFF",
-      "created_at": "2026-01-05T00:46:36.773635",
+      "created_at": "2026-01-05T01:17:14.940292",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CHI/8476882.png",
       "goals": 0,
       "assists": 0,
@@ -1193,7 +1193,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "04:14",
+      "time_on_ice": "05:40",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 1,
@@ -1203,7 +1203,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 7,
+      "shifts": 9,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -1265,6 +1265,6 @@
     }
   ],
   "total_players": 12,
-  "generated_at": "2026-01-05T00:46:42.524944",
+  "generated_at": "2026-01-05T01:17:20.745265",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
