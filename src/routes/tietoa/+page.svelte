@@ -4,15 +4,6 @@
 
 <svelte:head>
     <title>Tietoa - Suomalaiset NHL-pelaajat</title>
-    <script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
-    <script>
-        kofiWidgetOverlay.draw("miikkamgr", {
-            type: "floating-chat",
-            "floating-chat.donateButton.text": "Support me",
-            "floating-chat.donateButton.background-color": "#794bc4",
-            "floating-chat.donateButton.text-color": "#fff",
-        });
-    </script>
 </svelte:head>
 
 <div class="w-full max-w-3xl mx-auto px-4 py-8">
@@ -74,6 +65,23 @@
                     Affiliate-yhteistyöt eivät vaikuta sivuston sisältöön tai näytettäviin
                     tilastoihin.
                 </p>
+            </div>
+        </section>
+
+        <!-- Ko-fi section -->
+        <section
+            class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm flex flex-col items-center"
+        >
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Tue sivustoa</h2>
+            <div id="kofi-widget-container">
+                <script
+                    type="text/javascript"
+                    src="https://storage.ko-fi.com/cdn/widget/Widget_2.js"
+                ></script>
+                <script type="text/javascript">
+                    kofiwidget2.init("Support me on Ko-fi", "#3b82f6", "Z8Z16PHF0");
+                    kofiwidget2.draw();
+                </script>
             </div>
         </section>
 
