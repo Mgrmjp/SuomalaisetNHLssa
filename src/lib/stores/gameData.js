@@ -201,6 +201,13 @@ export const latestPrepopulatedDate = derived(
 // Use a store to ensure currentDate is always reactive
 export const currentDate = writable(new Date())
 
+// Yesterday's date in YYYY-MM-DD format
+export const yesterdayDate = derived(currentDate, ($currentDate) => {
+    const yesterday = new Date($currentDate)
+    yesterday.setDate(yesterday.getDate() - 1)
+    return yesterday.toISOString().split('T')[0]
+})
+
 // Memory Management: Store interval ID for cleanup
 let currentDateInterval = null
 
@@ -445,17 +452,19 @@ export async function setDate(date) {
 
 /**
  * Reset the application to its default state
- * (latest date, players view, calendar closed)
+ * (yesterday's date, players view, calendar closed)
  */
 export async function resetToDefault() {
+    const yesterday = get(yesterdayDate)
     const latestDate = get(latestPrepopulatedDate)
 
     // Reset view and calendar
     selectedViewStore.set('players')
     showCalendarView.set(false)
 
-    // Reset date (this will also trigger loadPlayersForDate)
-    if (latestDate) {
-        return await setDate(latestDate)
+    // Reset date (prefer yesterday, fallback to latest prepopulated)
+    const defaultDate = yesterday || latestDate
+    if (defaultDate) {
+        return await setDate(defaultDate)
     }
 }
