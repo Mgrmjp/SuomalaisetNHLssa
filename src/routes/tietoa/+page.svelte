@@ -1,17 +1,17 @@
 <script>
-import { base } from '$app/paths'
+    import { base } from "$app/paths";
 </script>
 
 <svelte:head>
     <title>Tietoa - Suomalaiset NHL-pelaajat</title>
-    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
     <script>
-      kofiWidgetOverlay.draw('miikkamgr', {
-        'type': 'floating-chat',
-        'floating-chat.donateButton.text': 'Support me',
-        'floating-chat.donateButton.background-color': '#794bc4',
-        'floating-chat.donateButton.text-color': '#fff'
-      });
+        kofiWidgetOverlay.draw("miikkamgr", {
+            type: "floating-chat",
+            "floating-chat.donateButton.text": "Support me",
+            "floating-chat.donateButton.background-color": "#794bc4",
+            "floating-chat.donateButton.text-color": "#fff",
+        });
     </script>
 </svelte:head>
 
@@ -43,7 +43,7 @@ import { base } from '$app/paths'
             <h2 class="text-xl font-semibold text-gray-900 mb-3">Sivustosta</h2>
             <p class="text-gray-700 leading-relaxed">
                 Tämä sivusto seuraa suomalaisten NHL-pelaajien ottelutilastoja päivittäin. Voit
-                valita minkä tahansa päivän ja nähdä kyisenä iltana pelanneiden suomalaisten
+                valita minkä tahansa päivän ja nähdä kyseisenä iltana pelanneiden suomalaisten
                 pelaajien maalit, syötöt, pisteet ja jääajat.
             </p>
         </section>
@@ -71,7 +71,8 @@ import { base } from '$app/paths'
                     <li>Muut affiliate-verkostot</li>
                 </ul>
                 <p class="text-sm text-gray-500 mt-3">
-                    Affiliate-yhteistyöt ei vaikuta sivuston sisältöön tai näytettäviin tilastoihin.
+                    Affiliate-yhteistyöt eivät vaikuta sivuston sisältöön tai näytettäviin
+                    tilastoihin.
                 </p>
             </div>
         </section>
