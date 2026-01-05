@@ -1,88 +1,93 @@
 <script>
-import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
-import PlayerCard from '$lib/components/game/PlayerCard.svelte'
-import { displayDate, error, isLoading, players, setDate } from '$lib/stores/gameData.js'
-import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
+    import LoadingSpinner from "$lib/components/ui/LoadingSpinner.svelte";
+    import PlayerCard from "$lib/components/game/PlayerCard.svelte";
+    import { displayDate, error, isLoading, players, setDate } from "$lib/stores/gameData.js";
+    import {
+        getSavePercentage,
+        hasPoints,
+        isDefense,
+        isGoalie,
+    } from "$lib/utils/positionHelpers.js";
 
-function _handleRetry() {
-    const currentDate = new Date().toISOString().split('T')[0]
-    setDate(currentDate)
-}
-
-/**
- * Check if a goalie actually played in the game
- * Goalie must have logged time, faced shots, made saves, or allowed goals
- *
- * @param {Object} player - Player object
- * @returns {boolean} True if goalie participated in the game
- */
-function goalieHasPlayed(player) {
-    const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0)
-    const saves = Number(player.saves ?? player.goalie_saves ?? 0)
-    const goalsAgainst = Number(player.goals_against ?? player.goalsAgainst ?? 0)
-    const toi = player.time_on_ice || player.toi || ''
-
-    return (
-        shotsAgainst > 0 ||
-        saves > 0 ||
-        goalsAgainst > 0 ||
-        (toi && toi !== '00:00' && toi !== '0:00')
-    )
-}
-
-/**
- * Filter players based on position and performance
- * - Goalies: must have actually played (faced shots, made saves, etc.)
- * - Skaters: must have recorded at least one point
- *
- * @param {Object[]} players - Array of player objects
- * @returns {Object[]} Filtered array of players
- */
-$: filteredPlayers = ($players || []).filter((player) => {
-    if (isGoalie(player)) {
-        return goalieHasPlayed(player)
+    function _handleRetry() {
+        const currentDate = new Date().toISOString().split("T")[0];
+        setDate(currentDate);
     }
-    return hasPoints(player)
-})
 
-/**
- * Sort skaters by points (primary), then goals, plus/minus, and assists
- *
- * @param {Object[]} list - Array of skater objects
- * @returns {Object[]} Sorted array
- */
-const sortSkatersByPoints = (list) =>
-    [...list].sort(
-        (a, b) =>
-            (b.points || 0) - (a.points || 0) ||
-            (b.goals || 0) - (a.goals || 0) ||
-            (b.plus_minus ?? -Infinity) - (a.plus_minus ?? -Infinity) ||
-            (b.assists || 0) - (a.assists || 0)
-    )
+    /**
+     * Check if a goalie actually played in the game
+     * Goalie must have logged time, faced shots, made saves, or allowed goals
+     *
+     * @param {Object} player - Player object
+     * @returns {boolean} True if goalie participated in the game
+     */
+    function goalieHasPlayed(player) {
+        const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0);
+        const saves = Number(player.saves ?? player.goalie_saves ?? 0);
+        const goalsAgainst = Number(player.goals_against ?? player.goalsAgainst ?? 0);
+        const toi = player.time_on_ice || player.toi || "";
 
-/**
- * Sort goalies by save percentage (best first)
- *
- * @param {Object[]} list - Array of goalie objects
- * @returns {Object[]} Sorted array
- */
-const sortGoalies = (list) =>
-    [...list].sort((a, b) => {
-        const aPct = getSavePercentage(a)
-        const bPct = getSavePercentage(b)
+        return (
+            shotsAgainst > 0 ||
+            saves > 0 ||
+            goalsAgainst > 0 ||
+            (toi && toi !== "00:00" && toi !== "0:00")
+        );
+    }
 
-        if (aPct === null && bPct === null) return 0
-        if (aPct === null) return 1
-        if (bPct === null) return -1
+    /**
+     * Filter players based on position and performance
+     * - Goalies: must have actually played (faced shots, made saves, etc.)
+     * - Skaters: must have recorded at least one point
+     *
+     * @param {Object[]} players - Array of player objects
+     * @returns {Object[]} Filtered array of players
+     */
+    $: filteredPlayers = ($players || []).filter((player) => {
+        if (isGoalie(player)) {
+            return goalieHasPlayed(player);
+        }
+        return hasPoints(player);
+    });
 
-        return bPct - aPct
-    })
+    /**
+     * Sort skaters by points (primary), then goals, plus/minus, and assists
+     *
+     * @param {Object[]} list - Array of skater objects
+     * @returns {Object[]} Sorted array
+     */
+    const sortSkatersByPoints = (list) =>
+        [...list].sort(
+            (a, b) =>
+                (b.points || 0) - (a.points || 0) ||
+                (b.goals || 0) - (a.goals || 0) ||
+                (b.plus_minus ?? -Infinity) - (a.plus_minus ?? -Infinity) ||
+                (b.assists || 0) - (a.assists || 0),
+        );
 
-$: forwards = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)))
-$: defenders = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)))
-$: goalies = sortGoalies(filteredPlayers.filter((p) => isGoalie(p)))
+    /**
+     * Sort goalies by save percentage (best first)
+     *
+     * @param {Object[]} list - Array of goalie objects
+     * @returns {Object[]} Sorted array
+     */
+    const sortGoalies = (list) =>
+        [...list].sort((a, b) => {
+            const aPct = getSavePercentage(a);
+            const bPct = getSavePercentage(b);
 
-$: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
+            if (aPct === null && bPct === null) return 0;
+            if (aPct === null) return 1;
+            if (bPct === null) return -1;
+
+            return bPct - aPct;
+        });
+
+    $: forwards = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)));
+    $: defenders = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)));
+    $: goalies = sortGoalies(filteredPlayers.filter((p) => isGoalie(p)));
+
+    $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0;
 </script>
 
 {#if $isLoading}
@@ -103,7 +108,7 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
         />
     </div>
 {:else}
-    <section id="scoringList" class="scoring-list py-8">
+    <section id="scoringList" class="scoring-list py-12 bg-gray-50/50">
         <div class="scoring-list__container container mx-auto px-4">
             {#if !hasAnyPlayers && $isLoading === false}
                 <div
@@ -171,15 +176,14 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
                 <div class="scoring-list__sections space-y-10">
                     {#if forwards.length}
                         <div class="scoring-list__section space-y-4">
-                            <div class="scoring-list__section-header flex items-center gap-3">
+                            <div
+                                class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                            >
                                 <h3
-                                    class="scoring-list__section-title text-lg font-semibold text-gray-900"
+                                    class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                                 >
                                     Hyökkääjät
                                 </h3>
-                                <p class="scoring-list__section-subtitle text-sm text-gray-600">
-                                    (järjestetty pisteiden mukaan)
-                                </p>
                             </div>
                             <div
                                 class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -189,22 +193,19 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
                                 {/each}
                             </div>
                         </div>
-                        <div
-                            class="scoring-list__divider h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"
-                        ></div>
+                        <div class="h-8"></div>
                     {/if}
 
                     {#if defenders.length}
                         <div class="scoring-list__section space-y-4">
-                            <div class="scoring-list__section-header flex items-center gap-3">
+                            <div
+                                class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                            >
                                 <h3
-                                    class="scoring-list__section-title text-lg font-semibold text-gray-900"
+                                    class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                                 >
                                     Puolustajat
                                 </h3>
-                                <p class="scoring-list__section-subtitle text-sm text-gray-600">
-                                    (järjestetty pisteiden mukaan)
-                                </p>
                             </div>
                             <div
                                 class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -214,22 +215,19 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
                                 {/each}
                             </div>
                         </div>
-                        <div
-                            class="scoring-list__divider h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"
-                        ></div>
+                        <div class="h-8"></div>
                     {/if}
 
                     {#if goalies.length}
                         <div class="scoring-list__section space-y-4">
-                            <div class="scoring-list__section-header flex items-center gap-3">
+                            <div
+                                class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                            >
                                 <h3
-                                    class="scoring-list__section-title text-lg font-semibold text-gray-900"
+                                    class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                                 >
                                     Maalivahdit
                                 </h3>
-                                <p class="scoring-list__section-subtitle text-sm text-gray-600">
-                                    (järjestetty torjuntaprosentin mukaan)
-                                </p>
                             </div>
                             <div
                                 class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"

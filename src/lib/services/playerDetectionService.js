@@ -5,9 +5,11 @@
  * without relying on a static database. Each player is verified in real-time.
  */
 
+import { base } from '$app/paths'
+
 // Configuration
 const CONFIG = {
-    NHL_API_BASE: '/api', // Use proxy instead of direct API
+    NHL_API_BASE: base + '/api', // Use proxy instead of direct API
     REQUEST_TIMEOUT: 8000,
     MAX_RETRIES: 2,
     RETRY_DELAY: 500,
@@ -155,7 +157,7 @@ async function getFinnishPlayerIds() {
  */
 async function fetchFinnishPlayersFromPython() {
     try {
-        const response = await fetch('/api/finnish-players')
+        const response = await fetch(`${base}/api/finnish-players`)
         if (!response.ok) {
             throw new Error(
                 `Failed to fetch Finnish players: ${response.status} ${response.statusText}`

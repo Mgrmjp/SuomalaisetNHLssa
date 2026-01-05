@@ -4,12 +4,10 @@
  * Centralized API fetching logic with consistent error handling and retry logic
  */
 
-// Base path for static assets (for GitHub Pages compatibility)
-let appBase = ''
-if (typeof window !== 'undefined') {
-    // Get base path from current URL
-    appBase = window.location.pathname.replace(/\/[^/]*$/, '') || ''
-}
+import { base } from '$app/paths'
+
+// Base path for static assets
+const appBase = base
 
 /**
  * Fetch data from NHL API with retry logic

@@ -3,13 +3,11 @@
  * Extracts dominant colors from team SVG logos and provides them for styling
  */
 
+import { base } from '$app/paths'
 import logger from './logger.js'
 
 // Cache for extracted team colors
 const teamColorCache = new Map()
-
-// Clear cache for debugging
-teamColorCache.clear()
 
 // Predefined fallback colors for teams in case extraction fails
 const fallbackTeamColors = {
@@ -199,17 +197,7 @@ function _calculateColorVibrancyScore(hexColor, frequency) {
 async function extractTeamColors(teamAbbr) {
     const normalizedTeam = teamAbbr.toLowerCase()
 
-    // Get base path for GitHub Pages
-    const getBasePath = () => {
-        if (typeof window !== 'undefined') {
-            const path = window.location.pathname
-            const match = path.match(/^\/[^/]+/)
-            return match ? match[0] : ''
-        }
-        return ''
-    }
-
-    const svgPath = `${getBasePath()}/nhl-logos/${normalizedTeam}.svg`
+    const svgPath = `${base}/nhl-logos/${normalizedTeam}.svg`
 
     try {
         // In browser environment, we'll fetch the SVG content

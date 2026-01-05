@@ -1,154 +1,156 @@
 <script>
-import flatpickr from 'flatpickr'
-import { onDestroy, onMount } from 'svelte'
-import 'flatpickr/dist/flatpickr.css'
-import { Finnish } from 'flatpickr/dist/l10n/fi.js'
-import {
-    availableDates,
-    currentDateReadOnly,
-    latestPrepopulatedDate,
-    selectedDate,
-    setDate,
-    showCalendarView,
-} from '$lib/stores/gameData.js'
-import MonthView from './MonthView.svelte'
+    import flatpickr from "flatpickr";
+    import { onDestroy, onMount } from "svelte";
+    import "flatpickr/dist/flatpickr.css";
+    import { Finnish } from "flatpickr/dist/l10n/fi.js";
+    import {
+        availableDates,
+        currentDateReadOnly,
+        latestPrepopulatedDate,
+        selectedDate,
+        setDate,
+        showCalendarView,
+    } from "$lib/stores/gameData.js";
+    import MonthView from "./MonthView.svelte";
 
-// availableDates is now a derived store, so we need to use $availableDates
+    // availableDates is now a derived store, so we need to use $availableDates
 
-$: currentDateValue = $selectedDate || formatLocalDate($currentDateReadOnly)
-$: pickerValue = currentDateValue ? new Date(`${currentDateValue}T00:00:00`) : new Date()
+    $: currentDateValue = $selectedDate || formatLocalDate($currentDateReadOnly);
+    $: pickerValue = currentDateValue ? new Date(`${currentDateValue}T00:00:00`) : new Date();
 
-function _goToPreviousDay() {
-    const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
-    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
+    function _goToPreviousDay() {
+        const currentDateObj = new Date(`${currentDateValue}T00:00:00`);
+        const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`));
 
-    // Find the previous available date
-    const previousDates = availableDateObjects
-        .filter((d) => d.getTime() < currentDateObj.getTime())
-        .sort((a, b) => b.getTime() - a.getTime())
+        // Find the previous available date
+        const previousDates = availableDateObjects
+            .filter((d) => d.getTime() < currentDateObj.getTime())
+            .sort((a, b) => b.getTime() - a.getTime());
 
-    if (previousDates.length > 0 && previousDates[0]) {
-        setDate(formatLocalDate(previousDates[0]))
-    }
-}
-
-function _goToToday() {
-    const today = formatLocalDate($currentDateReadOnly)
-
-    // Find the nearest available date (today or most recent past date with games)
-    const todayDate = new Date(`${today}T00:00:00`)
-    const sortedDates = $availableDates
-        .map((d) => new Date(`${d}T00:00:00`))
-        .sort((a, b) => b.getTime() - a.getTime())
-
-    // Find the most recent date with games (today or earlier)
-    let nearestDate = sortedDates.find((d) => d <= todayDate)
-
-    // If no past dates found, use the earliest available date
-    if (!nearestDate && sortedDates.length > 0) {
-        nearestDate = sortedDates[sortedDates.length - 1]
+        if (previousDates.length > 0 && previousDates[0]) {
+            setDate(formatLocalDate(previousDates[0]));
+        }
     }
 
-    if (nearestDate) {
-        setDate(formatLocalDate(nearestDate))
+    function _goToToday() {
+        const today = formatLocalDate($currentDateReadOnly);
+
+        // Find the nearest available date (today or most recent past date with games)
+        const todayDate = new Date(`${today}T00:00:00`);
+        const sortedDates = $availableDates
+            .map((d) => new Date(`${d}T00:00:00`))
+            .sort((a, b) => b.getTime() - a.getTime());
+
+        // Find the most recent date with games (today or earlier)
+        let nearestDate = sortedDates.find((d) => d <= todayDate);
+
+        // If no past dates found, use the earliest available date
+        if (!nearestDate && sortedDates.length > 0) {
+            nearestDate = sortedDates[sortedDates.length - 1];
+        }
+
+        if (nearestDate) {
+            setDate(formatLocalDate(nearestDate));
+        }
     }
-}
 
-function _goToNextDay() {
-    const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
-    const today = formatLocalDate($currentDateReadOnly)
-    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
+    function _goToNextDay() {
+        const currentDateObj = new Date(`${currentDateValue}T00:00:00`);
+        const today = formatLocalDate($currentDateReadOnly);
+        const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`));
 
-    // Find the next available date (but not past today)
-    const nextDates = availableDateObjects
-        .filter((d) => d > currentDateObj && formatLocalDate(d) <= today)
-        .sort((a, b) => a.getTime() - b.getTime())
+        // Find the next available date (but not past today)
+        const nextDates = availableDateObjects
+            .filter((d) => d > currentDateObj && formatLocalDate(d) <= today)
+            .sort((a, b) => a.getTime() - b.getTime());
 
-    if (nextDates.length > 0 && nextDates[0]) {
-        setDate(formatLocalDate(nextDates[0]))
+        if (nextDates.length > 0 && nextDates[0]) {
+            setDate(formatLocalDate(nextDates[0]));
+        }
     }
-}
 
-/** @param {Date | string} date */
-function formatLocalDate(date) {
-    const d = typeof date === 'string' ? new Date(`${date}T00:00:00`) : date
-    const year = d.getFullYear()
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-}
+    /** @param {Date | string} date */
+    function formatLocalDate(date) {
+        const d = typeof date === "string" ? new Date(`${date}T00:00:00`) : date;
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
 
-$: todayIso = formatLocalDate(new Date())
+    $: todayIso = formatLocalDate(new Date());
 
-/** @param {string} a
- * @param {string} b */
-function minDateString(a, b) {
-    const aDate = new Date(`${a}T00:00:00`)
-    const bDate = new Date(`${b}T00:00:00`)
-    return aDate <= bDate ? a : b
-}
+    /** @param {string} a
+     * @param {string} b */
+    function minDateString(a, b) {
+        const aDate = new Date(`${a}T00:00:00`);
+        const bDate = new Date(`${b}T00:00:00`);
+        return aDate <= bDate ? a : b;
+    }
 
-$: maxDate = $latestPrepopulatedDate ? minDateString(todayIso, $latestPrepopulatedDate) : todayIso
+    $: maxDate = $latestPrepopulatedDate
+        ? minDateString(todayIso, $latestPrepopulatedDate)
+        : todayIso;
 
-// Check if at first or last available date
-$: isPrevDisabled = $availableDates.length > 0 && currentDateValue === $availableDates[0]
-$: isNextDisabled = $availableDates.length > 0 && currentDateValue === maxDate
+    // Check if at first or last available date
+    $: isPrevDisabled = $availableDates.length > 0 && currentDateValue === $availableDates[0];
+    $: isNextDisabled = $availableDates.length > 0 && currentDateValue === maxDate;
 
-/** @param {string} date */
-function _formatDotted(date) {
-    return new Date(`${date}T00:00:00`).toLocaleDateString('fi-FI', {
-        day: 'numeric',
-        month: 'numeric',
-        year: 'numeric',
-    })
-}
+    /** @param {string} date */
+    function _formatDotted(date) {
+        return new Date(`${date}T00:00:00`).toLocaleDateString("fi-FI", {
+            day: "numeric",
+            month: "numeric",
+            year: "numeric",
+        });
+    }
 
-/** @type {any} */
-let pickerInstance
-/** @type {any} */
-let inputElement
+    /** @type {any} */
+    let pickerInstance;
+    /** @type {any} */
+    let inputElement;
 
-onMount(() => {
-    pickerInstance = flatpickr(inputElement, {
-        locale: Finnish,
-        dateFormat: 'd.m.Y',
-        defaultDate: pickerValue,
-        enable: $availableDates.map((d) => new Date(`${d}T00:00:00`)),
-        onChange: (selectedDates) => {
-            if (selectedDates[0]) {
-                setDate(formatLocalDate(selectedDates[0]))
-            }
-        },
-    })
-})
+    onMount(() => {
+        pickerInstance = flatpickr(inputElement, {
+            locale: Finnish,
+            dateFormat: "d.m.Y",
+            defaultDate: pickerValue,
+            enable: $availableDates.map((d) => new Date(`${d}T00:00:00`)),
+            onChange: (selectedDates) => {
+                if (selectedDates[0]) {
+                    setDate(formatLocalDate(selectedDates[0]));
+                }
+            },
+        });
+    });
 
-onDestroy(() => {
-    if (pickerInstance) pickerInstance.destroy()
-})
+    onDestroy(() => {
+        if (pickerInstance) pickerInstance.destroy();
+    });
 
-// Update flatpickr when available dates change
-$: if (pickerInstance && $availableDates.length > 0) {
-    pickerInstance.set(
-        'enable',
-        $availableDates.map((d) => new Date(`${d}T00:00:00`))
-    )
-}
+    // Update flatpickr when available dates change
+    $: if (pickerInstance && $availableDates.length > 0) {
+        pickerInstance.set(
+            "enable",
+            $availableDates.map((d) => new Date(`${d}T00:00:00`)),
+        );
+    }
 
-// Sync picker instance with reactive pickerValue
-$: if (pickerInstance && pickerValue) {
-    pickerInstance.setDate(pickerValue, false)
-}
+    // Sync picker instance with reactive pickerValue
+    $: if (pickerInstance && pickerValue) {
+        pickerInstance.setDate(pickerValue, false);
+    }
 
-function _toggleCalendar() {
-    showCalendarView.update((v) => !v)
-}
+    function _toggleCalendar() {
+        showCalendarView.update((v) => !v);
+    }
 </script>
 
 <div class="date-controls w-full max-w-4xl mx-auto space-y-4">
     <div
         class="date-controls__card w-full bg-white border border-gray-200 rounded-xl shadow-lg p-4 md:p-5"
     >
-        <div class="flex items-center gap-2 md:gap-4">
+        <div class="date-controls__navigation-row flex items-center gap-2 md:gap-4">
             <button
                 type="button"
                 onclick={_goToPreviousDay}
@@ -167,13 +169,19 @@ function _toggleCalendar() {
                 </svg>
             </button>
 
-            <div class="flex-1 flex flex-col gap-3">
-                <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="date-controls__main-content flex-1 flex flex-col gap-3">
+                <div
+                    class="date-controls__header-row flex flex-col sm:flex-row items-center justify-between gap-3"
+                >
                     <div class="date-controls__selected-info text-center sm:text-left">
-                        <div class="date-controls__label text-xs sm:text-sm font-semibold text-blue-800">
+                        <div
+                            class="date-controls__label text-xs sm:text-sm font-semibold text-blue-800"
+                        >
                             Valittu päivämäärä
                         </div>
-                        <div class="date-controls__value text-lg sm:text-xl font-bold text-gray-900">
+                        <div
+                            class="date-controls__value text-lg sm:text-xl font-bold text-gray-900"
+                        >
                             {currentDateValue ? _formatDotted(currentDateValue) : "-"}
                         </div>
                     </div>
@@ -252,7 +260,9 @@ function _toggleCalendar() {
         </div>
 
         {#if $showCalendarView}
-            <div class="mt-4 animate-in fade-in slide-in-from-top-4 duration-300 flex justify-center">
+            <div
+                class="mt-4 animate-in fade-in slide-in-from-top-4 duration-300 flex justify-center"
+            >
                 <MonthView />
             </div>
         {/if}

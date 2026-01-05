@@ -71,7 +71,7 @@
 
 <div class="standings-view">
     <!-- Header -->
-    <div class="mb-8 text-center">
+    <div class="standings-header mb-8 text-center">
         <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
             NHL Sarjataulukot {_currentSeason}
         </h1>
@@ -79,9 +79,9 @@
 
         {#if hasAnyData}
             <!-- Controls -->
-            <div class="flex flex-wrap justify-center items-center gap-4 mb-6">
+            <div class="standings-controls flex flex-wrap justify-center items-center gap-4 mb-6">
                 <!-- Conference Toggle -->
-                <div class="flex bg-gray-100 rounded-lg p-1 gap-x-1">
+                <div class="conference-toggle flex bg-gray-100 rounded-lg p-1 gap-x-1">
                     <button
                         type="button"
                         class="px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-gray-600 hover:text-gray-900 hover:bg-white"
@@ -107,7 +107,7 @@
                 <!-- Advanced Stats Toggle -->
                 <button
                     type="button"
-                    class="px-4 py-2 rounded-md text-sm font-medium border transition-colors cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-50"
+                    class="advanced-stats-toggle px-4 py-2 rounded-md text-sm font-medium border transition-colors cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-50"
                     class:bg-blue-50={_showAdvancedStats}
                     class:border-blue-300={_showAdvancedStats}
                     class:text-blue-700={_showAdvancedStats}
@@ -120,10 +120,10 @@
     </div>
 
     <!-- Main Content -->
-    <div class="max-w-7xl mx-auto">
+    <div class="standings-main-container max-w-7xl mx-auto">
         {#if _loading && !hasAnyData}
             <!-- Initial Loading State -->
-            <div class="text-center py-16">
+            <div class="standings-loading-state text-center py-16">
                 <div
                     class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4"
                 >
@@ -155,7 +155,7 @@
             </div>
         {:else if _error}
             <!-- Error State -->
-            <div class="text-center py-16">
+            <div class="standings-error-state text-center py-16">
                 <div
                     class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4"
                 >
@@ -186,7 +186,7 @@
             </div>
         {:else if !hasAnyData && !_loading}
             <!-- No Data State -->
-            <div class="text-center py-16">
+            <div class="standings-empty-state text-center py-16">
                 <div
                     class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4"
                 >

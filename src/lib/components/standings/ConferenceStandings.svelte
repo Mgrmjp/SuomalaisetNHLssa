@@ -1,47 +1,47 @@
 <script>
-// biome-ignore lint/correctness/noUnusedImports: used in template
-import DivisionStandings from '$lib/components/standings/DivisionStandings.svelte'
-import { CONFERENCE_NAMES, calculateWildCardTeams } from '$lib/utils/nhlStructure.js'
+    // biome-ignore lint/correctness/noUnusedImports: used in template
+    import DivisionStandings from "$lib/components/standings/DivisionStandings.svelte";
+    import { CONFERENCE_NAMES, calculateWildCardTeams } from "$lib/utils/nhlStructure.js";
 
-const {
-    conferenceData = {},
-    conferenceName = '',
-    loading = false,
-    error = null,
-    showAdvancedStats = false,
-} = $props()
+    const {
+        conferenceData = {},
+        conferenceName = "",
+        loading = false,
+        error = null,
+        showAdvancedStats = false,
+    } = $props();
 
-// Format conference name for display
-const displayName = $derived(CONFERENCE_NAMES[conferenceName] || conferenceName)
+    // Format conference name for display
+    const displayName = $derived(CONFERENCE_NAMES[conferenceName] || conferenceName);
 
-// Check if conference has data
-const hasData = $derived(conferenceData && Object.keys(conferenceData).length > 0)
-const divisions = $derived(hasData ? Object.entries(conferenceData) : [])
-const hasDivisions = $derived(divisions.length > 0)
+    // Check if conference has data
+    const hasData = $derived(conferenceData && Object.keys(conferenceData).length > 0);
+    const divisions = $derived(hasData ? Object.entries(conferenceData) : []);
+    const hasDivisions = $derived(divisions.length > 0);
 
-// Calculate Wild Card teams for this conference
-const allConferenceData = $derived(hasData ? { [conferenceName]: conferenceData } : {})
-const wildCardData = $derived(hasData ? calculateWildCardTeams(allConferenceData) : {})
-const wildCardTeams = $derived(wildCardData[conferenceName] || [])
+    // Calculate Wild Card teams for this conference
+    const allConferenceData = $derived(hasData ? { [conferenceName]: conferenceData } : {});
+    const wildCardData = $derived(hasData ? calculateWildCardTeams(allConferenceData) : {});
+    const wildCardTeams = $derived(wildCardData[conferenceName] || []);
 
-// Loading state
-const isLoading = $derived(loading || !hasData)
+    // Loading state
+    const isLoading = $derived(loading || !hasData);
 
-// Error state
-// biome-ignore lint/correctness/noUnusedVariables: used in template
-const hasError = $derived(error !== null)
+    // Error state
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
+    const hasError = $derived(error !== null);
 
-// Debug logging
-$effect(() => {
-    console.log('🔍 ConferenceStandings:', {
-        conferenceName,
-        hasData,
-        isLoading,
-        loading,
-        divisionsCount: divisions.length,
-        conferenceDataKeys: Object.keys(conferenceData || {}).length,
-    })
-})
+    // Debug logging
+    $effect(() => {
+        console.log("🔍 ConferenceStandings:", {
+            conferenceName,
+            hasData,
+            isLoading,
+            loading,
+            divisionsCount: divisions.length,
+            conferenceDataKeys: Object.keys(conferenceData || {}).length,
+        });
+    });
 </script>
 
 <div class="conference-standings">
@@ -74,7 +74,7 @@ $effect(() => {
             </div>
         </div>
     {:else if isLoading}
-        <div class="mb-6">
+        <div class="conference-loading mb-6">
             <div class="flex items-center justify-center py-8">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
@@ -83,7 +83,7 @@ $effect(() => {
 
     <!-- Conference Title -->
     {#if hasData && !hasError}
-        <div class="mb-8">
+        <div class="conference-header mb-8">
             <h2 class="conference-title text-2xl font-bold mb-3 text-gray-900">
                 {displayName}
             </h2>
@@ -91,9 +91,9 @@ $effect(() => {
         </div>
 
         <!-- Divisions Grid -->
-        <div class="grid gap-6 lg:grid-cols-2 xl:grid-cols-1 w-full overflow-hidden">
+        <div class="divisions-grid grid gap-6 lg:grid-cols-2 xl:grid-cols-1 w-full overflow-hidden">
             {#each divisions as [divisionName, teams]}
-                <div class="min-w-0 w-full overflow-hidden">
+                <div class="division-card-wrapper min-w-0 w-full overflow-hidden">
                     <DivisionStandings
                         {teams}
                         {divisionName}
@@ -106,7 +106,7 @@ $effect(() => {
         </div>
 
         <!-- Conference Legend -->
-        <div class="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div class="standings-legend mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg">
             <h3 class="text-sm font-semibold text-gray-900 mb-3">Selitteet</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700">
                 <div class="flex items-center space-x-2">

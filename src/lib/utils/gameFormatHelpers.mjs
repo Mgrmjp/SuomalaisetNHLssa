@@ -86,7 +86,7 @@ export function formatGameVenue(player) {
     if (!player.game_venue && !player.game_city) return ''
 
     if (player.game_venue && player.game_city) {
-        return `${player.game_venue} — ${player.game_city}`
+        return `${player.game_venue}, ${player.game_city}`
     }
     if (player.game_venue) {
         return player.game_venue

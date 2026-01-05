@@ -1,10 +1,8 @@
 <script>
-    import FinnishRoster from "$lib/components/game/FinnishRoster.svelte";
     import PlayerList from "$lib/components/game/PlayerList.svelte";
     import SimpleDateControls from "$lib/components/game/SimpleDateControls.svelte";
     import Snowfall from "$lib/components/ui/Snowfall.svelte";
-    import StandingsView from "$lib/components/standings/StandingsView.svelte";
-    import ViewToggle from "$lib/components/ui/ViewToggle.svelte";
+    import NavTabs from "$lib/components/ui/NavTabs.svelte";
     import { base } from "$app/paths";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
@@ -13,7 +11,6 @@
         players,
         resetToDefault,
         selectedDate,
-        selectedView,
         setDate,
         yesterdayDate,
     } from "$lib/stores/gameData.js";
@@ -89,19 +86,19 @@
         </div>
     </div>
 
-    <div class="space-y-8">
+    <div class="space-y-8 main-content-wrapper">
         <!-- Controls Section -->
         <div>
             <SimpleDateControls />
         </div>
 
-        <!-- View Toggle -->
-        <ViewToggle />
+        <!-- Navigation -->
+        <NavTabs />
 
-        <!-- Hero Stats - Only show on Players view -->
-        {#if $selectedView === "players" && $players && $players.length > 0}
-            <div class="text-center mb-4">
-                <p class="text-sm text-gray-600">Valitun päivän yhteistilastot</p>
+        <!-- Hero Stats -->
+        {#if $players && $players.length > 0}
+            <div class="text-center mb-4 hero-summary-header">
+                <p class="text-sm text-gray-600 hero-summary-text">Valitun päivän yhteistilastot</p>
             </div>
             <div class="flex flex-wrap justify-center gap-8 hero-stats">
                 <div class="text-center hero-stat hero-stat--goals">
@@ -213,17 +210,8 @@
             </div>
         {/if}
 
-        <!-- Content based on selected view -->
-        {#if $selectedView === "players"}
-            <!-- Player List -->
-            <PlayerList />
-        {:else if $selectedView === "standings"}
-            <!-- Standings View -->
-            <StandingsView />
-        {:else if $selectedView === "roster"}
-            <!-- Finnish Roster View -->
-            <FinnishRoster />
-        {/if}
+        <!-- Player List (Default View) -->
+        <PlayerList />
     </div>
 
     <!-- Footer link -->

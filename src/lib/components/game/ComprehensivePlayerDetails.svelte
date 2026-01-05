@@ -1,148 +1,156 @@
 <script>
-import { base } from '$app/paths'
+    import { base } from "$app/paths";
 
-import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
-import { games } from '$lib/stores/gameData.js'
-import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+    import { isPlayerGameLive } from "$lib/utils/gameStateHelpers.mjs";
+    import { games } from "$lib/stores/gameData.js";
+    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
 
-export let player
-export let showComprehensiveDetails = false
+    let { player, isOpen = false, onclose } = $props();
 
-// Reactive variables for player photo
-let playerPhotoUrl = null
-let photoError = false
-let imageLoading = true
-let lqipUrl = null
-let imageLoaded = false
+    // Internal state as Svelte 5 runes
+    let playerPhotoUrl = $state(null);
+    let photoError = $state(false);
+    let imageLoading = $state(true);
+    let lqipUrl = $state(null);
+    let imageLoaded = $state(false);
 
-// Get player headshot URL
-function getPlayerHeadshotUrl(playerId) {
-    if (!playerId) return null
-    return `${base}/headshots/thumbs/${playerId}.jpg`
-}
-
-// Generate LQIP (Low Quality Image Placeholder)
-function _generateLQIP(playerId) {
-    if (!playerId) return null
-    const canvas = document.createElement('canvas')
-    canvas.width = 64
-    canvas.height = 64
-    const ctx = canvas.getContext('2d')
-
-    const hue = (parseInt(playerId, 10) * 137.508) % 360
-    ctx.fillStyle = `hsl(${hue}, 30%, 85%)`
-    ctx.fillRect(0, 0, 64, 64)
-
-    return canvas.toDataURL()
-}
-
-// Preload player image
-function preloadPlayerImage(playerId) {
-    if (!playerId) return
-
-    imageLoading = true
-    imageLoaded = false
-    playerPhotoUrl = null
-
-    // Set LQIP immediately
-    lqipUrl = getPlayerHeadshotUrl(playerId)
-
-    // Load full image after delay
-    setTimeout(() => {
-        const img = new Image()
-        const url = player.headshot_url
-
-        img.onload = () => {
-            playerPhotoUrl = url
-            photoError = false
-            imageLoading = false
-            // Add delay before removing blur
-            setTimeout(() => {
-                imageLoaded = true
-            }, 100)
-        }
-
-        img.onerror = () => {
-            photoError = true
-            playerPhotoUrl = null
-            imageLoading = false
-        }
-
-        img.src = url
-    }, 500)
-}
-
-// Preload image when player changes
-$: if (player?.playerId) {
-    preloadPlayerImage(player.playerId)
-}
-
-function _closeComprehensiveDetails(event) {
-    event.preventDefault()
-    event.stopPropagation()
-    showComprehensiveDetails = false
-}
-
-function _handleBackdropClick(event) {
-    if (event.target === event.currentTarget) {
-        showComprehensiveDetails = false
+    // Get player headshot URL
+    function getPlayerHeadshotUrl(playerId) {
+        if (!playerId) return null;
+        return `${base}/headshots/thumbs/${playerId}.jpg`;
     }
-}
 
-function _toggleSeasonStats(event) {
-    if (event) {
-        event.preventDefault()
-        event.stopPropagation()
+    // Generate LQIP (Low Quality Image Placeholder)
+    function _generateLQIP(playerId) {
+        if (!playerId) return null;
+        const canvas = document.createElement("canvas");
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext("2d");
+
+        const hue = (parseInt(playerId, 10) * 137.508) % 360;
+        ctx.fillStyle = `hsl(${hue}, 30%, 85%)`;
+        ctx.fillRect(0, 0, 64, 64);
+
+        return canvas.toDataURL();
     }
-    // This will be handled by the parent component
-    const seasonStatsEvent = new CustomEvent('toggle-season-stats')
-    window.dispatchEvent(seasonStatsEvent)
-}
 
-$: displayName = player.name?.default || player.name || 'Unknown Player'
-$: gamesData = $games
-$: isLive = isPlayerGameLive(player, gamesData)
-$: headshotUrl = player.headshot_url || null
-$: playerInitials = displayName
-    .split(' ')
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('')
-    .slice(0, 2)
-$: iceTime = player.time_on_ice || player.ice_time
-$: hasGameStats =
-    player.goals > 0 ||
-    player.assists > 0 ||
-    player.points > 0 ||
-    (player.penalty_minutes || 0) > 0 ||
-    player.plus_minus !== undefined
-$: hasAdvancedStats =
-    player.position !== 'G' &&
-    (player.faceoffs_taken > 0 ||
-        player.takeaways > 0 ||
-        player.giveaways > 0 ||
-        player.blocked_shots > 0 ||
-        player.hits > 0 ||
-        player.power_play_goals > 0 ||
-        player.short_handed_goals > 0 ||
-        player.even_strength_goals > 0 ||
-        player.power_play_assists > 0 ||
-        player.short_handed_assists > 0)
-$: hasContextStats =
-    player.shifts > 0 ||
-    player.average_ice_time ||
-    iceTime ||
-    (player.blocked_shots > 0 && player.position === 'D') ||
-    player.shots > 0
+    // Preload player image
+    function preloadPlayerImage(playerId) {
+        if (!playerId) return;
+
+        imageLoading = true;
+        imageLoaded = false;
+        playerPhotoUrl = null;
+
+        // Set LQIP immediately
+        lqipUrl = getPlayerHeadshotUrl(playerId);
+
+        // Load full image after delay
+        setTimeout(() => {
+            const img = new Image();
+            const url = player.headshot_url;
+
+            img.onload = () => {
+                playerPhotoUrl = url;
+                photoError = false;
+                imageLoading = false;
+                // Add delay before removing blur
+                setTimeout(() => {
+                    imageLoaded = true;
+                }, 100);
+            };
+
+            img.onerror = () => {
+                photoError = true;
+                playerPhotoUrl = null;
+                imageLoading = false;
+            };
+
+            img.src = url;
+        }, 500);
+    }
+
+    // Preload image when player changes using $effect
+    $effect(() => {
+        if (player?.playerId) {
+            preloadPlayerImage(player.playerId);
+        }
+    });
+
+    function _closeComprehensiveDetails(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        if (onclose) onclose();
+    }
+
+    function _handleBackdropClick(event) {
+        if (event.target === event.currentTarget) {
+            if (onclose) onclose();
+        }
+    }
+
+    function _toggleSeasonStats(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        // This will be handled by the parent component
+        const seasonStatsEvent = new CustomEvent("toggle-season-stats");
+        window.dispatchEvent(seasonStatsEvent);
+    }
+
+    const displayName = $derived(player.name?.default || player.name || "Unknown Player");
+    const gamesData = $derived($games);
+    const isLive = $derived(isPlayerGameLive(player, gamesData));
+    const headshotUrl = $derived(player.headshot_url || null);
+    const playerInitials = $derived(
+        displayName
+            .split(" ")
+            .map((part) => part.charAt(0).toUpperCase())
+            .join("")
+            .slice(0, 2),
+    );
+    const iceTime = $derived(player.time_on_ice || player.ice_time);
+    const hasGameStats = $derived(
+        player.goals > 0 ||
+            player.assists > 0 ||
+            player.points > 0 ||
+            (player.penalty_minutes || 0) > 0 ||
+            player.plus_minus !== undefined,
+    );
+    const hasAdvancedStats = $derived(
+        player.position !== "G" &&
+            (player.faceoffs_taken > 0 ||
+                player.takeaways > 0 ||
+                player.giveaways > 0 ||
+                player.blocked_shots > 0 ||
+                player.hits > 0 ||
+                player.power_play_goals > 0 ||
+                player.short_handed_goals > 0 ||
+                player.even_strength_goals > 0 ||
+                player.power_play_assists > 0 ||
+                player.short_handed_assists > 0),
+    );
+    const hasContextStats = $derived(
+        player.shifts > 0 ||
+            player.average_ice_time ||
+            iceTime ||
+            (player.blocked_shots > 0 && player.position === "D") ||
+            player.shots > 0,
+    );
 </script>
 
 <!-- Comprehensive Details Modal -->
-{#if showComprehensiveDetails}
+{#if isOpen}
     <div
         class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 comprehensive-details-overlay"
         role="button"
         tabindex="0"
-        on:click={_handleBackdropClick}
-        on:keydown={(e) =>
+        onclick={_handleBackdropClick}
+        onkeydown={(e) =>
             (e.key === "Escape" || e.key === "Enter" || e.key === " ") && _handleBackdropClick(e)}
     >
         <div
@@ -258,8 +266,8 @@ $: hasContextStats =
                     </div>
                     <button
                         type="button"
-                        class="p-2 rounded-lg gradient-button-ghost gradient-button-ghost--sm"
-                        on:click={_closeComprehensiveDetails}
+                        class="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                        onclick={_closeComprehensiveDetails}
                         aria-label="Sulje"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
@@ -479,7 +487,7 @@ $: hasContextStats =
                                         })}
                                     </div>
                                     <div class="recent-result-opponent">
-                                        <TeamLogo team={game.opponent} size="16" />
+                                        <TeamLogo team={game.opponent} size="24" />
                                         <span>{game.opponent}</span>
                                     </div>
                                     <div class="recent-result-stats">
