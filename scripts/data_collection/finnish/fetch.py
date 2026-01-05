@@ -373,6 +373,11 @@ def get_player_recent_games(player_id, player_team, limit=10):
             else:
                 opponent_full = opponent_abbrev
 
+            # Skip games where goalie didn't play (no shots faced = backup/scratch)
+            shots_against = game.get('shotsAgainst', 0)
+            if shots_against == 0:
+                continue
+
             recent_games.append({
                 'date': game_date,
                 'opponent': opponent_abbrev,
@@ -382,7 +387,11 @@ def get_player_recent_games(player_id, player_team, limit=10):
                 'result': result,
                 'goals': game.get('goals', 0),
                 'assists': game.get('assists', 0),
-                'points': game.get('points', 0)
+                'points': game.get('points', 0),
+                'goals_against': game.get('goalsAgainst', 0),
+                'save_percentage': round(game.get('savePctg', 0.0), 3) if game.get('savePctg') else 0.0,
+                'shots_against': shots_against,
+                'saves': shots_against - game.get('goalsAgainst', 0) if game.get('goalsAgainst') is not None else 0
             })
 
         return recent_games

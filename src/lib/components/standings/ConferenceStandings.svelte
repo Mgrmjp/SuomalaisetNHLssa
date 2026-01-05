@@ -118,7 +118,7 @@
                     <span>V</span>
                     <span>H</span>
                     <span>JA</span>
-                    <span class="text-gray-500">Ottelut • Voitot • Häviöt • Jälkieisa-häviöt</span>
+                    <span class="text-gray-500">Ottelut • Voitot • Häviöt • Jatkoaika-häviöt</span>
                 </div>
                 <div class="flex items-center space-x-2">
                     <span>P</span>

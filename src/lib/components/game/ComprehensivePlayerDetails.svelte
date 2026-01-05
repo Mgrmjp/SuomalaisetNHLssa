@@ -113,13 +113,18 @@
             .join("")
             .slice(0, 2),
     );
+    const isGoalie = $derived(
+        (player.position || "").toUpperCase() === "G" ||
+            (player.position || "").toUpperCase() === "GOALIE",
+    );
     const iceTime = $derived(player.time_on_ice || player.ice_time);
     const hasGameStats = $derived(
         player.goals > 0 ||
             player.assists > 0 ||
             player.points > 0 ||
             (player.penalty_minutes || 0) > 0 ||
-            player.plus_minus !== undefined,
+            (!isGoalie && player.plus_minus !== undefined) ||
+            (isGoalie && (player.saves > 0 || player.shots_against > 0)),
     );
     const hasAdvancedStats = $derived(
         player.position !== "G" &&
@@ -139,7 +144,15 @@
             player.average_ice_time ||
             iceTime ||
             (player.blocked_shots > 0 && player.position === "D") ||
-            player.shots > 0,
+            player.shots > 0 ||
+            (isGoalie && player.time_on_ice),
+    );
+    const goalieSavePct = $derived(
+        player.save_percentage !== undefined
+            ? Math.round(player.save_percentage * 1000) / 10
+            : player.shots_against > 0
+              ? Math.round((player.saves / player.shots_against) * 1000) / 10
+              : null,
     );
 </script>
 
@@ -322,7 +335,7 @@
                                         <div class="stat-panel__label">Pisteet</div>
                                     </div>
                                 {/if}
-                                {#if player.plus_minus !== undefined}
+                                {#if !isGoalie && player.plus_minus !== undefined}
                                     <div class="stat-panel__card">
                                         <div class="stat-panel__value">
                                             {player.plus_minus > 0 ? "+" : ""}{player.plus_minus}
@@ -336,6 +349,41 @@
                                             {player.penalty_minutes}
                                         </div>
                                         <div class="stat-panel__label">Rangaistusminuutit</div>
+                                    </div>
+                                {/if}
+                            {/if}
+
+                            {#if isGoalie}
+                                {#if player.saves !== undefined}
+                                    <div class="stat-panel__card">
+                                        <div class="stat-panel__value">{player.saves}</div>
+                                        <div class="stat-panel__label">Torjunnat</div>
+                                    </div>
+                                {/if}
+                                {#if player.shots_against !== undefined}
+                                    <div class="stat-panel__card">
+                                        <div class="stat-panel__value">{player.shots_against}</div>
+                                        <div class="stat-panel__label">Laukaukset kohti</div>
+                                    </div>
+                                {/if}
+                                {#if player.goals_against !== undefined}
+                                    <div class="stat-panel__card">
+                                        <div class="stat-panel__value">{player.goals_against}</div>
+                                        <div class="stat-panel__label">Päästetyt maalit</div>
+                                    </div>
+                                {/if}
+                                {#if goalieSavePct !== null}
+                                    <div class="stat-panel__card">
+                                        <div class="stat-panel__value">{goalieSavePct}%</div>
+                                        <div class="stat-panel__label">Torjuntaprosentti</div>
+                                    </div>
+                                {/if}
+                                {#if player.goals_against === 0 && player.saves > 0}
+                                    <div class="stat-panel__card border-green-200 bg-green-50">
+                                        <div class="stat-panel__value text-green-600">JEES</div>
+                                        <div class="stat-panel__label text-green-700 font-bold">
+                                            Nollapeli
+                                        </div>
                                     </div>
                                 {/if}
                             {/if}
@@ -454,6 +502,12 @@
                                         <div class="stat-panel__label">Laukaukset</div>
                                     </div>
                                 {/if}
+                                {#if isGoalie && iceTime}
+                                    <div class="stat-panel__card stat-panel__card--ice-time">
+                                        <div class="stat-panel__value">{iceTime}</div>
+                                        <div class="stat-panel__label">Peliaika</div>
+                                    </div>
+                                {/if}
                             {/if}
                         </div>
                     </div>
@@ -491,24 +545,65 @@
                                         <span>{game.opponent}</span>
                                     </div>
                                     <div class="recent-result-stats">
-                                        <div class="recent-result-stat recent-result-stat--goals">
-                                            <span class="recent-result-stat__label">M</span>
-                                            <span class="recent-result-stat__value"
-                                                >{game.goals}</span
+                                        {#if isGoalie}
+                                            <div
+                                                class="recent-result-stat recent-result-stat--goals"
+                                                title="Päästetyt maalit"
                                             >
-                                        </div>
-                                        <div class="recent-result-stat recent-result-stat--assists">
-                                            <span class="recent-result-stat__label">S</span>
-                                            <span class="recent-result-stat__value"
-                                                >{game.assists}</span
+                                                <span class="recent-result-stat__label">P</span>
+                                                <span class="recent-result-stat__value"
+                                                    >{game.goals_against ?? "-"}</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="recent-result-stat recent-result-stat--assists"
+                                                title="Torjunnat"
                                             >
-                                        </div>
-                                        <div class="recent-result-stat recent-result-stat--points">
-                                            <span class="recent-result-stat__label">P</span>
-                                            <span class="recent-result-stat__value"
-                                                >{game.points}</span
+                                                <span class="recent-result-stat__label">T</span>
+                                                <span class="recent-result-stat__value"
+                                                    >{game.saves ?? "-"}</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="recent-result-stat recent-result-stat--points"
+                                                title="Torjuntaprosentti"
                                             >
-                                        </div>
+                                                <span class="recent-result-stat__label">T%</span>
+                                                <span class="recent-result-stat__value"
+                                                    >{game.save_percentage
+                                                        ? Math.round(game.save_percentage * 100)
+                                                        : "-"}</span
+                                                >
+                                            </div>
+                                        {:else}
+                                            <div
+                                                class="recent-result-stat recent-result-stat--goals"
+                                                title="Maalit"
+                                            >
+                                                <span class="recent-result-stat__label">M</span>
+                                                <span class="recent-result-stat__value"
+                                                    >{game.goals}</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="recent-result-stat recent-result-stat--assists"
+                                                title="Syötöt"
+                                            >
+                                                <span class="recent-result-stat__label">S</span>
+                                                <span class="recent-result-stat__value"
+                                                    >{game.assists}</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="recent-result-stat recent-result-stat--points"
+                                                title="Pisteet"
+                                            >
+                                                <span class="recent-result-stat__label">P</span>
+                                                <span class="recent-result-stat__value"
+                                                    >{game.points}</span
+                                                >
+                                            </div>
+                                        {/if}
                                     </div>
                                     <div class="recent-result-indicator">
                                         {#if game.result === "W"}

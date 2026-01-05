@@ -75,7 +75,7 @@
                 };
             case "OT":
                 return {
-                    text: streak,
+                    text: streak.replace("OT", "JA"),
                     bg: "bg-gradient-to-br from-amber-500 to-orange-500",
                     textColor: "text-white",
                     ring: "ring-amber-300",
