@@ -96,7 +96,7 @@
       "game_id": 2025020513,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:54:28.265245",
+      "created_at": "2026-01-06T00:19:27.952759",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8480009.png",
       "goals": 0,
       "assists": 0,
@@ -117,63 +117,7 @@
       "short_handed_assists": 0,
       "shifts": 23,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-29",
-          "opponent": "VAN",
-          "opponent_full": "Vancouver Canucks",
-          "team_score": 2,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-28",
-          "opponent": "PHI",
-          "opponent_full": "Philadelphia Flyers",
-          "team_score": 4,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 2,
-          "assists": 1,
-          "points": 3
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "LAK",
-          "opponent_full": "Los Angeles Kings",
-          "team_score": 3,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 2,
-          "points": 2
-        },
-        {
-          "date": "2025-12-22",
-          "opponent": "ANA",
-          "opponent_full": "Anaheim Ducks",
-          "team_score": 3,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 1,
-          "points": 1
-        },
-        {
-          "date": "2025-12-20",
-          "opponent": "SJS",
-          "opponent_full": "San Jose Sharks",
-          "team_score": 4,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 1,
-          "assists": 1,
-          "points": 2
-        }
-      ]
+      "recent_results": []
     },
     {
       "playerId": 8483497,
@@ -196,7 +140,7 @@
       "game_id": 2025020513,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:54:34.112596",
+      "created_at": "2026-01-06T00:19:33.874093",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8483497.png",
       "goals": 0,
       "assists": 0,
@@ -217,63 +161,7 @@
       "short_handed_assists": 0,
       "shifts": 13,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-22",
-          "opponent": "ANA",
-          "opponent_full": "Anaheim Ducks",
-          "team_score": 3,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-20",
-          "opponent": "SJS",
-          "opponent_full": "San Jose Sharks",
-          "team_score": 4,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-18",
-          "opponent": "CGY",
-          "opponent_full": "Calgary Flames",
-          "team_score": 2,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 1,
-          "points": 1
-        },
-        {
-          "date": "2025-12-16",
-          "opponent": "COL",
-          "opponent_full": "Colorado Avalanche",
-          "team_score": 3,
-          "opponent_score": 5,
-          "result": "L",
-          "goals": 0,
-          "assists": 1,
-          "points": 1
-        },
-        {
-          "date": "2025-12-14",
-          "opponent": "BUF",
-          "opponent_full": "Buffalo Sabres",
-          "team_score": 1,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     },
     {
       "playerId": 8476914,
@@ -292,11 +180,11 @@
       "game_result": "L",
       "game_venue": "Grand Casino Arena",
       "game_city": "Minnesota",
-      "game_address": "St. Paul Skyway, Saint Paul, Minnesota, United States",
+      "game_address": "Kellogg Boulevard West, Saint Paul, Minnesota, United States",
       "game_id": 2025020511,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:54:09.931917",
+      "created_at": "2026-01-06T00:19:09.167754",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
       "goals": 0,
       "assists": 0,
@@ -331,7 +219,11 @@
           "result": "L",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 3,
+          "save_percentage": 0.909,
+          "shots_against": 33,
+          "saves": 30
         },
         {
           "date": "2025-12-21",
@@ -342,7 +234,11 @@
           "result": "L",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 5,
+          "save_percentage": 0.706,
+          "shots_against": 17,
+          "saves": 12
         },
         {
           "date": "2025-12-11",
@@ -353,7 +249,11 @@
           "result": "W",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 3,
+          "save_percentage": 0.897,
+          "shots_against": 29,
+          "saves": 26
         },
         {
           "date": "2025-12-04",
@@ -364,7 +264,11 @@
           "result": "W",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 2,
+          "save_percentage": 0.949,
+          "shots_against": 39,
+          "saves": 37
         },
         {
           "date": "2025-12-02",
@@ -375,7 +279,11 @@
           "result": "L",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 0,
+          "save_percentage": 1.0,
+          "shots_against": 9,
+          "saves": 9
         }
       ]
     },
@@ -400,7 +308,7 @@
       "game_id": 2025020508,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:53:36.174351",
+      "created_at": "2026-01-06T00:18:34.543814",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8477996.png",
       "goals": 0,
       "assists": 0,
@@ -421,63 +329,7 @@
       "short_handed_assists": 0,
       "shifts": 15,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-19",
-          "opponent": "UTA",
-          "opponent_full": "Utah Mammoth",
-          "team_score": 2,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-17",
-          "opponent": "VGK",
-          "opponent_full": "Vegas Golden Knights",
-          "team_score": 2,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-14",
-          "opponent": "VAN",
-          "opponent_full": "Vancouver Canucks",
-          "team_score": 1,
-          "opponent_score": 2,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-13",
-          "opponent": "ANA",
-          "opponent_full": "Anaheim Ducks",
-          "team_score": 4,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 2,
-          "points": 2
-        },
-        {
-          "date": "2025-12-03",
-          "opponent": "DAL",
-          "opponent_full": "Dallas Stars",
-          "team_score": 0,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     },
     {
       "playerId": 8481554,
@@ -500,7 +352,7 @@
       "game_id": 2025020513,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:54:40.384139",
+      "created_at": "2026-01-06T00:19:39.879747",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8481554.png",
       "goals": 0,
       "assists": 0,
@@ -521,63 +373,7 @@
       "short_handed_assists": 0,
       "shifts": 23,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-29",
-          "opponent": "VAN",
-          "opponent_full": "Vancouver Canucks",
-          "team_score": 2,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-28",
-          "opponent": "PHI",
-          "opponent_full": "Philadelphia Flyers",
-          "team_score": 4,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 1,
-          "points": 1
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "LAK",
-          "opponent_full": "Los Angeles Kings",
-          "team_score": 3,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-22",
-          "opponent": "ANA",
-          "opponent_full": "Anaheim Ducks",
-          "team_score": 3,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 2,
-          "points": 2
-        },
-        {
-          "date": "2025-12-20",
-          "opponent": "SJS",
-          "opponent_full": "San Jose Sharks",
-          "team_score": 4,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     },
     {
       "playerId": 8480947,
@@ -600,7 +396,7 @@
       "game_id": 2025020508,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:53:30.078925",
+      "created_at": "2026-01-06T00:18:28.618177",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/VAN/8480947.png",
       "goals": 0,
       "assists": 0,
@@ -627,6 +423,21 @@
       "goals_against": 0,
       "recent_results": [
         {
+          "date": "2026-01-03",
+          "opponent": "BOS",
+          "opponent_full": "Boston Bruins",
+          "team_score": 2,
+          "opponent_score": 3,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": 3,
+          "save_percentage": 0.864,
+          "shots_against": 22,
+          "saves": 19
+        },
+        {
           "date": "2025-12-29",
           "opponent": "SEA",
           "opponent_full": "Seattle Kraken",
@@ -635,7 +446,11 @@
           "result": "W",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 2,
+          "save_percentage": 0.949,
+          "shots_against": 39,
+          "saves": 37
         },
         {
           "date": "2025-12-20",
@@ -646,7 +461,11 @@
           "result": "W",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 4,
+          "save_percentage": 0.907,
+          "shots_against": 43,
+          "saves": 39
         },
         {
           "date": "2025-12-08",
@@ -657,7 +476,11 @@
           "result": "L",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 3,
+          "save_percentage": 0.786,
+          "shots_against": 14,
+          "saves": 11
         },
         {
           "date": "2025-12-05",
@@ -668,18 +491,11 @@
           "result": "L",
           "goals": 0,
           "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-02",
-          "opponent": "COL",
-          "opponent_full": "Colorado Avalanche",
-          "team_score": 1,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 3,
+          "save_percentage": 0.824,
+          "shots_against": 17,
+          "saves": 14
         }
       ]
     },
@@ -704,7 +520,7 @@
       "game_id": 2025020509,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:53:45.563842",
+      "created_at": "2026-01-06T00:18:45.016251",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/UTA/8476874.png",
       "goals": 0,
       "assists": 0,
@@ -725,63 +541,7 @@
       "short_handed_assists": 0,
       "shifts": 15,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-16",
-          "opponent": "BOS",
-          "opponent_full": "Boston Bruins",
-          "team_score": 1,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-14",
-          "opponent": "PIT",
-          "opponent_full": "Pittsburgh Penguins",
-          "team_score": 5,
-          "opponent_score": 4,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-12",
-          "opponent": "SEA",
-          "opponent_full": "Seattle Kraken",
-          "team_score": 5,
-          "opponent_score": 3,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-11-18",
-          "opponent": "SJS",
-          "opponent_full": "San Jose Sharks",
-          "team_score": 2,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-11-08",
-          "opponent": "MTL",
-          "opponent_full": "Montréal Canadiens",
-          "team_score": 2,
-          "opponent_score": 6,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     },
     {
       "playerId": 8478427,
@@ -804,7 +564,7 @@
       "game_id": 2025020510,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:54:00.812638",
+      "created_at": "2026-01-06T00:19:00.206928",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 0,
       "assists": 0,
@@ -825,63 +585,7 @@
       "short_handed_assists": 0,
       "shifts": 25,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-30",
-          "opponent": "PIT",
-          "opponent_full": "Pittsburgh Penguins",
-          "team_score": 1,
-          "opponent_score": 5,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-29",
-          "opponent": "NYR",
-          "opponent_full": "New York Rangers",
-          "team_score": 3,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 1,
-          "assists": 1,
-          "points": 2
-        },
-        {
-          "date": "2025-12-27",
-          "opponent": "DET",
-          "opponent_full": "Detroit Red Wings",
-          "team_score": 5,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 1,
-          "points": 1
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "FLA",
-          "opponent_full": "Florida Panthers",
-          "team_score": 2,
-          "opponent_score": 5,
-          "result": "L",
-          "goals": 0,
-          "assists": 1,
-          "points": 1
-        },
-        {
-          "date": "2025-12-20",
-          "opponent": "TBL",
-          "opponent_full": "Tampa Bay Lightning",
-          "team_score": 4,
-          "opponent_score": 6,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     },
     {
       "playerId": 8480045,
@@ -904,7 +608,7 @@
       "game_id": 2025020513,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:54:22.134639",
+      "created_at": "2026-01-06T00:19:22.029288",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -931,6 +635,21 @@
       "goals_against": 0,
       "recent_results": [
         {
+          "date": "2026-01-03",
+          "opponent": "CBJ",
+          "opponent_full": "Columbus Blue Jackets",
+          "team_score": 1,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": 4,
+          "save_percentage": 0.882,
+          "shots_against": 34,
+          "saves": 30
+        },
+        {
           "date": "2025-12-31",
           "opponent": "DAL",
           "opponent_full": "Dallas Stars",
@@ -939,7 +658,11 @@
           "result": "W",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 1,
+          "save_percentage": 0.966,
+          "shots_against": 29,
+          "saves": 28
         },
         {
           "date": "2025-12-27",
@@ -950,7 +673,11 @@
           "result": "W",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 1,
+          "save_percentage": 0.957,
+          "shots_against": 23,
+          "saves": 22
         },
         {
           "date": "2025-12-21",
@@ -961,7 +688,11 @@
           "result": "W",
           "goals": 0,
           "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 1,
+          "save_percentage": 0.963,
+          "shots_against": 27,
+          "saves": 26
         },
         {
           "date": "2025-12-08",
@@ -972,18 +703,11 @@
           "result": "L",
           "goals": 0,
           "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-05",
-          "opponent": "WPG",
-          "opponent_full": "Winnipeg Jets",
-          "team_score": 1,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
+          "points": 0,
+          "goals_against": 5,
+          "save_percentage": 0.773,
+          "shots_against": 22,
+          "saves": 17
         }
       ]
     },
@@ -1008,7 +732,7 @@
       "game_id": 2025020509,
       "game_date": "2025-12-14",
       "game_status": "OFF",
-      "created_at": "2026-01-01T15:53:51.461201",
+      "created_at": "2026-01-06T00:18:50.862800",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/PIT/8482758.png",
       "goals": 0,
       "assists": 0,
@@ -1029,66 +753,10 @@
       "short_handed_assists": 0,
       "shifts": 14,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-30",
-          "opponent": "CAR",
-          "opponent_full": "Carolina Hurricanes",
-          "team_score": 5,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-28",
-          "opponent": "CHI",
-          "opponent_full": "Chicago Blackhawks",
-          "team_score": 7,
-          "opponent_score": 3,
-          "result": "W",
-          "goals": 0,
-          "assists": 1,
-          "points": 1
-        },
-        {
-          "date": "2025-12-23",
-          "opponent": "TOR",
-          "opponent_full": "Toronto Maple Leafs",
-          "team_score": 3,
-          "opponent_score": 6,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-21",
-          "opponent": "MTL",
-          "opponent_full": "Montréal Canadiens",
-          "team_score": 4,
-          "opponent_score": 3,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-20",
-          "opponent": "MTL",
-          "opponent_full": "Montréal Canadiens",
-          "team_score": 0,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     }
   ],
   "total_players": 10,
-  "generated_at": "2026-01-01T15:54:46.239822",
+  "generated_at": "2026-01-06T00:19:45.866098",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }

@@ -36,7 +36,7 @@
       "game_id": 2025020038,
       "game_date": "2025-10-12",
       "game_status": "OFF",
-      "created_at": "2026-01-01T14:09:30.383338",
+      "created_at": "2026-01-05T22:51:21.746927",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NYR/8480001.png",
       "goals": 0,
       "assists": 0,
@@ -57,66 +57,10 @@
       "short_handed_assists": 0,
       "shifts": 17,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-21",
-          "opponent": "NSH",
-          "opponent_full": "Nashville Predators",
-          "team_score": 1,
-          "opponent_score": 2,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-15",
-          "opponent": "ANA",
-          "opponent_full": "Anaheim Ducks",
-          "team_score": 1,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-13",
-          "opponent": "MTL",
-          "opponent_full": "Montréal Canadiens",
-          "team_score": 5,
-          "opponent_score": 4,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-11-26",
-          "opponent": "CAR",
-          "opponent_full": "Carolina Hurricanes",
-          "team_score": 4,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-11-24",
-          "opponent": "STL",
-          "opponent_full": "St. Louis Blues",
-          "team_score": 3,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-01-01T14:09:36.288006",
+  "generated_at": "2026-01-05T22:51:27.793549",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }

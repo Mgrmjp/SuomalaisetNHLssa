@@ -84,7 +84,7 @@
       "game_id": 2025020197,
       "game_date": "2025-11-02",
       "game_status": "OFF",
-      "created_at": "2026-01-01T14:46:15.261474",
+      "created_at": "2026-01-05T23:18:52.382898",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8477996.png",
       "goals": 0,
       "assists": 0,
@@ -105,63 +105,7 @@
       "short_handed_assists": 0,
       "shifts": 15,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-19",
-          "opponent": "UTA",
-          "opponent_full": "Utah Mammoth",
-          "team_score": 2,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-17",
-          "opponent": "VGK",
-          "opponent_full": "Vegas Golden Knights",
-          "team_score": 2,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-14",
-          "opponent": "VAN",
-          "opponent_full": "Vancouver Canucks",
-          "team_score": 1,
-          "opponent_score": 2,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-13",
-          "opponent": "ANA",
-          "opponent_full": "Anaheim Ducks",
-          "team_score": 4,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 2,
-          "points": 2
-        },
-        {
-          "date": "2025-12-03",
-          "opponent": "DAL",
-          "opponent_full": "Dallas Stars",
-          "team_score": 0,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     },
     {
       "playerId": 8476874,
@@ -184,7 +128,7 @@
       "game_id": 2025020194,
       "game_date": "2025-11-02",
       "game_status": "OFF",
-      "created_at": "2026-01-01T14:45:58.909161",
+      "created_at": "2026-01-05T23:18:35.263289",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/UTA/8476874.png",
       "goals": 0,
       "assists": 0,
@@ -205,66 +149,10 @@
       "short_handed_assists": 0,
       "shifts": 19,
       "average_ice_time": "00:00",
-      "recent_results": [
-        {
-          "date": "2025-12-16",
-          "opponent": "BOS",
-          "opponent_full": "Boston Bruins",
-          "team_score": 1,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-14",
-          "opponent": "PIT",
-          "opponent_full": "Pittsburgh Penguins",
-          "team_score": 5,
-          "opponent_score": 4,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-12-12",
-          "opponent": "SEA",
-          "opponent_full": "Seattle Kraken",
-          "team_score": 5,
-          "opponent_score": 3,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-11-18",
-          "opponent": "SJS",
-          "opponent_full": "San Jose Sharks",
-          "team_score": 2,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        },
-        {
-          "date": "2025-11-08",
-          "opponent": "MTL",
-          "opponent_full": "Montréal Canadiens",
-          "team_score": 2,
-          "opponent_score": 6,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0
-        }
-      ]
+      "recent_results": []
     }
   ],
   "total_players": 2,
-  "generated_at": "2026-01-01T14:46:24.896164",
+  "generated_at": "2026-01-05T23:19:01.613500",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
