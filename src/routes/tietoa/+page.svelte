@@ -3,9 +3,27 @@
     import { onMount } from "svelte";
 
     function initKofi() {
-        if (typeof kofiwidget2 !== "undefined") {
-            kofiwidget2.init("Support me on Ko-fi", "#3b82f6", "Z8Z16PHF0");
-            kofiwidget2.draw();
+        const container = document.getElementById("kofi-widget-container");
+        if (
+            typeof kofiwidget2 !== "undefined" &&
+            container &&
+            container.innerHTML === ""
+        ) {
+            // Shim document.write to capture the widget's output
+            const originalWrite = document.write;
+            const originalWriteln = document.writeln;
+
+            document.write = (content) => (container.innerHTML += content);
+            document.writeln = (content) => (container.innerHTML += content + "\n");
+
+            try {
+                kofiwidget2.init("Support me on Ko-fi", "#3b82f6", "Z8Z16PHF0");
+                kofiwidget2.draw();
+            } finally {
+                // Always restore original functions
+                document.write = originalWrite;
+                document.writeln = originalWriteln;
+            }
         }
     }
 
