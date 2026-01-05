@@ -7,7 +7,8 @@ Checks for live games and updates data files accordingly.
 import sys
 import time
 import argparse
-from datetime import datetime, timedelta
+import os
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # Add necessary directories to sys.path for imports
@@ -24,12 +25,16 @@ except ImportError as e:
     print(f"Error importing modules: {e}")
     sys.exit(1)
 
-def check_for_live_games(date_str):
+def check_for_live_games(date_str, near_hours=2):
     """
-    Check if there are any live or critical games for the given date.
+    Check if there are any live, critical, or games starting soon for the given date.
     
+    Args:
+        date_str: Date to check (YYYY-MM-DD)
+        near_hours: Hours to look ahead for upcoming games
+        
     Returns:
-        bool: True if live games are found, False otherwise.
+        bool: True if live or near-starting games are found, False otherwise.
     """
     schedule = fetch_from_api(schedule_url(date_str))
     if not schedule:
@@ -48,9 +53,33 @@ def check_for_live_games(date_str):
     live_games = [g for g in games if g.get("gameState") in live_states]
     
     if live_games:
-        print(f"Found {len(live_games)} live/upcoming games.")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Found {len(live_games)} live/upcoming games.")
         for g in live_games:
             print(f"  - {g.get('awayTeam', {}).get('abbrev')} @ {g.get('homeTeam', {}).get('abbrev')} ({g.get('gameState')})")
+        return True
+    
+    # Check for games starting within the next N hours
+    now_utc = datetime.now(timezone.utc)
+    near_threshold = now_utc + timedelta(hours=near_hours)
+    
+    near_games = []
+    for g in games:
+        start_time_str = g.get("startTimeUTC")
+        if not start_time_str:
+            continue
+            
+        try:
+            # Format is typically 2024-10-12T23:00:00Z
+            start_time = datetime.strptime(start_time_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+            if now_utc <= start_time <= near_threshold:
+                near_games.append(g)
+        except ValueError:
+            continue
+
+    if near_games:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Found {len(near_games)} games starting within {near_hours} hours.")
+        for g in near_games:
+            print(f"  - {g.get('awayTeam', {}).get('abbrev')} @ {g.get('homeTeam', {}).get('abbrev')} (Starts: {g.get('startTimeUTC')})")
         return True
     
     return False
@@ -90,10 +119,16 @@ def main():
             date_str = now.strftime("%Y-%m-%d")
     
     if args.once:
-        if args.force or check_for_live_games(date_str):
+        should_update = args.force or check_for_live_games(date_str)
+        if should_update:
             run_update(date_str)
         else:
-            print(f"No live games found for {date_str}. Skipping update.")
+            print(f"No live or near games found for {date_str}. Skipping update.")
+        
+        # Set GitHub Action output if running in GA
+        if "GITHUB_OUTPUT" in os.environ:
+            with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                f.write(f"updated={'true' if should_update else 'false'}\n")
         return
 
     print(f"Starting polling loop for {date_str} every {args.interval} seconds...")
