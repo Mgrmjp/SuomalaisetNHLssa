@@ -3,6 +3,8 @@
  * Extracts dominant colors from team SVG logos and provides them for styling
  */
 
+import logger from './logger.js'
+
 // Cache for extracted team colors
 const teamColorCache = new Map()
 
@@ -220,11 +222,11 @@ async function extractTeamColors(teamAbbr) {
 
             const svgContent = await response.text()
             const extractedColors = extractColorsFromSVG(svgContent)
-            console.log(`Extracted colors for ${teamAbbr}:`, extractedColors)
+            logger.debug(`Extracted colors for ${teamAbbr}:`, extractedColors)
             return extractedColors
         }
     } catch (error) {
-        console.warn(`Error extracting colors for ${teamAbbr}:`, error)
+        logger.warn(`Error extracting colors for ${teamAbbr}:`, error)
         return fallbackTeamColors[teamAbbr.toUpperCase()] || ['#000000', '#FFFFFF']
     }
 }
@@ -369,21 +371,21 @@ export async function getTeamColors(teamAbbr) {
 
     // For debugging: clear cache to force re-extraction
     if (teamColorCache.has(upperTeamAbbr)) {
-        console.log(`Using cached colors for ${upperTeamAbbr}:`, teamColorCache.get(upperTeamAbbr))
+        logger.debug(`Using cached colors for ${upperTeamAbbr}:`, teamColorCache.get(upperTeamAbbr))
         return teamColorCache.get(upperTeamAbbr)
     }
 
     try {
-        console.log(`Extracting fresh colors for ${upperTeamAbbr}...`)
+        logger.debug(`Extracting fresh colors for ${upperTeamAbbr}...`)
         const colors = await extractTeamColors(upperTeamAbbr)
         teamColorCache.set(upperTeamAbbr, colors)
-        console.log(`Cached colors for ${upperTeamAbbr}:`, colors)
+        logger.debug(`Cached colors for ${upperTeamAbbr}:`, colors)
         return colors
     } catch (error) {
-        console.warn(`Error getting colors for ${upperTeamAbbr}:`, error)
+        logger.warn(`Error getting colors for ${upperTeamAbbr}:`, error)
         const fallback = fallbackTeamColors[upperTeamAbbr] || ['#000000', '#FFFFFF']
         teamColorCache.set(upperTeamAbbr, fallback)
-        console.log(`Using fallback colors for ${upperTeamAbbr}:`, fallback)
+        logger.debug(`Using fallback colors for ${upperTeamAbbr}:`, fallback)
         return fallback
     }
 }
@@ -465,7 +467,7 @@ function generateAccentColor(primaryColor, secondaryColor) {
             Math.max(0, Math.min(255, finalB))
         )
     } catch (error) {
-        console.warn('Error generating accent color:', error)
+        logger.warn('Error generating accent color:', error)
         return primaryColor // Fallback to primary color
     }
 }
@@ -572,13 +574,13 @@ function getRandomColors(colors, count = 3) {
 export async function getTeamColorVariables(teamAbbr) {
     const colors = await getTeamColors(teamAbbr)
 
-    console.log(`🎨 Raw extracted colors for ${teamAbbr}:`, colors)
+    logger.debug(`🎨 Raw extracted colors for ${teamAbbr}:`, colors)
 
     // Randomly select 3 colors from the palette (favoring vibrant ones)
     const selectedColors = getRandomColors(colors, 3)
 
-    console.log(`🎲 Randomly selected colors for ${teamAbbr}:`, selectedColors)
-    console.log(
+    logger.debug(`🎲 Randomly selected colors for ${teamAbbr}:`, selectedColors)
+    logger.debug(
         `🌙 Darkened colors for ${teamAbbr}:`,
         selectedColors.map((c) => `${c} (${Math.round((1 - 0.35) * 100)}% darker)`)
     )
@@ -603,7 +605,7 @@ export async function getTeamColorVariables(teamAbbr) {
         '--team-accent-color': accentColor,
     }
 
-    console.log(`🎯 Final colors for ${teamAbbr}:`, result)
+    logger.debug(`🎯 Final colors for ${teamAbbr}:`, result)
     return result
 }
 
@@ -644,9 +646,9 @@ export async function preloadCommonTeamColors() {
     const promises = commonTeams.map(async (team) => {
         try {
             await getTeamColors(team)
-            console.log(`✓ Preloaded colors for ${team}`)
+            logger.debug(`✓ Preloaded colors for ${team}`)
         } catch (error) {
-            console.warn(`✗ Failed to preload colors for ${team}:`, error)
+            logger.warn(`✗ Failed to preload colors for ${team}:`, error)
         }
     })
 

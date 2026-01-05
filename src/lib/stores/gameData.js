@@ -42,11 +42,11 @@ async function fetchAvailableDates() {
             const dates = await response.json()
             availableDatesStore.set(dates)
             availableDatesLoaded = true
-            console.log(`📅 Loaded ${dates.length} available game dates from API`)
+            logger.debug(`📅 Loaded ${dates.length} available game dates from API`)
             return
         }
     } catch (error) {
-        console.log('API not available, using static scan...')
+        logger.debug('API not available, using static scan...')
     }
 
     // Fallback: Scan static data files (for GitHub Pages)
@@ -68,7 +68,7 @@ async function fetchAvailableDates() {
         if (dates.length > 0) {
             availableDatesStore.set(dates)
             availableDatesLoaded = true
-            console.log(`📅 Loaded ${dates.length} available game dates from static scan`)
+            logger.debug(`📅 Loaded ${dates.length} available game dates from static scan`)
         } else {
             // Hardcoded fallback if no dates found - updated to include latest dates
             const fallbackDates = [
@@ -154,10 +154,10 @@ async function fetchAvailableDates() {
             ]
             availableDatesStore.set(fallbackDates)
             availableDatesLoaded = true
-            console.log(`📅 Using ${fallbackDates.length} fallback dates`)
+            logger.debug(`📅 Using ${fallbackDates.length} fallback dates`)
         }
     } catch (error) {
-        console.error('Error fetching available dates:', error)
+        logger.error('Error fetching available dates:', error)
         availableDatesStore.set([])
     }
 }
@@ -293,17 +293,16 @@ export async function loadStandings(seasonStart = earliestPrepopulatedDate) {
     standingsLoadingStore.set(true)
 
     try {
-        console.log('📊 Starting standings calculation from', seasonStart)
+        logger.debug('📊 Starting standings calculation from', seasonStart)
         const standingsData = await standingsService.calculateSeasonStandings(seasonStart)
-        console.log('📊 Standings calculation result:', standingsData)
-        console.log('📊 Eastern conference keys:', Object.keys(standingsData?.eastern || {}))
-        console.log('📊 Western conference keys:', Object.keys(standingsData?.western || {}))
+        logger.debug('📊 Standings calculation result:', standingsData)
+        logger.debug('📊 Eastern conference keys:', Object.keys(standingsData?.eastern || {}))
+        logger.debug('📊 Western conference keys:', Object.keys(standingsData?.western || {}))
         standingsStore.set(standingsData)
-        logger.log('✅ Standings loaded successfully')
+        logger.success('Standings loaded successfully')
         return standingsData
     } catch (error) {
-        console.error('❌ Error loading standings:', error)
-        logger.log(`❌ Error loading standings: ${error.message}`)
+        logger.error('Error loading standings:', error)
         standingsStore.set({})
         throw error
     } finally {
@@ -393,7 +392,7 @@ export async function loadPlayersForDate(date) {
         return []
     }
 
-    logger.log(`📊 Loading players for UI display for date: ${date}`)
+    logger.debug(`📊 Loading players for UI display for date: ${date}`)
 
     isLoadingStore.set(true)
     errorStore.set(null)
@@ -411,13 +410,13 @@ export async function loadPlayersForDate(date) {
         // Update the games store
         games.set(gamesData)
 
-        logger.log(
-            `✅ Loaded ${fetchedPlayers.length} players and ${gamesData.games.length} games from prepopulated data for ${date}`
+        logger.success(
+            `Loaded ${fetchedPlayers.length} players and ${gamesData.games.length} games from prepopulated data for ${date}`
         )
 
         return fetchedPlayers
     } catch (err) {
-        console.error('Error loading player data:', err)
+        logger.error('Error loading player data:', err)
 
         // Provide more specific error messages based on the error type
         let errorMessage = 'Failed to load player data. Please try again.'

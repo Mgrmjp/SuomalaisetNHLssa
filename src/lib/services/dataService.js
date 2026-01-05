@@ -51,7 +51,7 @@ async function _getFinnishPlayerById(playerId) {
 async function loadPrepopulatedData(date) {
     const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
     if (data) {
-        logger.log(`📁 Loaded pre-populated data for ${date}: ${data.total_players} players`)
+        logger.debug(`📁 Loaded pre-populated data for ${date}: ${data.total_players} players`)
         return data.players || []
     }
     return null
@@ -65,7 +65,7 @@ async function loadPrepopulatedData(date) {
 async function loadFullPrepopulatedData(date) {
     const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
     if (data) {
-        logger.log(
+        logger.debug(
             `📁 Loaded full pre-populated data for ${date}: ${data.total_players} players, ${data.games?.length || 0} games`
         )
         return data
@@ -91,7 +91,7 @@ export async function getAvailablePrepopulatedDates() {
     }
 
     if (availableDates.length > 0) {
-        logger.log(`📅 Available pre-populated dates: ${availableDates.join(', ')}`)
+        logger.debug(`📅 Available pre-populated dates: ${availableDates.join(', ')}`)
     }
 
     return availableDates.sort()
@@ -113,12 +113,12 @@ export async function getFinnishPlayersForDate(date) {
         logger.warn(`Invalid date format provided: ${date}. Expected YYYY-MM-DD`)
         return []
     }
-    logger.log(`🏒 Loading Finnish players for ${date}`)
+    logger.debug(`🏒 Loading Finnish players for ${date}`)
 
     // Only use pre-populated data - no API fetching
     const prepopulatedData = await loadPrepopulatedData(date)
     if (prepopulatedData) {
-        logger.log(`✅ Using pre-populated data for ${date}: ${prepopulatedData.length} players`)
+        logger.debug(`✅ Using pre-populated data for ${date}: ${prepopulatedData.length} players`)
         return prepopulatedData
     }
 
@@ -144,12 +144,12 @@ export async function getGamesForDate(date) {
         return { games: [], findGameById: () => null }
     }
 
-    logger.log(`🏒 Loading games data for ${date}`)
+    logger.debug(`🏒 Loading games data for ${date}`)
 
     // Load full pre-populated data to get games
     const fullData = await loadFullPrepopulatedData(date)
     if (fullData?.games) {
-        logger.log(`✅ Using games data for ${date}: ${fullData.games.length} games`)
+        logger.debug(`✅ Using games data for ${date}: ${fullData.games.length} games`)
 
         // Create a lookup function to find games by ID
         const gamesMap = new Map(fullData.games.map((game) => [game.gameId, game]))
@@ -160,7 +160,7 @@ export async function getGamesForDate(date) {
         }
     }
 
-    logger.log(`📁 No games data found for ${date}`)
+    logger.debug(`📁 No games data found for ${date}`)
     return { games: [], findGameById: () => null }
 }
 
@@ -171,9 +171,9 @@ export async function getGamesForDate(date) {
  * @returns {Promise<any[]>} Array of Finnish players
  */
 export async function getFinnishRoster() {
-    logger.log(`🏒 Fetching Finnish roster`)
+    logger.debug(`🏒 Fetching Finnish roster`)
     const players = await playerDetectionService.getAllFinnishPlayers()
-    logger.log(`✅ Found ${players.length} Finnish players in roster`)
+    logger.success(`Found ${players.length} Finnish players in roster`)
     return players
 }
 

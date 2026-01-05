@@ -17,7 +17,7 @@ const LOG_LEVELS = {
 const currentLogLevel =
     typeof process !== 'undefined' && process.env.NODE_ENV === 'production'
         ? LOG_LEVELS.ERROR
-        : LOG_LEVELS.DEBUG
+        : LOG_LEVELS.INFO
 
 /**
  * Simple logger with basic functionality
