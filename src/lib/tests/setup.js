@@ -55,3 +55,8 @@ vi.mock('$app/environment', () => ({
     building: false,
     version: '1.0.0',
 }))
+
+// Mock $app/paths module
+vi.mock('$app/paths', () => ({
+    base: '',
+}))

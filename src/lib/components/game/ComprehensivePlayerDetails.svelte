@@ -540,9 +540,26 @@
                                             day: "numeric",
                                         })}
                                     </div>
-                                    <div class="recent-result-opponent">
+                                    <div class="recent-result-opponent__team">
                                         <TeamLogo team={game.opponent} size="24" />
                                         <span>{game.opponent}</span>
+                                    </div>
+                                    <div class="recent-result-score">
+                                        <span class="recent-result-score__team">{player.team}</span>
+                                        <span
+                                            class="recent-result-score__value"
+                                            class:is-winner={game.result === "W"}
+                                            >{game.team_score}</span
+                                        >
+                                        <span class="recent-result-score__separator">-</span>
+                                        <span
+                                            class="recent-result-score__value"
+                                            class:is-winner={game.result === "L"}
+                                            >{game.opponent_score}</span
+                                        >
+                                        <span class="recent-result-score__team"
+                                            >{game.opponent}</span
+                                        >
                                     </div>
                                     <div class="recent-result-stats">
                                         {#if isGoalie}

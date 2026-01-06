@@ -32,6 +32,8 @@ describe('Data Validation', () => {
                     '2024-02-29', // Leap year
                     '2023-01-01',
                     '2025-12-31',
+                    '2026-01-01',
+                    '2026-01-03',
                 ]
 
                 validDates.forEach((date) => {
@@ -77,6 +79,7 @@ describe('Data Validation', () => {
             it('should accept dates within reasonable range', () => {
                 const validDates = [
                     '2025-10-25', // Current season
+                    '2026-01-03', // Current season in Jan
                     '2024-10-01', // Previous season
                     '2023-04-30', // End of season
                     '2015-10-01', // Minimum season

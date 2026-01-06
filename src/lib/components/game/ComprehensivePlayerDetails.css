@@ -227,7 +227,7 @@
 
 .recent-result-item {
     display: grid;
-    grid-template-columns: 3.5rem 1fr 9.5rem 1.5rem;
+    grid-template-columns: 3.5rem 5rem 8.5rem 1fr 1.5rem;
     gap: 1rem;
     align-items: center;
     background: white;
@@ -252,13 +252,58 @@
     white-space: nowrap;
 }
 
-.recent-result-opponent {
+
+.recent-result-opponent__team {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.875rem;
     font-weight: 600;
     color: #334155;
+    white-space: nowrap;
+}
+
+.recent-result-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    background: #f8fafc;
+    padding: 0.2rem 0;
+    border-radius: 6px;
+    border: 1px solid #f1f5f9;
+    width: 100%;
+}
+
+.recent-result-score__team {
+    flex: 1;
+    font-weight: 700;
+    color: #475569;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.recent-result-score__value {
+    color: #0f172a;
+    font-weight: 800;
+    min-width: 1.25rem;
+    text-align: center;
+}
+
+.recent-result-score__separator {
+    color: #cbd5e1;
+    font-weight: 400;
+    padding: 0 0.15rem;
+}
+
+.recent-result-score__value.is-winner {
+    color: #1e40af;
+    background: #dbeafe;
+    padding: 0 0.25rem;
+    border-radius: 4px;
 }
 
 .recent-result-stats {
@@ -309,24 +354,35 @@
 @media (max-width: 640px) {
     .recent-result-item {
         grid-template-columns: 3rem 1fr auto;
-        grid-template-rows: auto auto;
+        grid-template-rows: auto auto auto;
         gap: 0.25rem 0.75rem;
         padding: 0.75rem;
     }
 
     .recent-result-date {
         grid-column: 1;
-        grid-row: 1 / span 2;
+        grid-row: 1 / span 3;
     }
 
-    .recent-result-opponent {
+    .recent-result-opponent__team {
         grid-column: 2;
         grid-row: 1;
     }
 
-    .recent-result-stats {
+    .recent-result-score {
         grid-column: 2;
         grid-row: 2;
+        justify-content: flex-start;
+        scale: 0.9;
+        transform-origin: left;
+        background: transparent;
+        padding: 0;
+        border: none;
+    }
+
+    .recent-result-stats {
+        grid-column: 2;
+        grid-row: 3;
         justify-content: flex-start;
         scale: 0.85;
         transform-origin: left;
@@ -335,6 +391,6 @@
 
     .recent-result-indicator {
         grid-column: 3;
-        grid-row: 1 / span 2;
+        grid-row: 1 / span 3;
     }
 }

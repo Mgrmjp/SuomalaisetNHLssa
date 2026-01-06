@@ -81,7 +81,14 @@ export async function getAvailablePrepopulatedDates() {
     const availableDates = []
 
     // Check for known pre-populated dates
-    const datesToCheck = ['2025-11-08', '2025-11-09', '2025-11-13']
+    const datesToCheck = [
+        '2025-11-08',
+        '2025-11-09',
+        '2025-11-13',
+        '2026-01-01',
+        '2026-01-03',
+        '2026-01-06',
+    ]
 
     for (const date of datesToCheck) {
         const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
