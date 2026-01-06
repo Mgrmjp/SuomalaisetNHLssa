@@ -175,8 +175,30 @@ export class StandingsService {
             console.log(`📊 Processing ${gameDates.length} game dates from ${effectiveSeasonStart}`)
 
             // Process each game date
-            for (const date of gameDates) {
-                await this.processGamesForDate(date, standings)
+            // Parallelize fetching of game data
+            const gamesDataPromises = gameDates.map((date) =>
+                this.getGamesDataForDate(date)
+                    .then((data) => ({ date, data }))
+                    .catch((error) => ({ date, error }))
+            )
+
+            const results = await Promise.all(gamesDataPromises)
+
+            // Process the fetched data sequentially to ensure data consistency
+            for (const result of results) {
+                if (result.error) {
+                    logger.log(`⚠️ No game data for ${result.date}: ${result.error.message}`)
+                    continue
+                }
+
+                const gamesData = result.data
+                if (!gamesData || !gamesData.games || gamesData.games.length === 0) {
+                    continue
+                }
+
+                for (const game of gamesData.games) {
+                    this.processGame(game, standings)
+                }
             }
 
             console.log('📊 Standings after processing games:', standings)
