@@ -831,21 +831,23 @@
                                             </div>
                                         </div>
                                     {/if}
-                                    <div
-                                        class="player-card__stat-item flex flex-col justify-center min-w-0 text-center"
-                                        title="Maali pysynyt puhtaana koko ottelun ajan"
-                                    >
+                                    {#if player.goals_against === 0 && player.saves > 0}
                                         <div
-                                            class="player-card__stat-value text-sm font-bold text-green-600 truncate"
+                                            class="player-card__stat-item flex flex-col justify-center min-w-0 text-center"
+                                            title="Maali pysynyt puhtaana koko ottelun ajan"
                                         >
-                                            KYLLÄ
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-green-600 truncate"
+                                            >
+                                                KYLLÄ
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-xs text-green-600 mt-1 truncate font-bold"
+                                            >
+                                                Nollapeli
+                                            </div>
                                         </div>
-                                        <div
-                                            class="player-card__stat-label text-xs text-green-600 mt-1 truncate font-bold"
-                                        >
-                                            Nollapeli
-                                        </div>
-                                    </div>
+                                    {/if}
                                 {:else}
                                     {#if player.shots !== undefined && player.shots >= 0}
                                         <div
