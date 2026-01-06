@@ -54,6 +54,12 @@
         name="description"
         content="Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset."
     />
+    <meta property="og:title" content="Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot" />
+    <meta
+        property="og:description"
+        content="Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset."
+    />
+    <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
 </svelte:head>
 
 <div class="w-full max-w-6xl mx-auto px-4 py-8 relative" style="z-index: 1; position: relative;">

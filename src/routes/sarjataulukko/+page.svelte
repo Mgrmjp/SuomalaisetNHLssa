@@ -7,7 +7,17 @@
 </script>
 
 <svelte:head>
-    <title>Suomalaiset NHL-pelaajat - Sarjataulukko</title>
+    <title>NHL Sarjataulukko - Suomalaiset NHL:ssä</title>
+    <meta
+        name="description"
+        content="NHL sarjataulukko. Seuraa suomalaisten pelaajien joukkueiden sijoituksia."
+    />
+    <meta property="og:title" content="NHL Sarjataulukko - Suomalaiset NHL:ssä" />
+    <meta
+        property="og:description"
+        content="NHL sarjataulukko. Seuraa suomalaisten pelaajien joukkueiden sijoituksia."
+    />
+    <meta property="og:url" content="https://suomalaisetnhlssa.fi/sarjataulukko" />
 </svelte:head>
 
 <div

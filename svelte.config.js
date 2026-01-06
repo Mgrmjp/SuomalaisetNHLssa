@@ -12,7 +12,7 @@ const config = {
     }),
     prerender: {
       // Explicitly generate API endpoints needed by the static site
-      entries: ['*', '/api/available-dates'],
+      entries: ['*', '/api/available-dates', '/sitemap.xml'],
     },
   },
 };

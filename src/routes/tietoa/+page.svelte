@@ -4,11 +4,7 @@
 
     function initKofi() {
         const container = document.getElementById("kofi-widget-container");
-        if (
-            typeof kofiwidget2 !== "undefined" &&
-            container &&
-            container.innerHTML === ""
-        ) {
+        if (typeof kofiwidget2 !== "undefined" && container && container.innerHTML === "") {
             // Shim document.write to capture the widget's output
             const originalWrite = document.write;
             const originalWriteln = document.writeln;
@@ -34,6 +30,16 @@
 
 <svelte:head>
     <title>Tietoa - Suomalaiset NHL-pelaajat</title>
+    <meta
+        name="description"
+        content="Tietoa Suomalaiset NHL:ssä -sivustosta, tietolähteistä ja mainosilmoitus."
+    />
+    <meta property="og:title" content="Tietoa - Suomalaiset NHL:ssä" />
+    <meta
+        property="og:description"
+        content="Tietoa Suomalaiset NHL:ssä -sivustosta, tietolähteistä ja mainosilmoitus."
+    />
+    <meta property="og:url" content="https://suomalaisetnhlssa.fi/tietoa" />
     <script src="https://storage.ko-fi.com/cdn/widget/Widget_2.js" on:load={initKofi}></script>
 </svelte:head>
 

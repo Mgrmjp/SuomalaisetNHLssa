@@ -22,6 +22,12 @@
         name="description"
         content="NHL:n suomalaisten pelaajien pistepörssi kaudella {formattedSeason}. Seuraa kuka johtaa maaleissa ja pisteissä."
     />
+    <meta property="og:title" content="Suomalaisten Pistepörssi {formattedSeason} - NHL" />
+    <meta
+        property="og:description"
+        content="NHL:n suomalaisten pelaajien pistepörssi kaudella {formattedSeason}. Seuraa kuka johtaa maaleissa ja pisteissä."
+    />
+    <meta property="og:url" content="https://suomalaisetnhlssa.fi/pisteporssi" />
 </svelte:head>
 
 <div
