@@ -23,9 +23,9 @@ ALL_PLAYERS_DIR = PREPOPULATED_DIR / "all-players"  # All players by date
 # NHL API Configuration
 # =============================================================================
 NHL_API_BASE = "https://api-web.nhle.com"
-API_TIMEOUT = 10  # seconds
+API_TIMEOUT = 15  # seconds (increased for slower responses)
 API_MAX_RETRIES = 5
-RATE_LIMIT_DELAY = 1.0  # seconds between requests
+RATE_LIMIT_DELAY = 0.5  # seconds between requests (reduced, handled elsewhere)
 RATE_LIMIT_JITTER = (0.1, 0.5)  # random jitter range for retries
 
 # =============================================================================
