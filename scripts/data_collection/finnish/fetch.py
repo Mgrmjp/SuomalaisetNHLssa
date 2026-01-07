@@ -639,7 +639,8 @@ def generate_finnish_players_data(game_date):
                 "awayTeam": away_team,
                 "homeScore": game_info.get("home_score", 0),
                 "awayScore": game_info.get("away_score", 0),
-                "gameState": game.get("gameState", "UNKNOWN"),
+                # Use boxscore gameState (real-time) with schedule fallback (may be stale)
+                "gameState": game_details.get("gameState", game.get("gameState", "UNKNOWN")),
                 "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
                 "startTime": game.get("startTimeUTC", ""),
                 "finnish_players_count": len(finnish_players),
