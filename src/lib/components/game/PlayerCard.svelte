@@ -441,16 +441,6 @@
                         </div>
                     </div>
 
-                    {#if isLive}
-                        <div class="player-card__live-indicator absolute -top-1 -right-1">
-                            <span
-                                class="player-card__live-badge bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm"
-                            >
-                                LIVE
-                            </span>
-                        </div>
-                    {/if}
-
                     <!-- Spacer removed as we use relative layout now -->
                     <div class="mb-2"></div>
 
@@ -678,7 +668,15 @@
                         class="player-card__footer mt-auto flex items-center justify-between pt-4 border-t border-gray-100"
                     >
                         <!-- Enhanced Result Indicator - More subtle -->
-                        {#if gameResult}
+                        {#if isLive}
+                            <div class="player-card__live-indicator flex items-center gap-1.5">
+                                <span
+                                    class="player-card__live-badge bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap"
+                                >
+                                    LIVE
+                                </span>
+                            </div>
+                        {:else if gameResult}
                             <div class="player-card__result-status flex items-center gap-2">
                                 <div
                                     class={`w-5 h-5 rounded-md ${resultIndicator.bg} ${resultIndicator.textColor} flex items-center justify-center text-[10px] font-bold shadow-sm`}

@@ -29,9 +29,9 @@
     $: currentPath = $page.url.pathname;
 </script>
 
-<div class="nav-tabs-container flex justify-center mb-10 overflow-x-auto px-4">
+<div class="nav-tabs-container flex md:justify-center mb-10 overflow-x-auto pr-4 py-2">
     <div
-        class="nav-tabs-list inline-flex bg-slate-100/80 backdrop-blur-md p-1.5 rounded-2xl gap-1 border border-slate-200/50 shadow-inner min-w-max"
+        class="nav-tabs-list inline-flex bg-slate-100/80 backdrop-blur-md p-1.5 rounded-2xl gap-1 border border-slate-200/50 shadow-inner"
         role="group"
     >
         {#each navItems as item}

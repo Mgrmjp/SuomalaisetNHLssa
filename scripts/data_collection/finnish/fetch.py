@@ -373,11 +373,17 @@ def get_player_recent_games(player_id, player_team, limit=10):
             else:
                 opponent_full = opponent_abbrev
 
+            # Detect if this is goalie data (has goalie-specific stats)
+            is_goalie_data = game.get('savePctg') is not None or game.get('goalsAgainst') is not None
+            
             # Skip games where goalie didn't play (no shots faced = backup/scratch)
-            shots_against = game.get('shotsAgainst', 0)
-            if shots_against == 0:
-                continue
+            # Only apply this filter to goalies, not skaters
+            if is_goalie_data:
+                shots_against = game.get('shotsAgainst', 0)
+                if shots_against == 0:
+                    continue
 
+            shots_against = game.get('shotsAgainst', 0)
             recent_games.append({
                 'date': game_date,
                 'opponent': opponent_abbrev,
@@ -388,10 +394,10 @@ def get_player_recent_games(player_id, player_team, limit=10):
                 'goals': game.get('goals', 0),
                 'assists': game.get('assists', 0),
                 'points': game.get('points', 0),
-                'goals_against': game.get('goalsAgainst', 0),
-                'save_percentage': round(game.get('savePctg', 0.0), 3) if game.get('savePctg') else 0.0,
-                'shots_against': shots_against,
-                'saves': shots_against - game.get('goalsAgainst', 0) if game.get('goalsAgainst') is not None else 0
+                'goals_against': game.get('goalsAgainst', 0) if is_goalie_data else None,
+                'save_percentage': round(game.get('savePctg', 0.0), 3) if game.get('savePctg') else None,
+                'shots_against': shots_against if is_goalie_data else None,
+                'saves': shots_against - game.get('goalsAgainst', 0) if is_goalie_data and game.get('goalsAgainst') is not None else None
             })
 
         return recent_games
