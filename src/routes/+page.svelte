@@ -3,6 +3,8 @@
     import SimpleDateControls from "$lib/components/game/SimpleDateControls.svelte";
     import Snowfall from "$lib/components/ui/Snowfall.svelte";
     import NavTabs from "$lib/components/ui/NavTabs.svelte";
+    import AdBanner from "$lib/components/ui/AdBanner.svelte";
+    import MobileAd from "$lib/components/ui/MobileAd.svelte";
     import { base } from "$app/paths";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
@@ -97,6 +99,9 @@
         <div>
             <SimpleDateControls />
         </div>
+
+        <!-- Ad Banner -->
+        <AdBanner />
 
         <!-- Navigation -->
         <NavTabs />
@@ -219,6 +224,9 @@
         <!-- Player List (Default View) -->
         <PlayerList />
     </div>
+
+    <!-- Mobile Ad -->
+    <MobileAd />
 
     <!-- Footer link -->
     <footer class="text-center py-4 text-sm text-gray-500">
