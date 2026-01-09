@@ -278,11 +278,11 @@
                             <div
                                 class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
                             >
-                                <h3
+                                <h2
                                     class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                                 >
                                     Hyökkääjät
-                                </h3>
+                                </h2>
                             </div>
                             <!-- Desktop Grid -->
                             <div
@@ -314,11 +314,11 @@
                             <div
                                 class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
                             >
-                                <h3
+                                <h2
                                     class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                                 >
                                     Puolustajat
-                                </h3>
+                                </h2>
                             </div>
                             <!-- Desktop Grid -->
                             <div
@@ -350,11 +350,11 @@
                             <div
                                 class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
                             >
-                                <h3
+                                <h2
                                     class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                                 >
                                     Maalivahdit
-                                </h3>
+                                </h2>
                             </div>
                             <!-- Desktop Grid -->
                             <div

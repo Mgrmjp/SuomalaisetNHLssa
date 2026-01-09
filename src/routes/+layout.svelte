@@ -35,12 +35,8 @@
     <link rel="canonical" href="{siteUrl}{$page.url.pathname}" />
 
     <link rel="icon" type="image/svg+xml" href={base + "/logo.svg"} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    />
+
+    <!-- Note: Google Fonts loaded in app.html with async pattern -->
 
     <!-- JSON-LD Structured Data -->
     {@html `<script type="application/ld+json">${JSON.stringify({

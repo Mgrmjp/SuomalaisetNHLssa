@@ -255,24 +255,22 @@
         filter: blur(var(--spark-blur));
         animation: sparkle-float var(--spark-duration) ease-in-out infinite;
         animation-delay: var(--spark-delay);
+        will-change: transform;
     }
 
+    /* GPU-composited animation - uses only transform for best performance */
     @keyframes sparkle-float {
         0% {
-            transform: translate3d(0, 0, 0) scale(0.6);
-            opacity: 0;
+            transform: translate3d(0, 0, 0) scale(0);
         }
         20% {
-            opacity: 0.8;
             transform: translate3d(4px, -6px, 0) scale(1);
         }
         60% {
-            opacity: 0.6;
             transform: translate3d(-4px, 6px, 0) scale(0.9);
         }
         100% {
-            opacity: 0;
-            transform: translate3d(0, 12px, 0) scale(0.5);
+            transform: translate3d(0, 12px, 0) scale(0);
         }
     }
 

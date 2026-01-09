@@ -43,7 +43,7 @@
                 class="nav-tab-item group relative inline-flex items-center rounded-xl px-6 py-2.5 text-sm font-bold transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 whitespace-nowrap
                 {isActive
                     ? 'bg-white text-blue-700 shadow-[0_4px_14px_rgba(29,78,216,0.15)] ring-1 ring-blue-50 nav-tab-item--active scale-[1.02]'
-                    : 'text-slate-500 hover:text-slate-900 hover:bg-white/60'}"
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'}"
                 aria-current={isActive ? "page" : undefined}
             >
                 <svg
