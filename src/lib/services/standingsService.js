@@ -14,110 +14,15 @@ const AVG_POWER_PLAY_OPPORTUNITIES_PER_GAME = 3.2
 const AVG_PENALTY_KILL_TIMES_PER_GAME = 3.5
 
 // Prepopulated game dates - all dates we have data for
-const prepopulatedDates = [
-    '2025-09-30',
-    '2025-10-01',
-    '2025-10-02',
-    '2025-10-03',
-    '2025-10-04',
-    '2025-10-05',
-    '2025-10-06',
-    '2025-10-07',
-    '2025-10-08',
-    '2025-10-09',
-    '2025-10-10',
-    '2025-10-11',
-    '2025-10-12',
-    '2025-10-13',
-    '2025-10-14',
-    '2025-10-15',
-    '2025-10-16',
-    '2025-10-17',
-    '2025-10-18',
-    '2025-10-19',
-    '2025-10-20',
-    '2025-10-21',
-    '2025-10-22',
-    '2025-10-23',
-    '2025-10-24',
-    '2025-10-25',
-    '2025-10-26',
-    '2025-10-27',
-    '2025-10-28',
-    '2025-10-29',
-    '2025-10-30',
-    '2025-10-31',
-    '2025-11-01',
-    '2025-11-02',
-    '2025-11-03',
-    '2025-11-04',
-    '2025-11-05',
-    '2025-11-06',
-    '2025-11-07',
-    '2025-11-08',
-    '2025-11-09',
-    '2025-11-10',
-    '2025-11-11',
-    '2025-11-12',
-    '2025-11-13',
-    '2025-11-14',
-    '2025-11-15',
-    '2025-11-16',
-    '2025-11-17',
-    '2025-11-18',
-    '2025-11-19',
-    '2025-11-20',
-    '2025-11-21',
-    '2025-11-22',
-    '2025-11-23',
-    '2025-11-24',
-    '2025-11-25',
-    '2025-11-26',
-    '2025-11-27',
-    '2025-11-28',
-    '2025-11-29',
-    '2025-11-30',
-    '2025-12-01',
-    '2025-12-02',
-    '2025-12-03',
-    '2025-12-04',
-    '2025-12-05',
-    '2025-12-06',
-    '2025-12-07',
-    '2025-12-08',
-    '2025-12-09',
-    '2025-12-10',
-    '2025-12-11',
-    '2025-12-12',
-    '2025-12-13',
-    '2025-12-14',
-    '2025-12-15',
-    '2025-12-16',
-    '2025-12-17',
-    '2025-12-18',
-    '2025-12-19',
-    '2025-12-20',
-    '2025-12-21',
-    '2025-12-22',
-    '2025-12-23',
-    '2025-12-24',
-    '2025-12-25',
-    '2025-12-26',
-    '2025-12-27',
-    '2025-12-28',
-    '2025-12-29',
-    '2025-12-30',
-    '2025-12-31',
-    '2026-01-01',
-    '2026-01-02',
-    '2026-01-03',
-    '2026-01-04',
-    '2026-01-05',
-    '2026-01-06',
-]
+// Prepopulated game dates - all dates we have data for
+// This will be populated from /data/games_manifest.json
+let prepopulatedDates = []
 
 // Cache for fetched game data to avoid repeated fetches
 const gameDataCache = new Map()
+
+// Cache object for the manifest
+let gamesManifestCache = null
 
 async function loadGameDataForDate(date) {
     if (gameDataCache.has(date)) {
@@ -130,7 +35,7 @@ async function loadGameDataForDate(date) {
     return data
 }
 
-const EARLIEST_PREPOP_DATE = prepopulatedDates[0] || '2025-09-30'
+const EARLIEST_PREPOP_DATE = '2025-09-30'
 // 2025-26 NHL regular season starts October 7, 2025
 const DEFAULT_SEASON_START = '2025-10-07'
 
@@ -149,6 +54,9 @@ export class StandingsService {
      * @returns {Promise<object>} Complete standings data
      */
     async calculateSeasonStandings(seasonStart = DEFAULT_SEASON_START) {
+        // Ensure we have the list of available dates
+        await this.fetchAvailableDates()
+
         // Clamp seasonStart to our earliest available prepopulated date
         const effectiveSeasonStart =
             prepopulatedDates.find((d) => d >= seasonStart) || EARLIEST_PREPOP_DATE
@@ -232,6 +140,11 @@ export class StandingsService {
      * @returns {Promise<string[]>} Array of dates with games
      */
     async getGameDatesInRange(startDate, endDate = null) {
+        // Ensure dates are loaded
+        if (prepopulatedDates.length === 0) {
+            await this.fetchAvailableDates()
+        }
+        
         return prepopulatedDates
             .filter((date) => (!startDate || date >= startDate) && (!endDate || date <= endDate))
             .sort()
@@ -536,6 +449,37 @@ export class StandingsService {
      */
     clearCache() {
         this.cache.clear()
+        gamesManifestCache = null
+        prepopulatedDates = []
         logger.log('📊 Standings cache cleared')
+    }
+
+    /**
+     * Fetch the list of available game dates from the server
+     */
+    async fetchAvailableDates() {
+        // Return if already populated (and valid)
+        if (prepopulatedDates.length > 0 && gamesManifestCache) {
+            return prepopulatedDates
+        }
+
+        try {
+            logger.log('📊 Fetching games manifest...')
+            const manifest = await fetchLocalJSON('/data/games_manifest.json')
+            
+            if (manifest && manifest.games && Array.isArray(manifest.games)) {
+                gamesManifestCache = manifest
+                prepopulatedDates = manifest.games.sort()
+                logger.log(`✅ Loaded ${prepopulatedDates.length} game dates from manifest`)
+            } else {
+                logger.log('⚠️ Failed to load games manifest or invalid format')
+                // Fallback to minimal set or keep empty?
+                // If it fails, prepopulatedDates remains empty or whatever it was
+            }
+        } catch (error) {
+            logger.log(`❌ Error fetching games manifest: ${error.message}`)
+        }
+        
+        return prepopulatedDates
     }
 }

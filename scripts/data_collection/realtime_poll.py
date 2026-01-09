@@ -21,6 +21,7 @@ try:
     from finnish.fetch import generate_finnish_players_data
     from utils import fetch_from_api, schedule_url, save_json
     from config import GAMES_DIR
+    from generate_manifest import generate_manifest
 except ImportError as e:
     print(f"Error importing modules: {e}")
     sys.exit(1)
@@ -94,6 +95,9 @@ def run_update(date_str):
         output_file = GAMES_DIR / f"{date_str}.json"
         save_json(data, output_file)
         print(f"[{datetime.now().strftime('%H:%M:%S')}] ✅ Update complete. Saved to {output_file}")
+        
+        # Regenerate manifest to include the new/updated file
+        generate_manifest()
     except Exception as e:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] ❌ Error during update: {e}")
 
