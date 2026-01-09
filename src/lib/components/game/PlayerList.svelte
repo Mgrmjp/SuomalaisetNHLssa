@@ -1,5 +1,7 @@
 <script>
+    import { onMount } from "svelte";
     import LoadingSpinner from "$lib/components/ui/LoadingSpinner.svelte";
+    import MobileAdBanner from "$lib/components/ui/MobileAdBanner.svelte";
     import PlayerCard from "$lib/components/game/PlayerCard.svelte";
     import { displayDate, error, isLoading, players, setDate } from "$lib/stores/gameData.js";
     import {
@@ -8,6 +10,103 @@
         isDefense,
         isGoalie,
     } from "$lib/utils/positionHelpers.js";
+
+    // Swiper - only import core, handle CSS in scoped styles
+    import Swiper from "swiper";
+    import { FreeMode, Mousewheel } from "swiper/modules";
+
+    let forwardsSwiper = null;
+    let defendersSwiper = null;
+    let goaliesSwiper = null;
+    let isMobile = false;
+
+    function checkMobile() {
+        isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+    }
+
+    function initSwipers() {
+        checkMobile();
+        if (!isMobile) return;
+
+        const swiperConfig = {
+            modules: [FreeMode, Mousewheel],
+            slidesPerView: "auto",
+            spaceBetween: 12,
+            freeMode: {
+                enabled: true,
+                sticky: false,
+                momentumRatio: 0.8,
+                momentumVelocityRatio: 0.8,
+            },
+            mousewheel: {
+                forceToAxis: true,
+            },
+            grabCursor: true,
+            cssMode: false,
+        };
+
+        const forwardsEl = document.querySelector(".swiper-forwards");
+        const defendersEl = document.querySelector(".swiper-defenders");
+        const goaliesEl = document.querySelector(".swiper-goalies");
+
+        if (forwardsEl && !forwardsSwiper) {
+            forwardsSwiper = new Swiper(forwardsEl, swiperConfig);
+        }
+        if (defendersEl && !defendersSwiper) {
+            defendersSwiper = new Swiper(defendersEl, swiperConfig);
+        }
+        if (goaliesEl && !goaliesSwiper) {
+            goaliesSwiper = new Swiper(goaliesEl, swiperConfig);
+        }
+    }
+
+    function destroySwipers() {
+        if (forwardsSwiper) {
+            forwardsSwiper.destroy(true, true);
+            forwardsSwiper = null;
+        }
+        if (defendersSwiper) {
+            defendersSwiper.destroy(true, true);
+            defendersSwiper = null;
+        }
+        if (goaliesSwiper) {
+            goaliesSwiper.destroy(true, true);
+            goaliesSwiper = null;
+        }
+    }
+
+    function handleResize() {
+        const wasMobile = isMobile;
+        checkMobile();
+        if (wasMobile !== isMobile) {
+            destroySwipers();
+            if (isMobile) {
+                setTimeout(initSwipers, 100);
+            }
+        }
+    }
+
+    // Random ad position: 0 = after forwards, 1 = after defenders
+    let mobileAdPosition = 0;
+
+    onMount(() => {
+        // Randomly pick which row to show ad after (0 or 1)
+        mobileAdPosition = Math.random() < 0.5 ? 0 : 1;
+
+        checkMobile();
+        setTimeout(initSwipers, 100);
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+            destroySwipers();
+        };
+    });
+
+    // Re-initialize swipers when players data changes
+    $: if ($players && isMobile) {
+        destroySwipers();
+        setTimeout(initSwipers, 100);
+    }
 
     function _handleRetry() {
         const currentDate = new Date().toISOString().split("T")[0];
@@ -185,15 +284,29 @@
                                     Hyökkääjät
                                 </h3>
                             </div>
+                            <!-- Desktop Grid -->
                             <div
-                                class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                             >
                                 {#each forwards as player (`${player.playerId}-${player.game_id}`)}
                                     <PlayerCard {player} />
                                 {/each}
                             </div>
+                            <!-- Mobile Swiper -->
+                            <div class="swiper swiper-forwards md:hidden">
+                                <div class="swiper-wrapper">
+                                    {#each forwards as player (`${player.playerId}-${player.game_id}-mobile`)}
+                                        <div class="swiper-slide mobile-card-slide">
+                                            <PlayerCard {player} />
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
                         </div>
-                        <div class="h-8"></div>
+                        <div class="h-8 md:block hidden"></div>
+                        {#if mobileAdPosition === 0}
+                            <MobileAdBanner />
+                        {/if}
                     {/if}
 
                     {#if defenders.length}
@@ -207,15 +320,29 @@
                                     Puolustajat
                                 </h3>
                             </div>
+                            <!-- Desktop Grid -->
                             <div
-                                class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                             >
                                 {#each defenders as player (`${player.playerId}-${player.game_id}`)}
                                     <PlayerCard {player} />
                                 {/each}
                             </div>
+                            <!-- Mobile Swiper -->
+                            <div class="swiper swiper-defenders md:hidden">
+                                <div class="swiper-wrapper">
+                                    {#each defenders as player (`${player.playerId}-${player.game_id}-mobile`)}
+                                        <div class="swiper-slide mobile-card-slide">
+                                            <PlayerCard {player} />
+                                        </div>
+                                    {/each}
+                                </div>
+                            </div>
                         </div>
-                        <div class="h-8"></div>
+                        <div class="h-8 md:block hidden"></div>
+                        {#if mobileAdPosition === 1}
+                            <MobileAdBanner />
+                        {/if}
                     {/if}
 
                     {#if goalies.length}
@@ -229,12 +356,23 @@
                                     Maalivahdit
                                 </h3>
                             </div>
+                            <!-- Desktop Grid -->
                             <div
-                                class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                             >
                                 {#each goalies as player (`${player.playerId}-${player.game_id}`)}
                                     <PlayerCard {player} />
                                 {/each}
+                            </div>
+                            <!-- Mobile Swiper -->
+                            <div class="swiper swiper-goalies md:hidden">
+                                <div class="swiper-wrapper">
+                                    {#each goalies as player (`${player.playerId}-${player.game_id}-mobile`)}
+                                        <div class="swiper-slide mobile-card-slide">
+                                            <PlayerCard {player} />
+                                        </div>
+                                    {/each}
+                                </div>
                             </div>
                         </div>
                     {/if}
@@ -243,3 +381,58 @@
         </div>
     </section>
 {/if}
+
+<style>
+    /* Mobile-only styles for swiper - prevents affecting desktop layout */
+    @media (max-width: 767px) {
+        /* Essential Swiper styles - only applied on mobile */
+        .swiper {
+            overflow: hidden;
+            position: relative;
+            margin-left: -1rem;
+            margin-right: -1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .swiper-wrapper {
+            display: flex;
+            align-items: stretch;
+            box-sizing: content-box;
+            transition-property: transform;
+            transition-timing-function: ease-out;
+        }
+
+        .swiper-slide {
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        /* Mobile swiper card slides - show 2.33 cards initially */
+        .mobile-card-slide {
+            /* Width = (viewport - padding - gaps) / 2.33 */
+            /* padding: 1rem each side = 2rem, gaps: 2 * 12px = 24px */
+            width: calc((100vw - 2rem - 24px) / 2.33) !important;
+            flex-shrink: 0;
+        }
+
+        /* Ensure cards in mobile have the right sizing */
+        .mobile-card-slide :global(.player-card) {
+            min-height: 280px;
+        }
+
+        .mobile-card-slide :global(.player-card__inner),
+        .mobile-card-slide :global(.player-card__face) {
+            min-height: 280px;
+        }
+
+        /* Reduce font sizes on mobile cards */
+        .mobile-card-slide :global(.player-card__player-name) {
+            font-size: 0.875rem;
+        }
+
+        .mobile-card-slide :global(.player-card__stats-grid) {
+            gap: 0.25rem;
+        }
+    }
+</style>

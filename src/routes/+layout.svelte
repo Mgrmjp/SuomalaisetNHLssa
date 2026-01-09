@@ -1,6 +1,7 @@
 <script>
     import ErrorBoundary from "$lib/components/ui/ErrorBoundary.svelte";
     import VerticalAd from "$lib/components/ui/VerticalAd.svelte";
+    import VerticalAdLeft from "$lib/components/ui/VerticalAdLeft.svelte";
     import { base } from "$app/paths";
     import { page } from "$app/stores";
     import "../app.css";
@@ -53,8 +54,9 @@
 </svelte:head>
 
 <div class="min-h-screen flex flex-col relative bg-gray-50" style="color-scheme: light;">
-    <!-- Vertical Ad Sidebar -->
+    <!-- Vertical Ad Sidebars -->
     <VerticalAd />
+    <VerticalAdLeft />
 
     <!-- <Header /> -->
     <main class="flex-1 w-full relative z-10">
