@@ -206,6 +206,7 @@ export default defineConfig({
   clearScreen: false,
   build: {
     // Optimize build
+    target: 'es2022',
     minify: "terser",
     sourcemap: true,
     // Enable CSS code splitting

@@ -113,10 +113,8 @@
         opacity: 0.5;
     }
 
-    /* Performance optimization for mobile */
-    @media (max-width: 768px) {
-        .snowflake {
-            will-change: transform;
-        }
+    /* Performance optimization - hint browser to promote to layer */
+    .snowflake {
+        will-change: transform;
     }
 </style>

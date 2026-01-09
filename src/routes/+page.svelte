@@ -343,10 +343,11 @@
 
     .logo-button:hover .logo-img {
         transform: scale(1.05) rotate(-2deg);
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+        /* Removed expensive filter transition to improve performance */
     }
 
     .logo-img {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)); /* Static shadow */
     }
 </style>
