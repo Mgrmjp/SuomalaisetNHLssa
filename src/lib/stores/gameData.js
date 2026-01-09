@@ -2,7 +2,7 @@ import { derived, get, readable, readonly, writable } from 'svelte/store'
 
 import { getFinnishPlayersForDate, getGamesForDate } from '$lib/services/dataService.js'
 import { StandingsService } from '$lib/services/standingsService.js'
-import { formatDate as formatDateUtil } from '$lib/utils/dateHelpers.js'
+import { formatDate as formatDateUtil } from '$lib/utils/dateUtils.js'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 import logger from '$lib/utils/logger.js'
 

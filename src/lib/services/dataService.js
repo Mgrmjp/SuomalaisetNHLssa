@@ -6,7 +6,7 @@
 import { isValidDateFormat } from '$lib/api/nhlApi.js'
 import playerDetectionService from '$lib/services/playerDetectionService.js'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
-import { formatDate } from '$lib/utils/dateHelpers.js'
+import { formatDate } from '$lib/utils/dateUtils.js'
 import logger from '$lib/utils/logger.js'
 
 // API configuration removed - using only prepopulated data
