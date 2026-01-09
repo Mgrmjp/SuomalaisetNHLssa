@@ -408,11 +408,11 @@
             position: relative;
         }
 
-        /* Mobile swiper card slides - show 2.33 cards initially */
+        /* Mobile swiper card slides - show 1.5 cards initially */
         .mobile-card-slide {
-            /* Width = (viewport - padding - gaps) / 2.33 */
-            /* padding: 1rem each side = 2rem, gaps: 2 * 12px = 24px */
-            width: calc((100vw - 2rem - 24px) / 2.33) !important;
+            /* Width = (viewport - padding - gaps) / 1.5 */
+            /* padding: 1rem each side = 2rem, gaps: 0.5 * 12px = 6px */
+            width: calc((100vw - 2rem - 6px) / 1.5) !important;
             flex-shrink: 0;
         }
 
