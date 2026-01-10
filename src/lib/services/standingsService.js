@@ -405,8 +405,9 @@ export class StandingsService {
             return
         }
 
-        // Use regex to properly parse streak type and count (handles double-digit streaks)
-        const match = currentStreak.match(/^([WLO]+)(\d+)$/)
+        // Use regex to properly parse streak type and count (handles double-digit streaks and OT)
+        // Match W#, L#, or OT# where # is any number
+        const match = currentStreak.match(/^(W|L|OT)(\d+)$/)
         if (!match) {
             // Corrupted streak format, reset to new streak
             teamStats.streak = `${result}1`
