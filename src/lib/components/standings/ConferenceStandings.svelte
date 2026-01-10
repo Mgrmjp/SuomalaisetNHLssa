@@ -111,7 +111,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-gray-700">
                 <div class="flex items-center space-x-2">
                     <span class="w-2 h-2 bg-gray-800 rounded-full"></span>
-                    <span>Pudotuspelipaikka</span>
+                    <span>Divisioonan johtaja (pudotuspelipaikka)</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <span>Wild Card (pudotuspelipaikka)</span>
                 </div>
                 <div class="flex items-center space-x-2">
                     <span>O</span>

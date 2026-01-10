@@ -49,8 +49,12 @@
     // Calculate advanced stats
     const advancedStats = $derived(calculateAdvancedStats(teamData));
 
-    // Row classes
-    const rowClasses = $derived("border-b border-gray-100 bg-white hover:bg-gray-50");
+    // Row classes - different background for wildcards
+    const rowClasses = $derived(
+        isWildCard
+            ? "border-b border-blue-200 bg-blue-50/50 hover:bg-blue-100/50"
+            : "border-b border-gray-100 bg-white hover:bg-gray-50"
+    );
 
     // Enhanced streak display with gradients matching PlayerCard style
     function getEnhancedStreakDisplay(streak) {
@@ -130,21 +134,30 @@
 >
     <!-- Rank -->
     <td
-        class="standing-cell standing-cell--rank px-3 py-3 text-sm font-medium text-gray-900 text-center w-12 sticky left-0 z-10 bg-white border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.05)]"
+        class="standing-cell standing-cell--rank px-3 py-3 text-sm font-medium text-gray-900 text-center w-12 sticky left-0 z-10 {isWildCard
+            ? 'bg-blue-50/50 border-blue-200'
+            : 'bg-white border-gray-100'} border-r shadow-[2px_0_5px_rgba(0,0,0,0.05)]"
     >
         <div class="flex items-center justify-center">
             <span class="text-gray-600">
                 {rank}
             </span>
             {#if showPlayoffIndicator && isPlayoffTeam}
-                <div class="ml-1 w-2 h-2 bg-gray-800 rounded-full" title="Playoff Position"></div>
+                <div
+                    class="ml-1 w-2 h-2 {isWildCard
+                        ? 'bg-blue-500'
+                        : 'bg-gray-800'} rounded-full"
+                    title={isWildCard ? 'Wild Card' : 'Pudotuspelipaikka'}
+                ></div>
             {/if}
         </div>
     </td>
 
     <!-- Team -->
     <td
-        class="standing-cell standing-cell--team px-3 py-3 text-sm sticky left-12 z-10 bg-white border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.05)]"
+        class="standing-cell standing-cell--team px-3 py-3 text-sm sticky left-12 z-10 {isWildCard
+            ? 'bg-blue-50/50 border-blue-200'
+            : 'bg-white border-gray-100'} border-r shadow-[2px_0_5px_rgba(0,0,0,0.05)]"
     >
         <div class="flex items-center space-x-3">
             <div class="flex-shrink-0">
