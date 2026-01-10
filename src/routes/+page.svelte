@@ -1,6 +1,6 @@
 <script>
     import PlayerList from "$lib/components/game/PlayerList.svelte";
-    import SimpleDateControls from "$lib/components/game/SimpleDateControls.svelte";
+    import DateControls from "$lib/components/game/DateControls.svelte";
     import Snowfall from "$lib/components/ui/Snowfall.svelte";
     import NavTabs from "$lib/components/ui/NavTabs.svelte";
     import AdBanner from "$lib/components/ui/AdBanner.svelte";
@@ -51,15 +51,18 @@
 </script>
 
 <svelte:head>
-    <title>Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot</title>
+    <title>Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot ja seuranta</title>
     <meta
         name="description"
-        content="Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset."
+        content="Miten suomalaisilla kulkee NHL:ssä? Katso suomalaiset NHL-pelaajat, tilastot, päivän ottelut ja pistepörssi yhdestä paikasta."
     />
-    <meta property="og:title" content="Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot" />
+    <meta
+        property="og:title"
+        content="Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot ja seuranta"
+    />
     <meta
         property="og:description"
-        content="Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset."
+        content="Miten suomalaisilla kulkee NHL:ssä? Katso suomalaiset NHL-pelaajat, tilastot, päivän ottelut ja pistepörssi yhdestä paikasta."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
 </svelte:head>
@@ -97,7 +100,7 @@
     <div class="space-y-8 main-content-wrapper">
         <!-- Controls Section -->
         <div>
-            <SimpleDateControls />
+            <DateControls />
         </div>
 
         <!-- Ad Banner -->

@@ -86,7 +86,7 @@
                     <tr>
                         {#each headers as header}
                             <th
-                                class="px-3 py-2 text-xs font-medium text-gray-600 uppercase tracking-wider {header.width} {header.center
+                                class="px-3 py-2 text-xs font-medium text-gray-600 uppercase tracking-wider whitespace-nowrap {header.width} {header.center
                                     ? 'text-center'
                                     : 'text-left'} {header.key === 'rank'
                                     ? 'sticky left-0 z-20 bg-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.05)]'
@@ -181,6 +181,6 @@
         font-weight: 600;
         text-transform: uppercase;
         font-size: 0.75rem;
-        padding: 0.5rem;
+        padding: 0.625rem 0.5rem;
     }
 </style>

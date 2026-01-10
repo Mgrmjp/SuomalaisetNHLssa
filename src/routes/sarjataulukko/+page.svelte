@@ -48,7 +48,7 @@
 
     <!-- Content -->
     <div
-        class="standings-content-card bg-white rounded-xl shadow-sm border border-gray-100 p-1 md:p-6"
+        class="standings-content-card bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-6"
     >
         <StandingsView />
     </div>

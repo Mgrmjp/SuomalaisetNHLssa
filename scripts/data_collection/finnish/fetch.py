@@ -383,6 +383,11 @@ def get_player_recent_games(player_id, player_team, limit=10):
                 if shots_against == 0:
                     continue
 
+            # Check if game was decided in OT/SO
+            # API recent games doesn't always show this detail easily, 
+            # but gameOutcome might have it if we used a different endpoint.
+            # For now, if result is T or we have OT info, keep it.
+            
             shots_against = game.get('shotsAgainst', 0)
             recent_games.append({
                 'date': game_date,
@@ -390,7 +395,7 @@ def get_player_recent_games(player_id, player_team, limit=10):
                 'opponent_full': opponent_full,
                 'team_score': team_score,
                 'opponent_score': opponent_score,
-                'result': result,
+                'result': result, # Default result might be overwritten if we had better info
                 'goals': game.get('goals', 0),
                 'assists': game.get('assists', 0),
                 'points': game.get('points', 0),
@@ -639,16 +644,22 @@ def generate_finnish_players_data(game_date):
             )
             all_finnish_players.extend(finnish_players)
 
+            pd = game_details.get("periodDescriptor", {})
+            is_ot = pd.get("number", 0) > 3
+            is_so = pd.get("periodType") == "SO"
+
             game_summaries.append({
                 "gameId": game_id,
                 "homeTeam": home_team,
                 "awayTeam": away_team,
                 "homeScore": game_info.get("home_score", 0),
                 "awayScore": game_info.get("away_score", 0),
-                # Use boxscore gameState (real-time) with schedule fallback (may be stale)
                 "gameState": game_details.get("gameState", game.get("gameState", "UNKNOWN")),
-                "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
+                "gameType": game.get("gameType", 2),
                 "startTime": game.get("startTimeUTC", ""),
+                "isOT": is_ot,
+                "isSO": is_so,
+                "period": pd.get("number", 3),
                 "finnish_players_count": len(finnish_players),
                 "empty_net_goals": len([p for p in finnish_players if p.get('empty_net_goals', 0) > 0])
             })

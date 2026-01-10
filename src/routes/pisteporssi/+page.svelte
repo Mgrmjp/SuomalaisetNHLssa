@@ -17,15 +17,18 @@
 </script>
 
 <svelte:head>
-    <title>Suomalaisten Pistepörssi {formattedSeason} - NHL</title>
+    <title>Suomalaisten Pistepörssi {formattedSeason} - Tilastot per kausi - NHL</title>
     <meta
         name="description"
-        content="NHL:n suomalaisten pelaajien pistepörssi kaudella {formattedSeason}. Seuraa kuka johtaa maaleissa ja pisteissä."
+        content="Kaikki suomalaiset NHL-pelaajat ja tilastot per kausi. Katso kuka johtaa suomalaisten pistepörssiä kaudella {formattedSeason}."
     />
-    <meta property="og:title" content="Suomalaisten Pistepörssi {formattedSeason} - NHL" />
+    <meta
+        property="og:title"
+        content="Suomalaisten Pistepörssi {formattedSeason} - Tilastot per kausi - NHL"
+    />
     <meta
         property="og:description"
-        content="NHL:n suomalaisten pelaajien pistepörssi kaudella {formattedSeason}. Seuraa kuka johtaa maaleissa ja pisteissä."
+        content="Kaikki suomalaiset NHL-pelaajat ja tilastot per kausi. Katso kuka johtaa suomalaisten pistepörssiä kaudella {formattedSeason}."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/pisteporssi" />
 </svelte:head>

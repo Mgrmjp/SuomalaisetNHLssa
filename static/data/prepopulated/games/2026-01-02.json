@@ -11,7 +11,10 @@
       "gameType": 2,
       "startTime": "2026-01-02T20:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025020641,
@@ -23,7 +26,10 @@
       "gameType": 2,
       "startTime": "2026-01-03T01:00:00Z",
       "finnish_players_count": 3,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025020642,
@@ -35,7 +41,10 @@
       "gameType": 2,
       "startTime": "2026-01-03T03:30:00Z",
       "finnish_players_count": 4,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": true,
+      "isSO": true,
+      "period": 5
     },
     {
       "gameId": 2025020643,
@@ -47,7 +56,10 @@
       "gameType": 2,
       "startTime": "2026-01-03T03:30:00Z",
       "finnish_players_count": 1,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     }
   ],
   "players": [

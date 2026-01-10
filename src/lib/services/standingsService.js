@@ -217,7 +217,7 @@ export class StandingsService {
         this.updateGamesPlayed(homeTeamStats, awayTeamStats)
         this.updateGoalsStats(homeTeamStats, awayTeamStats, homeScore, awayScore)
         this.updateHomeAwayRecords(homeTeamStats, awayTeamStats)
-        this.updateGameResult(homeTeamStats, awayTeamStats, homeScore, awayScore)
+        this.updateGameResult(homeTeamStats, awayTeamStats, homeScore, awayScore, game)
         this.updateDerivedStats(homeTeamStats, awayTeamStats)
         this.updateLast10(homeTeamStats)
         this.updateLast10(awayTeamStats)
@@ -297,21 +297,35 @@ export class StandingsService {
      * @param {number} homeScore - Home team score
      * @param {number} awayScore - Away team score
      */
-    updateGameResult(homeTeamStats, awayTeamStats, homeScore, awayScore) {
+    updateGameResult(homeTeamStats, awayTeamStats, homeScore, awayScore, game) {
+        const isOT = game.period > 3 || game.isOT === true || game.isSO === true;
+
         if (homeScore > awayScore) {
             // Home team wins
             this.applyWin(homeTeamStats, homeTeamStats.home)
-            this.applyLoss(awayTeamStats, awayTeamStats.away)
-            this.updateStreak(homeTeamStats, 'W')
-            this.updateStreak(awayTeamStats, 'L')
+            if (isOT) {
+                this.applyOTLoss(awayTeamStats, awayTeamStats.away)
+                this.updateStreak(homeTeamStats, 'W')
+                this.updateStreak(awayTeamStats, 'OT')
+            } else {
+                this.applyLoss(awayTeamStats, awayTeamStats.away)
+                this.updateStreak(homeTeamStats, 'W')
+                this.updateStreak(awayTeamStats, 'L')
+            }
         } else if (awayScore > homeScore) {
             // Away team wins
             this.applyWin(awayTeamStats, awayTeamStats.away)
-            this.applyLoss(homeTeamStats, homeTeamStats.home)
-            this.updateStreak(awayTeamStats, 'W')
-            this.updateStreak(homeTeamStats, 'L')
+            if (isOT) {
+                this.applyOTLoss(homeTeamStats, homeTeamStats.home)
+                this.updateStreak(awayTeamStats, 'W')
+                this.updateStreak(homeTeamStats, 'OT')
+            } else {
+                this.applyLoss(homeTeamStats, homeTeamStats.home)
+                this.updateStreak(awayTeamStats, 'W')
+                this.updateStreak(homeTeamStats, 'L')
+            }
         } else {
-            // Tie (shouldn't happen in modern NHL)
+            // Tie (shouldn't happen in modern NHL, but handle just in case)
             homeTeamStats.points += 1
             awayTeamStats.points += 1
             this.updateStreak(homeTeamStats, 'OT')
@@ -340,6 +354,17 @@ export class StandingsService {
     applyLoss(teamStats, locationStats) {
         teamStats.losses++
         locationStats.losses++
+    }
+
+    /**
+     * Apply overtime/shootout loss statistics to a team
+     * @param {object} teamStats - Team stats to update
+     * @param {object} locationStats - Home or away stats to update
+     */
+    applyOTLoss(teamStats, locationStats) {
+        teamStats.overtimeLosses++
+        locationStats.ot = (locationStats.ot || 0) + 1
+        teamStats.points += 1
     }
 
     /**

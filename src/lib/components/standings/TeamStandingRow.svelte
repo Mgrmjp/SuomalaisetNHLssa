@@ -203,7 +203,9 @@
     </td>
 
     <!-- Last 10 Games -->
-    <td class="standing-cell standing-cell--l10 px-3 py-3 text-sm text-center text-gray-600 w-20">
+    <td
+        class="standing-cell standing-cell--l10 px-3 py-3 text-sm text-center text-gray-600 w-20 whitespace-nowrap"
+    >
         <span class="stat-value tabular-nums">{last10Display}</span>
     </td>
 
@@ -260,7 +262,7 @@
         }
 
         td {
-            padding: 0.5rem 0.25rem;
+            padding: 0.625rem 0.5rem;
         }
     }
 </style>
