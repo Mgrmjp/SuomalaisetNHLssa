@@ -31,7 +31,7 @@
       "awayTeam": "STL",
       "homeScore": 4,
       "awayScore": 2,
-      "gameState": "LIVE",
+      "gameState": "CRIT",
       "gameType": 2,
       "startTime": "2026-01-10T02:00:00Z",
       "finnish_players_count": 0,
@@ -60,7 +60,7 @@
       "game_id": 2025020694,
       "game_date": "2026-01-09",
       "game_status": "OFF",
-      "created_at": "2026-01-10T04:21:15.783239",
+      "created_at": "2026-01-10T04:41:31.287704",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CHI/8476882.png",
       "goals": 0,
       "assists": 0,
@@ -161,6 +161,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-01-10T04:21:24.219754",
+  "generated_at": "2026-01-10T04:41:40.066658",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
