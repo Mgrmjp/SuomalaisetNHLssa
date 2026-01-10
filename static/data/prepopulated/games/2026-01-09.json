@@ -7,7 +7,7 @@
       "awayTeam": "WSH",
       "homeScore": 1,
       "awayScore": 5,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 2,
       "startTime": "2026-01-10T01:00:00Z",
       "finnish_players_count": 1,
@@ -60,7 +60,7 @@
       "game_id": 2025020694,
       "game_date": "2026-01-09",
       "game_status": "OFF",
-      "created_at": "2026-01-10T03:45:10.914966",
+      "created_at": "2026-01-10T04:05:27.002607",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CHI/8476882.png",
       "goals": 0,
       "assists": 0,
@@ -82,6 +82,21 @@
       "shifts": 19,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-09",
+          "opponent": "WSH",
+          "opponent_full": "Washington Capitals",
+          "team_score": 1,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-07",
           "opponent": "STL",
@@ -141,26 +156,11 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2025-12-30",
-          "opponent": "NYI",
-          "opponent_full": "New York Islanders",
-          "team_score": 2,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 1,
-          "assists": 0,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-01-10T03:45:19.408891",
+  "generated_at": "2026-01-10T04:05:35.682169",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
