@@ -400,15 +400,24 @@ export class StandingsService {
     updateStreak(teamStats, result) {
         const currentStreak = teamStats.streak
 
-        if (!currentStreak) {
+        if (!currentStreak || currentStreak.length < 2) {
             teamStats.streak = `${result}1`
             return
         }
 
-        const [type, count] = currentStreak.split('')
+        // Use regex to properly parse streak type and count (handles double-digit streaks)
+        const match = currentStreak.match(/^([WLO]+)(\d+)$/)
+        if (!match) {
+            // Corrupted streak format, reset to new streak
+            teamStats.streak = `${result}1`
+            return
+        }
+
+        const [, type, countStr] = match
+        const count = parseInt(countStr, 10)
 
         if (type === result) {
-            teamStats.streak = `${result}${parseInt(count, 10) + 1}`
+            teamStats.streak = `${result}${count + 1}`
         } else {
             teamStats.streak = `${result}1`
         }

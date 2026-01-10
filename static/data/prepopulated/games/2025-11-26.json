@@ -11,7 +11,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 3,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020362,
@@ -23,7 +26,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020363,
@@ -35,7 +41,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 2,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020364,
@@ -47,7 +56,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 1,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 4,
+      "isOT": true,
+      "isSO": false
     },
     {
       "gameId": 2025020365,
@@ -59,7 +71,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 2,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020366,
@@ -71,7 +86,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 3,
-      "empty_net_goals": 1
+      "empty_net_goals": 1,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020367,
@@ -83,7 +101,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020368,
@@ -95,7 +116,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 2,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020369,
@@ -107,7 +131,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T00:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 4,
+      "isOT": true,
+      "isSO": false
     },
     {
       "gameId": 2025020370,
@@ -119,7 +146,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T01:30:00Z",
       "finnish_players_count": 1,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 4,
+      "isOT": true,
+      "isSO": false
     },
     {
       "gameId": 2025020371,
@@ -131,7 +161,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T02:00:00Z",
       "finnish_players_count": 1,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020372,
@@ -143,7 +176,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T02:30:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020373,
@@ -155,7 +191,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T03:00:00Z",
       "finnish_players_count": 2,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 5,
+      "isOT": true,
+      "isSO": true
     },
     {
       "gameId": 2025020374,
@@ -167,7 +206,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T03:00:00Z",
       "finnish_players_count": 1,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020375,
@@ -179,7 +221,10 @@
       "gameType": 2,
       "startTime": "2025-11-27T03:00:00Z",
       "finnish_players_count": 5,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     }
   ],
   "players": [

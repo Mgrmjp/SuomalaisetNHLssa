@@ -11,7 +11,10 @@
       "gameType": 2,
       "startTime": "2025-10-22T23:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020109,
@@ -23,7 +26,10 @@
       "gameType": 2,
       "startTime": "2025-10-22T23:30:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 3,
+      "isOT": false,
+      "isSO": false
     },
     {
       "gameId": 2025020110,
@@ -35,7 +41,10 @@
       "gameType": 2,
       "startTime": "2025-10-23T00:30:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "period": 4,
+      "isOT": true,
+      "isSO": false
     }
   ],
   "players": [],
