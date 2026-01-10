@@ -219,8 +219,6 @@ export class StandingsService {
         this.updateHomeAwayRecords(homeTeamStats, awayTeamStats)
         this.updateGameResult(homeTeamStats, awayTeamStats, homeScore, awayScore, game)
         this.updateDerivedStats(homeTeamStats, awayTeamStats)
-        this.updateLast10(homeTeamStats)
-        this.updateLast10(awayTeamStats)
         this.updateSpecialTeamsStats(homeTeamStats)
         this.updateSpecialTeamsStats(awayTeamStats)
     }
@@ -307,10 +305,14 @@ export class StandingsService {
                 this.applyOTLoss(awayTeamStats, awayTeamStats.away)
                 this.updateStreak(homeTeamStats, 'W')
                 this.updateStreak(awayTeamStats, 'OT')
+                this.recordLast10Result(homeTeamStats, 'W')
+                this.recordLast10Result(awayTeamStats, 'OT')
             } else {
                 this.applyLoss(awayTeamStats, awayTeamStats.away)
                 this.updateStreak(homeTeamStats, 'W')
                 this.updateStreak(awayTeamStats, 'L')
+                this.recordLast10Result(homeTeamStats, 'W')
+                this.recordLast10Result(awayTeamStats, 'L')
             }
         } else if (awayScore > homeScore) {
             // Away team wins
@@ -319,10 +321,14 @@ export class StandingsService {
                 this.applyOTLoss(homeTeamStats, homeTeamStats.home)
                 this.updateStreak(awayTeamStats, 'W')
                 this.updateStreak(homeTeamStats, 'OT')
+                this.recordLast10Result(awayTeamStats, 'W')
+                this.recordLast10Result(homeTeamStats, 'OT')
             } else {
                 this.applyLoss(homeTeamStats, homeTeamStats.home)
                 this.updateStreak(awayTeamStats, 'W')
                 this.updateStreak(homeTeamStats, 'L')
+                this.recordLast10Result(awayTeamStats, 'W')
+                this.recordLast10Result(homeTeamStats, 'L')
             }
         } else {
             // Tie (shouldn't happen in modern NHL, but handle just in case)
@@ -330,6 +336,8 @@ export class StandingsService {
             awayTeamStats.points += 1
             this.updateStreak(homeTeamStats, 'OT')
             this.updateStreak(awayTeamStats, 'OT')
+            this.recordLast10Result(homeTeamStats, 'OT')
+            this.recordLast10Result(awayTeamStats, 'OT')
         }
     }
 
@@ -407,18 +415,30 @@ export class StandingsService {
     }
 
     /**
-     * Update last 10 games record (simplified implementation)
+     * Record a game result in the last 10 games tracking
+     * @param {object} teamStats - Team stats object
+     * @param {string} result - 'W', 'L', or 'OT'
+     */
+    recordLast10Result(teamStats, result) {
+        teamStats.last10Results.push(result)
+        // Keep only the most recent 10 results
+        if (teamStats.last10Results.length > 10) {
+            teamStats.last10Results.shift()
+        }
+        this.updateLast10(teamStats)
+    }
+
+    /**
+     * Update last 10 games record from actual game results
      * @param {object} teamStats - Team stats object
      */
     updateLast10(teamStats) {
-        // This is a simplified version
-        // In a full implementation, you'd track the actual last 10 games
-        const winPercentage = teamStats.wins / Math.max(teamStats.gamesPlayed, 1)
-        const wins10 = Math.min(10, Math.round(winPercentage * 10))
-        const losses10 = Math.min(10 - wins10, teamStats.losses)
-        const ot10 = Math.min(10 - wins10 - losses10, teamStats.overtimeLosses)
+        const results = teamStats.last10Results
+        const wins = results.filter((r) => r === 'W').length
+        const losses = results.filter((r) => r === 'L').length
+        const otLosses = results.filter((r) => r === 'OT').length
 
-        teamStats.last10 = `${wins10}-${losses10}-${ot10}`
+        teamStats.last10 = `${wins}-${losses}-${otLosses}`
     }
 
     /**

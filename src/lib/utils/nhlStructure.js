@@ -95,6 +95,7 @@ export function initializeStandings() {
                 leagueRank: 0,
                 streak: '',
                 last10: '0-0-0',
+                last10Results: [],
                 home: {
                     games: 0,
                     wins: 0,
