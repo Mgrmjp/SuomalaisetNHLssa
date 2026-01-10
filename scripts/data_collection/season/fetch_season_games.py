@@ -243,6 +243,12 @@ def generate_season_data(start_date, end_date):
                 # Add game summary
                 home_score = game_details.get("homeTeam", {}).get("score", 0)
                 away_score = game_details.get("awayTeam", {}).get("score", 0)
+                
+                # Extract overtime/shootout info
+                pd = game_details.get("periodDescriptor", {})
+                is_ot = pd.get("number", 0) > 3
+                is_so = pd.get("periodType") == "SO"
+                period = pd.get("number", 3)
 
                 all_games.append({
                     "gameId": game_id,
@@ -254,6 +260,9 @@ def generate_season_data(start_date, end_date):
                     "gameState": game_state,
                     "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
                     "startTime": game.get("startTimeUTC", ""),
+                    "isOT": is_ot,
+                    "isSO": is_so,
+                    "period": period,
                     "players_count": len(players)
                 })
 
