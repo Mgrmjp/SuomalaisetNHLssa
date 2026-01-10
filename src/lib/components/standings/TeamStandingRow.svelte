@@ -60,6 +60,16 @@
     function getEnhancedStreakDisplay(streak) {
         if (!streak || streak.length < 2) return null;
 
+        // Check if streak starts with "OT" first (before checking single char)
+        if (streak.startsWith("OT")) {
+            return {
+                text: streak.replace("OT", "JA"),
+                bg: "bg-gradient-to-br from-amber-500 to-orange-500",
+                textColor: "text-white",
+                ring: "ring-amber-300",
+            };
+        }
+
         const type = streak[0];
 
         switch (type) {
@@ -76,13 +86,6 @@
                     bg: "bg-gradient-to-br from-red-500 to-red-600",
                     textColor: "text-white",
                     ring: "ring-red-300",
-                };
-            case "OT":
-                return {
-                    text: streak.replace("OT", "JA"),
-                    bg: "bg-gradient-to-br from-amber-500 to-orange-500",
-                    textColor: "text-white",
-                    ring: "ring-amber-300",
                 };
             default:
                 return null;
@@ -209,7 +212,9 @@
     <!-- Streak -->
     <td class="standing-cell standing-cell--streak px-3 py-3 text-sm text-center w-14">
         {#if streakDisplay}
-            <span class="text-gray-600">{streakDisplay.text}</span>
+            <span class="text-gray-600" title="Voitto-, häviö- tai jatkoaikataikkujen määrä">
+                {streakDisplay.text}
+            </span>
         {:else}
             <span class="text-gray-400">-</span>
         {/if}
@@ -219,7 +224,9 @@
     <td
         class="standing-cell standing-cell--l10 px-3 py-3 text-sm text-center text-gray-600 w-20 whitespace-nowrap"
     >
-        <span class="stat-value tabular-nums">{last10Display}</span>
+        <span class="stat-value tabular-nums" title="Viimeiset 10 pelia: voitot-häviöt-jatkoaika-tappiot">
+            {last10Display}
+        </span>
     </td>
 
     {#if showAdvancedStats}

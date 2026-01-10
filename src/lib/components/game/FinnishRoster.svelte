@@ -6,6 +6,7 @@
     import { fetchLocalJSON } from "$lib/utils/apiHelpers.js";
     import teamMapping from "$lib/utils/teamMapping.js";
     import { getTeamColorVariables } from "$lib/utils/teamColors.js";
+    import { correctFullName } from "$lib/utils/finnishNameUtils.js";
 
     // State
     let _players = [];
@@ -36,14 +37,19 @@
             // Handle cache format (object keyed by player ID)
             let playerList;
             if (Array.isArray(rawData)) {
-                playerList = rawData;
+                playerList = rawData.map((p) => ({
+                    ...p,
+                    name: correctFullName(p.name),
+                }));
             } else {
                 // Convert object to array and normalize
                 playerList = Object.values(rawData).map((p) => {
                     const teamFromHeadshot = extractTeamFromHeadshot(p.headshot);
+                    const originalName = p.name;
+                    const correctedName = correctFullName(originalName);
                     return {
                         id: p.playerId || p.id,
-                        name: p.name,
+                        name: correctedName,
                         position: p.position,
                         team: p.teamAbbrev || p.team || teamFromHeadshot || "",
                         team_abbrev: p.teamAbbrev || p.team || teamFromHeadshot || "",

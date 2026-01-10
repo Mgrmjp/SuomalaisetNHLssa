@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { correctFullName } from '$lib/utils/finnishNameUtils.js';
 
 /**
  * List of Finnish Stanley Cup winners (Player IDs).
@@ -40,8 +41,9 @@ export async function load({ fetch }) {
             }
             const data = await res.json();
             
-            // 1. Get Name
-            const name = `${data.firstName?.default || ''} ${data.lastName?.default || ''}`.trim();
+            // 1. Get Name with Finnish letter correction
+            const rawName = `${data.firstName?.default || ''} ${data.lastName?.default || ''}`.trim();
+            const name = correctFullName(rawName);
 
             // 2. Find Stanley Cup Award
             const cupAward = data.awards?.find(

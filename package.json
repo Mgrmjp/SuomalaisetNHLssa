@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "vite build",
+        "prebuild": "node scripts/prebuild/fetch-player-stats.cjs",
+        "build": "npm run prebuild && vite build",
+        "build:quick": "vite build",
         "dev": "vite dev",
         "preview": "vite preview",
         "test": "vitest run",
