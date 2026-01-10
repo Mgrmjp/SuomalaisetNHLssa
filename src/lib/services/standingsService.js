@@ -188,8 +188,8 @@ export class StandingsService {
      * @param {object} standings - Standings object to update
      */
     processGame(game, standings) {
-        // Only process completed games
-        if (game.gameState !== 'OFF' && game.gameState !== 'FINAL') {
+        // Exclude future games (FUT) - include all completed game states
+        if (game.gameState === 'FUT') {
             return
         }
 
