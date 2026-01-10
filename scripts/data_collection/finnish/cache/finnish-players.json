@@ -807,6 +807,29 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8483497.png",
     "isActive": true
   },
+  "8483501": {
+    "playerId": 8483501,
+    "name": "Samuel Helenius",
+    "firstName": {
+      "default": "Samuel"
+    },
+    "lastName": {
+      "default": "Helenius"
+    },
+    "position": "C",
+    "sweaterNumber": 86,
+    "birthDate": "2002-07-31",
+    "birthCity": {
+      "default": "Hameenlinna"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Hameenlinna, FIN",
+    "heightInches": 76,
+    "weightLbs": 198,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8483501.png",
+    "isActive": true
+  },
   "8484321": {
     "playerId": 8484321,
     "name": "Nikolas Matinpalo",
@@ -829,6 +852,131 @@
     "weightLbs": 213,
     "shootsCatches": "R",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8484321.png",
+    "isActive": true
+  },
+  "8477499": {
+    "playerId": 8477499,
+    "name": "Rasmus Ristolainen",
+    "firstName": {
+      "default": "Rasmus"
+    },
+    "lastName": {
+      "default": "Ristolainen"
+    },
+    "position": "D",
+    "sweaterNumber": 55,
+    "birthDate": "1994-10-27",
+    "birthCity": {
+      "default": "Turku",
+      "sv": "Åbo"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Turku, FIN",
+    "heightInches": 76,
+    "weightLbs": 208,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
+    "isActive": true
+  },
+  "8477953": {
+    "playerId": 8477953,
+    "name": "Kasperi Kapanen",
+    "firstName": {
+      "default": "Kasperi"
+    },
+    "lastName": {
+      "default": "Kapanen"
+    },
+    "position": "R",
+    "sweaterNumber": 42,
+    "birthDate": "1996-07-23",
+    "birthCity": {
+      "default": "Kuopio"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Kuopio, FIN",
+    "heightInches": 73,
+    "weightLbs": 194,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/EDM/8477953.png",
+    "isActive": true
+  },
+  "8478024": {
+    "playerId": 8478024,
+    "name": "Ville Husso",
+    "firstName": {
+      "default": "Ville"
+    },
+    "lastName": {
+      "default": "Husso"
+    },
+    "position": "G",
+    "sweaterNumber": 33,
+    "birthDate": "1995-02-06",
+    "birthCity": {
+      "default": "Helsinki",
+      "cs": "Helsinky",
+      "sk": "Helsinky",
+      "sv": "Helsingfors"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Helsinki, FIN",
+    "heightInches": 75,
+    "weightLbs": 205,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8478024.png",
+    "isActive": true
+  },
+  "8481641": {
+    "playerId": 8481641,
+    "name": "Joel Kiviranta",
+    "firstName": {
+      "default": "Joel"
+    },
+    "lastName": {
+      "default": "Kiviranta"
+    },
+    "position": "L",
+    "sweaterNumber": 94,
+    "birthDate": "1996-03-23",
+    "birthCity": {
+      "default": "Vantaa",
+      "sv": "Vanda"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Vantaa, FIN",
+    "heightInches": 71,
+    "weightLbs": 185,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
+    "isActive": true
+  },
+  "8482451": {
+    "playerId": 8482451,
+    "name": "Mikael Pyyhtia",
+    "firstName": {
+      "default": "Mikael"
+    },
+    "lastName": {
+      "default": "Pyyhtia",
+      "cs": "Pyyhtiä",
+      "fi": "Pyyhtiä",
+      "sk": "Pyyhtiä",
+      "sv": "Pyyhtiä"
+    },
+    "position": "L",
+    "sweaterNumber": 82,
+    "birthDate": "2001-12-17",
+    "birthCity": {
+      "default": "Turku",
+      "sv": "Åbo"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Turku, FIN",
+    "heightInches": 72,
+    "weightLbs": 178,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CBJ/8482451.png",
     "isActive": true
   }
 }
