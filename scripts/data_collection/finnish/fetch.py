@@ -38,6 +38,7 @@ from utils import (
 )
 # Import Finnish text correction utilities
 from finnish_text_utils import normalize_finnish_player_data
+from headshots.sync import sync_headshots
 
 # =============================================================================
 # Geocoding for venue addresses
@@ -706,6 +707,12 @@ if __name__ == "__main__":
     print()
 
     data = generate_finnish_players_data(date_str)
+
+    # Sync headshots for any new players
+    if data.get("players"):
+        new_headshots = sync_headshots(data["players"])
+        if new_headshots > 0:
+            print(f"\n📷 Downloaded {new_headshots} new headshot(s)")
 
     # Save using shared utilities
     output_file = GAMES_DIR / f"{date_str}.json"

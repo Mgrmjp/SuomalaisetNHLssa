@@ -1,12 +1,45 @@
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Immutable SvelteKit assets (1 year)
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    
+    # Images (1 week)
+    ExpiresByType image/jpeg "access plus 1 week"
+    ExpiresByType image/png "access plus 1 week"
+    ExpiresByType image/gif "access plus 1 week"
+    ExpiresByType image/svg+xml "access plus 1 week"
+    ExpiresByType image/x-icon "access plus 1 week"
+    
+    # JSON data (10 minutes)
+    ExpiresByType application/json "access plus 10 minutes"
+    
+    # HTML (no cache)
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
 <IfModule mod_headers.c>
-    # Immutable content (SvelteKit generated assets)
-    <FilesMatch "\.[\da-f]{8,}\.(js|css|woff2)$">
+    # Immutable content in _app/immutable folder
+    <If "%{REQUEST_URI} =~ m#^/_app/immutable/#">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </If>
+    
+    # JS and CSS files with hash names (SvelteKit generated)
+    <FilesMatch "\.(js|css)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
 
-    # Static images - 1 day
-    <FilesMatch "\.(jpg|jpeg|png|gif|svg|ico)$">
-        Header set Cache-Control "public, max-age=86400"
+    # Static images - 1 week
+    <FilesMatch "\.(jpg|jpeg|png|gif|svg|ico|webp)$">
+        Header set Cache-Control "public, max-age=604800"
+    </FilesMatch>
+
+    # WOFF2 fonts - 1 year
+    <FilesMatch "\.woff2$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
 
     # JSON Data - 10 minutes

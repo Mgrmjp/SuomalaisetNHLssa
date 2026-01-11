@@ -14,67 +14,74 @@
     let lqipUrl = $state(null);
     let imageLoaded = $state(false);
 
-    // Get player headshot URL
-    function getPlayerHeadshotUrl(playerId) {
+    // Get local WebP headshot URL (optimized, served from our domain)
+    function getLocalHeadshotUrl(playerId) {
+        if (!playerId) return null;
+        return `${base}/headshots/${playerId}.webp`;
+    }
+
+    // Get LQIP thumbnail URL (tiny placeholder)
+    function getLqipUrl(playerId) {
         if (!playerId) return null;
         return `${base}/headshots/thumbs/${playerId}.jpg`;
     }
 
-    // Generate LQIP (Low Quality Image Placeholder)
-    function _generateLQIP(playerId) {
-        if (!playerId) return null;
-        const canvas = document.createElement("canvas");
-        canvas.width = 64;
-        canvas.height = 64;
-        const ctx = canvas.getContext("2d");
-
-        const hue = (parseInt(playerId, 10) * 137.508) % 360;
-        ctx.fillStyle = `hsl(${hue}, 30%, 85%)`;
-        ctx.fillRect(0, 0, 64, 64);
-
-        return canvas.toDataURL();
-    }
-
-    // Preload player image
-    function preloadPlayerImage(playerId) {
+    // Load player image - try local WebP first, fallback to NHL CDN
+    function loadPlayerImage(playerId) {
         if (!playerId) return;
 
         imageLoading = true;
         imageLoaded = false;
-        playerPhotoUrl = null;
+        photoError = false;
 
-        // Set LQIP immediately
-        lqipUrl = getPlayerHeadshotUrl(playerId);
+        // Set LQIP placeholder immediately
+        lqipUrl = getLqipUrl(playerId);
 
-        // Load full image after delay
-        setTimeout(() => {
-            const img = new Image();
-            const url = player.headshot_url;
+        // Try local WebP first
+        const localUrl = getLocalHeadshotUrl(playerId);
+        const img = new Image();
 
-            img.onload = () => {
-                playerPhotoUrl = url;
-                photoError = false;
-                imageLoading = false;
-                // Add delay before removing blur
-                setTimeout(() => {
-                    imageLoaded = true;
-                }, 100);
-            };
+        img.onload = () => {
+            playerPhotoUrl = localUrl;
+            photoError = false;
+            imageLoading = false;
+            setTimeout(() => {
+                imageLoaded = true;
+            }, 100);
+        };
 
-            img.onerror = () => {
+        img.onerror = () => {
+            // Fallback to NHL CDN if local not found
+            if (player.headshot_url) {
+                const fallbackImg = new Image();
+                fallbackImg.onload = () => {
+                    playerPhotoUrl = player.headshot_url;
+                    photoError = false;
+                    imageLoading = false;
+                    setTimeout(() => {
+                        imageLoaded = true;
+                    }, 100);
+                };
+                fallbackImg.onerror = () => {
+                    photoError = true;
+                    playerPhotoUrl = null;
+                    imageLoading = false;
+                };
+                fallbackImg.src = player.headshot_url;
+            } else {
                 photoError = true;
                 playerPhotoUrl = null;
                 imageLoading = false;
-            };
+            }
+        };
 
-            img.src = url;
-        }, 500);
+        img.src = localUrl;
     }
 
-    // Preload image when player changes using $effect
+    // Load image when player changes using $effect
     $effect(() => {
         if (player?.playerId) {
-            preloadPlayerImage(player.playerId);
+            loadPlayerImage(player.playerId);
         }
     });
 

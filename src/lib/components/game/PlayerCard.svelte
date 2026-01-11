@@ -21,92 +21,70 @@
     let _imageLoading = $state(true);
     let _lqipUrl = $state(null);
 
-    // Get player headshot URL
-    function getPlayerHeadshotUrl(playerId) {
+    // Get local WebP headshot URL (optimized, served from our domain)
+    function getLocalHeadshotUrl(playerId) {
+        if (!playerId) return null;
+        return `${base}/headshots/${playerId}.webp`;
+    }
+
+    // Get LQIP thumbnail URL (tiny placeholder)
+    function getLqipUrl(playerId) {
         if (!playerId) return null;
         return `${base}/headshots/thumbs/${playerId}.jpg`;
     }
 
-    // Generate LQIP (Low Quality Image Placeholder)
-    function _generateLQIP(playerId) {
-        if (!playerId) return null;
-        // Create a simple colored rectangle as LQIP based on player ID
-        const canvas = document.createElement("canvas");
-        canvas.width = 64;
-        canvas.height = 64;
-        const ctx = canvas.getContext("2d");
-
-        // Generate color based on player ID
-        const hue = (parseInt(playerId, 10) * 137.508) % 360;
-        ctx.fillStyle = `hsl(${hue}, 30%, 85%)`;
-        ctx.fillRect(0, 0, 64, 64);
-
-        return canvas.toDataURL();
-    }
-
-    // Preload player image
-    function preloadPlayerImage(playerId) {
+    // Load player image - try local WebP first, fallback to NHL CDN
+    function loadPlayerImage(playerId) {
         if (!playerId) return;
 
         _imageLoading = true;
-        playerPhotoUrl = null; // Reset full image
+        _photoError = false;
 
-        // Set LQIP immediately
-        _lqipUrl = getPlayerHeadshotUrl(playerId);
+        // Set LQIP placeholder immediately
+        _lqipUrl = getLqipUrl(playerId);
 
-        // Load full image after delay
-        setTimeout(() => {
-            const img = new Image();
-            const url = player.headshot_url;
+        // Try local WebP first
+        const localUrl = getLocalHeadshotUrl(playerId);
+        const img = new Image();
 
-            img.onload = () => {
-                playerPhotoUrl = url;
-                _photoError = false;
-                _imageLoading = false;
-            };
+        img.onload = () => {
+            playerPhotoUrl = localUrl;
+            _photoError = false;
+            _imageLoading = false;
+        };
 
-            img.onerror = () => {
+        img.onerror = () => {
+            // Fallback to NHL CDN if local not found
+            if (player.headshot_url) {
+                const fallbackImg = new Image();
+                fallbackImg.onload = () => {
+                    playerPhotoUrl = player.headshot_url;
+                    _photoError = false;
+                    _imageLoading = false;
+                };
+                fallbackImg.onerror = () => {
+                    _photoError = true;
+                    playerPhotoUrl = null;
+                    _imageLoading = false;
+                };
+                fallbackImg.src = player.headshot_url;
+            } else {
                 _photoError = true;
                 playerPhotoUrl = null;
                 _imageLoading = false;
-            };
+            }
+        };
 
-            img.src = url;
-        }, 500);
+        img.src = localUrl;
     }
 
-    // Preload image when player changes
+    // Load image when player changes
     $effect(() => {
         if (player?.playerId) {
-            preloadPlayerImage(player.playerId);
+            loadPlayerImage(player.playerId);
         }
     });
     let _photoLoading = $state(true);
-
-    // Load player photo when component mounts or player changes
-    $effect(() => {
-        if (player?.playerId) {
-            loadPlayerPhoto(player.playerId, player.headshot_url);
-        }
-    });
-
-    /**
-     * Load player photo from our API, falling back to precomputed headshot_url if available
-     */
-    async function loadPlayerPhoto(_playerId, precomputedUrl) {
-        // If we already have a precomputed URL from data, use it first
-        if (precomputedUrl) {
-            playerPhotoUrl = precomputedUrl;
-            _photoLoading = false;
-            _photoError = false;
-            return;
-        }
-
-        // If no precomputed URL is available, skip network fetch to avoid 404 spam in dev/offline
-        _photoLoading = false;
-        _photoError = true;
-        playerPhotoUrl = null;
-    }
 
     let showSeasonStats = $state(false);
     let showComprehensiveDetails = $state(false);
