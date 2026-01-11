@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """
-Fetch Finnish NHL player headshots and save as optimized WebP.
+Fetch Finnish NHL player headshots and save as optimized WebP with transparent backgrounds.
 
 Requirements:
 - Python 3.9+
 - requests
 - Pillow (pip install pillow)
+- rembg (pip install rembg[cpu]) - for background removal
 
 Output:
-- WebP images at 168x168 in static/headshots/{playerId}.webp
+- WebP images at 168x168 with transparent backgrounds in static/headshots/{playerId}.webp
 
 Usage:
     python3 scripts/data_collection/headshots/fetch_headshots_webp.py
@@ -29,6 +30,13 @@ except ImportError:
     PIL_AVAILABLE = False
     print("ERROR: Pillow is required. Install with: pip install pillow")
     exit(1)
+
+try:
+    from rembg import remove as remove_bg
+    REMBG_AVAILABLE = True
+except ImportError:
+    REMBG_AVAILABLE = False
+    print("WARNING: rembg not available, backgrounds will not be removed")
 
 NHL_API = "https://api-web.nhle.com"
 HEADSHOT_CDN = "https://assets.nhle.com/mugs/nhl"
@@ -113,15 +121,21 @@ def get_headshot_bytes(player_id: int, team: str) -> Optional[bytes]:
 
 
 def save_webp(player_id: int, team: str) -> bool:
-    """Download headshot and save as optimized WebP."""
+    """Download headshot, remove background, and save as optimized WebP."""
     try:
         data = get_headshot_bytes(player_id, team)
         if data is None:
             raise RuntimeError("No headshot found")
 
-        # Convert to WebP
-        img = Image.open(io.BytesIO(data))
-        img = img.convert("RGB")
+        # Remove background if rembg is available
+        if REMBG_AVAILABLE:
+            data = remove_bg(data)
+            img = Image.open(io.BytesIO(data))
+            img = img.convert("RGBA")  # Keep transparency
+        else:
+            img = Image.open(io.BytesIO(data))
+            img = img.convert("RGB")
+        
         img = img.resize((IMAGE_SIZE, IMAGE_SIZE), Image.LANCZOS)
         
         out_path = OUT_DIR / f"{player_id}.webp"

@@ -20,6 +20,12 @@ try:
 except ImportError:
     PIL_AVAILABLE = False
 
+try:
+    from rembg import remove as remove_bg
+    REMBG_AVAILABLE = True
+except ImportError:
+    REMBG_AVAILABLE = False
+
 NHL_API = "https://api-web.nhle.com"
 HEADSHOT_CDN = "https://assets.nhle.com/mugs/nhl"
 IMAGE_SIZE = 168
@@ -89,7 +95,7 @@ def get_headshot_bytes(player_id: int, team: str, headshot_url: Optional[str] = 
 
 def download_headshot(player_id: int, team: str, headshot_url: Optional[str] = None) -> bool:
     """
-    Download and save a player headshot as WebP.
+    Download and save a player headshot as WebP with transparent background.
     
     Args:
         player_id: Player ID
@@ -107,8 +113,15 @@ def download_headshot(player_id: int, team: str, headshot_url: Optional[str] = N
         if data is None:
             return False
         
-        img = Image.open(io.BytesIO(data))
-        img = img.convert("RGB")
+        # Remove background if rembg is available
+        if REMBG_AVAILABLE:
+            data = remove_bg(data)
+            img = Image.open(io.BytesIO(data))
+            img = img.convert("RGBA")  # Keep transparency
+        else:
+            img = Image.open(io.BytesIO(data))
+            img = img.convert("RGB")
+        
         img = img.resize((IMAGE_SIZE, IMAGE_SIZE), Image.LANCZOS)
         
         HEADSHOTS_DIR.mkdir(parents=True, exist_ok=True)
