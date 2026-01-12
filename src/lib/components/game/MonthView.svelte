@@ -9,17 +9,48 @@
         availableDates,
     } from "$lib/stores/gameData.js";
 
+    // View state: 'calendar' or 'year'
+    let view = "calendar";
+
+    // Generate years array (from 2021 to current year)
+    $: years = Array.from(
+        { length: $currentDateReadOnly.getFullYear() - 2020 },
+        (_, i) => 2021 + i,
+    );
+
+    // Toggle between calendar and year view
+    function toggleView() {
+        view = view === "calendar" ? "year" : "calendar";
+    }
+
+    // Select a year and switch back to calendar view
+    /** @param {number} year */
+    function selectYear(year) {
+        const newDate = new Date(currentMonth);
+        newDate.setFullYear(year);
+        // Don't go beyond current date
+        if (newDate > $currentDateReadOnly) {
+            newDate.setTime($currentDateReadOnly.getTime());
+        }
+        setDate(formatDate(newDate));
+        view = "calendar";
+    }
+
+    // Check if two dates are in the same month
+    /** @param {Date} date1 @param {Date} date2 */
+    function isSameMonth(date1, date2) {
+        return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth();
+    }
+
     // Generate calendar days for the current selected date's month
     $: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly));
     $: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $currentDateReadOnly;
 
-    // Get the month and year display string
-    function _getMonthYearDisplay() {
-        return currentMonth.toLocaleDateString("fi-FI", {
-            month: "long",
-            year: "numeric",
-        });
-    }
+    // Get the month and year display string (reactive)
+    $: monthYearDisplay = currentMonth.toLocaleDateString("fi-FI", {
+        month: "long",
+        year: "numeric",
+    });
 
     // Navigate between months
     /** @param {'prev' | 'next'} direction */
@@ -127,7 +158,7 @@
             onclick={toggleView}
         >
             {#if view === "calendar"}
-                {_getMonthYearDisplay()}
+                {monthYearDisplay}
             {:else}
                 Valitse vuosi
             {/if}
