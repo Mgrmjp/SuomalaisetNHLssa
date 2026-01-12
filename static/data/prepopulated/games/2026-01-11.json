@@ -52,7 +52,7 @@
       "awayTeam": "CBJ",
       "homeScore": 2,
       "awayScore": 3,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 2,
       "startTime": "2026-01-12T00:00:00Z",
       "isOT": true,
@@ -67,12 +67,12 @@
       "awayTeam": "VGK",
       "homeScore": 2,
       "awayScore": 5,
-      "gameState": "LIVE",
+      "gameState": "CRIT",
       "gameType": 2,
       "startTime": "2026-01-12T01:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 2,
+      "period": 3,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     }
@@ -99,7 +99,7 @@
       "game_id": 2025020712,
       "game_date": "2026-01-11",
       "game_status": "OFF",
-      "created_at": "2026-01-12T02:54:00.800525",
+      "created_at": "2026-01-12T03:32:01.586150",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8480035.png",
       "goals": 0,
       "assists": 1,
@@ -219,7 +219,7 @@
       "game_id": 2025020714,
       "game_date": "2026-01-11",
       "game_status": "OFF",
-      "created_at": "2026-01-12T02:54:21.953921",
+      "created_at": "2026-01-12T03:32:23.112488",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CBJ/8482451.png",
       "goals": 1,
       "assists": 0,
@@ -241,6 +241,21 @@
       "shifts": 17,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-11",
+          "opponent": "UTA",
+          "opponent_full": "Utah Mammoth",
+          "team_score": 3,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 1,
+          "assists": 0,
+          "points": 1,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-10",
           "opponent": "COL",
@@ -294,7 +309,7 @@
       "game_id": 2025020713,
       "game_date": "2026-01-11",
       "game_status": "OFF",
-      "created_at": "2026-01-12T02:54:09.684450",
+      "created_at": "2026-01-12T03:32:10.647725",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8475287.png",
       "goals": 0,
       "assists": 0,
@@ -316,6 +331,21 @@
       "shifts": 22,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-11",
+          "opponent": "WSH",
+          "opponent_full": "Washington Capitals",
+          "team_score": 3,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-10",
           "opponent": "CHI",
@@ -375,21 +405,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-01",
-          "opponent": "SEA",
-          "opponent_full": "Seattle Kraken",
-          "team_score": 1,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -414,7 +429,7 @@
       "game_id": 2025020712,
       "game_date": "2026-01-11",
       "game_status": "OFF",
-      "created_at": "2026-01-12T02:54:04.054088",
+      "created_at": "2026-01-12T03:32:04.920939",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
       "goals": 0,
       "assists": 0,
@@ -538,7 +553,7 @@
       "game_id": 2025020713,
       "game_date": "2026-01-11",
       "game_status": "OFF",
-      "created_at": "2026-01-12T02:54:12.944648",
+      "created_at": "2026-01-12T03:32:13.900222",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8481020.png",
       "goals": 0,
       "assists": 0,
@@ -564,6 +579,21 @@
       "save_percentage": 0.933,
       "goals_against": 2,
       "recent_results": [
+        {
+          "date": "2026-01-11",
+          "opponent": "WSH",
+          "opponent_full": "Washington Capitals",
+          "team_score": 3,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": 2,
+          "save_percentage": 0.933,
+          "shots_against": 30,
+          "saves": 28
+        },
         {
           "date": "2025-12-31",
           "opponent": "VGK",
@@ -623,21 +653,6 @@
           "save_percentage": 1.0,
           "shots_against": 2,
           "saves": 2
-        },
-        {
-          "date": "2025-11-29",
-          "opponent": "WPG",
-          "opponent_full": "Winnipeg Jets",
-          "team_score": 2,
-          "opponent_score": 5,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": 4,
-          "save_percentage": 0.846,
-          "shots_against": 26,
-          "saves": 22
         }
       ]
     },
@@ -662,7 +677,7 @@
       "game_id": 2025020713,
       "game_date": "2026-01-11",
       "game_status": "OFF",
-      "created_at": "2026-01-12T02:54:16.207675",
+      "created_at": "2026-01-12T03:32:17.330647",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8477424.png",
       "goals": 0,
       "assists": 0,
@@ -767,6 +782,6 @@
     }
   ],
   "total_players": 6,
-  "generated_at": "2026-01-12T02:54:26.082687",
+  "generated_at": "2026-01-12T03:32:27.690571",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
