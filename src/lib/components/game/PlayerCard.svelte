@@ -11,6 +11,7 @@
     import { getTeamColorVariables } from "$lib/utils/teamColors.js";
     import { isPlayerGameLive, shouldShowGameResult } from "$lib/utils/gameStateHelpers.mjs";
     import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
+    import { correctFullName } from "$lib/utils/finnishNameUtils.js";
     import "./PlayerCard.css";
 
     let { player } = $props();
@@ -163,11 +164,13 @@
     }
 
     const displayName = $derived(
-        player.name?.default ||
-            player.name ||
-            player.fullName ||
-            player.skaterFullName ||
-            "Unknown Player",
+        correctFullName(
+            player.name?.default ||
+                player.name ||
+                player.fullName ||
+                player.skaterFullName ||
+                "Unknown Player"
+        )
     );
     const gamesData = $derived($games);
     const isLive = $derived(isPlayerGameLive(player, gamesData));
@@ -351,6 +354,49 @@
 
         return null;
     }
+
+    // Action to portal element to body (for modals to escape parent transforms)
+    function portal(node) {
+        // Create a placeholder to take the element's place
+        const placeholder = document.createElement('div');
+        placeholder.className = 'portal-placeholder';
+        placeholder.style.cssText = 'display: none;';
+        node.parentNode.insertBefore(placeholder, node);
+        node._portalPlaceholder = placeholder;
+
+        // Move to body
+        document.body.appendChild(node);
+
+        return {
+            update() {
+                // Keep it in body
+                if (node.parentNode !== document.body) {
+                    document.body.appendChild(node);
+                }
+            },
+            destroy() {
+                // Remove from body and remove placeholder
+                if (document.body.contains(node)) {
+                    document.body.removeChild(node);
+                }
+                if (node._portalPlaceholder && node._portalPlaceholder.parentNode) {
+                    node._portalPlaceholder.parentNode.removeChild(node._portalPlaceholder);
+                }
+            }
+        };
+    }
+
+    // Prevent body scroll when modal is open
+    $effect(() => {
+        if (showSeasonStats) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    });
 </script>
 
 <div class="player-card__container relative w-full min-h-[320px]">
@@ -961,127 +1007,125 @@
     </div>
 </div>
 
-<!-- Modals -->
+<!-- Season Stats Modal -->
 {#if showSeasonStats}
-    <!-- Backdrop -->
     <div
-        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 pointer-events-auto"
+        use:portal
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex modal-safe-overlay modal-overlay-mobile md:modal-overlay-desktop pointer-events-auto"
         onclick={_handleBackdropClick}
         role="button"
         tabindex="0"
         onkeydown={(e) => e.key === "Escape" && _closeSeasonStats(e)}
         aria-label="Close modal"
-        transition:fade={{ duration: 200 }}
     >
-        <!-- Modal Content -->
         <div
-            class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden relative animate-in fade-in zoom-in-95 duration-200"
+            class="bg-white shadow-2xl w-full max-w-lg max-h-[100vh] overflow-y-auto relative modal-dialog-mobile md:rounded-xl"
             role="dialog"
             aria-modal="true"
             aria-labelledby="season-stats-title"
             onclick={(e) => e.stopPropagation()}
         >
-            <!-- Header -->
-            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">
-                <div class="player-card__modal-avatar shrink-0">
-                    {#if playerPhotoUrl && !_photoError}
-                        <img
-                            src={playerPhotoUrl || player.headshot_url}
-                            alt={displayName}
-                            class={`player-card__modal-photo ${_photoLoading || _imageLoading ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}
-                            onload={() => {
-                                _photoLoading = false;
-                                _imageLoading = false;
-                            }}
-                            onerror={() => {
-                                _photoError = true;
-                                _photoLoading = false;
-                                _imageLoading = false;
-                            }}
-                        />
-                        {#if (_photoLoading || _imageLoading) && _lqipUrl}
+                <!-- Header -->
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">
+                    <div class="player-card__modal-avatar shrink-0">
+                        {#if playerPhotoUrl && !_photoError}
+                            <img
+                                src={playerPhotoUrl || player.headshot_url}
+                                alt={displayName}
+                                class={`player-card__modal-photo ${_photoLoading || _imageLoading ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}
+                                onload={() => {
+                                    _photoLoading = false;
+                                    _imageLoading = false;
+                                }}
+                                onerror={() => {
+                                    _photoError = true;
+                                    _photoLoading = false;
+                                    _imageLoading = false;
+                                }}
+                            />
+                            {#if (_photoLoading || _imageLoading) && _lqipUrl}
+                                <img
+                                    src={_lqipUrl}
+                                    alt=""
+                                    class="absolute inset-0 w-full h-full object-cover blur-md scale-110 -z-10"
+                                />
+                            {/if}
+                        {:else if _lqipUrl}
                             <img
                                 src={_lqipUrl}
                                 alt=""
-                                class="absolute inset-0 w-full h-full object-cover blur-md scale-110 -z-10"
+                                class="absolute inset-0 w-full h-full object-cover"
                             />
+                        {:else}
+                            <div class="player-card__modal-initials">{playerInitials}</div>
                         {/if}
-                    {:else if _lqipUrl}
-                        <img
-                            src={_lqipUrl}
-                            alt=""
-                            class="absolute inset-0 w-full h-full object-cover"
-                        />
-                    {:else}
-                        <div class="player-card__modal-initials">{playerInitials}</div>
-                    {/if}
-                </div>
-                <div>
-                    <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">
-                        {displayName}
-                    </h3>
-                    <div class="text-sm text-gray-500 flex items-center gap-2">
-                        <span>{teamWithCity}</span>
-                        <span>•</span>
-                        <span>Kauden 2024-2025 tilastot</span>
                     </div>
-                </div>
-                <button
-                    class="ml-auto p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
-                    onclick={_closeSeasonStats}
-                    aria-label="Sulje"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                    <div>
+                        <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">
+                            {displayName}
+                        </h3>
+                        <div class="text-sm text-gray-500 flex items-center gap-2">
+                            <span>{teamWithCity}</span>
+                            <span>•</span>
+                            <span>Kauden 2024-2025 tilastot</span>
+                        </div>
+                    </div>
+                    <button
+                        class="ml-auto p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                        onclick={_closeSeasonStats}
+                        aria-label="Sulje"
                     >
-                        <path
-                            fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                        />
-                    </svg>
-                </button>
-            </div>
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path
+                                fill-rule="evenodd"
+                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                clip-rule="evenodd"
+                            />
+                        </svg>
+                    </button>
+                </div>
 
-            <!-- Content -->
-            <div class="p-6">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <div class="text-2xl font-bold text-gray-900">
-                            {player.season_goals || 0}
+                <!-- Content -->
+                <div class="p-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-gray-900">
+                                {player.season_goals || 0}
+                            </div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
+                                Maalit
+                            </div>
                         </div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
-                            Maalit
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <div class="text-2xl font-bold text-gray-900">
-                            {player.season_assists || 0}
-                        </div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
-                            Syötöt
-                        </div>
-                    </div>
-                    <div
-                        class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100"
-                    >
-                        <div class="text-3xl font-bold text-finnish-blue-600">
-                            {player.season_points || 0}
+                        <div class="bg-gray-50 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-gray-900">
+                                {player.season_assists || 0}
+                            </div>
+                            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
+                                Syötöt
+                            </div>
                         </div>
                         <div
-                            class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium"
+                            class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100"
                         >
-                            Pisteet yhteensä
+                            <div class="text-3xl font-bold text-finnish-blue-600">
+                                {player.season_points || 0}
+                            </div>
+                            <div
+                                class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium"
+                            >
+                                Pisteet yhteensä
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-{/if}
+    {/if}
 
 {#if showComprehensiveDetails}
     <ComprehensivePlayerDetails

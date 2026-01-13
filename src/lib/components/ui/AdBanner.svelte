@@ -129,4 +129,14 @@
         letter-spacing: 0.5px;
         pointer-events: none;
     }
+
+    @media (max-width: 639px) {
+        .ad-wrapper {
+            min-height: auto;
+        }
+
+        .ad-banner-container {
+            padding: 0.5rem 0;
+        }
+    }
 </style>

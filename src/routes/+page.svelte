@@ -27,12 +27,16 @@
     }));
 
     // Reactive variables
-    $: totalGoals = $players?.reduce((sum, player) => sum + player.goals, 0) || 0;
-    $: totalAssists = $players?.reduce((sum, player) => sum + player.assists, 0) || 0;
-    $: totalPoints = $players?.reduce((sum, player) => sum + player.points, 0) || 0;
-    $: totalPenaltyMinutes =
-        $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0;
-    $: totalPlayers = $players?.length || 0;
+    const totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0);
+    const totalAssists = $derived($players?.reduce((sum, player) => sum + player.assists, 0) || 0);
+    const totalPoints = $derived($players?.reduce((sum, player) => sum + player.points, 0) || 0);
+    const totalPenaltyMinutes = $derived(
+        $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
+    );
+    const totalPlayers = $derived($players?.length || 0);
+
+    // Mobile hero stats toggle
+    let showHeroStats = $state(false);
 
     // Default to yesterday's date on first load (relative to Finland/Europe)
     onMount(() => {
@@ -94,6 +98,12 @@
                 Miten suomalaisilla kulkee NHL:ssä?
             </h1>
             <p class="text-gray-700 hero-subtitle">Tutki päivän ottelut, pisteet ja onnistumiset</p>
+            <button
+                onclick={() => document.getElementById('scoringList')?.scrollIntoView({ behavior: 'smooth' })}
+                class="hero-scroll-to-results md:hidden mt-4 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition-colors duration-200"
+            >
+                Tuloksiin
+            </button>
         </div>
     </div>
 
@@ -111,10 +121,34 @@
 
         <!-- Hero Stats -->
         {#if $players && $players.length > 0}
-            <div class="text-center mb-4 hero-summary-header">
-                <p class="text-sm text-gray-600 hero-summary-text">Valitun päivän yhteistilastot</p>
-            </div>
-            <div class="flex flex-wrap justify-center gap-8 hero-stats">
+            <div class="hero-stats-container">
+                <!-- Desktop header -->
+                <div class="text-center mb-4 hero-summary-header hidden md:block">
+                    <p class="text-sm text-gray-600 hero-summary-text">Valitun päivän yhteistilastot</p>
+                </div>
+
+                <!-- Mobile toggle button -->
+                <button
+                    class="hero-stats-toggle md:hidden"
+                    onclick={() => showHeroStats = !showHeroStats}
+                    aria-label="Näytä tilastot"
+                    aria-expanded={showHeroStats}
+                >
+                    <span class="hero-stats-toggle-text">Valitun päivän yhteistilastot</span>
+                    <svg
+                        class="hero-stats-toggle-icon"
+                        class:rotated={showHeroStats}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <!-- Stats wrapper (hidden on mobile by default, always visible on desktop) -->
+                <div class="hero-stats-wrapper" class:expanded={showHeroStats}>
+                    <div class="flex flex-wrap justify-center gap-8 hero-stats">
                 <div class="text-center hero-stat hero-stat--goals">
                     <div class="flex justify-center mb-1 hero-stat__icon-wrap">
                         <svg
@@ -220,6 +254,8 @@
                     >
                         Kokoonpanossa
                     </div>
+                </div>
+            </div>
                 </div>
             </div>
         {/if}
@@ -352,5 +388,87 @@
     .logo-img {
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)); /* Static shadow */
+    }
+
+    /* Hero Stats Mobile Toggle */
+    .hero-stats-container {
+        margin-bottom: 1rem;
+    }
+
+    .hero-stats-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        background: white;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        cursor: pointer;
+        transition: box-shadow 0.2s ease;
+    }
+
+    .hero-stats-toggle:hover {
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
+    }
+
+    .hero-stats-toggle-text {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+    }
+
+    .hero-stats-toggle-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .hero-stats-toggle-icon.rotated {
+        transform: rotate(180deg);
+    }
+
+    /* Mobile: hidden by default, shown when expanded */
+    .hero-stats-wrapper {
+        display: none;
+    }
+
+    .hero-stats-wrapper.expanded {
+        display: block;
+        animation: slide-down 0.2s ease-out;
+        padding-bottom: 1rem;
+    }
+
+    @keyframes slide-down {
+        from {
+            opacity: 0;
+            transform: translateY(-0.5rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Desktop: always show hero stats without toggle */
+    @media (min-width: 768px) {
+        .hero-stats-container {
+            margin-bottom: 0;
+        }
+
+        .hero-stats-wrapper {
+            display: block;
+        }
+
+        .hero-stats-wrapper.expanded {
+            padding-bottom: 0;
+        }
+
+        .hero-stats-toggle {
+            display: none;
+        }
     }
 </style>

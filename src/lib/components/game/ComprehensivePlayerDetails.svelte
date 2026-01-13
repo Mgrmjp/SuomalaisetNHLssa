@@ -161,12 +161,56 @@
               ? Math.round((player.saves / player.shots_against) * 1000) / 10
               : null,
     );
+
+    // Action to portal element to body
+    function portal(node) {
+        // Add a class to hide the element initially
+        const placeholder = document.createElement('div');
+        placeholder.className = 'portal-placeholder';
+        placeholder.style.cssText = 'display: none;';
+        node.parentNode.insertBefore(placeholder, node);
+        node._portalPlaceholder = placeholder;
+
+        // Move to body
+        document.body.appendChild(node);
+
+        return {
+            update() {
+                // Keep it in body
+                if (node.parentNode !== document.body) {
+                    document.body.appendChild(node);
+                }
+            },
+            destroy() {
+                // Remove from body and restore placeholder
+                if (document.body.contains(node)) {
+                    document.body.removeChild(node);
+                }
+                if (node._portalPlaceholder && node._portalPlaceholder.parentNode) {
+                    node._portalPlaceholder.parentNode.removeChild(node._portalPlaceholder);
+                }
+            }
+        };
+    }
+
+    // Prevent body scroll when modal is open
+    $effect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    });
 </script>
 
 <!-- Comprehensive Details Modal -->
 {#if isOpen}
     <div
-        class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 comprehensive-details-overlay"
+        use:portal
+        class="fixed inset-0 bg-black/30 backdrop-blur-sm flex modal-safe-overlay modal-overlay-mobile md:modal-overlay-desktop z-[100] comprehensive-details-overlay"
         role="button"
         tabindex="0"
         onclick={_handleBackdropClick}
@@ -174,9 +218,9 @@
             (e.key === "Escape" || e.key === "Enter" || e.key === " ") && _handleBackdropClick(e)}
     >
         <div
-            class="bg-white rounded-lg max-w-6xl w-full mx-4 max-h-screen overflow-y-auto comprehensive-details-dialog"
+            class="bg-white rounded-lg max-w-6xl w-full mx-4 max-h-[85dvh] max-h-[85vh] overflow-y-auto comprehensive-details-dialog modal-dialog-mobile md:modal-dialog-desktop"
         >
-            <div class="p-6 comprehensive-details-content">
+            <div class="p-6 comprehensive-details-content modal-content-mobile">
                 <div
                     class="flex items-start justify-between gap-4 mb-6 comprehensive-details-header"
                 >
