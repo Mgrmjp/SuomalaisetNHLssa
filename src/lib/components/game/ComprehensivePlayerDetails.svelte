@@ -210,7 +210,7 @@
 {#if isOpen}
     <div
         use:portal
-        class="fixed inset-0 bg-black/30 backdrop-blur-sm flex modal-safe-overlay modal-overlay-mobile md:modal-overlay-desktop z-[100] comprehensive-details-overlay"
+        class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-end md:items-center justify-center modal-safe-overlay modal-overlay-mobile md:modal-overlay-desktop z-[100] comprehensive-details-overlay"
         role="button"
         tabindex="0"
         onclick={_handleBackdropClick}
