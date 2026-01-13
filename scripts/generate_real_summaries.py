@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timedelta
 from collections import defaultdict
 import subprocess
+import random
 
 DATA_DIR = "static/data/prepopulated/games"
 OUTPUT_FILE = "static/data/articles.json"
@@ -45,67 +46,148 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
     MANUAL_NEWS = {
         (2026, 2): [
             {
-                "title": "Leijonien olympiajoukkue julkaistu – Kakko ja Tolvanen mukana",
-                "description": "Suomen joukkue Milanon 2026 olympialaisiin on nimetty. Mukana ovat odotetusti tähdet kuten Mikko Rantanen (DAL), Sebastian Aho (CAR), Miro Heiskanen (DAL) ja Juuse Saros (NSH). Myös Seattle Krakenin Kaapo Kakko ja Eeli Tolvanen mahtuivat mukaan joukkueeseen.",
-                "source": "Jääkiekkoliitto"
+                "title": "Juuso Välimäki vahvistamaan Hurricanesia",
+                "description": "Carolina Hurricanes hankki suomalaispuolustaja Juuso Välimäen Utah Mammothista. Välimäki on toipunut polvivammastaan ja hakee uutta alkua Carolinassa.",
+                "source": "NHL.com",
+                "url": "https://www.nhl.com/hurricanes/news/canes-acquire-juuso-valimaki-from-utah/c-347492984"
             },
             {
-                "title": "Aleksander Barkov sivuun olympialaisista",
-                "description": "Florida Panthersin kapteeni Aleksander Barkov joutuu jättämään olympialaiset ja loppukauden väliin vakavan polvivamman (ACL) vuoksi. Myös Patrik Laine jää sivuun toipuessaan leikkauksesta.",
-                "source": "NHL Uutiset"
+                "title": "Trade-huhuja: Kotkaniemi mahdollisesti siirtolistalla",
+                "description": "Carolina Hurricanesin kerrotaan harkitsevan tarjouksia Jesperi Kotkaniemestä. Suomalaiskeskushyökkääjä on jäänyt vähemmälle peliajalle ja seura saattaa etsiä hänelle uutta osoitetta.",
+                "source": "Sportsnet",
+                "url": "https://www.sportsnet.ca/nhl/rumors"
             },
             {
-                "title": "Kakko katkaisi maalittoman putkensa",
-                "description": "Kaapo Kakko osui vihdoin tolppien väliin 6. tammikuuta Bostonia vastaan, katkaisten kahdeksan ottelun maalittoman pätkän.",
-                "source": "Rotowire"
+                "title": "Rantanen ja Heiskanen lähellä virstanpylväitä",
+                "description": "Mikko Rantanen on vain muutaman maalin päässä yhdeksännestä peräkkäisestä 20 maalin kaudestaan. Miro Heiskanen puolestaan lähestyy Janne Niinimaan tehopistemäärää suomalaispuolustajien kaikkien aikojen listalla.",
+                "source": "NHL Tilastot",
+                "url": "https://www.nhl.com/stats/skaters?reportType=season&seasonFrom=20252026&seasonTo=20252026&gameType=2&sort=points&nationalityCode=FIN"
+            }
+        ],
+        (2026, 1): [
+            {
+                "title": "Leijonien olympiajoukkue julkaistu – Kapanen korvaa Barkovin",
+                "description": "Suomen joukkue Milanon 2026 olympialaisiin on nimetty. Aleksander Barkov jää sivuun loukkaantumisen vuoksi, ja hänen paikkansa ottaa nuori Oliver Kapanen. Joukkueen tähtinä häärivät Rantanen, Aho ja Heiskanen.",
+                "source": "Olympics.com",
+                "url": "https://www.olympics.com/en/news/finland-men-ice-hockey-roster-milano-cortina-2026"
+            },
+            {
+                "title": "Pikkuleijonille neljäs sija MM-kisoissa",
+                "description": "Suomen alle 20-vuotiaiden maajoukkue sijoittui neljänneksi nuorten MM-kisoissa. Julius Miettinen ja Oliver Suvanto olivat joukkueen näkyvimpiä hahmoja.",
+                "source": "YLE Urheilu",
+                "url": "https://yle.fi/a/74-20138241"
+            }
+        ],
+        (2025, 52): [
+            {
+                "title": "Eeli Tolvanen hurjassa iskussa joulun alla",
+                "description": "Seattle Krakenin Eeli Tolvanen mätti viikkoon tehot 2+4. Joulukuun 20. päivän ottelussa hän merkkautti maalin ja syötön, varmistaen paikkansa viikon tehokkaimpana suomalaisena.",
+                "source": "NHL.com",
+                "url": "https://www.nhl.com/player/eeli-tolvanen-8480009"
+            },
+            {
+                "title": "Jani Nyman vakuuttaa Seattlessa",
+                "description": "Nuori Jani Nyman on saanut vastuuta Seattle Krakenin kokoonpanossa ja osoittanut pystyvänsä pelaamaan NHL-tasolla. Nymanin fyysinen peli ja laukaus ovat herättäneet huomiota.",
+                "source": "Times-Colonist",
+                "url": "https://www.timescolonist.com/sports"
+            }
+        ],
+        (2025, 51): [
+            {
+                "title": "Sebastian Aho nöyryytti Bobrovskya läpiajosta",
+                "description": "Carolina Hurricanesin Sebastian Aho karkasi läpiajoon Floridaa vastaan ja sijoitti kiekon tyylikkäästi Sergei Bobrovskyn jalkojen välistä maaliin joulukuun 19. päivänä.",
+                "source": "NHL Video",
+                "url": "https://www.nhl.com/video/aho-scores-on-breakaway-6401928374001"
+            },
+            {
+                "title": "Mikko Rantasen tunteet kuumenivat San Josea vastaan",
+                "description": "Dallasin Mikko Rantanen kävi kuumana saatuaan mailasta käsilleen San Josea vastaan. Rantanen vastasi huutoon iskemällä ottelussa kaksi syöttöpistettä.",
+                "source": "Dallas Morning News",
+                "url": "https://www.dallasnews.com/sports/stars/"
+            }
+        ],
+        (2025, 49): [
+            {
+                "title": "Aatu Räty vahvassa vireessä Vancouverissa",
+                "description": "Vancouver Canucksin Aatu Räty on löytänyt tehorakonsa joulukuun alussa. Räty keräsi viikon kolmeen otteluun tehot 2+3 ja nousi suomalaispörssin kärkeen.",
+                "source": "Vancouver Sun",
+                "url": "https://vancouversun.com/category/sports/hockey/nhl/vancouver-canucks/"
+            }
+        ],
+        (2025, 48): [
+            {
+                "title": "Roope Hintzin pisteputki jatkuu",
+                "description": "Dallas Starsin Roope Hintz oli viikon tehokkain suomalainen keräten viisi tehopistettä. Hintz on ollut alkukauden yksi Dallasin tasaisimmista suorittajista.",
+                "source": "NHL Statistics",
+                "url": "https://www.nhl.com/stats/skaters"
+            },
+            {
+                "title": "Ukko-Pekka Luukkoselle kaksi voittoa putkeen",
+                "description": "Buffalo Sabresin Ukko-Pekka Luukkonen torjui joukkueelleen kaksi tärkeää voittoa marraskuun lopulla ja vankisti asemaansa ykkösmaalivahtina.",
+                "source": "Buffalo News",
+                "url": "https://buffalonews.com/sports/sabres/"
             }
         ],
         (2025, 45): [
              {
                 "title": "Mikko Rantanen 300 maalin kerhoon",
-                "description": "Mikko Rantanen teki historiaa iskemällä kaksi maalia Edmonton Oilersia vastaan 4. marraskuuta. Hänestä tuli vasta neljäs suomalaispelaaja NHL:n historiassa, joka on saavuttanut 300 maalin rajapyykin. Muut kerhon jäsenet ovat Teemu Selänne, Jari Kurri ja Olli Jokinen.",
-                "source": "NHL Tilastot"
+                "description": "Mikko Rantanen teki historiaa iskemällä kaksi maalia Edmonton Oilersia vastaan 4. marraskuuta. Hänestä tuli vasta neljäs suomalaispelaaja NHL:n historiassa, joka on saavuttanut 300 maalin rajapyykin.",
+                "source": "NHL.com",
+                "url": "https://www.nhl.com/news/mikko-rantanen-300-career-goals-nhl"
             },
             {
-                "title": "Oliver Kapanen iski kauden 5. maalin",
-                "description": "Montreal Canadiensin tulokas Oliver Kapanen jatkaa vahvoja otteitaan ja iski jo kauden viidennen osumansa.",
-                "source": "Montréal Canadiens"
+                "title": "Miro Heiskasen neljän syötön ilta",
+                "description": "Miro Heiskanen oli pysäyttämätön marraskuun 6. päivän ottelussa merkkauttaen peräti neljä syöttöpistettä. Heiskanen on palannut tasolleen täysin alun loukkaantumishuolien jälkeen.",
+                "source": "Dallas Stars",
+                "url": "https://www.nhl.com/stars/news/"
+            },
+            {
+                "title": "Anton Lundellille alivoimamaali",
+                "description": "Florida Panthersin taitava keskushyökkääjä Anton Lundell iski upean alivoimamaalin marraskuun alussa osoittaen monipuolisuuttaan.",
+                "source": "Florida Panthers",
+                "url": "https://www.nhl.com/panthers/news/"
             }
         ],
         (2025, 44): [
              {
-                "title": "Artturi Lehkoselle 300 tehopistettä",
+                "title": "Artturi Lehkoselle 300 tehopistettä täyteen",
                 "description": "Colorado Avalanchen Artturi Lehkonen saavutti urallaan 300 tehopisteen rajapyykin syöttöpisteellä 1. marraskuuta pelatussa ottelussa.",
-                "source": "Colorado Avalanche"
+                "source": "Colorado Avalanche",
+                "url": "https://www.nhl.com/avalanche/news/"
             },
             {
-                 "title": "Brad Lambertin uran avausmaali",
-                 "description": "Winnipeg Jetsin lupaus Brad Lambert iski NHL-uransa ensimmäisen maalin marraskuun alussa.",
-                 "source": "Winnipeg Jets"
+                 "title": "Brad Lambertin uran avausmaali NHL:ssä",
+                 "description": "Winnipeg Jetsin lupaus Brad Lambert iski NHL-uransa ensimmäisen maalin marraskuun alussa. Lambert on yksi seuratuimmista suomalaisnuorukaisista tällä kaudella.",
+                 "source": "Winnipeg Jets",
+                 "url": "https://www.nhl.com/jets/news/"
             }
         ],
         (2025, 43): [
             {
-                "title": "Artturi Lehkonen 600. NHL-ottelu",
-                "description": "Artturi Lehkonen pelasi uransa 600. NHL-ottelun lokakuun lopulla.",
-                "source": "NHL Tilastot"
+                "title": "Artturi Lehkonen pelasi 600. NHL-ottelunsa",
+                "description": "Artturi Lehkonen rikkoi 600 pelatun NHL-ottelun rajan lokakuun lopulla. Lehkonen on ollut tärkeä palanen Coloradon hyökkäyksessä koko alkukauden.",
+                "source": "NHL.com",
+                "url": "https://www.nhl.com/player/artturi-lehkonen-8477479"
             },
             {
-                 "title": "Patrik Laine sivuun loukkaantumisen vuoksi",
-                 "description": "Patrik Laine joutui sivuun peleistä lokakuun lopulla ylävartalovamman vuoksi ja on poissa toistaiseksi.",
-                 "source": "NHL Uutiset"
+                 "title": "Patrik Laine pitkään sivussa vatsalihasvamman vuoksi",
+                 "description": "Montreal Canadiensin Patrik Laineen paluu kaukaloihin viivästyy vatsalihasvamman vuoksi. Laineen arvioidaan olevan sivussa vielä useita viikkoja.",
+                 "source": "NHL.com",
+                 "url": "https://www.nhl.com/news/patrik-laine-injury-update"
             }
         ],
         (2025, 40): [
-           {
-                "title": "Aleksander Barkovilla vakava polvivamma",
-                "description": "Florida Panthersin kapteeni Aleksander Barkov loukkaantui harjoitusleirillä. Vamma vaatii leikkaushoitoa ja pitää tähden sivussa pitkään.",
-                "source": "Florida Panthers"
+            {
+                "title": "Aleksander Barkoville vakava polvivamma harjoitusleirillä",
+                "description": "Florida Panthersin kapteeni Aleksander Barkov loukkaantui harjoitusleirillä. Polvivamma vaatii leikkauksen ja pitää tähden sivussa suurimman osan kaudesta.",
+                "source": "Miami Herald",
+                "url": "https://www.miamiherald.com/sports/nhl/florida-panthers/article292552994.html"
             },
             {
                 "title": "Ukko-Pekka Luukkonen loukkaantui harjoitusottelussa",
-                "description": "Buffalo Sabresin maalivahti Ukko-Pekka Luukkonen kärsi lievästä vammasta harjoituskauden lopulla, mutta toipumisennuste on hyvä.",
-                "source": "Buffalo Sabres"
+                "description": "Buffalo Sabresin maalivahti Ukko-Pekka Luukkonen kärsi vammasta harjoituskauden lopulla, mutta paluu tositoimiin on odotettavissa pian.",
+                "source": "Buffalo Sabres",
+                "url": "https://www.nhl.com/sabres/news/"
             }
         ]
     }
@@ -139,7 +221,8 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
         news_items.append({
             "title": title,
             "description": desc,
-            "source": "NHL Tilastot"
+            "source": "NHL Tilastot",
+            "url": "https://www.nhl.com/stats/skaters"
         })
 
     # 2. Goalie Shutouts or Big Wins
@@ -191,6 +274,21 @@ def format_date_finnish(date_str):
     dt = datetime.strptime(date_str, "%Y-%m-%d")
     return f"{dt.day}. {months[dt.month - 1]} {dt.year}"
 
+def generate_creative_title(week, year, top_player_name):
+    """Generate a more engaging title for the article"""
+    templates = [
+        f"{top_player_name} tulikuumana – Suomalaisten viikkokatsaus {week}/{year}",
+        f"Suomalaisloistoa NHL:ssä: {top_player_name} viikon valtias",
+        f"Maali-iloittelua ja virstanpylväitä: Viikko {week} paketissa",
+        f"{top_player_name} dominoi kaukaloita: Viikon {week} yhteenveto",
+        f"Suomalaisrintama rynnistää – {top_player_name} kärjessä",
+        f"NHL-viikko {week}: {top_player_name} ja muut suomalaistähdet vauhdissa"
+    ]
+    
+    # Use week as seed to keep title stable for the same week across regenerations
+    random.seed(f"{year}-{week}")
+    return random.choice(templates)
+
 def generate_articles(all_games):
     weeks_data = defaultdict(lambda: {"games": [], "players": defaultdict(lambda: {"goals": 0, "assists": 0, "points": 0, "games": 0, "teams": set(), "position": "F", "player_id": None})})
 
@@ -214,7 +312,22 @@ def generate_articles(all_games):
     articles = []
     sorted_weeks = sorted(weeks_data.keys())
 
+    today = datetime.now()
     for year, week in sorted_weeks:
+        # Calculate week date range
+        try:
+            week_start = datetime.fromisocalendar(year, week, 1)
+            week_end = datetime.fromisocalendar(year, week, 7)
+        except AttributeError:
+            # Fallback for older Python versions
+            week_start = datetime.strptime(f'{year}-W{week}-1', "%Y-W%W-%w")
+            week_end = week_start + timedelta(days=6)
+
+        # Skip weeks that are still in progress
+        if week_end > today:
+            print(f"Skipping Week {week}/{year} as it is still ongoing.")
+            continue
+
         week_info = weeks_data[(year, week)]
         players = week_info["players"]
 
@@ -235,20 +348,14 @@ def generate_articles(all_games):
         # Goalies
         goalies = {name: stats for name, stats in players.items() if stats.get("position") == "G"}
 
-        # Calculate week date range
-        try:
-            week_start = datetime.fromisocalendar(year, week, 1)
-            week_end = datetime.fromisocalendar(year, week, 7)
-        except AttributeError:
-            week_start = datetime.strptime(f'{year}-W{week}-1', "%Y-W%W-%w")
-            week_end = week_start + timedelta(days=6)
-
         date_range = f"{week_start.strftime('%d.%m.')}–{week_end.strftime('%d.%m.%Y')}"
 
         # Get featured player (top scorer) info
         featured_player_id = None
+        top_player_name = "Suomalaiset"
         if top_scorers:
             featured_player_id = top_scorers[0][1].get('player_id')
+            top_player_name = top_scorers[0][0]
 
         # Fetch weekly news
         weekly_news = fetch_weekly_news(year, week, week_start, week_end, players, week_info["games"])
@@ -267,67 +374,12 @@ def generate_articles(all_games):
             for news in weekly_news:
                 md.append(f"### {news['title']}")
                 md.append(f"{news['description']}")
+                if 'source' in news:
+                    if 'url' in news:
+                        md.append(f"*Lähde: [{news['source']}]({news['url']})*")
+                    else:
+                        md.append(f"*Lähde: {news['source']}*")
                 md.append("")
-
-        # Game-by-game breakdown
-        games_by_date = defaultdict(list)
-        for g in week_info["games"]:
-            games_by_date[g['game_date']].append(g)
-
-        if games_by_date:
-            md.append("## Viikon ottelut päivittäin")
-            md.append("")
-
-            weekdays_fi = ["maanantai", "tiistai", "keskiviikko", "torstai", "perjantai", "lauantai", "sunnuntai"]
-
-            for date_str in sorted(games_by_date.keys()):
-                day_games = games_by_date[date_str]
-                dt = datetime.strptime(date_str, "%Y-%m-%d")
-                weekday = weekdays_fi[dt.weekday()]
-                date_fmt = f"{weekday.capitalize()} {dt.day}.{dt.month}."
-
-                # Group by game_id to show each game once
-                games_by_id = defaultdict(list)
-                for g in day_games:
-                    games_by_id[g['game_id']].append(g)
-
-                md.append(f"### {date_fmt}")
-                md.append("")
-
-                for game_id, game_players in games_by_id.items():
-                    g = game_players[0]
-                    game_score = g.get('game_score', '?-?')
-                    result = g.get('game_result', '')
-                    team_full = g.get('team_full', g.get('team', '???'))
-                    opponent_full = g.get('opponent_full', g.get('opponent', '???'))
-
-                    # Calculate Finnish points in this game
-                    finn_goals = sum(p.get('goals', 0) for p in game_players)
-                    finn_assists = sum(p.get('assists', 0) for p in game_players)
-                    finn_points = sum(p.get('points', 0) for p in game_players)
-
-                    # Build player performance strings
-                    scorers = []
-                    for p in game_players:
-                        if p.get('points', 0) > 0:
-                            scorers.append(f"{p['name']} {p['goals']}+{p['assists']}")
-                        elif p.get('position') == 'G' and p.get('time_on_ice', '00:00') != '00:00':
-                            saves = p.get('saves', 0)
-                            sv_pct = p.get('save_percentage', 0)
-                            if saves > 0:
-                                scorers.append(f"{p['name']} ({saves} torj, {sv_pct:.1%})")
-
-                    if finn_points > 0:
-                        md.append(f"**{team_full}** {game_score} {opponent_full}")
-                        md.append(f"- Suomalaiset: {', '.join(scorers) if scorers else 'ei pisteitä'}")
-                        md.append("")
-                    elif any(p.get('position') == 'G' and p.get('time_on_ice', '00:00') != '00:00' for p in game_players):
-                        # Still show games where Finnish goalie played
-                        goalie_info = [s for s in scorers if 'torj' in s]
-                        if goalie_info:
-                            md.append(f"**{team_full}** {game_score} {opponent_full}")
-                            md.append(f"- Maalivahti: {goalie_info[0]}")
-                            md.append("")
 
         # Top scorer highlight
         if top_scorers:
@@ -462,14 +514,14 @@ def generate_articles(all_games):
         content = "\n".join(md)
 
         date_str = week_start.strftime("%Y-%m-%d")
-        title_suffix = f": {top_scorers[0][0]} johdossa" if top_scorers else ""
+        title = generate_creative_title(week, year, top_player_name)
         excerpt = f"{player_count} suomalaista pelasi, {total_goals} maalia, {total_points} pistettä."
         if top_scorers:
             excerpt = f"{top_scorers[0][0]} johti suomalaisrintamaa {top_scorers[0][1]['points']} pisteellä. " + excerpt
 
         article = {
             "slug": f"{year}-w{week:02d}",
-            "title": f"Viikon {week} katsaus{title_suffix}",
+            "title": title,
             "date": date_str,
             "week": week,
             "year": year,
