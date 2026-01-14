@@ -276,14 +276,25 @@ def format_date_finnish(date_str):
 
 def generate_creative_title(week, year, top_player_name):
     """Generate a more engaging title for the article"""
-    templates = [
-        f"{top_player_name} tulikuumana – Suomalaisten viikkokatsaus {week}/{year}",
-        f"Suomalaisloistoa NHL:ssä: {top_player_name} viikon valtias",
-        f"Maali-iloittelua ja virstanpylväitä: Viikko {week} paketissa",
-        f"{top_player_name} dominoi kaukaloita: Viikon {week} yhteenveto",
-        f"Suomalaisrintama rynnistää – {top_player_name} kärjessä",
-        f"NHL-viikko {week}: {top_player_name} ja muut suomalaistähdet vauhdissa"
-    ]
+    if top_player_name == "Suomalaiset":
+        templates = [
+            f"Viikko {week}: suomalaiset iskussa",
+            f"Suomalaisilta tasainen viikko {week}",
+            f"Viikon {week} suomalaiskatsaus",
+            f"Viikko {week}/{year}: suomalaiset vauhdissa",
+        ]
+    else:
+        templates = [
+            f"Viikko {week}: {top_player_name} nosti suomalaiset esiin",
+            f"{top_player_name} näytti suunnan viikolla {week}",
+            f"Viikko {week}/{year}: {top_player_name} piti tahtia",
+            f"{top_player_name} loisti viikolla {week}",
+            f"Viikon {week} isoin nimi: {top_player_name}",
+            f"{top_player_name} sytytti suomalaiset viikolla {week}",
+            f"Viikko {week}: {top_player_name} kantoi tehot",
+            f"{top_player_name} nappasi viikon {week} otsikot",
+            f"Viikko {week} pähkinänkuoressa: {top_player_name} edellä",
+        ]
     
     # Use week as seed to keep title stable for the same week across regenerations
     random.seed(f"{year}-{week}")
