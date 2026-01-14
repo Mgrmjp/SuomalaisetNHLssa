@@ -60,6 +60,15 @@ jobs:
       - name: Build static site
         run: npm run build
 
+      - name: Clean up old season data files
+        run: |
+          # Keep only the latest season data file to reduce deployment size
+          cd build/data/prepopulated/season
+          ls -t season-*.json | tail -n +2 | xargs -r rm -f
+          # Also remove any corresponding compressed files
+          ls -t season-*.json.gz 2>/dev/null | tail -n +2 | xargs -r rm -f
+          ls -t season-*.json.br 2>/dev/null | tail -n +2 | xargs -r rm -f
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
