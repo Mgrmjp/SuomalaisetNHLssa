@@ -22,7 +22,7 @@
       "awayTeam": "PHI",
       "homeScore": 5,
       "awayScore": 2,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 2,
       "startTime": "2026-01-15T00:30:00Z",
       "isOT": false,
@@ -37,7 +37,7 @@
       "awayTeam": "OTT",
       "homeScore": 4,
       "awayScore": 8,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 2,
       "startTime": "2026-01-15T00:30:00Z",
       "isOT": false,
@@ -51,13 +51,13 @@
       "homeTeam": "LAK",
       "awayTeam": "VGK",
       "homeScore": 0,
-      "awayScore": 0,
+      "awayScore": 1,
       "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-01-15T03:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     }
@@ -84,7 +84,7 @@
       "game_id": 2025020735,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:50:30.662671",
+      "created_at": "2026-01-15T04:16:25.256326",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8480009.png",
       "goals": 0,
       "assists": 0,
@@ -204,7 +204,7 @@
       "game_id": 2025020735,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:50:33.867680",
+      "created_at": "2026-01-15T04:16:28.352434",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8481554.png",
       "goals": 0,
       "assists": 0,
@@ -324,7 +324,7 @@
       "game_id": 2025020737,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:50:45.482973",
+      "created_at": "2026-01-15T04:16:39.735559",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8482447.png",
       "goals": 0,
       "assists": 0,
@@ -350,6 +350,21 @@
       "save_percentage": 0.818,
       "goals_against": 4,
       "recent_results": [
+        {
+          "date": "2026-01-14",
+          "opponent": "NYR",
+          "opponent_full": "New York Rangers",
+          "team_score": 8,
+          "opponent_score": 4,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": 4,
+          "save_percentage": 0.818,
+          "shots_against": 22,
+          "saves": 18
+        },
         {
           "date": "2026-01-13",
           "opponent": "VAN",
@@ -409,21 +424,6 @@
           "save_percentage": 0.857,
           "shots_against": 21,
           "saves": 18
-        },
-        {
-          "date": "2026-01-05",
-          "opponent": "DET",
-          "opponent_full": "Detroit Red Wings",
-          "team_score": 3,
-          "opponent_score": 5,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": 3,
-          "save_percentage": 0.667,
-          "shots_against": 9,
-          "saves": 6
         }
       ]
     },
@@ -448,13 +448,13 @@
       "game_id": 2025020736,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:50:39.386979",
+      "created_at": "2026-01-15T04:16:33.777443",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
       "points": 0,
       "empty_net_goals": 0,
-      "penalty_minutes": 0,
+      "penalty_minutes": 2,
       "shots": 0,
       "plus_minus": 0,
       "time_on_ice": "60:00",
@@ -474,6 +474,21 @@
       "save_percentage": 0.909,
       "goals_against": 2,
       "recent_results": [
+        {
+          "date": "2026-01-14",
+          "opponent": "PHI",
+          "opponent_full": "Philadelphia Flyers",
+          "team_score": 5,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": 2,
+          "save_percentage": 0.909,
+          "shots_against": 22,
+          "saves": 20
+        },
         {
           "date": "2026-01-10",
           "opponent": "ANA",
@@ -533,26 +548,11 @@
           "save_percentage": 0.966,
           "shots_against": 29,
           "saves": 28
-        },
-        {
-          "date": "2025-12-27",
-          "opponent": "BOS",
-          "opponent_full": "Boston Bruins",
-          "team_score": 4,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": 1,
-          "save_percentage": 0.957,
-          "shots_against": 23,
-          "saves": 22
         }
       ]
     }
   ],
   "total_players": 4,
-  "generated_at": "2026-01-15T03:50:51.260444",
+  "generated_at": "2026-01-15T04:16:45.270835",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
