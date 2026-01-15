@@ -7,7 +7,7 @@
       "awayTeam": "SEA",
       "homeScore": 3,
       "awayScore": 2,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 2,
       "startTime": "2026-01-15T00:00:00Z",
       "isOT": true,
@@ -52,12 +52,12 @@
       "awayTeam": "VGK",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "PRE",
+      "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-01-15T03:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 1,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     }
@@ -84,7 +84,7 @@
       "game_id": 2025020735,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:15:20.489882",
+      "created_at": "2026-01-15T03:50:30.662671",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8480009.png",
       "goals": 0,
       "assists": 0,
@@ -106,6 +106,21 @@
       "shifts": 23,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-14",
+          "opponent": "NJD",
+          "opponent_full": "New Jersey Devils",
+          "team_score": 2,
+          "opponent_score": 3,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-12",
           "opponent": "NYR",
@@ -165,21 +180,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-02",
-          "opponent": "VAN",
-          "opponent_full": "Vancouver Canucks",
-          "team_score": 4,
-          "opponent_score": 3,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -204,7 +204,7 @@
       "game_id": 2025020735,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:15:23.747884",
+      "created_at": "2026-01-15T03:50:33.867680",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8481554.png",
       "goals": 0,
       "assists": 0,
@@ -226,6 +226,21 @@
       "shifts": 19,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-14",
+          "opponent": "NJD",
+          "opponent_full": "New Jersey Devils",
+          "team_score": 2,
+          "opponent_score": 3,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-12",
           "opponent": "NYR",
@@ -285,21 +300,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-05",
-          "opponent": "CGY",
-          "opponent_full": "Calgary Flames",
-          "team_score": 5,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 0,
-          "assists": 1,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -324,7 +324,7 @@
       "game_id": 2025020737,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:15:34.947705",
+      "created_at": "2026-01-15T03:50:45.482973",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8482447.png",
       "goals": 0,
       "assists": 0,
@@ -448,7 +448,7 @@
       "game_id": 2025020736,
       "game_date": "2026-01-14",
       "game_status": "OFF",
-      "created_at": "2026-01-15T03:15:29.153441",
+      "created_at": "2026-01-15T03:50:39.386979",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -553,6 +553,6 @@
     }
   ],
   "total_players": 4,
-  "generated_at": "2026-01-15T03:15:39.949739",
+  "generated_at": "2026-01-15T03:50:51.260444",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
