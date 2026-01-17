@@ -65,8 +65,19 @@ export function correctFinnishName(name) {
  * Apply pattern-based corrections to a name.
  */
 function applyPatternCorrections(name) {
+    // Names ending in 'ia' that are correct as-is (should NOT become 'iä')
+    const validIaNames = ['Armia', 'Vainio', 'Aaltonen', 'Sebastian'];
+
+    // Skip pattern correction for known valid 'ia' endings
+    for (const validName of validIaNames) {
+        if (name === validName || name.endsWith(' ' + validName)) {
+            return name;
+        }
+    }
+
     // Pattern: 'ia' -> 'iä' at end of word (Finnish words ending in iä)
-    if (/ia$/.test(name)) {
+    // Skip if name ends in 'nen' (common Finnish surname ending, always correct)
+    if (/ia$/.test(name) && !name.endsWith('nen')) {
         const corrected = name.replace(/ia$/, 'iä');
         if (isFinnishPattern(corrected)) {
             return corrected;
