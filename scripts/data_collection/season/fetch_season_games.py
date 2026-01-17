@@ -225,10 +225,15 @@ def generate_season_data(start_date, end_date):
             game_state = game.get("gameState", "UNKNOWN")
 
             # Skip games that haven't been played yet (FUT = future, PRE = preseason)
-            # OFF = game is over and finished (this is what we want!)
+            # OFF/FINAL = game is over and finished (this is what we want!)
+            # CRIT = overtime/shootout - only accept if period > 3
             if game_state in ["FUT", "PRE"]:
                 print(f"   Game {i}/{len(games)}: {away_team} @ {home_team} - Not played yet ({game_state})")
                 continue
+
+            # Skip CRIT games from schedule - need boxscore to check period
+            if game_state == "CRIT":
+                print(f"   Game {i}/{len(games)}: {away_team} @ {home_team} - CRIT state, checking details...")
 
             print(f"   Game {i}/{len(games)}: {away_team} @ {home_team} ({game_state})")
 
@@ -236,6 +241,20 @@ def generate_season_data(start_date, end_date):
             game_details = get_game_details(game_id)
 
             if game_details:
+                # Get game state from boxscore (more accurate than schedule)
+                detail_state = game_details.get("gameState", game_state)
+
+                # Normalize FINAL to OFF
+                normalized_state = "OFF" if detail_state == "FINAL" else detail_state
+
+                # Skip CRIT games with incomplete data (period <= 3)
+                if normalized_state == "CRIT":
+                    pd = game_details.get("periodDescriptor", {})
+                    period = pd.get("number", 3)
+                    if period <= 3:
+                        print(f"      ⚠️ Skipping: CRIT with period={period} (incomplete scores)")
+                        continue
+
                 # Extract all player data
                 players = extract_all_player_data(game_details, game_id, home_team, away_team, date_str)
                 all_players.extend(players)
@@ -243,7 +262,7 @@ def generate_season_data(start_date, end_date):
                 # Add game summary
                 home_score = game_details.get("homeTeam", {}).get("score", 0)
                 away_score = game_details.get("awayTeam", {}).get("score", 0)
-                
+
                 # Extract overtime/shootout info
                 pd = game_details.get("periodDescriptor", {})
                 is_ot = pd.get("number", 0) > 3
@@ -257,7 +276,7 @@ def generate_season_data(start_date, end_date):
                     "awayTeam": away_team,
                     "homeScore": home_score,
                     "awayScore": away_score,
-                    "gameState": game_state,
+                    "gameState": normalized_state,
                     "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
                     "startTime": game.get("startTimeUTC", ""),
                     "isOT": is_ot,

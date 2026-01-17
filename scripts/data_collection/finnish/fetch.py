@@ -605,6 +605,47 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
     }
 
 
+def normalize_game_state(game_details: dict, schedule_game: dict) -> str:
+    """
+    Get and normalize game state from NHL API.
+
+    Rules:
+    - OFF and FINAL both mean game is over - normalize to OFF
+    - CRIT means overtime/shootout situation - only accept if period > 3
+    - For preseason (gameType=1), FINAL is acceptable
+    - For regular season (gameType=2), only accept OFF or FINAL
+    """
+    raw_state = game_details.get("gameState", schedule_game.get("gameState", "UNKNOWN"))
+    game_type = schedule_game.get("gameType", 2)
+    pd = game_details.get("periodDescriptor", {})
+    period = pd.get("number", 3)
+
+    # Normalize FINAL to OFF for consistency
+    if raw_state == "FINAL":
+        return "OFF"
+
+    # CRIT state with period <= 3 means incomplete data (API hasn't updated yet)
+    # We still return CRIT but the caller should handle it appropriately
+    return raw_state
+
+
+def should_skip_game(game_details: dict, normalized_state: str) -> tuple:
+    """
+    Check if a game should be skipped due to incomplete data.
+
+    Returns:
+        (should_skip: bool, reason: str | None)
+    """
+    if normalized_state == "CRIT":
+        pd = game_details.get("periodDescriptor", {})
+        period = pd.get("number", 3)
+
+        if period <= 3:
+            return True, f"CRIT state with period={period} (incomplete scores)"
+
+    return False, None
+
+
 def generate_finnish_players_data(game_date):
     """Generate data for Finnish players on a specific date."""
     finnish_cache = load_finnish_player_cache()
@@ -640,6 +681,16 @@ def generate_finnish_players_data(game_date):
         game_details = get_game_details(game_id)
 
         if game_details:
+            # Normalize game state (FINAL -> OFF, handle CRIT appropriately)
+            normalized_state = normalize_game_state(game_details, game)
+
+            # Check if game should be skipped due to incomplete data
+            should_skip, skip_reason = should_skip_game(game_details, normalized_state)
+            if should_skip:
+                print(f"      ⚠️ Skipping: {skip_reason}")
+                print(f"      💡 Run fix_game_states.py later to correct this game")
+                continue
+
             finnish_players, game_info = extract_finnish_player_data(
                 game_details, game_id, game_date, schedule, finnish_cache
             )
@@ -655,7 +706,7 @@ def generate_finnish_players_data(game_date):
                 "awayTeam": away_team,
                 "homeScore": game_info.get("home_score", 0),
                 "awayScore": game_info.get("away_score", 0),
-                "gameState": game_details.get("gameState", game.get("gameState", "UNKNOWN")),
+                "gameState": normalized_state,
                 "gameType": game.get("gameType", 2),
                 "startTime": game.get("startTimeUTC", ""),
                 "isOT": is_ot,

@@ -7,11 +7,14 @@
       "awayTeam": "NJD",
       "homeScore": 4,
       "awayScore": 3,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T16:30:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": true,
+      "isSO": true,
+      "period": 5
     },
     {
       "gameId": 2025010095,
@@ -19,11 +22,14 @@
       "awayTeam": "NYR",
       "homeScore": 4,
       "awayScore": 1,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T18:00:00Z",
       "finnish_players_count": 4,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025010090,
@@ -31,11 +37,14 @@
       "awayTeam": "ANA",
       "homeScore": 5,
       "awayScore": 4,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T20:00:00Z",
       "finnish_players_count": 2,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": true,
+      "isSO": false,
+      "period": 4
     },
     {
       "gameId": 2025010091,
@@ -43,11 +52,14 @@
       "awayTeam": "CAR",
       "homeScore": 3,
       "awayScore": 2,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T20:00:00Z",
       "finnish_players_count": 4,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": true,
+      "isSO": false,
+      "period": 4
     },
     {
       "gameId": 2025010092,
@@ -55,11 +67,14 @@
       "awayTeam": "COL",
       "homeScore": 3,
       "awayScore": 2,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T22:00:00Z",
       "finnish_players_count": 1,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025010093,
@@ -67,11 +82,14 @@
       "awayTeam": "CBJ",
       "homeScore": 2,
       "awayScore": 1,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T23:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025010096,
@@ -79,11 +97,14 @@
       "awayTeam": "OTT",
       "homeScore": 1,
       "awayScore": 3,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T23:00:00Z",
       "finnish_players_count": 2,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025010097,
@@ -91,11 +112,14 @@
       "awayTeam": "STL",
       "homeScore": 0,
       "awayScore": 4,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T23:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025010099,
@@ -103,11 +127,14 @@
       "awayTeam": "TBL",
       "homeScore": 7,
       "awayScore": 0,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T23:00:00Z",
       "finnish_players_count": 2,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     },
     {
       "gameId": 2025010100,
@@ -115,11 +142,14 @@
       "awayTeam": "TOR",
       "homeScore": 6,
       "awayScore": 5,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-04T23:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": true,
+      "isSO": false,
+      "period": 4
     },
     {
       "gameId": 2025010098,
@@ -127,11 +157,14 @@
       "awayTeam": "SJS",
       "homeScore": 6,
       "awayScore": 4,
-      "gameState": "FINAL",
+      "gameState": "OFF",
       "gameType": 1,
       "startTime": "2025-10-05T00:00:00Z",
       "finnish_players_count": 0,
-      "empty_net_goals": 0
+      "empty_net_goals": 0,
+      "isOT": false,
+      "isSO": false,
+      "period": 3
     }
   ],
   "players": [
