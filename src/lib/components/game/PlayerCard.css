@@ -1,19 +1,27 @@
+.player-card__container {
+    transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 300px;
+    height: 100%;
+}
+
 .player-card {
     perspective: 1000px;
     position: relative;
     width: 100%;
-    min-height: 320px;
+    min-height: 300px;
+    height: 100%;
     overflow: visible;
     transform-style: preserve-3d;
+    transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .player-card__inner {
     position: relative;
     width: 100%;
     height: 100%;
-    min-height: 320px;
+    min-height: 300px;
     text-align: left;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
     will-change: transform;
 }
@@ -26,7 +34,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    min-height: 320px;
+    min-height: 300px;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border-radius: 0.5rem;
@@ -34,10 +42,46 @@
     flex-direction: column;
     will-change: transform;
     overflow: hidden;
+    transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .player-card__face--back {
     transform: rotateY(180deg);
+}
+
+.goalie-card,
+.goalie-card .player-card,
+.goalie-card .player-card__inner,
+.goalie-card .player-card__face {
+    min-height: 340px;
+}
+
+@media (min-width: 768px) {
+    .player-card__container,
+    .player-card,
+    .player-card__inner,
+    .player-card__face {
+        min-height: 340px;
+    }
+
+    .goalie-card,
+    .goalie-card .player-card,
+    .goalie-card .player-card__inner,
+    .goalie-card .player-card__face {
+        min-height: 390px;
+    }
+
+    .player-card__player-info {
+        margin-bottom: 1.25rem;
+    }
+
+    .player-card__stats {
+        margin-top: 1.25rem;
+    }
+
+    .player-card__stats-grid {
+        row-gap: 1.25rem;
+    }
 }
 
 /* Modern gradient stylish buttons */
@@ -157,6 +201,7 @@
 /* Limit player name width to prevent overlap with logo */
 .player-card__player-info {
     max-width: calc(100% - 60px);
+    margin-bottom: 1rem;
 }
 
 /* Handle long player names - allow 2 lines max */
@@ -200,10 +245,8 @@
 }
 
 /* Fix content overflow and ensure proper spacing */
-.player-card__face .relative {
+.player-card__face .player-card__content {
     flex: 1;
-    display: flex;
-    flex-direction: column;
     min-height: 0;
 }
 
@@ -215,6 +258,30 @@
 .player-card__stats-grid,
 .player-card__advanced-stats-grid {
     min-height: 0;
+}
+
+/* Proper spacing for stats section to prevent overlap with player info */
+.player-card__stats {
+    margin-top: 1rem;
+    clear: both;
+}
+
+.player-card__mid {
+    min-height: 0;
+    align-self: center;
+}
+
+.player-card__mid .player-card__stats {
+    margin-top: 0;
+}
+
+/* When stats wrap to multiple rows, ensure proper row spacing */
+.player-card__stats-grid {
+    background: rgba(15, 23, 42, 0.015);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    row-gap: 1rem;
 }
 
 /* Fix modal overlay z-index issues */
@@ -312,7 +379,7 @@
 }
 
 .player-card__stats-grid--goalie-4 {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 }
 
 .player-card__stats-grid--skater-1 {
@@ -358,4 +425,12 @@
     border: 3px double rgba(255, 255, 255, 0.6);
     outline: 1px solid rgba(255, 255, 255, 0.3);
     outline-offset: 2px;
+}
+
+/* Inline Empty Net Goal Indicator */
+.player-card__eng-indicator {
+    font-size: 0.75rem;
+    margin-left: 2px;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    cursor: help;
 }

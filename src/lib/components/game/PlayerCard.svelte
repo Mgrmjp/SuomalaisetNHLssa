@@ -169,12 +169,13 @@
                 player.name ||
                 player.fullName ||
                 player.skaterFullName ||
-                "Unknown Player"
-        )
+                "Unknown Player",
+        ),
     );
     const gamesData = $derived($games);
     const isLive = $derived(isPlayerGameLive(player, gamesData));
     const showResult = $derived(shouldShowGameResult(player, gamesData));
+    const gameResult = $derived(player.game_result || player.gameResult || null);
     const teamWithCity = $derived(getTeamWithCity(player.team || "NHL"));
     const opponentWithCity = $derived(getTeamWithCity(player.opponent || "NHL"));
     const playerHeadshot = $derived(playerPhotoUrl);
@@ -241,7 +242,7 @@
         statCount === 1
             ? "player-card__stats-grid--single"
             : statCount >= 4
-              ? "player-card__stats-grid--skater-3"  // Cap at 3 columns to prevent cramped layout
+              ? "player-card__stats-grid--skater-3" // Cap at 3 columns to prevent cramped layout
               : `player-card__stats-grid--skater-${statCount}`,
     );
 
@@ -274,8 +275,8 @@
     const goalieSavePct = $derived(getSavePercentage(player));
 
     // Game result helpers
-    const gameResult = $derived(player.game_result || "");
     const resultIndicator = $derived(getResultIndicator(gameResult));
+    const hasENG = $derived((player.empty_net_goals || 0) > 0);
 
     function getResultIndicator(result) {
         switch (result) {
@@ -361,9 +362,9 @@
     // Action to portal element to body (for modals to escape parent transforms)
     function portal(node) {
         // Create a placeholder to take the element's place
-        const placeholder = document.createElement('div');
-        placeholder.className = 'portal-placeholder';
-        placeholder.style.cssText = 'display: none;';
+        const placeholder = document.createElement("div");
+        placeholder.className = "portal-placeholder";
+        placeholder.style.cssText = "display: none;";
         node.parentNode.insertBefore(placeholder, node);
         node._portalPlaceholder = placeholder;
 
@@ -385,24 +386,24 @@
                 if (node._portalPlaceholder && node._portalPlaceholder.parentNode) {
                     node._portalPlaceholder.parentNode.removeChild(node._portalPlaceholder);
                 }
-            }
+            },
         };
     }
 
     // Prevent body scroll when modal is open
     $effect(() => {
         if (showSeasonStats) {
-            document.body.style.overflow = 'hidden';
+            document.body.style.overflow = "hidden";
         } else {
-            document.body.style.overflow = '';
+            document.body.style.overflow = "";
         }
         return () => {
-            document.body.style.overflow = '';
+            document.body.style.overflow = "";
         };
     });
 </script>
 
-<div class="player-card__container relative w-full min-h-[320px]">
+<div class="player-card__container relative w-full h-full" class:goalie-card={isGoalie}>
     <!-- Player Card -->
     <div class="player-card" class:flipped={isFlipped}>
         <div class="player-card__inner">
@@ -423,7 +424,7 @@
                 ></div>
 
                 <div
-                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-5"
+                    class="player-card__content relative bg-white h-full grid grid-rows-[auto,1fr,auto] overflow-visible p-5 md:p-6"
                 >
                     <div class="player-card__logo-bg team-logo-bg select-none pointer-events-none">
                         <TeamLogo team={player.team || "NHL"} size="120" />
@@ -469,234 +470,223 @@
                     </div>
 
                     <!-- Spacer removed as we use relative layout now -->
-                    <div class="mb-2"></div>
+                    <div class="player-card__mid flex flex-col gap-3 md:gap-4">
+                        <!-- Game Stats -->
+                        {#if isGoalie}
+                            <div class="player-card__stats w-full">
+                                <div
+                                    class={`player-card__stats-grid ${goalieGridClass} grid gap-4 text-center justify-items-center w-fit mx-auto`}
+                                >
+                                    <div
+                                        class="player-card__stat-item player-card__stat-item--saves flex flex-col justify-center min-w-0 text-center"
+                                        title="Torjunnat"
+                                    >
+                                        <div
+                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                        >
+                                            {player.saves}
+                                        </div>
+                                        <div
+                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                        >
+                                            Torjunnat
+                                        </div>
+                                    </div>
+                                    {#if player.shots_against !== undefined}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--shots-against flex flex-col justify-center min-w-0 text-center"
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                            >
+                                                {player.shots_against}
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                                title="Vastustajan laukaukset"
+                                            >
+                                                Vastust.
+                                            </div>
+                                        </div>
+                                    {/if}
+                                    <div
+                                        class="player-card__stat-item player-card__stat-item--goals-against flex flex-col justify-center min-w-0 text-center"
+                                        title="Päästetyt maalit"
+                                    >
+                                        <div
+                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                        >
+                                            {player.goals_against}
+                                        </div>
+                                        <div
+                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                        >
+                                            Päästetyt
+                                        </div>
+                                    </div>
+                                    {#if goalieSavePct !== null}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--save-pct flex flex-col justify-center min-w-0 text-center"
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                            >
+                                                {goalieSavePct}%
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                                title="Torjuntaprosentti"
+                                            >
+                                                Torj.%
+                                            </div>
+                                        </div>
+                                    {/if}
+                                    {#if hasENG}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1"
+                                            >
+                                                <span class="text-xs">🥅</span>
+                                                <span>{player.empty_net_goals}</span>
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-red-500 uppercase tracking-widest mt-1 truncate font-bold"
+                                            >
+                                                Tyhjä maali
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        {:else if player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
+                            <div class="player-card__stats w-full">
+                                <!-- Main stats row -->
+                                <div
+                                    class={`player-card__stats-grid ${skaterGridClass} grid gap-4 text-center justify-items-center w-fit mx-auto`}
+                                >
+                                    {#if player.goals > 0}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--goals flex flex-col justify-center min-w-0 text-center relative"
+                                            title={hasENG
+                                                ? `Sisältää ${player.empty_net_goals} tyhjään maaliin tehtyä maalia`
+                                                : undefined}
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate flex items-center justify-center gap-0.5"
+                                            >
+                                                <span>{player.goals}</span>
+                                                {#if hasENG}
+                                                    <span
+                                                        class="player-card__eng-indicator"
+                                                        title="Tyhjä maali">🥅</span
+                                                    >
+                                                {/if}
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                            >
+                                                Maalit
+                                            </div>
+                                        </div>
+                                    {/if}
+                                    {#if player.assists > 0}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--assists flex flex-col justify-center min-w-0 text-center"
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                            >
+                                                {player.assists}
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                            >
+                                                Syötöt
+                                            </div>
+                                        </div>
+                                    {/if}
+                                    {#if player.points > 0}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--points flex flex-col justify-center min-w-0 text-center"
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-finnish-blue-900 truncate"
+                                            >
+                                                {player.points}
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-finnish-blue-600 uppercase tracking-widest mt-1 truncate font-medium"
+                                            >
+                                                Pisteet
+                                            </div>
+                                        </div>
+                                    {/if}
+                                    {#if !isGoalie && (player.plus_minus !== undefined || player.plusMinus !== undefined)}
+                                        {@const pm = player.plus_minus ?? player.plusMinus}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--plus-minus flex flex-col justify-center min-w-0 text-center"
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                            >
+                                                {pm > 0 ? "+" : ""}{pm}
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                                title="Plus-miinus tilasto"
+                                            >
+                                                +/-
+                                            </div>
+                                        </div>
+                                    {/if}
+                                    {#if (player.penalty_minutes || 0) > 0 || (player.penaltyMinutes || 0) > 0}
+                                        <div
+                                            class="player-card__stat-item player-card__stat-item--penalty-minutes flex flex-col justify-center min-w-0 text-center"
+                                        >
+                                            <div
+                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                            >
+                                                {player.penalty_minutes || player.penaltyMinutes}
+                                            </div>
+                                            <div
+                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                                title="Rangaistusminuutit"
+                                            >
+                                                R.min
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        {/if}
 
-                    <!-- Game Stats -->
-                    {#if isGoalie}
-                        <div class="player-card__stats mb-2 w-full">
+                        <!-- Simplified Game Info -->
+                        {#if isGoalie || player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
                             <div
-                                class={`player-card__stats-grid ${goalieGridClass} grid gap-1 text-left w-full`}
+                                class="player-card__game-info flex flex-col items-center justify-center gap-0.5"
                             >
-                                <div
-                                    class="player-card__stat-item player-card__stat-item--saves flex flex-col justify-center min-w-0 text-center"
-                                    title="Torjunnat"
-                                >
-                                    <div
-                                        class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                    >
-                                        {player.saves}
-                                    </div>
-                                    <div
-                                        class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                    >
-                                        Torjunnat
-                                    </div>
+                                <div class="text-[10px] tracking-wider font-medium text-gray-400">
+                                    {formatGameMatchup(player, gamesData)}
                                 </div>
-                                {#if player.shots_against !== undefined}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--shots-against flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.shots_against}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                            title="Vastustajan laukaukset"
-                                        >
-                                            Vastust.
-                                        </div>
+                                {#if formattedScore}
+                                    <div class="text-xs font-bold text-gray-700">
+                                        {formattedScore}
                                     </div>
                                 {/if}
-                                <div
-                                    class="player-card__stat-item player-card__stat-item--goals-against flex flex-col justify-center min-w-0 text-center"
-                                    title="Päästetyt maalit"
-                                >
+                                {#if formatGameVenue(player)}
                                     <div
-                                        class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
+                                        class="text-[10px] tracking-wider font-medium text-gray-400 truncate max-w-[200px]"
                                     >
-                                        {player.goals_against}
-                                    </div>
-                                    <div
-                                        class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                    >
-                                        Päästetyt
-                                    </div>
-                                </div>
-                                {#if goalieSavePct !== null}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--save-pct flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {goalieSavePct}%
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                            title="Torjuntaprosentti"
-                                        >
-                                            Torj.%
-                                        </div>
-                                    </div>
-                                {/if}
-                                {#if (player.empty_net_goals || 0) > 0}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1"
-                                        >
-                                            🥅
-                                            <span>{player.empty_net_goals}</span>
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-red-500 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Tyhjä maali
-                                        </div>
+                                        {formatGameVenue(player)}
                                     </div>
                                 {/if}
                             </div>
-                        </div>
-                    {:else if player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
-                        <div class="player-card__stats mb-2 w-full">
-                            <!-- Main stats row -->
-                            <div
-                                class={`player-card__stats-grid ${skaterGridClass} grid gap-1 text-left w-full`}
-                            >
-                                {#if player.goals > 0}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--goals flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.goals}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Maalit
-                                        </div>
-                                    </div>
-                                {/if}
-                                {#if player.assists > 0}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--assists flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.assists}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Syötöt
-                                        </div>
-                                    </div>
-                                {/if}
-                                {#if player.points > 0}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--points flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-finnish-blue-900 truncate"
-                                        >
-                                            {player.points}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-finnish-blue-600 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Pisteet
-                                        </div>
-                                    </div>
-                                {/if}
-                                {#if !isGoalie && (player.plus_minus !== undefined || player.plusMinus !== undefined)}
-                                    {@const pm = player.plus_minus ?? player.plusMinus}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--plus-minus flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {pm > 0 ? "+" : ""}{pm}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                            title="Plus-miinus tilasto"
-                                        >
-                                            +/-
-                                        </div>
-                                    </div>
-                                {/if}
-                                {#if (player.penalty_minutes || 0) > 0 || (player.penaltyMinutes || 0) > 0}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--penalty-minutes flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.penalty_minutes || player.penaltyMinutes}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                            title="Rangaistusminuutit"
-                                        >
-                                            R.min
-                                        </div>
-                                    </div>
-                                {/if}
-                            </div>
-                            <!-- Empty net goals in separate row to prevent cramped layout -->
-                            {#if (player.empty_net_goals || 0) > 0 && statCount >= 3}
-                                <div class="flex justify-center w-full mt-1">
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1"
-                                        >
-                                            🥅
-                                            <span>{player.empty_net_goals}</span>
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-red-500 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Tyhjä maali
-                                        </div>
-                                    </div>
-                                </div>
-                            {/if}
-                        </div>
-                    {/if}
-
-                    <!-- Simplified Game Info -->
-                    {#if isGoalie || player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
-                        <div
-                            class="player-card__game-info flex flex-col items-center justify-center gap-0.5 mt-0 mb-3"
-                        >
-                            <div class="text-[10px] tracking-wider font-medium text-gray-400">
-                                {formatGameMatchup(player, gamesData)}
-                            </div>
-                            {#if formattedScore}
-                                <div class="text-xs font-bold text-gray-700">
-                                    {formattedScore}
-                                </div>
-                            {/if}
-                            {#if formatGameVenue(player)}
-                                <div
-                                    class="text-[10px] tracking-wider font-medium text-gray-400 truncate max-w-[200px]"
-                                >
-                                    {formatGameVenue(player)}
-                                </div>
-                            {/if}
-                        </div>
-                    {/if}
+                        {/if}
+                    </div>
                     <div
-                        class="player-card__footer mt-auto flex items-center justify-between pt-4 border-t border-gray-100"
+                        class="player-card__footer flex items-center justify-between pt-4 md:pt-5 border-t border-gray-100"
                     >
                         <!-- Enhanced Result Indicator - More subtle -->
                         {#if isLive}
@@ -764,7 +754,7 @@
                 ></div>
 
                 <div
-                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-5 pt-4"
+                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-5 pt-4 md:p-6 md:pt-5"
                 >
                     <!-- Top Left Player Info -->
                     <div class="player-card__player-info relative z-10 mb-3">
@@ -786,10 +776,10 @@
                     </div>
 
                     <!-- Spacer removed -->
-                    <div class="mb-2"></div>
+                    <div class="mb-3 md:mb-4"></div>
 
                     <!-- Additional Stats and Time on Ice Wrapper -->
-                    <div class="flex-grow p-4 pt-2 flex flex-col">
+                    <div class="flex-grow p-4 pt-2 md:p-5 md:pt-3 flex flex-col">
                         <!-- Additional Stats -->
                         <div class="player-card__advanced-stats mb-2 w-full">
                             <div
@@ -1032,107 +1022,107 @@
             aria-labelledby="season-stats-title"
             onclick={(e) => e.stopPropagation()}
         >
-                <!-- Header -->
-                <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">
-                    <div class="player-card__modal-avatar shrink-0">
-                        {#if playerPhotoUrl && !_photoError}
-                            <img
-                                src={playerPhotoUrl || player.headshot_url}
-                                alt={displayName}
-                                class={`player-card__modal-photo ${_photoLoading || _imageLoading ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}
-                                onload={() => {
-                                    _photoLoading = false;
-                                    _imageLoading = false;
-                                }}
-                                onerror={() => {
-                                    _photoError = true;
-                                    _photoLoading = false;
-                                    _imageLoading = false;
-                                }}
-                            />
-                            {#if (_photoLoading || _imageLoading) && _lqipUrl}
-                                <img
-                                    src={_lqipUrl}
-                                    alt=""
-                                    class="absolute inset-0 w-full h-full object-cover blur-md scale-110 -z-10"
-                                />
-                            {/if}
-                        {:else if _lqipUrl}
+            <!-- Header -->
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">
+                <div class="player-card__modal-avatar shrink-0">
+                    {#if playerPhotoUrl && !_photoError}
+                        <img
+                            src={playerPhotoUrl || player.headshot_url}
+                            alt={displayName}
+                            class={`player-card__modal-photo ${_photoLoading || _imageLoading ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}
+                            onload={() => {
+                                _photoLoading = false;
+                                _imageLoading = false;
+                            }}
+                            onerror={() => {
+                                _photoError = true;
+                                _photoLoading = false;
+                                _imageLoading = false;
+                            }}
+                        />
+                        {#if (_photoLoading || _imageLoading) && _lqipUrl}
                             <img
                                 src={_lqipUrl}
                                 alt=""
-                                class="absolute inset-0 w-full h-full object-cover"
+                                class="absolute inset-0 w-full h-full object-cover blur-md scale-110 -z-10"
                             />
-                        {:else}
-                            <div class="player-card__modal-initials">{playerInitials}</div>
                         {/if}
-                    </div>
-                    <div>
-                        <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">
-                            {displayName}
-                        </h3>
-                        <div class="text-sm text-gray-500 flex items-center gap-2">
-                            <span>{teamWithCity}</span>
-                            <span>•</span>
-                            <span>Kauden 2024-2025 tilastot</span>
-                        </div>
-                    </div>
-                    <button
-                        class="ml-auto p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
-                        onclick={_closeSeasonStats}
-                        aria-label="Sulje"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-5 w-5"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd"
-                            />
-                        </svg>
-                    </button>
+                    {:else if _lqipUrl}
+                        <img
+                            src={_lqipUrl}
+                            alt=""
+                            class="absolute inset-0 w-full h-full object-cover"
+                        />
+                    {:else}
+                        <div class="player-card__modal-initials">{playerInitials}</div>
+                    {/if}
                 </div>
+                <div>
+                    <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">
+                        {displayName}
+                    </h3>
+                    <div class="text-sm text-gray-500 flex items-center gap-2">
+                        <span>{teamWithCity}</span>
+                        <span>•</span>
+                        <span>Kauden 2024-2025 tilastot</span>
+                    </div>
+                </div>
+                <button
+                    class="ml-auto p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                    onclick={_closeSeasonStats}
+                    aria-label="Sulje"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"
+                        />
+                    </svg>
+                </button>
+            </div>
 
-                <!-- Content -->
-                <div class="p-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-gray-50 p-4 rounded-lg text-center">
-                            <div class="text-2xl font-bold text-gray-900">
-                                {player.season_goals || 0}
-                            </div>
-                            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
-                                Maalit
-                            </div>
+            <!-- Content -->
+            <div class="p-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-gray-900">
+                            {player.season_goals || 0}
                         </div>
-                        <div class="bg-gray-50 p-4 rounded-lg text-center">
-                            <div class="text-2xl font-bold text-gray-900">
-                                {player.season_assists || 0}
-                            </div>
-                            <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
-                                Syötöt
-                            </div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
+                            Maalit
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg text-center">
+                        <div class="text-2xl font-bold text-gray-900">
+                            {player.season_assists || 0}
+                        </div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
+                            Syötöt
+                        </div>
+                    </div>
+                    <div
+                        class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100"
+                    >
+                        <div class="text-3xl font-bold text-finnish-blue-600">
+                            {player.season_points || 0}
                         </div>
                         <div
-                            class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100"
+                            class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium"
                         >
-                            <div class="text-3xl font-bold text-finnish-blue-600">
-                                {player.season_points || 0}
-                            </div>
-                            <div
-                                class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium"
-                            >
-                                Pisteet yhteensä
-                            </div>
+                            Pisteet yhteensä
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    {/if}
+    </div>
+{/if}
 
 {#if showComprehensiveDetails}
     <ComprehensivePlayerDetails

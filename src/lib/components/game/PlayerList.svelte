@@ -286,7 +286,7 @@
                             </div>
                             <!-- Desktop Grid -->
                             <div
-                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
                             >
                                 {#each forwards as player (`${player.playerId}-${player.game_id}`)}
                                     <PlayerCard {player} />
@@ -322,7 +322,7 @@
                             </div>
                             <!-- Desktop Grid -->
                             <div
-                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
                             >
                                 {#each defenders as player (`${player.playerId}-${player.game_id}`)}
                                     <PlayerCard {player} />
@@ -358,7 +358,7 @@
                             </div>
                             <!-- Desktop Grid -->
                             <div
-                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
                             >
                                 {#each goalies as player (`${player.playerId}-${player.game_id}`)}
                                     <PlayerCard {player} />
