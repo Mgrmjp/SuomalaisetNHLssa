@@ -226,6 +226,7 @@
     );
 
     // Calculate number of stats for responsive grid (skaters)
+    // Note: empty_net_goals are excluded from grid count - they get their own row
     const statCount = $derived(
         [
             player.goals > 0,
@@ -239,7 +240,9 @@
     const skaterGridClass = $derived(
         statCount === 1
             ? "player-card__stats-grid--single"
-            : `player-card__stats-grid--skater-${Math.min(statCount, 5)}`,
+            : statCount >= 4
+              ? "player-card__stats-grid--skater-3"  // Cap at 3 columns to prevent cramped layout
+              : `player-card__stats-grid--skater-${statCount}`,
     );
 
     // Goalie stats count
@@ -559,6 +562,7 @@
                         </div>
                     {:else if player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
                         <div class="player-card__stats mb-2 w-full">
+                            <!-- Main stats row -->
                             <div
                                 class={`player-card__stats-grid ${skaterGridClass} grid gap-1 text-left w-full`}
                             >
@@ -610,23 +614,6 @@
                                         </div>
                                     </div>
                                 {/if}
-                                {#if (player.empty_net_goals || 0) > 0}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1"
-                                        >
-                                            🥅
-                                            <span>{player.empty_net_goals}</span>
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-red-500 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Tyhjä maali
-                                        </div>
-                                    </div>
-                                {/if}
                                 {#if !isGoalie && (player.plus_minus !== undefined || player.plusMinus !== undefined)}
                                     {@const pm = player.plus_minus ?? player.plusMinus}
                                     <div
@@ -663,6 +650,26 @@
                                     </div>
                                 {/if}
                             </div>
+                            <!-- Empty net goals in separate row to prevent cramped layout -->
+                            {#if (player.empty_net_goals || 0) > 0 && statCount >= 3}
+                                <div class="flex justify-center w-full mt-1">
+                                    <div
+                                        class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
+                                    >
+                                        <div
+                                            class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1"
+                                        >
+                                            🥅
+                                            <span>{player.empty_net_goals}</span>
+                                        </div>
+                                        <div
+                                            class="player-card__stat-label text-[10px] text-red-500 uppercase tracking-widest mt-1 truncate font-medium"
+                                        >
+                                            Tyhjä maali
+                                        </div>
+                                    </div>
+                                </div>
+                            {/if}
                         </div>
                     {/if}
 
