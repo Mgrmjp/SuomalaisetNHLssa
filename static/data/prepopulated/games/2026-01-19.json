@@ -174,7 +174,7 @@
       "game_id": 2025020770,
       "game_date": "2026-01-19",
       "game_status": "OFF",
-      "created_at": "2026-01-19T21:37:32.513267",
+      "created_at": "2026-01-19T21:45:51.759299",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 0,
       "assists": 2,
@@ -196,6 +196,21 @@
       "shifts": 22,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-19",
+          "opponent": "BUF",
+          "opponent_full": "Buffalo Sabres",
+          "team_score": 2,
+          "opponent_score": 1,
+          "result": "W",
+          "goals": 0,
+          "assists": 2,
+          "points": 2,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-17",
           "opponent": "NJD",
@@ -255,21 +270,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-10",
-          "opponent": "SEA",
-          "opponent_full": "Seattle Kraken",
-          "team_score": 3,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -294,7 +294,7 @@
       "game_id": 2025020771,
       "game_date": "2026-01-19",
       "game_status": "OFF",
-      "created_at": "2026-01-19T21:37:40.501221",
+      "created_at": "2026-01-19T21:45:57.466967",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
       "goals": 0,
       "assists": 0,
@@ -302,8 +302,8 @@
       "empty_net_goals": 0,
       "penalty_minutes": 0,
       "shots": 0,
-      "plus_minus": -1,
-      "time_on_ice": "03:23",
+      "plus_minus": 0,
+      "time_on_ice": "05:03",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -313,7 +313,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 3,
+      "shifts": 5,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -414,7 +414,7 @@
       "game_id": 2025020770,
       "game_date": "2026-01-19",
       "game_status": "OFF",
-      "created_at": "2026-01-19T21:37:29.295586",
+      "created_at": "2026-01-19T21:45:48.520181",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -519,6 +519,6 @@
     }
   ],
   "total_players": 3,
-  "generated_at": "2026-01-19T21:37:56.298658",
+  "generated_at": "2026-01-19T21:46:13.292713",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
