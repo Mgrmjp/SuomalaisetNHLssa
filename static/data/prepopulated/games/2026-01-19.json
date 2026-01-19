@@ -12,7 +12,7 @@
       "startTime": "2026-01-19T18:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 2,
       "empty_net_goals": 0
     },
@@ -174,7 +174,7 @@
       "game_id": 2025020770,
       "game_date": "2026-01-19",
       "game_status": "OFF",
-      "created_at": "2026-01-19T19:27:14.606786",
+      "created_at": "2026-01-19T19:35:37.452123",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 0,
       "assists": 1,
@@ -294,7 +294,7 @@
       "game_id": 2025020770,
       "game_date": "2026-01-19",
       "game_status": "OFF",
-      "created_at": "2026-01-19T19:27:11.244389",
+      "created_at": "2026-01-19T19:35:34.221690",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -303,7 +303,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "20:00",
+      "time_on_ice": "21:55",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -315,9 +315,9 @@
       "short_handed_assists": 0,
       "shifts": 0,
       "average_ice_time": "00:00",
-      "saves": 11,
-      "shots_against": 12,
-      "save_percentage": 0.917,
+      "saves": 12,
+      "shots_against": 13,
+      "save_percentage": 0.923,
       "goals_against": 1,
       "recent_results": [
         {
@@ -399,6 +399,6 @@
     }
   ],
   "total_players": 2,
-  "generated_at": "2026-01-19T19:27:33.266462",
+  "generated_at": "2026-01-19T19:35:54.869204",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
