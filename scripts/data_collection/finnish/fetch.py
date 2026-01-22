@@ -242,8 +242,10 @@ def detect_empty_net_goals(play_by_play_data, game_id, finnish_cache, game_data=
                     if event_owner_team_id and home_team_id and away_team_id:
                         defending_team_id = away_team_id if event_owner_team_id == home_team_id else home_team_id
 
-                        # Find Finnish goalies from defending team who played
+                        # Find Finnish goalie from defending team with highest TOI
+                        # (the one who was actually playing when pulled for empty net)
                         player_stats = game_data.get('playerByGameStats', {})
+                        finnish_goalies_on_defending_team = []
                         for team_side in ['awayTeam', 'homeTeam']:
                             team_data = player_stats.get(team_side, {})
                             if game_data.get(team_side, {}).get('id') == defending_team_id:
@@ -252,7 +254,16 @@ def detect_empty_net_goals(play_by_play_data, game_id, finnish_cache, game_data=
                                     toi = goalie.get('toi', '00:00')
 
                                     if goalie_id in finnish_positions and toi not in ('00:00', '0'):
-                                        empty_net_goals_allowed[goalie_id] = empty_net_goals_allowed.get(goalie_id, 0) + 1
+                                        finnish_goalies_on_defending_team.append((goalie_id, toi))
+
+                        # Assign empty net goal to the goalie with highest TOI (the one who was pulled)
+                        if finnish_goalies_on_defending_team:
+                            # Sort by TOI descending and pick the first (highest TOI)
+                            finnish_goalies_on_defending_team.sort(
+                                key=lambda x: x[1], reverse=True
+                            )
+                            pulled_goalie_id = finnish_goalies_on_defending_team[0][0]
+                            empty_net_goals_allowed[pulled_goalie_id] = empty_net_goals_allowed.get(pulled_goalie_id, 0) + 1
 
     return empty_net_goals_scored, empty_net_goals_allowed
 
