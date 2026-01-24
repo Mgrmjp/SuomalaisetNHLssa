@@ -6,6 +6,8 @@ const pages = [
   { path: '/', priority: '1.0', changefreq: 'daily' },
   { path: '/pisteporssi', priority: '0.9', changefreq: 'daily' },
   { path: '/pelaajat', priority: '0.9', changefreq: 'daily' },
+  { path: '/joukkueet', priority: '0.8', changefreq: 'daily' },
+  { path: '/viikkokatsaus', priority: '0.8', changefreq: 'weekly' },
   { path: '/mestaruudet', priority: '0.8', changefreq: 'monthly' },
   { path: '/sarjataulukko', priority: '0.8', changefreq: 'daily' },
   { path: '/tietoa', priority: '0.5', changefreq: 'monthly' },
