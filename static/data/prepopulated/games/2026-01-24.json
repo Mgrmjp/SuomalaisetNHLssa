@@ -159,7 +159,7 @@
       "game_id": 2025020811,
       "game_date": "2026-01-24",
       "game_status": "OFF",
-      "created_at": "2026-01-24T22:02:21.591985",
+      "created_at": "2026-01-24T22:15:26.483638",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8475287.png",
       "goals": 0,
       "assists": 0,
@@ -181,6 +181,21 @@
       "shifts": 18,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-24",
+          "opponent": "UTA",
+          "opponent_full": "Utah Mammoth",
+          "team_score": 2,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-22",
           "opponent": "OTT",
@@ -240,21 +255,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-13",
-          "opponent": "EDM",
-          "opponent_full": "Edmonton Oilers",
-          "team_score": 4,
-          "opponent_score": 3,
-          "result": "W",
-          "goals": 1,
-          "assists": 0,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -279,7 +279,7 @@
       "game_id": 2025020811,
       "game_date": "2026-01-24",
       "game_status": "OFF",
-      "created_at": "2026-01-24T22:02:24.876397",
+      "created_at": "2026-01-24T22:15:29.772181",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8481020.png",
       "goals": 0,
       "assists": 0,
@@ -403,7 +403,7 @@
       "game_id": 2025020811,
       "game_date": "2026-01-24",
       "game_status": "OFF",
-      "created_at": "2026-01-24T22:02:28.214861",
+      "created_at": "2026-01-24T22:15:33.023587",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8477424.png",
       "goals": 0,
       "assists": 0,
@@ -429,6 +429,21 @@
       "save_percentage": 0.867,
       "goals_against": 4,
       "recent_results": [
+        {
+          "date": "2026-01-24",
+          "opponent": "UTA",
+          "opponent_full": "Utah Mammoth",
+          "team_score": 2,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": 4,
+          "save_percentage": 0.867,
+          "shots_against": 30,
+          "saves": 26
+        },
         {
           "date": "2026-01-22",
           "opponent": "OTT",
@@ -488,21 +503,6 @@
           "save_percentage": 0.903,
           "shots_against": 31,
           "saves": 28
-        },
-        {
-          "date": "2026-01-10",
-          "opponent": "CHI",
-          "opponent_full": "Chicago Blackhawks",
-          "team_score": 0,
-          "opponent_score": 3,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": 2,
-          "save_percentage": 0.9,
-          "shots_against": 20,
-          "saves": 18
         }
       ]
     },
@@ -527,7 +527,7 @@
       "game_id": 2025020810,
       "game_date": "2026-01-24",
       "game_status": "OFF",
-      "created_at": "2026-01-24T22:02:16.480315",
+      "created_at": "2026-01-24T22:15:21.246122",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8484797.png",
       "goals": 0,
       "assists": 0,
@@ -613,6 +613,6 @@
     }
   ],
   "total_players": 4,
-  "generated_at": "2026-01-24T22:02:43.783307",
+  "generated_at": "2026-01-24T22:15:47.204562",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
