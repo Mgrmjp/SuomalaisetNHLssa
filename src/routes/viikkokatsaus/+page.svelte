@@ -25,6 +25,36 @@
         content="Viikoittaiset katsaukset suomalaisten NHL-pelaajien menestykseen."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/viikkokatsaus" />
+
+    <!-- Breadcrumb Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: "https://suomalaisetnhlssa.fi/"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Viikkokatsaukset",
+                item: "https://suomalaisetnhlssa.fi/viikkokatsaus"
+            }
+        ]
+    })}</script>`}
+
+    <!-- CollectionPage Schema for articles -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: "Viikkokatsaukset - Suomalaisten NHL-pelaajien viikoittaiset katsaukset",
+        description: "Viikoittaiset katsaukset suomalaisten NHL-pelaajien menestykseen.",
+        url: "https://suomalaisetnhlssa.fi/viikkokatsaus",
+        inLanguage: "fi"
+    })}</script>`}
 </svelte:head>
 
 <div class="w-full max-w-3xl mx-auto px-4 py-8">

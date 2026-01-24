@@ -13,6 +13,15 @@ const config = {
     prerender: {
       // Explicitly generate API endpoints needed by the static site
       entries: ['*', '/api/available-dates', '/sitemap.xml'],
+      // Handle missing headshots gracefully during prerender
+      handleHttpError: ({ path, referrer, message }) => {
+        // Ignore 404 errors for headshots during build
+        if (path?.includes('/headshots/')) {
+          return 'ignore';
+        }
+        // Fail on other errors
+        return 'fail';
+      }
     },
   },
 };

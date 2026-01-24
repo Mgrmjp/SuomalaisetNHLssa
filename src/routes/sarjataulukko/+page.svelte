@@ -18,6 +18,26 @@
         content="NHL sarjataulukko. Seuraa suomalaisten pelaajien joukkueiden sijoituksia."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/sarjataulukko" />
+
+    <!-- Breadcrumb Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: "https://suomalaisetnhlssa.fi/"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Sarjataulukko",
+                item: "https://suomalaisetnhlssa.fi/sarjataulukko"
+            }
+        ]
+    })}</script>`}
 </svelte:head>
 
 <div

@@ -8,6 +8,36 @@
 
 <svelte:head>
     <title>Suomalaiset NHL-pelaajat - Joukkueet</title>
+    <meta
+        name="description"
+        content="Katso suomalaisten NHL-pelaajien jako joukkueittain. Löydä kaikki suomalaispelaajat kullekin joukkueelle."
+    />
+    <meta property="og:title" content="Suomalaiset NHL-pelaajat - Joukkueittain" />
+    <meta
+        property="og:description"
+        content="Katso suomalaisten NHL-pelaajien jako joukkueittain. Löydä kaikki suomalaispelaajat kullekin joukkueelle."
+    />
+    <meta property="og:url" content="https://suomalaisetnhlssa.fi/joukkueet" />
+
+    <!-- Breadcrumb Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: "https://suomalaisetnhlssa.fi/"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Joukkueet",
+                item: "https://suomalaisetnhlssa.fi/joukkueet"
+            }
+        ]
+    })}</script>`}
 </svelte:head>
 
 <div class="w-full max-w-6xl mx-auto px-4 py-8 relative" style="z-index: 1; position: relative;">

@@ -47,6 +47,20 @@
         description: defaultDescription,
         inLanguage: "fi",
     })}</script>`}
+
+    <!-- Breadcrumb Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: siteUrl + "/"
+            }
+        ]
+    })}</script>`}
 </svelte:head>
 
 <div class="min-h-screen flex flex-col relative bg-gray-50" style="color-scheme: light;">

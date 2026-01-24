@@ -1,28 +1,4 @@
 {
-  "8475287": {
-    "playerId": 8475287,
-    "name": "Erik Haula",
-    "firstName": {
-      "default": "Erik"
-    },
-    "lastName": {
-      "default": "Haula"
-    },
-    "position": "L",
-    "sweaterNumber": 56,
-    "birthDate": "1991-03-23",
-    "birthCity": {
-      "default": "Pori",
-      "sv": "Björneborg"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Pori, FIN",
-    "heightInches": 71,
-    "weightLbs": 191,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8475287.png",
-    "isActive": true
-  },
   "8475798": {
     "playerId": 8475798,
     "name": "Mikael Granlund",
@@ -45,20 +21,172 @@
     "weightLbs": 193,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8475798.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "ANA"
   },
-  "8476469": {
-    "playerId": 8476469,
-    "name": "Joel Armia",
+  "8478024": {
+    "playerId": 8478024,
+    "name": "Ville Husso",
     "firstName": {
-      "default": "Joel"
+      "default": "Ville"
     },
     "lastName": {
-      "default": "Armia"
+      "default": "Husso"
     },
-    "position": "R",
-    "sweaterNumber": 40,
-    "birthDate": "1993-05-31",
+    "position": "G",
+    "sweaterNumber": 33,
+    "birthDate": "1995-02-06",
+    "birthCity": {
+      "default": "Helsinki",
+      "cs": "Helsinky",
+      "sk": "Helsinky",
+      "sv": "Helsingfors"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Helsinki, FIN",
+    "heightInches": 75,
+    "weightLbs": 205,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8478024.png",
+    "isActive": true,
+    "currentTeam": "ANA"
+  },
+  "8480035": {
+    "playerId": 8480035,
+    "name": "Henri Jokiharju",
+    "firstName": {
+      "default": "Henri"
+    },
+    "lastName": {
+      "default": "Jokiharju"
+    },
+    "position": "D",
+    "sweaterNumber": 20,
+    "birthDate": "1999-06-17",
+    "birthCity": {
+      "default": "Oulu",
+      "sv": "Uleåborg"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Oulu, FIN",
+    "heightInches": 72,
+    "weightLbs": 205,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8480035.png",
+    "isActive": true,
+    "currentTeam": "BOS"
+  },
+  "8476914": {
+    "playerId": 8476914,
+    "name": "Joonas Korpisalo",
+    "firstName": {
+      "default": "Joonas"
+    },
+    "lastName": {
+      "default": "Korpisalo"
+    },
+    "position": "G",
+    "sweaterNumber": 70,
+    "birthDate": "1994-04-28",
+    "birthCity": {
+      "default": "Pori",
+      "sv": "Björneborg"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Pori, FIN",
+    "heightInches": 76,
+    "weightLbs": 200,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
+    "isActive": true,
+    "currentTeam": "BOS"
+  },
+  "8484797": {
+    "playerId": 8484797,
+    "name": "Konsta Helenius",
+    "firstName": {
+      "default": "Konsta"
+    },
+    "lastName": {
+      "default": "Helenius"
+    },
+    "position": "C",
+    "sweaterNumber": 94,
+    "birthDate": "2006-05-11",
+    "birthCity": {
+      "default": "Ylojarvi"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Ylojarvi, FIN",
+    "heightInches": 71,
+    "weightLbs": 190,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8484797.png",
+    "isActive": true,
+    "currentTeam": "BUF"
+  },
+  "8480045": {
+    "playerId": 8480045,
+    "name": "Ukko-Pekka Luukkonen",
+    "firstName": {
+      "default": "Ukko-Pekka"
+    },
+    "lastName": {
+      "default": "Luukkonen"
+    },
+    "position": "G",
+    "sweaterNumber": 1,
+    "birthDate": "1999-03-09",
+    "birthCity": {
+      "default": "Espoo",
+      "sv": "Esbo"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Espoo, FIN",
+    "heightInches": 77,
+    "weightLbs": 223,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
+    "isActive": true,
+    "currentTeam": "BUF"
+  },
+  "8478427": {
+    "playerId": 8478427,
+    "name": "Sebastian Aho",
+    "firstName": {
+      "default": "Sebastian"
+    },
+    "lastName": {
+      "default": "Aho"
+    },
+    "position": "C",
+    "sweaterNumber": 20,
+    "birthDate": "1997-07-26",
+    "birthCity": {
+      "default": "Rauma",
+      "sv": "Raumo"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Rauma, FIN",
+    "heightInches": 72,
+    "weightLbs": 189,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
+    "isActive": true,
+    "currentTeam": "CAR"
+  },
+  "8480829": {
+    "playerId": 8480829,
+    "name": "Jesperi Kotkaniemi",
+    "firstName": {
+      "default": "Jesperi"
+    },
+    "lastName": {
+      "default": "Kotkaniemi"
+    },
+    "position": "C",
+    "sweaterNumber": 82,
+    "birthDate": "2000-07-06",
     "birthCity": {
       "default": "Pori",
       "sv": "Björneborg"
@@ -66,36 +194,11 @@
     "birthCountry": "FIN",
     "birthplace": "Pori, FIN",
     "heightInches": 75,
-    "weightLbs": 216,
-    "shootsCatches": "R",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8476469.png",
-    "isActive": true
-  },
-  "8476874": {
-    "playerId": 8476874,
-    "name": "Olli Määttä",
-    "firstName": {
-      "default": "Olli"
-    },
-    "lastName": {
-      "default": "Määttä",
-      "de": "Maatta",
-      "es": "Maatta",
-      "fr": "Maatta"
-    },
-    "position": "D",
-    "sweaterNumber": 2,
-    "birthDate": "1994-08-22",
-    "birthCity": {
-      "default": "Jyväskylä"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Jyväskylä, FIN",
-    "heightInches": 74,
-    "weightLbs": 207,
+    "weightLbs": 212,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/UTA/8476874.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8480829.png",
+    "isActive": true,
+    "currentTeam": "CAR"
   },
   "8476882": {
     "playerId": 8476882,
@@ -125,78 +228,33 @@
     "weightLbs": 191,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CHI/8476882.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "CHI"
   },
-  "8476902": {
-    "playerId": 8476902,
-    "name": "Esa Lindell",
+  "8481641": {
+    "playerId": 8481641,
+    "name": "Joel Kiviranta",
     "firstName": {
-      "default": "Esa"
+      "default": "Joel"
     },
     "lastName": {
-      "default": "Lindell"
+      "default": "Kiviranta"
     },
-    "position": "D",
-    "sweaterNumber": 23,
-    "birthDate": "1994-05-23",
+    "position": "L",
+    "sweaterNumber": 94,
+    "birthDate": "1996-03-23",
     "birthCity": {
       "default": "Vantaa",
       "sv": "Vanda"
     },
     "birthCountry": "FIN",
     "birthplace": "Vantaa, FIN",
-    "heightInches": 75,
-    "weightLbs": 217,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8476902.png",
-    "isActive": true
-  },
-  "8476914": {
-    "playerId": 8476914,
-    "name": "Joonas Korpisalo",
-    "firstName": {
-      "default": "Joonas"
-    },
-    "lastName": {
-      "default": "Korpisalo"
-    },
-    "position": "G",
-    "sweaterNumber": 70,
-    "birthDate": "1994-04-28",
-    "birthCity": {
-      "default": "Pori",
-      "sv": "Björneborg"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Pori, FIN",
-    "heightInches": 76,
-    "weightLbs": 200,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
-    "isActive": true
-  },
-  "8477424": {
-    "playerId": 8477424,
-    "name": "Juuse Saros",
-    "firstName": {
-      "default": "Juuse"
-    },
-    "lastName": {
-      "default": "Saros"
-    },
-    "position": "G",
-    "sweaterNumber": 74,
-    "birthDate": "1995-04-19",
-    "birthCity": {
-      "default": "Forssa"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Forssa, FIN",
     "heightInches": 71,
-    "weightLbs": 180,
+    "weightLbs": 185,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8477424.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
+    "isActive": true,
+    "currentTeam": "COL"
   },
   "8477476": {
     "playerId": 8477476,
@@ -223,30 +281,32 @@
     "weightLbs": 179,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "COL"
   },
-  "8477996": {
-    "playerId": 8477996,
-    "name": "Juho Lammikko",
+  "8478449": {
+    "playerId": 8478449,
+    "name": "Roope Hintz",
     "firstName": {
-      "default": "Juho"
+      "default": "Roope"
     },
     "lastName": {
-      "default": "Lammikko"
+      "default": "Hintz"
     },
     "position": "C",
-    "sweaterNumber": 83,
-    "birthDate": "1996-01-29",
+    "sweaterNumber": 24,
+    "birthDate": "1996-11-17",
     "birthCity": {
-      "default": "Noormarkku"
+      "default": "Nokia"
     },
     "birthCountry": "FIN",
-    "birthplace": "Noormarkku, FIN",
-    "heightInches": 74,
-    "weightLbs": 191,
+    "birthplace": "Nokia, FIN",
+    "heightInches": 75,
+    "weightLbs": 217,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8477996.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8478449.png",
+    "isActive": true,
+    "currentTeam": "DAL"
   },
   "8478420": {
     "playerId": 8478420,
@@ -270,172 +330,8 @@
     "weightLbs": 228,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8478420.png",
-    "isActive": true
-  },
-  "8478427": {
-    "playerId": 8478427,
-    "name": "Sebastian Aho",
-    "firstName": {
-      "default": "Sebastian"
-    },
-    "lastName": {
-      "default": "Aho"
-    },
-    "position": "C",
-    "sweaterNumber": 20,
-    "birthDate": "1997-07-26",
-    "birthCity": {
-      "default": "Rauma",
-      "sv": "Raumo"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Rauma, FIN",
-    "heightInches": 72,
-    "weightLbs": 189,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
-    "isActive": true
-  },
-  "8478449": {
-    "playerId": 8478449,
-    "name": "Roope Hintz",
-    "firstName": {
-      "default": "Roope"
-    },
-    "lastName": {
-      "default": "Hintz"
-    },
-    "position": "C",
-    "sweaterNumber": 24,
-    "birthDate": "1996-11-17",
-    "birthCity": {
-      "default": "Nokia"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Nokia, FIN",
-    "heightInches": 75,
-    "weightLbs": 217,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8478449.png",
-    "isActive": true
-  },
-  "8478859": {
-    "playerId": 8478859,
-    "name": "Niko Mikkola",
-    "firstName": {
-      "default": "Niko"
-    },
-    "lastName": {
-      "default": "Mikkola"
-    },
-    "position": "D",
-    "sweaterNumber": 77,
-    "birthDate": "1996-04-27",
-    "birthCity": {
-      "default": "Kiiminki",
-      "sv": "Kiminge"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Kiiminki, FIN",
-    "heightInches": 78,
-    "weightLbs": 204,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8478859.png",
-    "isActive": true
-  },
-  "8479533": {
-    "playerId": 8479533,
-    "name": "Joona Koppanen",
-    "firstName": {
-      "default": "Joona"
-    },
-    "lastName": {
-      "default": "Koppanen"
-    },
-    "position": "L",
-    "sweaterNumber": 15,
-    "birthDate": "1998-02-25",
-    "birthCity": {
-      "default": "Tampere",
-      "sv": "Tammerfors"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Tampere, FIN",
-    "heightInches": 77,
-    "weightLbs": 216,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/PIT/8479533.png",
-    "isActive": true
-  },
-  "8480001": {
-    "playerId": 8480001,
-    "name": "Urho Vaakanainen",
-    "firstName": {
-      "default": "Urho"
-    },
-    "lastName": {
-      "default": "Vaakanainen"
-    },
-    "position": "D",
-    "sweaterNumber": 18,
-    "birthDate": "1999-01-01",
-    "birthCity": {
-      "default": "Joensuu"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Joensuu, FIN",
-    "heightInches": 74,
-    "weightLbs": 202,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NYR/8480001.png",
-    "isActive": true
-  },
-  "8480009": {
-    "playerId": 8480009,
-    "name": "Eeli Tolvanen",
-    "firstName": {
-      "default": "Eeli"
-    },
-    "lastName": {
-      "default": "Tolvanen"
-    },
-    "position": "R",
-    "sweaterNumber": 20,
-    "birthDate": "1999-04-22",
-    "birthCity": {
-      "default": "Vihti"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Vihti, FIN",
-    "heightInches": 70,
-    "weightLbs": 182,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8480009.png",
-    "isActive": true
-  },
-  "8480035": {
-    "playerId": 8480035,
-    "name": "Henri Jokiharju",
-    "firstName": {
-      "default": "Henri"
-    },
-    "lastName": {
-      "default": "Jokiharju"
-    },
-    "position": "D",
-    "sweaterNumber": 20,
-    "birthDate": "1999-06-17",
-    "birthCity": {
-      "default": "Oulu",
-      "sv": "Uleåborg"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Oulu, FIN",
-    "heightInches": 72,
-    "weightLbs": 205,
-    "shootsCatches": "R",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8480035.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "DAL"
   },
   "8480036": {
     "playerId": 8480036,
@@ -459,31 +355,107 @@
     "weightLbs": 197,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8480036.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "DAL"
   },
-  "8480045": {
-    "playerId": 8480045,
-    "name": "Ukko-Pekka Luukkonen",
+  "8476902": {
+    "playerId": 8476902,
+    "name": "Esa Lindell",
     "firstName": {
-      "default": "Ukko-Pekka"
+      "default": "Esa"
     },
     "lastName": {
-      "default": "Luukkonen"
+      "default": "Lindell"
     },
-    "position": "G",
-    "sweaterNumber": 1,
-    "birthDate": "1999-03-09",
+    "position": "D",
+    "sweaterNumber": 23,
+    "birthDate": "1994-05-23",
+    "birthCity": {
+      "default": "Vantaa",
+      "sv": "Vanda"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Vantaa, FIN",
+    "heightInches": 75,
+    "weightLbs": 217,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/DAL/8476902.png",
+    "isActive": true,
+    "currentTeam": "DAL"
+  },
+  "8477953": {
+    "playerId": 8477953,
+    "name": "Kasperi Kapanen",
+    "firstName": {
+      "default": "Kasperi"
+    },
+    "lastName": {
+      "default": "Kapanen"
+    },
+    "position": "R",
+    "sweaterNumber": 42,
+    "birthDate": "1996-07-23",
+    "birthCity": {
+      "default": "Kuopio"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Kuopio, FIN",
+    "heightInches": 73,
+    "weightLbs": 194,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/EDM/8477953.png",
+    "isActive": true,
+    "currentTeam": "EDM"
+  },
+  "8477493": {
+    "playerId": 8477493,
+    "name": "Aleksander Barkov",
+    "firstName": {
+      "default": "Aleksander"
+    },
+    "lastName": {
+      "default": "Barkov"
+    },
+    "position": "C",
+    "sweaterNumber": 16,
+    "birthDate": "1995-09-02",
+    "birthCity": {
+      "default": "Tampere",
+      "sv": "Tammerfors"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Tampere, FIN",
+    "heightInches": 75,
+    "weightLbs": 214,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8477493.png",
+    "isActive": true,
+    "currentTeam": "FLA"
+  },
+  "8482113": {
+    "playerId": 8482113,
+    "name": "Anton Lundell",
+    "firstName": {
+      "default": "Anton"
+    },
+    "lastName": {
+      "default": "Lundell"
+    },
+    "position": "C",
+    "sweaterNumber": 15,
+    "birthDate": "2001-10-03",
     "birthCity": {
       "default": "Espoo",
       "sv": "Esbo"
     },
     "birthCountry": "FIN",
     "birthplace": "Espoo, FIN",
-    "heightInches": 77,
-    "weightLbs": 223,
+    "heightInches": 73,
+    "weightLbs": 196,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8482113.png",
+    "isActive": true,
+    "currentTeam": "FLA"
   },
   "8480185": {
     "playerId": 8480185,
@@ -510,20 +482,46 @@
     "weightLbs": 191,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8480185.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "FLA"
   },
-  "8480829": {
-    "playerId": 8480829,
-    "name": "Jesperi Kotkaniemi",
+  "8478859": {
+    "playerId": 8478859,
+    "name": "Niko Mikkola",
     "firstName": {
-      "default": "Jesperi"
+      "default": "Niko"
     },
     "lastName": {
-      "default": "Kotkaniemi"
+      "default": "Mikkola"
     },
-    "position": "C",
-    "sweaterNumber": 82,
-    "birthDate": "2000-07-06",
+    "position": "D",
+    "sweaterNumber": 77,
+    "birthDate": "1996-04-27",
+    "birthCity": {
+      "default": "Kiiminki",
+      "sv": "Kiminge"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Kiiminki, FIN",
+    "heightInches": 78,
+    "weightLbs": 204,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8478859.png",
+    "isActive": true,
+    "currentTeam": "FLA"
+  },
+  "8476469": {
+    "playerId": 8476469,
+    "name": "Joel Armia",
+    "firstName": {
+      "default": "Joel"
+    },
+    "lastName": {
+      "default": "Armia"
+    },
+    "position": "R",
+    "sweaterNumber": 40,
+    "birthDate": "1993-05-31",
     "birthCity": {
       "default": "Pori",
       "sv": "Björneborg"
@@ -531,36 +529,110 @@
     "birthCountry": "FIN",
     "birthplace": "Pori, FIN",
     "heightInches": 75,
-    "weightLbs": 212,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8480829.png",
-    "isActive": true
+    "weightLbs": 215,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8476469.png",
+    "isActive": true,
+    "currentTeam": "LAK"
   },
-  "8480947": {
-    "playerId": 8480947,
-    "name": "Kevin Lankinen",
+  "8479339": {
+    "playerId": 8479339,
+    "name": "Patrik Laine",
     "firstName": {
-      "default": "Kevin"
+      "default": "Patrik"
     },
     "lastName": {
-      "default": "Lankinen"
+      "default": "Laine"
     },
-    "position": "G",
-    "sweaterNumber": 32,
-    "birthDate": "1995-04-28",
+    "position": "R",
+    "sweaterNumber": 92,
+    "birthDate": "1998-04-19",
     "birthCity": {
-      "default": "Helsinki",
-      "cs": "Helsinky",
-      "sk": "Helsinky",
-      "sv": "Helsingfors"
+      "default": "Tampere",
+      "sv": "Tammerfors"
     },
     "birthCountry": "FIN",
-    "birthplace": "Helsinki, FIN",
+    "birthplace": "Tampere, FIN",
+    "heightInches": 76,
+    "weightLbs": 208,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/MTL/8479339.png",
+    "isActive": true,
+    "currentTeam": "MTL"
+  },
+  "8484177": {
+    "playerId": 8484177,
+    "name": "Lenni Hameenaho",
+    "firstName": {
+      "default": "Lenni"
+    },
+    "lastName": {
+      "default": "Hameenaho"
+    },
+    "position": "R",
+    "sweaterNumber": 29,
+    "birthDate": "2004-11-07",
+    "birthCity": {
+      "default": "Kajaani",
+      "sv": "Jkajana"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Kajaani, FIN",
+    "heightInches": 72,
+    "weightLbs": 173,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8484177.png",
+    "isActive": true,
+    "currentTeam": "NJD"
+  },
+  "8477996": {
+    "playerId": 8477996,
+    "name": "Juho Lammikko",
+    "firstName": {
+      "default": "Juho"
+    },
+    "lastName": {
+      "default": "Lammikko"
+    },
+    "position": "C",
+    "sweaterNumber": 83,
+    "birthDate": "1996-01-29",
+    "birthCity": {
+      "default": "Noormarkku"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Noormarkku, FIN",
     "heightInches": 74,
-    "weightLbs": 190,
+    "weightLbs": 191,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/VAN/8480947.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8477996.png",
+    "isActive": true,
+    "currentTeam": "NJD"
+  },
+  "8475287": {
+    "playerId": 8475287,
+    "name": "Erik Haula",
+    "firstName": {
+      "default": "Erik"
+    },
+    "lastName": {
+      "default": "Haula"
+    },
+    "position": "L",
+    "sweaterNumber": 56,
+    "birthDate": "1991-03-23",
+    "birthCity": {
+      "default": "Pori",
+      "sv": "Björneborg"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Pori, FIN",
+    "heightInches": 71,
+    "weightLbs": 191,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8475287.png",
+    "isActive": true,
+    "currentTeam": "NSH"
   },
   "8481020": {
     "playerId": 8481020,
@@ -583,7 +655,106 @@
     "weightLbs": 210,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8481020.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "NSH"
+  },
+  "8477424": {
+    "playerId": 8477424,
+    "name": "Juuse Saros",
+    "firstName": {
+      "default": "Juuse"
+    },
+    "lastName": {
+      "default": "Saros"
+    },
+    "position": "G",
+    "sweaterNumber": 74,
+    "birthDate": "1995-04-19",
+    "birthCity": {
+      "default": "Forssa"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Forssa, FIN",
+    "heightInches": 71,
+    "weightLbs": 180,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8477424.png",
+    "isActive": true,
+    "currentTeam": "NSH"
+  },
+  "8480001": {
+    "playerId": 8480001,
+    "name": "Urho Vaakanainen",
+    "firstName": {
+      "default": "Urho"
+    },
+    "lastName": {
+      "default": "Vaakanainen"
+    },
+    "position": "D",
+    "sweaterNumber": 18,
+    "birthDate": "1999-01-01",
+    "birthCity": {
+      "default": "Joensuu"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Joensuu, FIN",
+    "heightInches": 74,
+    "weightLbs": 202,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NYR/8480001.png",
+    "isActive": true,
+    "currentTeam": "NYR"
+  },
+  "8484321": {
+    "playerId": 8484321,
+    "name": "Nikolas Matinpalo",
+    "firstName": {
+      "default": "Nikolas"
+    },
+    "lastName": {
+      "default": "Matinpalo"
+    },
+    "position": "D",
+    "sweaterNumber": 33,
+    "birthDate": "1998-10-05",
+    "birthCity": {
+      "default": "Espoo",
+      "sv": "Esbo"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Espoo, FIN",
+    "heightInches": 75,
+    "weightLbs": 213,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8484321.png",
+    "isActive": true,
+    "currentTeam": "OTT"
+  },
+  "8477499": {
+    "playerId": 8477499,
+    "name": "Rasmus Ristolainen",
+    "firstName": {
+      "default": "Rasmus"
+    },
+    "lastName": {
+      "default": "Ristolainen"
+    },
+    "position": "D",
+    "sweaterNumber": 55,
+    "birthDate": "1994-10-27",
+    "birthCity": {
+      "default": "Turku",
+      "sv": "Åbo"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Turku, FIN",
+    "heightInches": 76,
+    "weightLbs": 208,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
+    "isActive": true,
+    "currentTeam": "PHI"
   },
   "8481554": {
     "playerId": 8481554,
@@ -607,34 +778,32 @@
     "weightLbs": 215,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8481554.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "SEA"
   },
-  "8481704": {
-    "playerId": 8481704,
-    "name": "Juuso Parssinen",
+  "8480009": {
+    "playerId": 8480009,
+    "name": "Eeli Tolvanen",
     "firstName": {
-      "default": "Juuso"
+      "default": "Eeli"
     },
     "lastName": {
-      "default": "Parssinen",
-      "cs": "Pärssinen",
-      "fi": "Pärssinen",
-      "sk": "Pärssinen",
-      "sv": "Pärssinen"
+      "default": "Tolvanen"
     },
-    "position": "C",
-    "sweaterNumber": 71,
-    "birthDate": "2001-02-01",
+    "position": "R",
+    "sweaterNumber": 20,
+    "birthDate": "1999-04-22",
     "birthCity": {
-      "default": "Hameenlinna"
+      "default": "Vihti"
     },
     "birthCountry": "FIN",
-    "birthplace": "Hameenlinna, FIN",
-    "heightInches": 75,
-    "weightLbs": 207,
+    "birthplace": "Vihti, FIN",
+    "heightInches": 70,
+    "weightLbs": 182,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/NYR/8481704.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8480009.png",
+    "isActive": true,
+    "currentTeam": "SEA"
   },
   "8481711": {
     "playerId": 8481711,
@@ -658,55 +827,35 @@
     "weightLbs": 187,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/TOR/8481711.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "TOR"
   },
-  "8482113": {
-    "playerId": 8482113,
-    "name": "Anton Lundell",
+  "8476874": {
+    "playerId": 8476874,
+    "name": "Olli Määttä",
     "firstName": {
-      "default": "Anton"
+      "default": "Olli"
     },
     "lastName": {
-      "default": "Lundell"
+      "default": "Määttä",
+      "de": "Maatta",
+      "es": "Maatta",
+      "fr": "Maatta"
     },
-    "position": "C",
-    "sweaterNumber": 15,
-    "birthDate": "2001-10-03",
+    "position": "D",
+    "sweaterNumber": 2,
+    "birthDate": "1994-08-22",
     "birthCity": {
-      "default": "Espoo",
-      "sv": "Esbo"
+      "default": "Jyväskylä"
     },
     "birthCountry": "FIN",
-    "birthplace": "Espoo, FIN",
-    "heightInches": 73,
-    "weightLbs": 196,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8482113.png",
-    "isActive": true
-  },
-  "8482447": {
-    "playerId": 8482447,
-    "name": "Leevi Meriläinen",
-    "firstName": {
-      "default": "Leevi"
-    },
-    "lastName": {
-      "default": "Meriläinen"
-    },
-    "position": "G",
-    "sweaterNumber": 1,
-    "birthDate": "2002-08-13",
-    "birthCity": {
-      "default": "Oulu",
-      "sv": "Uleåborg"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Oulu, FIN",
+    "birthplace": "Jyväskylä, FIN",
     "heightInches": 74,
-    "weightLbs": 196,
+    "weightLbs": 207,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8482447.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/UTA/8476874.png",
+    "isActive": true,
+    "currentTeam": "UTA"
   },
   "8482691": {
     "playerId": 8482691,
@@ -734,185 +883,21 @@
     "weightLbs": 204,
     "shootsCatches": "L",
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/VAN/8482691.png",
-    "isActive": true
+    "isActive": true,
+    "currentTeam": "VAN"
   },
-  "8482758": {
-    "playerId": 8482758,
-    "name": "Ville Koivunen",
+  "8480947": {
+    "playerId": 8480947,
+    "name": "Kevin Lankinen",
     "firstName": {
-      "default": "Ville"
+      "default": "Kevin"
     },
     "lastName": {
-      "default": "Koivunen"
-    },
-    "position": "R",
-    "sweaterNumber": 41,
-    "birthDate": "2003-06-13",
-    "birthCity": {
-      "default": "Oulu",
-      "sv": "Uleåborg"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Oulu, FIN",
-    "heightInches": 72,
-    "weightLbs": 184,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/PIT/8482758.png",
-    "isActive": true
-  },
-  "8483471": {
-    "playerId": 8483471,
-    "name": "Brad Lambert",
-    "firstName": {
-      "default": "Brad"
-    },
-    "lastName": {
-      "default": "Lambert"
-    },
-    "position": "C",
-    "sweaterNumber": 93,
-    "birthDate": "2003-12-19",
-    "birthCity": {
-      "default": "Lahti",
-      "sv": "Lahtis"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Lahti, FIN",
-    "heightInches": 73,
-    "weightLbs": 173,
-    "shootsCatches": "R",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/WPG/8483471.png",
-    "isActive": true
-  },
-  "8483497": {
-    "playerId": 8483497,
-    "name": "Jani Nyman",
-    "firstName": {
-      "default": "Jani"
-    },
-    "lastName": {
-      "default": "Nyman"
-    },
-    "position": "R",
-    "sweaterNumber": 38,
-    "birthDate": "2004-07-30",
-    "birthCity": {
-      "default": "Valkeakoski"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Valkeakoski, FIN",
-    "heightInches": 74,
-    "weightLbs": 212,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8483497.png",
-    "isActive": true
-  },
-  "8483501": {
-    "playerId": 8483501,
-    "name": "Samuel Helenius",
-    "firstName": {
-      "default": "Samuel"
-    },
-    "lastName": {
-      "default": "Helenius"
-    },
-    "position": "C",
-    "sweaterNumber": 86,
-    "birthDate": "2002-07-31",
-    "birthCity": {
-      "default": "Hameenlinna"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Hameenlinna, FIN",
-    "heightInches": 76,
-    "weightLbs": 198,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8483501.png",
-    "isActive": true
-  },
-  "8484321": {
-    "playerId": 8484321,
-    "name": "Nikolas Matinpalo",
-    "firstName": {
-      "default": "Nikolas"
-    },
-    "lastName": {
-      "default": "Matinpalo"
-    },
-    "position": "D",
-    "sweaterNumber": 33,
-    "birthDate": "1998-10-05",
-    "birthCity": {
-      "default": "Espoo",
-      "sv": "Esbo"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Espoo, FIN",
-    "heightInches": 75,
-    "weightLbs": 213,
-    "shootsCatches": "R",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8484321.png",
-    "isActive": true
-  },
-  "8477499": {
-    "playerId": 8477499,
-    "name": "Rasmus Ristolainen",
-    "firstName": {
-      "default": "Rasmus"
-    },
-    "lastName": {
-      "default": "Ristolainen"
-    },
-    "position": "D",
-    "sweaterNumber": 55,
-    "birthDate": "1994-10-27",
-    "birthCity": {
-      "default": "Turku",
-      "sv": "Åbo"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Turku, FIN",
-    "heightInches": 76,
-    "weightLbs": 208,
-    "shootsCatches": "R",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
-    "isActive": true
-  },
-  "8477953": {
-    "playerId": 8477953,
-    "name": "Kasperi Kapanen",
-    "firstName": {
-      "default": "Kasperi"
-    },
-    "lastName": {
-      "default": "Kapanen"
-    },
-    "position": "R",
-    "sweaterNumber": 42,
-    "birthDate": "1996-07-23",
-    "birthCity": {
-      "default": "Kuopio"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Kuopio, FIN",
-    "heightInches": 73,
-    "weightLbs": 194,
-    "shootsCatches": "R",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/EDM/8477953.png",
-    "isActive": true
-  },
-  "8478024": {
-    "playerId": 8478024,
-    "name": "Ville Husso",
-    "firstName": {
-      "default": "Ville"
-    },
-    "lastName": {
-      "default": "Husso"
+      "default": "Lankinen"
     },
     "position": "G",
-    "sweaterNumber": 33,
-    "birthDate": "1995-02-06",
+    "sweaterNumber": 32,
+    "birthDate": "1995-04-28",
     "birthCity": {
       "default": "Helsinki",
       "cs": "Helsinky",
@@ -921,62 +906,11 @@
     },
     "birthCountry": "FIN",
     "birthplace": "Helsinki, FIN",
-    "heightInches": 75,
-    "weightLbs": 205,
+    "heightInches": 74,
+    "weightLbs": 190,
     "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8478024.png",
-    "isActive": true
-  },
-  "8481641": {
-    "playerId": 8481641,
-    "name": "Joel Kiviranta",
-    "firstName": {
-      "default": "Joel"
-    },
-    "lastName": {
-      "default": "Kiviranta"
-    },
-    "position": "L",
-    "sweaterNumber": 94,
-    "birthDate": "1996-03-23",
-    "birthCity": {
-      "default": "Vantaa",
-      "sv": "Vanda"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Vantaa, FIN",
-    "heightInches": 71,
-    "weightLbs": 185,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
-    "isActive": true
-  },
-  "8482451": {
-    "playerId": 8482451,
-    "name": "Mikael Pyyhtia",
-    "firstName": {
-      "default": "Mikael"
-    },
-    "lastName": {
-      "default": "Pyyhtia",
-      "cs": "Pyyhtiä",
-      "fi": "Pyyhtiä",
-      "sk": "Pyyhtiä",
-      "sv": "Pyyhtiä"
-    },
-    "position": "L",
-    "sweaterNumber": 82,
-    "birthDate": "2001-12-17",
-    "birthCity": {
-      "default": "Turku",
-      "sv": "Åbo"
-    },
-    "birthCountry": "FIN",
-    "birthplace": "Turku, FIN",
-    "heightInches": 72,
-    "weightLbs": 178,
-    "shootsCatches": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CBJ/8482451.png",
-    "isActive": true
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/VAN/8480947.png",
+    "isActive": true,
+    "currentTeam": "VAN"
   }
 }

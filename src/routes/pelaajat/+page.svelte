@@ -2,6 +2,7 @@
     import { base } from "$app/paths";
     import Snowfall from "$lib/components/ui/Snowfall.svelte";
     import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
+    import { correctFullName } from "$lib/utils/finnishNameUtils.js";
 
     /** @type {import('./$types').PageData} */
     export let data;
@@ -25,7 +26,21 @@
     });
 
     function getPlayerName(player) {
-        return player.skaterFullName || player.goalieFullName;
+        return correctFullName(player.skaterFullName || player.goalieFullName);
+    }
+
+    // Helper to convert name to URL-friendly slug
+    function nameToSlug(name) {
+        return name.toLowerCase()
+            .replace(/ä/g, 'a')
+            .replace(/ö/g, 'o')
+            .replace(/å/g, 'o')
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '');
+    }
+
+    function getPlayerSlug(player) {
+        return nameToSlug(getPlayerName(player));
     }
 </script>
 
@@ -41,6 +56,37 @@
         content="Katso lista kaikista suomalaisista NHL-pelaajista kaudella {formattedSeason}. Mukana kaikki kenttäpelaajat ja maalivahdit joukkueineen."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/pelaajat" />
+
+    <!-- Breadcrumb Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: "https://suomalaisetnhlssa.fi/"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Pelaajat",
+                item: "https://suomalaisetnhlssa.fi/pelaajat"
+            }
+        ]
+    })}</script>`}
+
+    <!-- CollectionPage Schema for players list -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: `Suomalaiset NHL-pelaajat ${formattedSeason}`,
+        description: `Kaikki suomalaiset NHL-pelaajat kaudella ${formattedSeason}`,
+        url: "https://suomalaisetnhlssa.fi/pelaajat",
+        numberOfItems: filteredPlayers.length,
+        inLanguage: "fi"
+    })}</script>`}
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50 relative overflow-hidden">
@@ -78,8 +124,9 @@
         {:else}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {#each filteredPlayers as player}
-                    <div
-                        class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center gap-4 hover:shadow-md transition-shadow"
+                    <a
+                        href={`${base}/pelaajat/${getPlayerSlug(player)}`}
+                        class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all group"
                     >
                         <div
                             class="flex-shrink-0 w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center"
@@ -87,7 +134,7 @@
                             <TeamLogo team={player.teamAbbrevs} size="48" />
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-900 text-lg leading-tight">
+                            <h3 class="font-bold text-slate-900 text-lg leading-tight group-hover:text-blue-600 transition-colors">
                                 {getPlayerName(player)}
                             </h3>
                             <div class="text-sm text-slate-500 mt-1">
@@ -97,7 +144,7 @@
                                 {player.gamesPlayed} ottelua
                             </div>
                         </div>
-                    </div>
+                    </a>
                 {/each}
             </div>
 

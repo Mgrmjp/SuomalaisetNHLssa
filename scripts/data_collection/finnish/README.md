@@ -137,7 +137,7 @@ Complete Finnish players cache.
 
 ### "0 Finnish players found"
 **Cause:** Cache incomplete or outdated
-**Solution:** Run `build_cache.py` to update cache
+**Solution:** Run `build_cache.py` to update cache (scans official team rosters)
 
 ### "API timeout"
 **Cause:** Too many requests

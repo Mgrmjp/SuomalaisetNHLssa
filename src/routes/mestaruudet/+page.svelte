@@ -20,6 +20,26 @@
         content="Katso lista kaikista suomalaisista Stanley Cup -voittajista. Jari Kurri, Esa Tikkanen, Teemu Selänne ja muut suomalaiset NHL-mestarit."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/mestaruudet" />
+
+    <!-- Breadcrumb Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: "https://suomalaisetnhlssa.fi/"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Mestaruudet",
+                item: "https://suomalaisetnhlssa.fi/mestaruudet"
+            }
+        ]
+    })}</script>`}
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50 relative overflow-hidden">

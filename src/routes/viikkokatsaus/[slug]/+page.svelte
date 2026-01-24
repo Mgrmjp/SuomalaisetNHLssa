@@ -28,6 +28,60 @@
         property="og:url"
         content={`https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`}
     />
+
+    <!-- NewsArticle Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "NewsArticle",
+        headline: data.article.title,
+        datePublished: data.article.date,
+        dateModified: data.article.date,
+        author: {
+            "@type": "Organization",
+            name: "Suomalaiset NHL:ssä"
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "Suomalaiset NHL:ssä",
+            url: "https://suomalaisetnhlssa.fi",
+            logo: {
+                "@type": "ImageObject",
+                url: "https://suomalaisetnhlssa.fi/logo.svg"
+            }
+        },
+        mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": `https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`
+        },
+        inLanguage: "fi",
+        description: `Viikon ${data.article.week} katsaus suomalaisten NHL-pelaajien menestykseen.`
+    })}</script>`}
+
+    <!-- Breadcrumb Schema for Article -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: "https://suomalaisetnhlssa.fi/"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Viikkokatsaukset",
+                item: "https://suomalaisetnhlssa.fi/viikkokatsaus"
+            },
+            {
+                "@type": "ListItem",
+                position: 3,
+                name: data.article.title,
+                item: `https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`
+            }
+        ]
+    })}</script>`}
 </svelte:head>
 
 <div class="w-full max-w-3xl mx-auto px-4 py-8">

@@ -31,6 +31,26 @@
         content="Kaikki suomalaiset NHL-pelaajat ja tilastot per kausi. Katso kuka johtaa suomalaisten pistepörssiä kaudella {formattedSeason}."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/pisteporssi" />
+
+    <!-- Breadcrumb Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+            {
+                "@type": "ListItem",
+                position: 1,
+                name: "Etusivu",
+                item: "https://suomalaisetnhlssa.fi/"
+            },
+            {
+                "@type": "ListItem",
+                position: 2,
+                name: "Pistepörssi",
+                item: "https://suomalaisetnhlssa.fi/pisteporssi"
+            }
+        ]
+    })}</script>`}
 </svelte:head>
 
 <div
