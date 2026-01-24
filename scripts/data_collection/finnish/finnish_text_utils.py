@@ -9,6 +9,11 @@ from openai import OpenAI
 _openai_client = None
 _correction_cache = {}  # Cache corrections to avoid duplicate API calls
 
+# Manual overrides for specific names/cities where LLM might fail or be inconsistent
+MANUAL_CORRECTIONS = {
+    "Hameenaho": "Hämeenaho",
+}
+
 
 def get_openai_client():
     """Initialize OpenAI client (lazy loading)."""
@@ -35,6 +40,10 @@ def correct_with_openai(text, context_type="city"):
     """
     if not text or not isinstance(text, str):
         return text
+
+    # Check manual corrections first
+    if text in MANUAL_CORRECTIONS:
+        return MANUAL_CORRECTIONS[text]
 
     # Check cache first
     cache_key = f"{context_type}:{text}"
