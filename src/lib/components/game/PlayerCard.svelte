@@ -241,8 +241,8 @@
     const skaterGridClass = $derived(
         statCount === 1
             ? "player-card__stats-grid--single"
-            : statCount >= 4
-              ? "player-card__stats-grid--skater-3" // Cap at 3 columns to prevent cramped layout
+            : statCount >= 5
+              ? "player-card__stats-grid--skater-4" // Cap at 4 columns
               : `player-card__stats-grid--skater-${statCount}`,
     );
 
@@ -564,7 +564,7 @@
                             <div class="player-card__stats w-full">
                                 <!-- Main stats row -->
                                 <div
-                                    class={`player-card__stats-grid ${skaterGridClass} grid gap-4 text-center justify-items-center w-fit mx-auto`}
+                                    class={`player-card__stats-grid ${skaterGridClass} grid gap-2 text-center justify-items-center w-fit mx-auto`}
                                 >
                                     {#if player.goals > 0}
                                         <div
