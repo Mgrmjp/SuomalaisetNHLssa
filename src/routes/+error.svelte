@@ -2,15 +2,35 @@
     import { base } from "$app/paths";
     import Snowfall from "$lib/components/ui/Snowfall.svelte";
     import { page } from "$app/stores";
+    import { onMount } from "svelte";
 
     let status = $page.status || 404;
     let message = "Sivua ei löytynyt";
+    let randomTrivia = "";
+
+    const TRIVIA_FACTS = [
+        "Jari Kurri teki 601 maalia 1251 NHL-ottelussa - keskimäärin 0.48 maalia per ottelu.",
+        "Suomi on voittanut jääkiekon MM-kultaa neljästi: 1995, 2011, 2019 ja 2022.",
+        "Teemu Selänne on NHL:n kaikkien aikojen paras suomalainen pistemies 1457 tehopisteellä.",
+        "Teemu Selänne pitää hallussaan NHL:n tulakkaiden maaliennätystä (76 maalia kaudella 1992-93).",
+        "Esa Tikkanen voitti urallaan viisi Stanley Cup -mestaruutta.",
+        "Miikka Kiprusoff voitti Vezina Trophyn NHL:n parhaana maalivahtina kaudella 2005-06.",
+        "Aleksander Barkov oli ensimmäinen suomalainen NHL-joukkueen kapteeni, joka johdatti joukkueensa Stanley Cup -mestaruuteen (2024).",
+        "Suomi voitti ensimmäisen olympiakultansa jääkiekossa Pekingissä 2022.",
+        "Saku Koivu toimi Montreal Canadiensin kapteenina 10 vuotta (1999-2009), ollen seuran ensimmäinen eurooppalainen kapteeni.",
+        "Pekka Rinne on ainoa suomalaismaalivahti, joka on tehnyt maalin NHL-ottelussa.",
+        "Tuukka Rask on Boston Bruinsin seurahistorian voitokkain maalivahti.",
+    ];
 
     if (status === 404) {
-        message = "Sivu ei löytynyt";
+        message = "Sivua ei löytynyt";
     } else if (status === 500) {
         message = "Palvelinvirhe";
     }
+
+    onMount(() => {
+        randomTrivia = TRIVIA_FACTS[Math.floor(Math.random() * TRIVIA_FACTS.length)];
+    });
 </script>
 
 <svelte:head>
@@ -24,12 +44,18 @@
         <!-- Animated Puck -->
         <div class="mb-8 flex justify-center">
             <div class="relative">
-                <div class="w-32 h-32 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl flex items-center justify-center animate-bounce">
-                    <div class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border-4 border-gray-600">
+                <div
+                    class="w-32 h-32 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl flex items-center justify-center animate-bounce"
+                >
+                    <div
+                        class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border-4 border-gray-600"
+                    >
                         <span class="text-5xl font-bold text-white">{status}</span>
                     </div>
                 </div>
-                <div class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-black/20 rounded-full blur-sm"></div>
+                <div
+                    class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-black/20 rounded-full blur-sm"
+                ></div>
             </div>
         </div>
 
@@ -39,9 +65,11 @@
         </h1>
         <p class="text-lg text-slate-600 mb-8 max-w-md mx-auto">
             {#if status === 404}
-                Peli on keskeytetty - etsimääsi sivua ei löytynyt. Kenties pelaaja on vaihtoon tai sivu on siirretty.
+                Peli on keskeytetty - etsimääsi sivua ei löytynyt. Kenties pelaaja on vaihdossa tai
+                sivu on siirretty.
             {:else}
-                Jään pinta on epätasainen - jotain odottamatonta tapahtui. Yritä uudelleen hetken kuluttua.
+                Jään pinta on epätasainen - jotain odottamatonta tapahtui. Yritä uudelleen hetken
+                kuluttua.
             {/if}
         </p>
 
@@ -78,16 +106,14 @@
         </div>
 
         <!-- Fun Hockey Facts -->
-        <div class="mt-12 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 max-w-md mx-auto">
+        <div
+            class="mt-12 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 max-w-md mx-auto"
+        >
             <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                Tie kysymys?
+                Tiesitkö?
             </p>
             <p class="text-slate-700">
-                {#if status === 404}
-                    Jari Kurri teki 601 pistettä 467 NHL-ottelussa - keskimäärin yli 1.28 pistettä per ottelu.
-                {:else}
-                    Suomi on voittanut jääkiekon MM-kultaa neljästi: 1995, 2022, 2023 ja 2024.
-                {/if}
+                {randomTrivia}
             </p>
         </div>
     </div>
@@ -95,7 +121,8 @@
 
 <style>
     @keyframes bounce {
-        0%, 100% {
+        0%,
+        100% {
             transform: translateY(0);
         }
         50% {
