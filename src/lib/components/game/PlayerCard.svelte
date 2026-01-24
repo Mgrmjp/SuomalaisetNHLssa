@@ -586,8 +586,9 @@
                                             </div>
                                             <div
                                                 class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                                title="Maalit"
                                             >
-                                                Maalit
+                                                M
                                             </div>
                                         </div>
                                     {/if}
@@ -602,8 +603,9 @@
                                             </div>
                                             <div
                                                 class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
+                                                title="Syötöt"
                                             >
-                                                Syötöt
+                                                S
                                             </div>
                                         </div>
                                     {/if}
@@ -618,8 +620,9 @@
                                             </div>
                                             <div
                                                 class="player-card__stat-label text-[10px] text-finnish-blue-600 uppercase tracking-widest mt-1 truncate font-medium"
+                                                title="Pisteet"
                                             >
-                                                Pisteet
+                                                P
                                             </div>
                                         </div>
                                     {/if}
