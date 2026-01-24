@@ -21,6 +21,9 @@ alias nhl-stats='cd /home/miikka/dev/suomalaisetnhlssa && bash scripts/quick-sta
 alias nhl-today='cd /home/miikka/dev/suomalaisetnhlssa && python3 scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d) && cp scripts/data/prepopulated/games/$(date +%Y-%m-%d).json data/prepopulated/games/'
 ```
 
+# Daily full update (Finds new players + fetches latest games)
+alias nhl-update='cd /home/miikka/dev/suomalaisetnhlssa && bash scripts/daily_update.sh'
+
 Then reload your shell:
 ```bash
 source ~/.bashrc
@@ -103,6 +106,15 @@ nhl-summary  # or bash scripts/view-week.sh
 # Quick wins/losses only
 nhl-stats  # or bash scripts/quick-stats.sh
 ```
+
+### Automatic Daily Update (Recommended)
+```bash
+# Updates player list AND fetches yesterday's games
+nhl-update  # or bash scripts/daily_update.sh
+```
+- **Best simple command** to keep everything in sync.
+- Finds new players (like Lenni Hameenaho).
+- Fetches latest stats.
 
 ## 📁 Data Location
 
