@@ -12,7 +12,7 @@
       "startTime": "2026-01-25T18:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 3,
       "empty_net_goals": 0
     },
@@ -22,7 +22,7 @@
       "awayTeam": "NJD",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-01-25T20:00:00Z",
       "isOT": false,
@@ -114,7 +114,7 @@
       "game_id": 2025020819,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T19:26:24.201976",
+      "created_at": "2026-01-25T19:33:48.794950",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
       "goals": 0,
       "assists": 1,
@@ -234,7 +234,7 @@
       "game_id": 2025020819,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T19:26:27.411202",
+      "created_at": "2026-01-25T19:33:52.197795",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
       "goals": 0,
       "assists": 0,
@@ -354,7 +354,7 @@
       "game_id": 2025020819,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T19:26:30.644723",
+      "created_at": "2026-01-25T19:33:55.468876",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/TOR/8481711.png",
       "goals": 0,
       "assists": 0,
@@ -455,6 +455,6 @@
     }
   ],
   "total_players": 3,
-  "generated_at": "2026-01-25T19:26:41.805178",
+  "generated_at": "2026-01-25T19:34:06.767995",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
