@@ -114,7 +114,7 @@
       "game_id": 2025020819,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T22:55:12.629450",
+      "created_at": "2026-01-25T23:02:41.350576",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
       "goals": 0,
       "assists": 1,
@@ -234,7 +234,7 @@
       "game_id": 2025020820,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T22:55:27.020065",
+      "created_at": "2026-01-25T23:02:56.535341",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8480009.png",
       "goals": 0,
       "assists": 1,
@@ -256,6 +256,21 @@
       "shifts": 22,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-25",
+          "opponent": "NJD",
+          "opponent_full": "New Jersey Devils",
+          "team_score": 4,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 0,
+          "assists": 1,
+          "points": 1,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-23",
           "opponent": "ANA",
@@ -315,21 +330,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-15",
-          "opponent": "BOS",
-          "opponent_full": "Boston Bruins",
-          "team_score": 2,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 1,
-          "assists": 0,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -354,7 +354,7 @@
       "game_id": 2025020819,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T22:55:15.871868",
+      "created_at": "2026-01-25T23:02:44.559221",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
       "goals": 0,
       "assists": 1,
@@ -474,7 +474,7 @@
       "game_id": 2025020820,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T22:55:30.273600",
+      "created_at": "2026-01-25T23:02:59.748913",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8481554.png",
       "goals": 0,
       "assists": 0,
@@ -496,6 +496,21 @@
       "shifts": 19,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-25",
+          "opponent": "NJD",
+          "opponent_full": "New Jersey Devils",
+          "team_score": 4,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-23",
           "opponent": "ANA",
@@ -555,21 +570,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-15",
-          "opponent": "BOS",
-          "opponent_full": "Boston Bruins",
-          "team_score": 2,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 1,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -594,7 +594,7 @@
       "game_id": 2025020820,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T22:55:24.840432",
+      "created_at": "2026-01-25T23:02:53.812387",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8484177.png",
       "goals": 0,
       "assists": 0,
@@ -616,6 +616,21 @@
       "shifts": 20,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-01-25",
+          "opponent": "SEA",
+          "opponent_full": "Seattle Kraken",
+          "team_score": 2,
+          "opponent_score": 4,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-01-23",
           "opponent": "VAN",
@@ -684,7 +699,7 @@
       "game_id": 2025020819,
       "game_date": "2026-01-25",
       "game_status": "OFF",
-      "created_at": "2026-01-25T22:55:19.136470",
+      "created_at": "2026-01-25T23:02:47.816352",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/TOR/8481711.png",
       "goals": 0,
       "assists": 0,
@@ -785,6 +800,6 @@
     }
   ],
   "total_players": 6,
-  "generated_at": "2026-01-25T22:55:40.767018",
+  "generated_at": "2026-01-25T23:03:10.335839",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
