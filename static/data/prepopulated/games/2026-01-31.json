@@ -22,7 +22,7 @@
       "awayTeam": "COL",
       "homeScore": 0,
       "awayScore": 5,
-      "gameState": "LIVE",
+      "gameState": "OFF",
       "gameType": 2,
       "startTime": "2026-01-31T18:00:00Z",
       "isOT": false,
@@ -234,7 +234,7 @@
       "game_id": 2025020860,
       "game_date": "2026-01-31",
       "game_status": "OFF",
-      "created_at": "2026-01-31T20:30:18.901517",
+      "created_at": "2026-01-31T20:43:08.835251",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
       "goals": 0,
       "assists": 2,
@@ -243,7 +243,7 @@
       "penalty_minutes": 0,
       "shots": 1,
       "plus_minus": 3,
-      "time_on_ice": "17:05",
+      "time_on_ice": "18:41",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -253,7 +253,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 21,
+      "shifts": 23,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -354,7 +354,7 @@
       "game_id": 2025020860,
       "game_date": "2026-01-31",
       "game_status": "OFF",
-      "created_at": "2026-01-31T20:30:22.195198",
+      "created_at": "2026-01-31T20:43:12.066443",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
       "goals": 0,
       "assists": 1,
@@ -363,7 +363,7 @@
       "penalty_minutes": 0,
       "shots": 2,
       "plus_minus": 1,
-      "time_on_ice": "11:42",
+      "time_on_ice": "13:35",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 1,
@@ -373,7 +373,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 18,
+      "shifts": 21,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -474,7 +474,7 @@
       "game_id": 2025020859,
       "game_date": "2026-01-31",
       "game_status": "OFF",
-      "created_at": "2026-01-31T20:30:13.183934",
+      "created_at": "2026-01-31T20:43:03.136582",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
       "goals": 0,
       "assists": 1,
@@ -594,7 +594,7 @@
       "game_id": 2025020859,
       "game_date": "2026-01-31",
       "game_status": "OFF",
-      "created_at": "2026-01-31T20:30:09.787040",
+      "created_at": "2026-01-31T20:42:59.902827",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8476469.png",
       "goals": 0,
       "assists": 0,
@@ -695,6 +695,6 @@
     }
   ],
   "total_players": 4,
-  "generated_at": "2026-01-31T20:30:45.058229",
+  "generated_at": "2026-01-31T20:43:34.200350",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
