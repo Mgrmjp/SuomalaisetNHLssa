@@ -67,6 +67,8 @@
         ($selectedDateSummary) => $selectedDateSummary?.summary || "suomalaisten NHL-ottelut"
     );
 
+    const SEO_KEYWORDS = "Suomalaiset NHL-pelaajat, pistepörssi, live-tilastot";
+
     const metaDescription = $derived(
         [selectedDateSummary, totalPlayers],
         ([$selectedDateSummary, $totalPlayers]) => {
@@ -75,7 +77,7 @@
                     ? `Seuraa ${$totalPlayers} suomalaisen NHL-tilastoja.`
                     : "Seuraa suomalaisten NHL-matkaa.";
 
-            return `${$selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText}`;
+            return `${$selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText} ${SEO_KEYWORDS}.`;
         }
     );
 
@@ -103,6 +105,7 @@
     <meta name="description" content={$metaDescription} />
     <meta property="og:title" content="Suomalaiset NHL-pelaajat - {$dynamicTitleSuffix}" />
     <meta property="og:description" content={$metaDescription} />
+    <meta name="keywords" content={SEO_KEYWORDS} />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
 </svelte:head>
 
