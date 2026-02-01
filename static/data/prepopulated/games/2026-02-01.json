@@ -69,7 +69,7 @@
       "game_id": 2025020874,
       "game_date": "2026-02-01",
       "game_status": "OFF",
-      "created_at": "2026-02-01T20:30:38.335314",
+      "created_at": "2026-02-01T20:46:50.167910",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8480829.png",
       "goals": 0,
       "assists": 0,
@@ -78,7 +78,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "01:12",
+      "time_on_ice": "04:29",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -88,7 +88,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 2,
+      "shifts": 5,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -189,16 +189,16 @@
       "game_id": 2025020874,
       "game_date": "2026-02-01",
       "game_status": "OFF",
-      "created_at": "2026-02-01T20:30:32.177968",
+      "created_at": "2026-02-01T20:46:43.573887",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8476469.png",
       "goals": 0,
       "assists": 0,
       "points": 0,
       "empty_net_goals": 0,
       "penalty_minutes": 0,
-      "shots": 0,
+      "shots": 1,
       "plus_minus": 0,
-      "time_on_ice": "03:09",
+      "time_on_ice": "05:40",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -208,7 +208,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 4,
+      "shifts": 7,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -309,7 +309,7 @@
       "game_id": 2025020874,
       "game_date": "2026-02-01",
       "game_status": "OFF",
-      "created_at": "2026-02-01T20:30:35.263080",
+      "created_at": "2026-02-01T20:46:46.863934",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 0,
       "assists": 0,
@@ -318,7 +318,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "02:18",
+      "time_on_ice": "04:24",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -328,7 +328,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 3,
+      "shifts": 6,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -410,6 +410,6 @@
     }
   ],
   "total_players": 3,
-  "generated_at": "2026-02-01T20:30:44.682325",
+  "generated_at": "2026-02-01T20:46:56.569310",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
