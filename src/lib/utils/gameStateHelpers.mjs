@@ -18,6 +18,68 @@ export const GAME_STATE = {
     IRT: 'IRT', // In review timeout
 }
 
+function normalizeGameDateString(value) {
+    if (typeof value !== 'string') {
+        return null
+    }
+    const trimmed = value.trim()
+    if (!trimmed) {
+        return null
+    }
+    const candidate = trimmed.slice(0, 10)
+    return /^\d{4}-\d{2}-\d{2}$/.test(candidate) ? candidate : null
+}
+
+function getPlayerGameDateString(player) {
+    if (!player) {
+        return null
+    }
+
+    return (
+        normalizeGameDateString(player.game_date) ||
+        normalizeGameDateString(player.gameDate) ||
+        normalizeGameDateString(player.gameDateString)
+    )
+}
+
+function isPlayerGameInPast(player) {
+    const playerDate = getPlayerGameDateString(player)
+    if (!playerDate) {
+        return false
+    }
+    const today = new Date().toISOString().slice(0, 10)
+    return playerDate < today
+}
+
+const COMPLETED_PLAYER_STATUSES = new Set(['OFF', 'FINAL'])
+
+function getPlayerGameStatus(player) {
+    if (!player) {
+        return null
+    }
+
+    const status =
+        player.game_status ||
+        player.gameStatus ||
+        player.game_state ||
+        player.gameState ||
+        null
+
+    if (typeof status !== 'string') {
+        return null
+    }
+
+    return status.trim().toUpperCase() || null
+}
+
+function isPlayerGameMarkedComplete(player) {
+    const status = getPlayerGameStatus(player)
+    if (!status) {
+        return false
+    }
+    return COMPLETED_PLAYER_STATUSES.has(status)
+}
+
 /**
  * Get game state for a player by looking up their game
  * @param {Object} player - Player object with game_id property
@@ -40,6 +102,14 @@ export function getGameStateForPlayer(player, gamesData) {
  * @returns {boolean} True if game is live
  */
 export function isPlayerGameLive(player, gamesData) {
+    if (isPlayerGameMarkedComplete(player)) {
+        return false
+    }
+
+    if (isPlayerGameInPast(player)) {
+        return false
+    }
+
     const state = getGameStateForPlayer(player, gamesData)
     
     // If state is a "finished" state, definitely not live
