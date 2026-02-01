@@ -15,7 +15,9 @@
         selectedDate,
         setDate,
         yesterdayDate,
+        games,
     } from "$lib/stores/gameData.js";
+    import { formatFinnishDateWithRelative } from "$lib/utils/dateUtils.js";
 
     const _sparkles = Array.from({ length: 12 }, () => ({
         left: `${Math.random() * 100}%`,
@@ -34,6 +36,48 @@
         $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
     );
     const totalPlayers = $derived($players?.length || 0);
+
+    function buildDateLabel(value) {
+        if (!value) {
+            return "valitulle päivälle";
+        }
+
+        const { formatted, relative } = formatFinnishDateWithRelative(value, {
+            showYear: true,
+            showWeekday: true,
+            longFormat: false,
+        });
+
+        return relative ? `${relative} (${formatted})` : formatted;
+    }
+
+    const selectedDateSummary = $derived(
+        [$selectedDate, $games],
+        ([$selectedDate, $games]) => {
+            const count = $games?.games?.length || 0;
+            const label = buildDateLabel($selectedDate);
+            const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`;
+
+            return { label, count, summary };
+        }
+    );
+
+    const dynamicTitleSuffix = $derived(
+        selectedDateSummary,
+        ($selectedDateSummary) => $selectedDateSummary?.summary || "suomalaisten NHL-ottelut"
+    );
+
+    const metaDescription = $derived(
+        [selectedDateSummary, totalPlayers],
+        ([$selectedDateSummary, $totalPlayers]) => {
+            const playerText =
+                $totalPlayers > 0
+                    ? `Seuraa ${$totalPlayers} suomalaisen NHL-tilastoja.`
+                    : "Seuraa suomalaisten NHL-matkaa.";
+
+            return `${$selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText}`;
+        }
+    );
 
     // Mobile hero stats toggle
     let showHeroStats = $state(false);
@@ -55,19 +99,10 @@
 </script>
 
 <svelte:head>
-    <title>Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot ja seuranta</title>
-    <meta
-        name="description"
-        content="Miten suomalaisilla kulkee NHL:ssä? Katso suomalaiset NHL-pelaajat, tilastot, päivän ottelut ja pistepörssi yhdestä paikasta."
-    />
-    <meta
-        property="og:title"
-        content="Suomalaiset NHL-pelaajat - Reaaliaikaiset tilastot ja seuranta"
-    />
-    <meta
-        property="og:description"
-        content="Miten suomalaisilla kulkee NHL:ssä? Katso suomalaiset NHL-pelaajat, tilastot, päivän ottelut ja pistepörssi yhdestä paikasta."
-    />
+    <title>Suomalaiset NHL-pelaajat - {$dynamicTitleSuffix}</title>
+    <meta name="description" content={$metaDescription} />
+    <meta property="og:title" content="Suomalaiset NHL-pelaajat - {$dynamicTitleSuffix}" />
+    <meta property="og:description" content={$metaDescription} />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
 </svelte:head>
 
