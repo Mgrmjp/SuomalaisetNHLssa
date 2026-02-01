@@ -60,18 +60,18 @@
     });
 
     const dynamicTitleSuffix = $derived.by(() =>
-        $selectedDateSummary?.summary || "suomalaisten NHL-ottelut"
+        selectedDateSummary?.summary || "suomalaisten NHL-ottelut"
     );
 
     const SEO_KEYWORDS = "Suomalaiset NHL-pelaajat, pistepörssi, live-tilastot";
 
     const metaDescription = $derived.by(() => {
         const playerText =
-            $totalPlayers > 0
-                ? `Seuraa ${$totalPlayers} suomalaisen NHL-tilastoja.`
+            totalPlayers > 0
+                ? `Seuraa ${totalPlayers} suomalaisen NHL-tilastoja.`
                 : "Seuraa suomalaisten NHL-matkaa.";
 
-        return `${$selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText} ${SEO_KEYWORDS}.`;
+        return `${selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText} ${SEO_KEYWORDS}.`;
     });
 
     // Mobile hero stats toggle
