@@ -22,7 +22,7 @@
       "awayTeam": "BOS",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-02-01T23:30:00Z",
       "isOT": false,
@@ -69,7 +69,7 @@
       "game_id": 2025020874,
       "game_date": "2026-02-01",
       "game_status": "OFF",
-      "created_at": "2026-02-01T22:55:45.894021",
+      "created_at": "2026-02-01T23:04:56.617338",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 1,
       "assists": 0,
@@ -189,7 +189,7 @@
       "game_id": 2025020874,
       "game_date": "2026-02-01",
       "game_status": "OFF",
-      "created_at": "2026-02-01T22:55:49.164297",
+      "created_at": "2026-02-01T23:04:59.953172",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8480829.png",
       "goals": 0,
       "assists": 0,
@@ -309,7 +309,7 @@
       "game_id": 2025020874,
       "game_date": "2026-02-01",
       "game_status": "OFF",
-      "created_at": "2026-02-01T22:55:42.630896",
+      "created_at": "2026-02-01T23:04:53.330291",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8476469.png",
       "goals": 0,
       "assists": 0,
@@ -410,6 +410,6 @@
     }
   ],
   "total_players": 3,
-  "generated_at": "2026-02-01T22:55:55.572893",
+  "generated_at": "2026-02-01T23:05:06.385269",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
