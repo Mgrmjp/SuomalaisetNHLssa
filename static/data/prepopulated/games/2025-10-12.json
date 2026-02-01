@@ -10,11 +10,11 @@
       "gameState": "OFF",
       "gameType": 2,
       "startTime": "2025-10-12T23:00:00Z",
-      "finnish_players_count": 1,
-      "empty_net_goals": 0,
-      "period": 3,
       "isOT": false,
-      "isSO": false
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 1,
+      "empty_net_goals": 0
     }
   ],
   "players": [
@@ -35,11 +35,11 @@
       "game_result": "L",
       "game_venue": "Madison Square Garden",
       "game_city": "New York",
-      "game_address": "4 Pennsylvania Plaza, City of New York, New York, United States",
+      "game_address": "4 Pennsylvania Plaza, New York, New York, United States",
       "game_id": 2025020038,
       "game_date": "2025-10-12",
       "game_status": "OFF",
-      "created_at": "2026-01-06T01:28:20.728411",
+      "created_at": "2026-02-01T17:09:07.283668",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NYR/8480001.png",
       "goals": 0,
       "assists": 0,
@@ -60,10 +60,86 @@
       "short_handed_assists": 0,
       "shifts": 17,
       "average_ice_time": "00:00",
-      "recent_results": []
+      "recent_results": [
+        {
+          "date": "2026-01-31",
+          "opponent": "PIT",
+          "opponent_full": "Pittsburgh Penguins",
+          "team_score": 5,
+          "opponent_score": 6,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
+        {
+          "date": "2026-01-29",
+          "opponent": "NYI",
+          "opponent_full": "New York Islanders",
+          "team_score": 1,
+          "opponent_score": 2,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
+        {
+          "date": "2026-01-28",
+          "opponent": "NYI",
+          "opponent_full": "New York Islanders",
+          "team_score": 2,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
+        {
+          "date": "2026-01-26",
+          "opponent": "BOS",
+          "opponent_full": "Boston Bruins",
+          "team_score": 4,
+          "opponent_score": 3,
+          "result": "W",
+          "goals": 0,
+          "assists": 1,
+          "points": 1,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
+        {
+          "date": "2026-01-19",
+          "opponent": "ANA",
+          "opponent_full": "Anaheim Ducks",
+          "team_score": 3,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        }
+      ]
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-01-06T01:28:24.240092",
+  "generated_at": "2026-02-01T17:09:11.333861",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }

@@ -51,35 +51,28 @@
         return relative ? `${relative} (${formatted})` : formatted;
     }
 
-    const selectedDateSummary = $derived(
-        [$selectedDate, $games],
-        ([$selectedDate, $games]) => {
-            const count = $games?.games?.length || 0;
-            const label = buildDateLabel($selectedDate);
-            const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`;
+    const selectedDateSummary = $derived.by(() => {
+        const count = $games?.games?.length || 0;
+        const label = buildDateLabel($selectedDate);
+        const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`;
 
-            return { label, count, summary };
-        }
-    );
+        return { label, count, summary };
+    });
 
-    const dynamicTitleSuffix = $derived(
-        selectedDateSummary,
-        ($selectedDateSummary) => $selectedDateSummary?.summary || "suomalaisten NHL-ottelut"
+    const dynamicTitleSuffix = $derived.by(() =>
+        $selectedDateSummary?.summary || "suomalaisten NHL-ottelut"
     );
 
     const SEO_KEYWORDS = "Suomalaiset NHL-pelaajat, pistepörssi, live-tilastot";
 
-    const metaDescription = $derived(
-        [selectedDateSummary, totalPlayers],
-        ([$selectedDateSummary, $totalPlayers]) => {
-            const playerText =
-                $totalPlayers > 0
-                    ? `Seuraa ${$totalPlayers} suomalaisen NHL-tilastoja.`
-                    : "Seuraa suomalaisten NHL-matkaa.";
+    const metaDescription = $derived.by(() => {
+        const playerText =
+            $totalPlayers > 0
+                ? `Seuraa ${$totalPlayers} suomalaisen NHL-tilastoja.`
+                : "Seuraa suomalaisten NHL-matkaa.";
 
-            return `${$selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText} ${SEO_KEYWORDS}.`;
-        }
-    );
+        return `${$selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText} ${SEO_KEYWORDS}.`;
+    });
 
     // Mobile hero stats toggle
     let showHeroStats = $state(false);
