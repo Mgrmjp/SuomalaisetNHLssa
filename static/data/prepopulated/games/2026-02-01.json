@@ -1,0 +1,54 @@
+{
+  "date": "2026-02-01",
+  "games": [
+    {
+      "gameId": 2025020874,
+      "homeTeam": "CAR",
+      "awayTeam": "LAK",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 2,
+      "startTime": "2026-02-01T20:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2025020873,
+      "homeTeam": "TBL",
+      "awayTeam": "BOS",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 2,
+      "startTime": "2026-02-01T23:30:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2025020875,
+      "homeTeam": "ANA",
+      "awayTeam": "VGK",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 2,
+      "startTime": "2026-02-02T02:30:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    }
+  ],
+  "players": [],
+  "total_players": 0,
+  "generated_at": "2026-02-01T06:17:47.200422",
+  "source": "NHL API - Enhanced with Empty Net Goal Tracking"
+}
