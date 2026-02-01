@@ -44,6 +44,20 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
     news_items = []
 
     MANUAL_NEWS = {
+        (2026, 5): [
+            {
+                "title": "Oliver Kapanen debytoi Montrealissa",
+                "description": "Roope Hintzin serkku Oliver Kapanen pelasi ensimmäiset NHL-ottelunsa Montreal Canadiensissa tuloksilla 1+2. Kokenut keskushyökkääjä toi kokemusta nuoreaan kanada-joukkueeseen.",
+                "source": "NHL.com",
+                "url": "https://www.nhl.com/canadiens/news/oliver-kapanen-debut"
+            },
+            {
+                "title": "Heiskanen taklaaantui – poissa pelistä viikkoja",
+                "description": "Dallas Starsin tähtipuolustaja Miro Heiskanen joutui hankalan taklauksen kohteeksi ja joutui poissaoleon peleiksi. Loukkaantuminen on kova isku Dallasin puolustukselle.",
+                "source": "Dallas Morning News",
+                "url": "https://www.dallasnews.com/sports/stars/"
+            }
+        ],
         (2026, 2): [
             {
                 "title": "Juuso Välimäki vahvistamaan Hurricanesia",
@@ -276,26 +290,32 @@ def format_date_finnish(date_str):
 
 def generate_creative_title(week, year, top_player_name):
     """Generate a more engaging title for the article"""
+    # More creative, less formulaic templates
     if top_player_name == "Suomalaiset":
         templates = [
-            f"Viikko {week}: suomalaiset iskussa",
-            f"Suomalaisilta tasainen viikko {week}",
-            f"Viikon {week} suomalaiskatsaus",
-            f"Viikko {week}/{year}: suomalaiset vauhdissa",
+            f"Suomalaisia NHL-tähtiä vauhdissa viikolla {week}",
+            f"NHL-viikko {week}: suomalaista voimaa",
+            f"Viikko {week}: suomalaispelaajat iskivät",
+            f"Leijonat maalittelevät viikolla {week}",
+            f"Suomalaisrondo NHL:ssä – viikko {week}",
         ]
     else:
         templates = [
-            f"Viikko {week}: {top_player_name} nosti suomalaiset esiin",
-            f"{top_player_name} näytti suunnan viikolla {week}",
-            f"Viikko {week}/{year}: {top_player_name} piti tahtia",
-            f"{top_player_name} loisti viikolla {week}",
-            f"Viikon {week} isoin nimi: {top_player_name}",
             f"{top_player_name} sytytti suomalaiset viikolla {week}",
-            f"Viikko {week}: {top_player_name} kantoi tehot",
-            f"{top_player_name} nappasi viikon {week} otsikot",
-            f"Viikko {week} pähkinänkuoressa: {top_player_name} edellä",
+            f"Leijonan kynnet: {top_player_name} iski viikolla {week}",
+            f"Suomalaisodottaja {top_player_name} rääväisi viikolla {week}",
+            f"{top_player_name} johti suomalaiset voittoon viikolla {week}",
+            f"NHL-viikko {week}: {top_player_name} ykkönen",
+            f"{top_player_name}: viikon {week} suomalähti",
+            f"Suomalaisten tähti {top_player_name} loisti NHL:ssä",
+            f"{top_player_name} näytti tietä viikolla {week}",
+            f"Leijonat kulkevat – {top_player_name} edellä viikolla {week}",
+            f"Viikko {week}: {top_player_name} nostaa tasoa",
+            f"{top_player_name} takoi suomalaisille voitot viikolla {week}",
+            f"Suomalaisvoittoja – {top_player_name} kärjessä",
+            f"{top_player_name} hurjasteli viikolla {week}",
         ]
-    
+
     # Use week as seed to keep title stable for the same week across regenerations
     random.seed(f"{year}-{week}")
     return random.choice(templates)
