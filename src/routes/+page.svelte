@@ -94,10 +94,10 @@
 </script>
 
 <svelte:head>
-    <title>Suomalaiset NHL-pelaajat - {$dynamicTitleSuffix}</title>
-    <meta name="description" content={$metaDescription} />
-    <meta property="og:title" content="Suomalaiset NHL-pelaajat - {$dynamicTitleSuffix}" />
-    <meta property="og:description" content={$metaDescription} />
+    <title>Suomalaiset NHL-pelaajat - {dynamicTitleSuffix}</title>
+    <meta name="description" content={metaDescription} />
+    <meta property="og:title" content="Suomalaiset NHL-pelaajat - {dynamicTitleSuffix}" />
+    <meta property="og:description" content={metaDescription} />
     <meta name="keywords" content={SEO_KEYWORDS} />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
 </svelte:head>
