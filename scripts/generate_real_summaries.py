@@ -43,188 +43,21 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
     """Generate dynamic news highlights based on weekly statistics"""
     news_items = []
 
-    MANUAL_NEWS = {
-        (2026, 5): [
-            {
-                "title": "Oliver Kapanen debytoi Montrealissa",
-                "description": "Roope Hintzin serkku Oliver Kapanen pelasi ensimmäiset NHL-ottelunsa Montreal Canadiensissa tuloksilla 1+2. Kokenut keskushyökkääjä toi kokemusta nuoreaan kanada-joukkueeseen.",
-                "source": "NHL.com",
-                "url": "https://www.nhl.com/canadiens/news/oliver-kapanen-debut"
-            },
-            {
-                "title": "Heiskanen taklaaantui – poissa pelistä viikkoja",
-                "description": "Dallas Starsin tähtipuolustaja Miro Heiskanen joutui hankalan taklauksen kohteeksi ja joutui poissaoleon peleiksi. Loukkaantuminen on kova isku Dallasin puolustukselle.",
-                "source": "Dallas Morning News",
-                "url": "https://www.dallasnews.com/sports/stars/"
-            }
-        ],
-        (2026, 2): [
-            {
-                "title": "Juuso Välimäki vahvistamaan Hurricanesia",
-                "description": "Carolina Hurricanes hankki suomalaispuolustaja Juuso Välimäen Utah Mammothista. Välimäki on toipunut polvivammastaan ja hakee uutta alkua Carolinassa.",
-                "source": "NHL.com",
-                "url": "https://www.nhl.com/hurricanes/news/canes-acquire-juuso-valimaki-from-utah/c-347492984"
-            },
-            {
-                "title": "Trade-huhuja: Kotkaniemi mahdollisesti siirtolistalla",
-                "description": "Carolina Hurricanesin kerrotaan harkitsevan tarjouksia Jesperi Kotkaniemestä. Suomalaiskeskushyökkääjä on jäänyt vähemmälle peliajalle ja seura saattaa etsiä hänelle uutta osoitetta.",
-                "source": "Sportsnet",
-                "url": "https://www.sportsnet.ca/nhl/rumors"
-            },
-            {
-                "title": "Rantanen ja Heiskanen lähellä virstanpylväitä",
-                "description": "Mikko Rantanen on vain muutaman maalin päässä yhdeksännestä peräkkäisestä 20 maalin kaudestaan. Miro Heiskanen puolestaan lähestyy Janne Niinimaan tehopistemäärää suomalaispuolustajien kaikkien aikojen listalla.",
-                "source": "NHL Tilastot",
-                "url": "https://www.nhl.com/stats/skaters?reportType=season&seasonFrom=20252026&seasonTo=20252026&gameType=2&sort=points&nationalityCode=FIN"
-            }
-        ],
-        (2026, 1): [
-            {
-                "title": "Leijonien olympiajoukkue julkaistu – Kapanen korvaa Barkovin",
-                "description": "Suomen joukkue Milanon 2026 olympialaisiin on nimetty. Aleksander Barkov jää sivuun loukkaantumisen vuoksi, ja hänen paikkansa ottaa nuori Oliver Kapanen. Joukkueen tähtinä häärivät Rantanen, Aho ja Heiskanen.",
-                "source": "Olympics.com",
-                "url": "https://www.olympics.com/en/news/finland-men-ice-hockey-roster-milano-cortina-2026"
-            },
-            {
-                "title": "Pikkuleijonille neljäs sija MM-kisoissa",
-                "description": "Suomen alle 20-vuotiaiden maajoukkue sijoittui neljänneksi nuorten MM-kisoissa. Julius Miettinen ja Oliver Suvanto olivat joukkueen näkyvimpiä hahmoja.",
-                "source": "YLE Urheilu",
-                "url": "https://yle.fi/a/74-20138241"
-            }
-        ],
-        (2025, 52): [
-            {
-                "title": "Eeli Tolvanen hurjassa iskussa joulun alla",
-                "description": "Seattle Krakenin Eeli Tolvanen mätti viikkoon tehot 2+4. Joulukuun 20. päivän ottelussa hän merkkautti maalin ja syötön, varmistaen paikkansa viikon tehokkaimpana suomalaisena.",
-                "source": "NHL.com",
-                "url": "https://www.nhl.com/player/eeli-tolvanen-8480009"
-            },
-            {
-                "title": "Jani Nyman vakuuttaa Seattlessa",
-                "description": "Nuori Jani Nyman on saanut vastuuta Seattle Krakenin kokoonpanossa ja osoittanut pystyvänsä pelaamaan NHL-tasolla. Nymanin fyysinen peli ja laukaus ovat herättäneet huomiota.",
-                "source": "Times-Colonist",
-                "url": "https://www.timescolonist.com/sports"
-            }
-        ],
-        (2025, 51): [
-            {
-                "title": "Sebastian Aho nöyryytti Bobrovskya läpiajosta",
-                "description": "Carolina Hurricanesin Sebastian Aho karkasi läpiajoon Floridaa vastaan ja sijoitti kiekon tyylikkäästi Sergei Bobrovskyn jalkojen välistä maaliin joulukuun 19. päivänä.",
-                "source": "NHL Video",
-                "url": "https://www.nhl.com/video/aho-scores-on-breakaway-6401928374001"
-            },
-            {
-                "title": "Mikko Rantasen tunteet kuumenivat San Josea vastaan",
-                "description": "Dallasin Mikko Rantanen kävi kuumana saatuaan mailasta käsilleen San Josea vastaan. Rantanen vastasi huutoon iskemällä ottelussa kaksi syöttöpistettä.",
-                "source": "Dallas Morning News",
-                "url": "https://www.dallasnews.com/sports/stars/"
-            }
-        ],
-        (2025, 49): [
-            {
-                "title": "Aatu Räty vahvassa vireessä Vancouverissa",
-                "description": "Vancouver Canucksin Aatu Räty on löytänyt tehorakonsa joulukuun alussa. Räty keräsi viikon kolmeen otteluun tehot 2+3 ja nousi suomalaispörssin kärkeen.",
-                "source": "Vancouver Sun",
-                "url": "https://vancouversun.com/category/sports/hockey/nhl/vancouver-canucks/"
-            }
-        ],
-        (2025, 48): [
-            {
-                "title": "Roope Hintzin pisteputki jatkuu",
-                "description": "Dallas Starsin Roope Hintz oli viikon tehokkain suomalainen keräten viisi tehopistettä. Hintz on ollut alkukauden yksi Dallasin tasaisimmista suorittajista.",
-                "source": "NHL Statistics",
-                "url": "https://www.nhl.com/stats/skaters"
-            },
-            {
-                "title": "Ukko-Pekka Luukkoselle kaksi voittoa putkeen",
-                "description": "Buffalo Sabresin Ukko-Pekka Luukkonen torjui joukkueelleen kaksi tärkeää voittoa marraskuun lopulla ja vankisti asemaansa ykkösmaalivahtina.",
-                "source": "Buffalo News",
-                "url": "https://buffalonews.com/sports/sabres/"
-            }
-        ],
-        (2025, 45): [
-             {
-                "title": "Mikko Rantanen 300 maalin kerhoon",
-                "description": "Mikko Rantanen teki historiaa iskemällä kaksi maalia Edmonton Oilersia vastaan 4. marraskuuta. Hänestä tuli vasta neljäs suomalaispelaaja NHL:n historiassa, joka on saavuttanut 300 maalin rajapyykin.",
-                "source": "NHL.com",
-                "url": "https://www.nhl.com/news/mikko-rantanen-300-career-goals-nhl"
-            },
-            {
-                "title": "Miro Heiskasen neljän syötön ilta",
-                "description": "Miro Heiskanen oli pysäyttämätön marraskuun 6. päivän ottelussa merkkauttaen peräti neljä syöttöpistettä. Heiskanen on palannut tasolleen täysin alun loukkaantumishuolien jälkeen.",
-                "source": "Dallas Stars",
-                "url": "https://www.nhl.com/stars/news/"
-            },
-            {
-                "title": "Anton Lundellille alivoimamaali",
-                "description": "Florida Panthersin taitava keskushyökkääjä Anton Lundell iski upean alivoimamaalin marraskuun alussa osoittaen monipuolisuuttaan.",
-                "source": "Florida Panthers",
-                "url": "https://www.nhl.com/panthers/news/"
-            }
-        ],
-        (2025, 44): [
-             {
-                "title": "Artturi Lehkoselle 300 tehopistettä täyteen",
-                "description": "Colorado Avalanchen Artturi Lehkonen saavutti urallaan 300 tehopisteen rajapyykin syöttöpisteellä 1. marraskuuta pelatussa ottelussa.",
-                "source": "Colorado Avalanche",
-                "url": "https://www.nhl.com/avalanche/news/"
-            },
-            {
-                 "title": "Brad Lambertin uran avausmaali NHL:ssä",
-                 "description": "Winnipeg Jetsin lupaus Brad Lambert iski NHL-uransa ensimmäisen maalin marraskuun alussa. Lambert on yksi seuratuimmista suomalaisnuorukaisista tällä kaudella.",
-                 "source": "Winnipeg Jets",
-                 "url": "https://www.nhl.com/jets/news/"
-            }
-        ],
-        (2025, 43): [
-            {
-                "title": "Artturi Lehkonen pelasi 600. NHL-ottelunsa",
-                "description": "Artturi Lehkonen rikkoi 600 pelatun NHL-ottelun rajan lokakuun lopulla. Lehkonen on ollut tärkeä palanen Coloradon hyökkäyksessä koko alkukauden.",
-                "source": "NHL.com",
-                "url": "https://www.nhl.com/player/artturi-lehkonen-8477479"
-            },
-            {
-                 "title": "Patrik Laine pitkään sivussa vatsalihasvamman vuoksi",
-                 "description": "Montreal Canadiensin Patrik Laineen paluu kaukaloihin viivästyy vatsalihasvamman vuoksi. Laineen arvioidaan olevan sivussa vielä useita viikkoja.",
-                 "source": "NHL.com",
-                 "url": "https://www.nhl.com/news/patrik-laine-injury-update"
-            }
-        ],
-        (2025, 40): [
-            {
-                "title": "Aleksander Barkoville vakava polvivamma harjoitusleirillä",
-                "description": "Florida Panthersin kapteeni Aleksander Barkov loukkaantui harjoitusleirillä. Polvivamma vaatii leikkauksen ja pitää tähden sivussa suurimman osan kaudesta.",
-                "source": "Miami Herald",
-                "url": "https://www.miamiherald.com/sports/nhl/florida-panthers/article292552994.html"
-            },
-            {
-                "title": "Ukko-Pekka Luukkonen loukkaantui harjoitusottelussa",
-                "description": "Buffalo Sabresin maalivahti Ukko-Pekka Luukkonen kärsi vammasta harjoituskauden lopulla, mutta paluu tositoimiin on odotettavissa pian.",
-                "source": "Buffalo Sabres",
-                "url": "https://www.nhl.com/sabres/news/"
-            }
-        ]
-    }
-
-
-    # Add manual news for the specific week if available
-    if (year, week) in MANUAL_NEWS:
-        news_items.extend(MANUAL_NEWS[(year, week)])
-
+    # No manual news - only auto-generated from actual game stats
 
     # 1. Highlight Top Scorer
     skaters = {name: stats for name, stats in players.items() if stats.get("position") != "G"}
     sorted_players = sorted(skaters.items(), key=lambda x: (x[1]['points'], x[1]['goals']), reverse=True)
-    
+
     if sorted_players:
         top_name, top_stats = sorted_players[0]
         points = top_stats['points']
         goals = top_stats['goals']
         assists = top_stats['assists']
-        
+
         title = f"{top_name} viikon tehokkain suomalainen"
         desc = f"{top_name} johti suomalaisrintamaa tehoilla {goals}+{assists}={points}."
-        
+
         # Check for multi-point games
         player_games = [g for g in games if g['name'] == top_name]
         big_games = [g for g in player_games if g.get('points', 0) >= 3]
@@ -306,7 +139,7 @@ def generate_creative_title(week, year, top_player_name):
             f"Suomalaisodottaja {top_player_name} rääväisi viikolla {week}",
             f"{top_player_name} johti suomalaiset voittoon viikolla {week}",
             f"NHL-viikko {week}: {top_player_name} ykkönen",
-            f"{top_player_name}: viikon {week} suomalähti",
+            f"Viikon {week} suomalähti: {top_player_name}",
             f"Suomalaisten tähti {top_player_name} loisti NHL:ssä",
             f"{top_player_name} näytti tietä viikolla {week}",
             f"Leijonat kulkevat – {top_player_name} edellä viikolla {week}",
