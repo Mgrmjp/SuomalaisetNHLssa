@@ -1,0 +1,257 @@
+# Suomalaiset NHL:ssä - LLM Context
+
+## Project Overview
+
+A static SvelteKit web app that tracks Finnish NHL players' statistics and standings.
+Data is fetched from NHL API, processed with Python scripts, and baked into static HTML.
+
+**Key Concept**: Finnish name correction (ä, ö, å) happens server-side, then static HTML is served.
+
+---
+
+## Tech Stack
+
+- **SvelteKit** with `adapter-static` - generates static HTML
+- **Svelte 5** with runes (`$state`, `$derived`, `$effect`)
+- **Tailwind CSS 4** for styling
+- **Python 3.10** for data collection scripts
+- **TypeScript** for type safety
+- **Vitest** for testing
+- **Biome** for linting/formatting
+
+---
+
+## Critical Architecture Points
+
+### Static Site Generation
+- Site is built to `build/` directory
+- All data is pre-baked into JSON or HTML during build
+- No server-side rendering at runtime
+- `fetchLocalJSON()` in `src/lib/utils/apiHelpers.js` loads data from `static/data/`
+
+### Data Flow
+
+1. **Python scripts** fetch from NHL API → `static/data/prepopulated/games/YYYY-MM-DD.json`
+2. **Game data** contains only Finnish players (filtered by cached player list)
+3. **Manifest** (`static/data/games_manifest.json`) lists available dates
+4. **Frontend** reads from `static/data/` via `fetchLocalJSON()`
+
+### Player Data Sources
+
+- **Cache**: `scripts/data_collection/finnish/cache/finnish-players.json` (source of truth)
+- **Roster**: `static/data/players/finnish-roster.json` (frontend reads this)
+- **Sync**: Run `python scripts/data_collection/finnish/sync_roster.py` to update roster from cache
+
+---
+
+## Key Files and Locations
+
+### Frontend Routes
+- `src/routes/+page.svelte` - Main page (daily games)
+- `src/routes/pisteporssi/+page.svelte` - Leaderboard
+- `src/routes/joukkueet/+page.svelte` - Teams listing
+- `src/routes/sarjataulukko/+page.svelte` - Standings
+
+### Data Services
+- `src/lib/services/standingsService.js` - Calculates standings from game data
+- `src/lib/services/dataService.js` - Loads game data by date
+- `src/lib/stores/gameData.js` - Svelte stores for game/standings data
+
+### Utilities
+- `src/lib/utils/apiHelpers.js` - `fetchLocalJSON()` for loading static data
+- `src/lib/utils/teamMapping.js` - Team abbrev → full names
+- `src/lib/utils/nhlStructure.js` - Conference/division structure
+- `src/lib/utils/finnishNameUtils.js` - Finnish name corrections (ä, ö, å)
+
+### Data Collection Scripts
+- `scripts/data_collection/finnish/build_cache.py` - Scan NHL rosters for Finnish players
+- `scripts/data_collection/finnish/sync_roster.py` - Sync cache to static roster
+- `scripts/data_collection/finnish/fetch.py` - Fetch game data for specific date
+- `scripts/data_collection/generate_manifest.py` - Regenerate games manifest
+- `scripts/data_collection/validate_manifest.py` - Validate manifest matches game files
+
+### Workflows
+- `.github/workflows/daily-update.yml` - Daily data fetch + manifest + roster sync
+- `.github/workflows/realtime-update.yml` - Realtime polling during games
+
+---
+
+## Code Conventions
+
+### Svelte 5 Runes
+- Use `$state()` for local component state
+- Use `$derived()` for computed values
+- Use `$effect()` for side effects (not for derived values)
+- Use `$props()` for component props
+
+### TypeScript
+- Files are `.svelte` or `.js` (TypeScript via JSDoc comments)
+- Types defined in `src/lib/types/index.d.ts`
+- Use `/** @type {Type} */` for type assertions
+
+### Styling
+- Tailwind CSS utility classes
+- Component-specific styles in `<style>` blocks
+- No CSS modules or CSS-in-JS objects
+
+### Language
+- UI is in Finnish (labels, headings, messages)
+- Code comments in English
+- Player names may contain Finnish characters (ä, ö, å)
+
+---
+
+## Common Tasks
+
+### Adding New Features
+1. Check if data exists in `static/data/`
+2. If new data needed, check Python scripts in `scripts/data_collection/`
+3. Frontend: use `fetchLocalJSON('/data/...')` to load data
+4. Follow Svelte 5 patterns with runes
+
+### Updating Player Data
+```bash
+# Rebuild Finnish players cache (scans all NHL rosters)
+python scripts/data_collection/finnish/build_cache.py
+
+# This auto-syncs to static/data/players/finnish-roster.json
+```
+
+### Fetching New Game Data
+```bash
+# Fetch specific date
+python scripts/data_collection/finnish/fetch.py 2026-01-23
+
+# Regenerate manifest (after new dates added)
+python scripts/data_collection/generate_manifest.py
+```
+
+### Building and Testing
+```bash
+npm run dev          # Dev server
+npm run build        # Production build
+npm run check        # Type checking
+npm run lint         # Lint with Biome
+npm run test         # Run tests
+```
+
+---
+
+## Important Notes for LLMs
+
+### Finnish Name Correction
+- Happens server-side via `finnish_text_utils.py` (OpenAI-based)
+- Results are baked into static JSON
+- Frontend just displays what's in the data
+- DO NOT try to correct names on the frontend
+
+### Standings Calculation
+- Standings are NOT fetched from NHL API
+- They are calculated from game data in `standingsService.js`
+- Process: iterate all games → track wins/losses/OT → calculate rankings
+- This means standings may differ from NHL if game data is incomplete
+
+### OT/SO Detection
+- Game data has `isOT`, `isSO`, and `period` fields
+- `period > 3` indicates overtime
+- `isSO: true` indicates shootout
+- Code in `standingsService.js`: `const isOT = game.period > 3 || game.isOT === true || game.isSO === true;`
+
+### Manifest Synchronization
+- `games_manifest.json` MUST list all available game dates
+- If manifest is outdated, standings will be incomplete
+- Both workflows now regenerate manifest automatically
+
+### Player Roster Synchronization
+- `finnish-roster.json` is the frontend data source
+- `finnish-players.json` (cache) is the source of truth
+- They must stay in sync via `sync_roster.py`
+
+---
+
+## File Structure Summary
+
+```
+suomalaisetnhlssa/
+├── src/
+│   ├── routes/              # SvelteKit pages (file-based routing)
+│   ├── lib/
+│   │   ├── components/      # Svelte components
+│   │   ├── services/        # Data processing services
+│   │   ├── stores/          # Svelte stores
+│   │   ├── utils/           # Utility functions
+│   │   └── types/          # TypeScript definitions
+│   └── assets/             # Static assets (copied to build/)
+├── scripts/
+│   └── data_collection/   # Python data fetching scripts
+│       ├── finnish/        # Finnish player specific scripts
+│       └── config.py       # Shared configuration
+├── static/
+│   ├── data/              # Static data (served as-is)
+│   │   ├── prepopulated/  # Game data by date
+│   │   ├── players/       # Player rosters
+│   │   └── games_manifest.json
+│   └── logo.svg
+└── package.json
+```
+
+---
+
+## Data Format Examples
+
+### Game Data (`static/data/prepopulated/games/YYYY-MM-DD.json`)
+```json
+{
+  "date": "2026-01-21",
+  "games": [
+    {
+      "gameId": 2025020788,
+      "homeTeam": "TOR",
+      "awayTeam": "DET",
+      "homeScore": 1,
+      "awayScore": 2,
+      "gameState": "OFF",
+      "gameType": 2,
+      "isOT": true,
+      "isSO": false,
+      "period": 4,
+      "players": []
+    }
+  ]
+}
+```
+
+### Player Data (`static/data/players/finnish-roster.json`)
+```json
+{
+  "8475798": {
+    "playerId": 8475798,
+    "name": "Mikael Granlund",
+    "position": "C",
+    "sweaterNumber": 64,
+    "birthDate": "1992-02-26",
+    "birthCity": { "default": "Oulu" },
+    "birthCountry": "FIN",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8475798.png",
+    "isActive": true,
+    "currentTeam": "ANA"
+  }
+}
+```
+
+---
+
+## Testing
+
+- Tests in `tests/` directory
+- Use `npm run test` to run Vitest
+- Test files use `.test.js` extension
+
+---
+
+## Deployment
+
+- GitHub Actions builds and deploys to GitHub Pages
+- Triggered: daily at 06:00 UTC, or manually via `workflow_dispatch`
+- Build output: `build/` directory
+- No server required - pure static HTML/CSS/JS
