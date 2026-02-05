@@ -36,12 +36,17 @@ jobs:
           # It automatically handles the late-night/early-morning date logic
           python scripts/data_collection/realtime_poll.py --once
 
+      - name: Sync Finnish players roster
+        if: steps.poll.outputs.updated == 'true'
+        run: |
+          python scripts/data_collection/finnish/sync_roster.py
+
       - name: Commit and push updated data
         if: steps.poll.outputs.updated == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

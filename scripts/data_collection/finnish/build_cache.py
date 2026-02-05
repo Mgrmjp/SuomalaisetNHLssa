@@ -153,6 +153,11 @@ def main():
     print(f"📁 Saved to: {FINNISH_CACHE_FILE}")
     print()
 
+    # Sync to static roster location for frontend
+    print("🔄 Syncing to static roster...")
+    from sync_roster import sync_roster
+    sync_roster()
+
     # Print summary by position
     positions = {}
     for player_id, player in finnish_players.items():

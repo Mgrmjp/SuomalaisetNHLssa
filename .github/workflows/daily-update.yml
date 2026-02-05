@@ -40,11 +40,16 @@ jobs:
           source .venv/bin/activate
           python scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d)
 
+      - name: Sync Finnish players roster
+        run: |
+          source .venv/bin/activate
+          python scripts/data_collection/finnish/sync_roster.py
+
       - name: Commit and push updated data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json
           git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git push
 
