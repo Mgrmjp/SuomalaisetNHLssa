@@ -5,12 +5,17 @@
     // biome-ignore lint/correctness/noUnusedImports: used for types/stores
     import { loadStandings, standings, standingsLoading } from "$lib/stores/gameData.js";
     import { getCurrentSeason } from "$lib/api/nhlApi.js";
+    import { fetchLocalJSON } from "$lib/utils/apiHelpers.js";
 
     let _error = $state(null);
     // biome-ignore lint/style/useConst: Svelte 5 state
     let _activeConference = $state("eastern"); // 'eastern' or 'western'
     // biome-ignore lint/style/useConst: Svelte 5 state
     let _showAdvancedStats = $state(false); // Advanced stats toggle
+    // biome-ignore lint/style/useConst: Svelte 5 state
+    let _lastGameDate = $state(""); // Most recent game date in manifest
+    // biome-ignore lint/style/useConst: Svelte 5 state
+    let _manifestLastUpdated = $state(""); // Manifest last updated timestamp
 
     // Get current season
     const _currentSeason = getCurrentSeason();
@@ -50,6 +55,12 @@
     // Load standings on component mount
     onMount(async () => {
         try {
+            // Fetch manifest to get last game date
+            const manifest = await fetchLocalJSON('/data/games_manifest.json');
+            if (manifest?.games?.length) {
+                _lastGameDate = manifest.games[manifest.games.length - 1];
+                _manifestLastUpdated = manifest.lastUpdated;
+            }
             await loadStandings();
         } catch (err) {
             _error = /** @type {Error} */ (err).message || "Failed to load standings";
@@ -234,9 +245,18 @@
         <p class="text-sm text-gray-500">
             Sarjataulukot päivitetään automaattisesti ottelutulosten perusteella.
         </p>
-        <p class="text-xs text-gray-400 mt-2">
-            Päivitetty: {new Date().toLocaleString("fi-FI")}
-        </p>
+        {#if _lastGameDate}
+            <p class="text-xs text-gray-400 mt-2">
+                Tiedot through {_lastGameDate}
+                {#if _manifestLastUpdated}
+                    • Päivitetty {new Date(_manifestLastUpdated).toLocaleDateString("fi-FI")}
+                {/if}
+            </p>
+        {:else}
+            <p class="text-xs text-gray-400 mt-2">
+                Päivitetty: {new Date().toLocaleString("fi-FI")}
+            </p>
+        {/if}
     </div>
 </div>
 

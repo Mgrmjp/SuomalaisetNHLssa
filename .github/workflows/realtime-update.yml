@@ -49,6 +49,20 @@ jobs:
             git push
           fi
 
+      - name: Regenerate games manifest
+        if: steps.poll.outputs.updated == 'true'
+        run: |
+          python scripts/data_collection/generate_manifest.py
+
+      - name: Commit and push updated manifest
+        if: steps.poll.outputs.updated == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add static/data/games_manifest.json
+          git commit -m "chore: updated games manifest" || echo "No manifest changes"
+          git push
+
       - name: Set up Node.js
         if: steps.poll.outputs.updated == 'true'
         uses: actions/setup-node@v4

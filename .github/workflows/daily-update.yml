@@ -48,6 +48,19 @@ jobs:
           git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git push
 
+      - name: Regenerate games manifest
+        run: |
+          source .venv/bin/activate
+          python scripts/data_collection/generate_manifest.py
+
+      - name: Commit and push updated manifest
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add static/data/games_manifest.json
+          git commit -m "chore: updated games manifest" || echo "No manifest changes"
+          git push
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
