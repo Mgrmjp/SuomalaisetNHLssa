@@ -912,5 +912,55 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20252026/VAN/8480947.png",
     "isActive": true,
     "currentTeam": "VAN"
+  },
+  "8482726": {
+    "playerId": 8482726,
+    "name": "Samuel Helenius",
+    "firstName": {
+      "default": "Samuel"
+    },
+    "lastName": {
+      "default": "Helenius"
+    },
+    "position": "C",
+    "sweaterNumber": 79,
+    "birthDate": "2002-11-26",
+    "birthCity": {
+      "default": "Dallas"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Dallas, FIN",
+    "heightInches": 78,
+    "weightLbs": 225,
+    "shootsCatches": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8482726.png",
+    "isActive": true,
+    "currentTeam": "LAK"
+  },
+  "8482775": {
+    "playerId": 8482775,
+    "name": "Oliver Kapanen",
+    "firstName": {
+      "default": "Oliver"
+    },
+    "lastName": {
+      "default": "Kapanen"
+    },
+    "position": "C",
+    "sweaterNumber": 91,
+    "birthDate": "2003-07-29",
+    "birthCity": {
+      "default": "Timra",
+      "fi": "Timrå",
+      "sv": "Timrå"
+    },
+    "birthCountry": "FIN",
+    "birthplace": "Timra, FIN",
+    "heightInches": 74,
+    "weightLbs": 194,
+    "shootsCatches": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/MTL/8482775.png",
+    "isActive": true,
+    "currentTeam": "MTL"
   }
 }
