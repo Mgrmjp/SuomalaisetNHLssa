@@ -520,7 +520,8 @@ export class StandingsService {
 
         try {
             logger.log('📊 Fetching games manifest...')
-            const manifest = await fetchLocalJSON('/data/games_manifest.json')
+            const timestamp = new Date().getTime()
+            const manifest = await fetchLocalJSON(`/data/games_manifest.json?t=${timestamp}`)
             
             if (manifest && manifest.games && Array.isArray(manifest.games)) {
                 gamesManifestCache = manifest
