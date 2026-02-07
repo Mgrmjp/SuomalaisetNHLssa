@@ -26,8 +26,27 @@ import { base } from '$app/paths'
  * Fetch available dates by scanning the data directory
  * This works on static sites by trying known date ranges
  */
+const breaksStore = writable([])
+export const breaks = readonly(breaksStore)
+
+async function fetchBreaks() {
+    try {
+        const response = await fetch(`${base}/data/breaks.json`)
+        if (response.ok) {
+            const data = await response.json()
+            breaksStore.set(data)
+            logger.debug(`📅 Loaded ${data.length} schedule breaks`)
+        }
+    } catch (error) {
+        logger.warn('Failed to load breaks:', error)
+    }
+}
+
 async function fetchAvailableDates() {
     if (availableDatesLoaded) return
+
+    // Load breaks in parallel
+    fetchBreaks()
 
     try {
         // Try server API first (for dev mode or prerendered static API)
@@ -296,7 +315,28 @@ if (browser) {
 }
 
 // Export available dates as a readable store
-export const availableDates = derived(availableDatesStore, ($store) => $store)
+// Export available dates as a readable store
+// Combine available dates with break dates so users can navigate to breaks
+export const availableDates = derived(
+    [availableDatesStore, breaksStore],
+    ([$availableDates, $breaks]) => {
+        const breakDates = []
+        if ($breaks && $breaks.length > 0) {
+            $breaks.forEach((b) => {
+                let current = new Date(b.startDate)
+                const end = new Date(b.endDate)
+                while (current <= end) {
+                    breakDates.push(current.toISOString().split('T')[0])
+                    current.setDate(current.getDate() + 1)
+                }
+            })
+        }
+
+        // Merge and deduplicate
+        const uniqueDates = new Set([...$availableDates, ...breakDates])
+        return Array.from(uniqueDates).sort()
+    }
+)
 
 // Earliest and latest dates (derived from available dates)
 export const earliestPrepopulatedDate = derived(
@@ -370,6 +410,18 @@ export { currentDate as currentDateReadOnly }
 
 export const players = writable([])
 export const games = writable({}) // Store games data with findGameById function
+
+// Derived store for checking if selected date is in a break
+export const currentBreak = derived(
+    [selectedDate, breaks],
+    ([$selectedDate, $breaks]) => {
+        if (!$selectedDate || !$breaks || $breaks.length === 0) return null
+
+        return $breaks.find(b => 
+            $selectedDate >= b.startDate && $selectedDate <= b.endDate
+        ) || null
+    }
+)
 
 // Derived store for display date with formatting - European friendly
 export const displayDate = derived([selectedDate, currentDate], ([$selectedDate, $currentDate]) => {

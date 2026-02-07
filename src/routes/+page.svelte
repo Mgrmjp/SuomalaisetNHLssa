@@ -16,6 +16,7 @@
         setDate,
         yesterdayDate,
         games,
+        currentBreak,
     } from "$lib/stores/gameData.js";
     import { formatFinnishDateWithRelative } from "$lib/utils/dateUtils.js";
 
@@ -141,6 +142,19 @@
     <div class="space-y-8 main-content-wrapper">
         <!-- Controls Section -->
         <div>
+            {#if $currentBreak}
+                <div class="w-full max-w-4xl mx-auto mb-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl shadow-sm text-center">
+                    <div class="flex flex-col items-center justify-center space-y-2">
+                        <span class="text-2xl" role="img" aria-label="Break">🏒</span>
+                        <h3 class="font-bold text-gray-800 text-lg">
+                            {$currentBreak.description}
+                        </h3>
+                        <p class="text-sm text-gray-600">
+                            NHL on tauolla ({formatFinnishDateWithRelative($currentBreak.startDate).formatted} - {formatFinnishDateWithRelative($currentBreak.endDate).formatted})
+                        </p>
+                    </div>
+                </div>
+            {/if}
             <DateControls />
         </div>
 
@@ -292,7 +306,9 @@
         {/if}
 
         <!-- Player List (Default View) -->
-        <PlayerList />
+        {#if !$currentBreak}
+            <PlayerList />
+        {/if}
     </div>
 
     <!-- Mobile Ad -->
