@@ -76,6 +76,8 @@ def get_master_finnish_player_ids():
     regardless of birth country.
     """
     ids = set()
+    skaters_ok = False
+    goalies_ok = False
     
     # Endpoints
     skater_url = "https://api.nhle.com/stats/rest/en/skater/bios"
@@ -98,6 +100,7 @@ def get_master_finnish_player_ids():
             ids.add(player.get("playerId"))
             count += 1
         print(f"   Found {count} skaters")
+        skaters_ok = True
     except Exception as e:
         print(f"   ❌ Error fetching skaters: {e}")
 
@@ -111,11 +114,12 @@ def get_master_finnish_player_ids():
             ids.add(player.get("playerId"))
             count += 1
         print(f"   Found {count} goalies")
+        goalies_ok = True
     except Exception as e:
         print(f"   ❌ Error fetching goalies: {e}")
         
     print(f"   Total unique Finnish players: {len(ids)}\n")
-    return ids
+    return ids, (skaters_ok and goalies_ok and len(ids) > 0)
 
 def load_existing_cache():
     """Load existing cache if available"""
@@ -125,6 +129,21 @@ def load_existing_cache():
         except:
             return {}
     return {}
+
+
+def prune_cache_with_master_ids(existing_cache, master_finnish_ids):
+    """
+    Keep only players present in authoritative NHL Stats Finnish player IDs.
+    """
+    pruned_cache = {}
+    for player_id, player_data in existing_cache.items():
+        try:
+            normalized_id = int(player_id)
+        except (TypeError, ValueError):
+            continue
+        if normalized_id in master_finnish_ids:
+            pruned_cache[player_id] = player_data
+    return pruned_cache
 
 def main():
     print("Building comprehensive Finnish players cache (Roster Scan Mode)...")
@@ -145,7 +164,18 @@ def main():
     new_players_count = 0
 
     # Get master list of Finnish players for robust identification
-    master_finnish_ids = get_master_finnish_player_ids()
+    master_finnish_ids, master_ids_reliable = get_master_finnish_player_ids()
+
+    # Prune stale/incorrect players only when master IDs are fully reliable.
+    # This prevents accidental data loss during partial API outages.
+    if master_ids_reliable:
+        before_prune = len(finnish_players)
+        finnish_players = prune_cache_with_master_ids(finnish_players, master_finnish_ids)
+        removed_count = before_prune - len(finnish_players)
+        if removed_count > 0:
+            print(f"🧹 Pruned {removed_count} non-Finnish stale entries from existing cache.\n")
+    else:
+        print("⚠️ Master Finnish IDs not fully reliable; skipping stale entry pruning.\n")
 
     # Scan each team's roster
     for i, team in enumerate(teams, 1):
