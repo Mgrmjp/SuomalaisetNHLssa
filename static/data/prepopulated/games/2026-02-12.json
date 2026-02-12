@@ -42,7 +42,7 @@
       "startTime": "2026-02-12T20:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -51,7 +51,7 @@
       "homeTeam": "DEN",
       "awayTeam": "GER",
       "homeScore": 1,
-      "awayScore": 1,
+      "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 9,
       "startTime": "2026-02-12T20:00:00Z",
@@ -64,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-12T21:07:34.359154",
+  "generated_at": "2026-02-12T21:20:43.085497",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
