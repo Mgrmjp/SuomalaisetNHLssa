@@ -6,13 +6,13 @@
       "homeTeam": "FRA",
       "awayTeam": "SUI",
       "homeScore": 0,
-      "awayScore": 0,
-      "gameState": "FUT",
+      "awayScore": 2,
+      "gameState": "LIVE",
       "gameType": 9,
       "startTime": "2026-02-12T11:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -64,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-12T06:25:16.236965",
+  "generated_at": "2026-02-12T12:13:23.391296",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
