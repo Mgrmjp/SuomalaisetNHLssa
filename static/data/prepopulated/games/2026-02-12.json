@@ -22,12 +22,12 @@
       "awayTeam": "CZE",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "LIVE",
       "gameType": 9,
       "startTime": "2026-02-12T15:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 1,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -64,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-12T15:25:27.214154",
+  "generated_at": "2026-02-12T15:45:56.695530",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
