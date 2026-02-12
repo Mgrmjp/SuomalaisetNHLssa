@@ -2,6 +2,21 @@
   "date": "2026-02-12",
   "games": [
     {
+      "gameId": 2025090003,
+      "homeTeam": "FRA",
+      "awayTeam": "SUI",
+      "homeScore": 0,
+      "awayScore": 4,
+      "gameState": "OFF",
+      "gameType": 9,
+      "startTime": "2026-02-12T11:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
       "gameId": 2025090004,
       "homeTeam": "CAN",
       "awayTeam": "CZE",
@@ -49,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-12T14:13:31.180644",
+  "generated_at": "2026-02-12T14:37:16.922246",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
