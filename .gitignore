@@ -96,3 +96,12 @@ temp/
 .venv/
 **/__pycache__/
 *.pyc
+
+# Data collection and debug scripts
+scripts/check_na_finns.py
+scripts/debug_*.py
+scripts/probe_*.py
+scripts/test_*.py
+scripts/inspect_*.py
+scripts/find_undrafted.py
+scripts/deep_probe_*.py

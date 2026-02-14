@@ -461,6 +461,43 @@ export const selectedView = readonly(selectedViewStore)
 export const standings = readonly(standingsStore)
 export const standingsLoading = readonly(standingsLoadingStore)
 
+// Prospects store
+const prospectsStore = writable([])
+const prospectsLoadingStore = writable(false)
+export const prospects = readonly(prospectsStore)
+export const prospectsLoading = readonly(prospectsLoadingStore)
+
+// Draft Rankings store
+const draftRankingsStore = writable({ north_american_skaters: [], international_skaters: [] })
+export const draftRankings = readonly(draftRankingsStore)
+
+export async function loadProspects() {
+    prospectsLoadingStore.set(true)
+    try {
+        const [prospectsRes, rankingsRes] = await Promise.all([
+            fetch(`${base}/data/finnish_prospects.json`),
+            fetch(`${base}/data/finnish_draft_rankings.json`)
+        ])
+        
+        if (prospectsRes.ok) {
+            const data = await prospectsRes.json()
+            prospectsStore.set(data)
+            logger.debug(`Loaded ${data.length} prospects`)
+        }
+
+        if (rankingsRes.ok) {
+            const rankings = await rankingsRes.json()
+            draftRankingsStore.set(rankings)
+            logger.debug(`Loaded draft rankings for ${rankings.year}`)
+        }
+
+    } catch (error) {
+        logger.error('Failed to load prospects data:', error)
+    } finally {
+        prospectsLoadingStore.set(false)
+    }
+}
+
 // Standings service instance
 const standingsService = new StandingsService()
 
