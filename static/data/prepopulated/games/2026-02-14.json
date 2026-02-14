@@ -1,0 +1,69 @@
+{
+  "date": "2026-02-14",
+  "games": [
+    {
+      "gameId": 2025090011,
+      "homeTeam": "SVK",
+      "awayTeam": "SWE",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 9,
+      "startTime": "2026-02-14T11:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2025090012,
+      "homeTeam": "LAT",
+      "awayTeam": "GER",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 9,
+      "startTime": "2026-02-14T11:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2025090013,
+      "homeTeam": "ITA",
+      "awayTeam": "FIN",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 9,
+      "startTime": "2026-02-14T15:30:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2025090014,
+      "homeTeam": "DEN",
+      "awayTeam": "USA",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 9,
+      "startTime": "2026-02-14T20:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    }
+  ],
+  "players": [],
+  "total_players": 0,
+  "generated_at": "2026-02-14T06:14:10.072985",
+  "source": "NHL API - Enhanced with Empty Net Goal Tracking"
+}
