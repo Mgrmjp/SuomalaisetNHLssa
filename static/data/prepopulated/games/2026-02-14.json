@@ -2,12 +2,12 @@
   "date": "2026-02-14",
   "games": [
     {
-      "gameId": 2025090011,
-      "homeTeam": "SVK",
-      "awayTeam": "SWE",
-      "homeScore": 2,
-      "awayScore": 4,
-      "gameState": "LIVE",
+      "gameId": 2025090012,
+      "homeTeam": "LAT",
+      "awayTeam": "GER",
+      "homeScore": 4,
+      "awayScore": 3,
+      "gameState": "OFF",
       "gameType": 9,
       "startTime": "2026-02-14T11:00:00Z",
       "isOT": false,
@@ -49,6 +49,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-14T13:23:06.191025",
+  "generated_at": "2026-02-14T13:44:28.948314",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
