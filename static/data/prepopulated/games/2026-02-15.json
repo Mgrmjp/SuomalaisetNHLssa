@@ -32,11 +32,26 @@
       "empty_net_goals": 0
     },
     {
+      "gameId": 2025090017,
+      "homeTeam": "LAT",
+      "awayTeam": "DEN",
+      "homeScore": 2,
+      "awayScore": 4,
+      "gameState": "OFF",
+      "gameType": 9,
+      "startTime": "2026-02-15T18:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
       "gameId": 2025090018,
       "homeTeam": "GER",
       "awayTeam": "USA",
       "homeScore": 0,
-      "awayScore": 0,
+      "awayScore": 1,
       "gameState": "LIVE",
       "gameType": 9,
       "startTime": "2026-02-15T20:00:00Z",
@@ -49,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-15T20:30:27.338852",
+  "generated_at": "2026-02-15T20:47:13.814519",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
