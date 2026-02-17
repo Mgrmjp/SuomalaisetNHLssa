@@ -5,9 +5,9 @@
       "gameId": 2025090019,
       "homeTeam": "GER",
       "awayTeam": "FRA",
-      "homeScore": 4,
+      "homeScore": 5,
       "awayScore": 1,
-      "gameState": "LIVE",
+      "gameState": "OFF",
       "gameType": 9,
       "startTime": "2026-02-17T11:00:00Z",
       "isOT": false,
@@ -22,7 +22,7 @@
       "awayTeam": "ITA",
       "homeScore": 3,
       "awayScore": 0,
-      "gameState": "LIVE",
+      "gameState": "OFF",
       "gameType": 9,
       "startTime": "2026-02-17T11:00:00Z",
       "isOT": false,
@@ -64,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-17T13:17:51.011008",
+  "generated_at": "2026-02-17T13:47:24.580095",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
