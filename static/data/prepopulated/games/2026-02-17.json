@@ -35,14 +35,14 @@
       "gameId": 2025090021,
       "homeTeam": "CZE",
       "awayTeam": "DEN",
-      "homeScore": 0,
-      "awayScore": 0,
+      "homeScore": 3,
+      "awayScore": 1,
       "gameState": "LIVE",
       "gameType": 9,
       "startTime": "2026-02-17T15:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -64,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-17T16:33:02.230962",
+  "generated_at": "2026-02-17T16:59:32.482219",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
