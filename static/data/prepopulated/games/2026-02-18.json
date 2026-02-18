@@ -5,14 +5,14 @@
       "gameId": 2025090023,
       "homeTeam": "SVK",
       "awayTeam": "GER",
-      "homeScore": 0,
+      "homeScore": 4,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "LIVE",
       "gameType": 9,
       "startTime": "2026-02-18T11:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -64,6 +64,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-18T06:23:44.816715",
+  "generated_at": "2026-02-18T12:23:52.587411",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
