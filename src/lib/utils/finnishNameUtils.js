@@ -6,6 +6,7 @@
 
 // In-memory cache with common corrections
 const defaultCorrections = {
+    "Armiä": "Armia",
     "Pyyhtia": "Pyyhtiä",
     "Kaskimaki": "Kaskimäki",
     "Raty": "Räty",
@@ -40,14 +41,14 @@ export function correctFinnishName(name) {
         return name;
     }
 
+    // Check cache first - this includes manual corrections that should always apply
+    if (nameCache[name]) {
+        return nameCache[name];
+    }
+
     // If name already has Finnish characters, it's likely correct
     if (/[äöåÄÖÅ]/.test(name)) {
         return name;
-    }
-
-    // Check cache first
-    if (nameCache[name]) {
-        return nameCache[name];
     }
 
     // Apply pattern-based corrections
