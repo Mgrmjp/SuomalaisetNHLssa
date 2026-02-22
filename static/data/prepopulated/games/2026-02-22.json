@@ -1,8 +1,24 @@
 {
   "date": "2026-02-22",
-  "games": [],
+  "games": [
+    {
+      "gameId": 2025090030,
+      "homeTeam": "CAN",
+      "awayTeam": "USA",
+      "homeScore": 1,
+      "awayScore": 2,
+      "gameState": "CRIT",
+      "gameType": 9,
+      "startTime": "2026-02-22T13:00:00Z",
+      "isOT": true,
+      "isSO": false,
+      "period": 4,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    }
+  ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-22T15:43:02.559900",
+  "generated_at": "2026-02-22T15:54:25.252024",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
