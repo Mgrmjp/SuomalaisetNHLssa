@@ -12,6 +12,11 @@
             alt: "Mainos"
         },
         {
+            href: "https://go.adt242.com/t/t?a=2050880477&as=2038972948&t=2&tk=1",
+            src: "https://track.adtraction.com/t/t?a=2050880477&as=2038972948&t=1&tk=1&i=1",
+            alt: "Mainos"
+        },
+        {
             href: "https://at.valco.fi/t/t?a=2020376424&as=2038972948&t=2&tk=1",
             src: `${base}/valco.jpg`,
             alt: "Mainos"
