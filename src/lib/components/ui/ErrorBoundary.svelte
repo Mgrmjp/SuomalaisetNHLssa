@@ -4,7 +4,7 @@ import { onMount } from 'svelte'
 export let error = null
 export let errorInfo = null
 
-let _showDetails = false
+const _showDetails = false
 let errorReport = {
     message: '',
     stack: '',

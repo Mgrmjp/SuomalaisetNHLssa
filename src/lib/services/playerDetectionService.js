@@ -9,7 +9,7 @@ import { base } from '$app/paths'
 
 // Configuration
 const CONFIG = {
-    NHL_API_BASE: base + '/api', // Use proxy instead of direct API
+    NHL_API_BASE: `${base}/api`, // Use proxy instead of direct API
     REQUEST_TIMEOUT: 8000,
     MAX_RETRIES: 2,
     RETRY_DELAY: 500,

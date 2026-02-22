@@ -144,7 +144,7 @@ export class StandingsService {
         if (prepopulatedDates.length === 0) {
             await this.fetchAvailableDates()
         }
-        
+
         return prepopulatedDates
             .filter((date) => (!startDate || date >= startDate) && (!endDate || date <= endDate))
             .sort()
@@ -296,7 +296,7 @@ export class StandingsService {
      * @param {number} awayScore - Away team score
      */
     updateGameResult(homeTeamStats, awayTeamStats, homeScore, awayScore, game) {
-        const isOT = game.period > 3 || game.isOT === true || game.isSO === true;
+        const isOT = game.period > 3 || game.isOT === true || game.isSO === true
 
         if (homeScore > awayScore) {
             // Home team wins
@@ -520,10 +520,10 @@ export class StandingsService {
 
         try {
             logger.log('📊 Fetching games manifest...')
-            const timestamp = new Date().getTime()
+            const timestamp = Date.now()
             const manifest = await fetchLocalJSON(`/data/games_manifest.json?t=${timestamp}`)
-            
-            if (manifest && manifest.games && Array.isArray(manifest.games)) {
+
+            if (manifest?.games && Array.isArray(manifest.games)) {
                 gamesManifestCache = manifest
                 prepopulatedDates = manifest.games.sort()
                 logger.log(`✅ Loaded ${prepopulatedDates.length} game dates from manifest`)
@@ -535,7 +535,7 @@ export class StandingsService {
         } catch (error) {
             logger.log(`❌ Error fetching games manifest: ${error.message}`)
         }
-        
+
         return prepopulatedDates
     }
 }

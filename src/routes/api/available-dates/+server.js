@@ -1,6 +1,6 @@
+import { readdir, readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import { json } from '@sveltejs/kit'
-import { readdir, readFile } from 'fs/promises'
-import { join } from 'path'
 
 // Pre-render this endpoint so it exists in static builds
 export const prerender = true

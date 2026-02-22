@@ -237,7 +237,9 @@
         0 2px 8px rgba(15, 23, 42, 0.04),
         inset 0 1px 0 rgba(255, 255, 255, 0.7);
     border: 1px solid rgba(226, 232, 240, 0.8);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .recent-result-item:hover {
@@ -251,7 +253,6 @@
     color: #64748b;
     white-space: nowrap;
 }
-
 
 .recent-result-opponent__team {
     display: flex;
@@ -579,7 +580,6 @@
 
 @media (min-width: 641px) {
     .comprehensive-details-dialog {
-        max-height: 85dvh !important;
-        max-height: 85vh !important;
+        max-height: 85dvh;
     }
 }

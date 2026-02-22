@@ -1,209 +1,206 @@
 <script>
-    import { base } from "$app/paths";
+import { base } from '$app/paths'
+import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
 
-    import { isPlayerGameLive } from "$lib/utils/gameStateHelpers.mjs";
-    import { games } from "$lib/stores/gameData.js";
-    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
+const { player, isOpen = false, onclose } = $props()
 
-    let { player, isOpen = false, onclose } = $props();
+// Internal state as Svelte 5 runes
+let _playerPhotoUrl = $state(null)
+let _photoError = $state(false)
+let _imageLoading = $state(true)
+let _lqipUrl = $state(null)
+let _imageLoaded = $state(false)
 
-    // Internal state as Svelte 5 runes
-    let playerPhotoUrl = $state(null);
-    let photoError = $state(false);
-    let imageLoading = $state(true);
-    let lqipUrl = $state(null);
-    let imageLoaded = $state(false);
+// Get local WebP headshot URL (optimized, served from our domain)
+function getLocalHeadshotUrl(playerId) {
+    if (!playerId) return null
+    return `${base}/headshots/${playerId}.webp`
+}
 
-    // Get local WebP headshot URL (optimized, served from our domain)
-    function getLocalHeadshotUrl(playerId) {
-        if (!playerId) return null;
-        return `${base}/headshots/${playerId}.webp`;
+// Get LQIP thumbnail URL (tiny placeholder)
+function getLqipUrl(playerId) {
+    if (!playerId) return null
+    return `${base}/headshots/thumbs/${playerId}.jpg`
+}
+
+// Load player image - try local WebP first, fallback to NHL CDN
+function loadPlayerImage(playerId) {
+    if (!playerId) return
+
+    _imageLoading = true
+    _imageLoaded = false
+    _photoError = false
+
+    // Set LQIP placeholder immediately
+    _lqipUrl = getLqipUrl(playerId)
+
+    // Try local WebP first
+    const localUrl = getLocalHeadshotUrl(playerId)
+    const img = new Image()
+
+    img.onload = () => {
+        _playerPhotoUrl = localUrl
+        _photoError = false
+        _imageLoading = false
+        setTimeout(() => {
+            _imageLoaded = true
+        }, 100)
     }
 
-    // Get LQIP thumbnail URL (tiny placeholder)
-    function getLqipUrl(playerId) {
-        if (!playerId) return null;
-        return `${base}/headshots/thumbs/${playerId}.jpg`;
-    }
-
-    // Load player image - try local WebP first, fallback to NHL CDN
-    function loadPlayerImage(playerId) {
-        if (!playerId) return;
-
-        imageLoading = true;
-        imageLoaded = false;
-        photoError = false;
-
-        // Set LQIP placeholder immediately
-        lqipUrl = getLqipUrl(playerId);
-
-        // Try local WebP first
-        const localUrl = getLocalHeadshotUrl(playerId);
-        const img = new Image();
-
-        img.onload = () => {
-            playerPhotoUrl = localUrl;
-            photoError = false;
-            imageLoading = false;
-            setTimeout(() => {
-                imageLoaded = true;
-            }, 100);
-        };
-
-        img.onerror = () => {
-            // Fallback to NHL CDN if local not found
-            if (player.headshot_url) {
-                const fallbackImg = new Image();
-                fallbackImg.onload = () => {
-                    playerPhotoUrl = player.headshot_url;
-                    photoError = false;
-                    imageLoading = false;
-                    setTimeout(() => {
-                        imageLoaded = true;
-                    }, 100);
-                };
-                fallbackImg.onerror = () => {
-                    photoError = true;
-                    playerPhotoUrl = null;
-                    imageLoading = false;
-                };
-                fallbackImg.src = player.headshot_url;
-            } else {
-                photoError = true;
-                playerPhotoUrl = null;
-                imageLoading = false;
+    img.onerror = () => {
+        // Fallback to NHL CDN if local not found
+        if (player.headshot_url) {
+            const fallbackImg = new Image()
+            fallbackImg.onload = () => {
+                _playerPhotoUrl = player.headshot_url
+                _photoError = false
+                _imageLoading = false
+                setTimeout(() => {
+                    _imageLoaded = true
+                }, 100)
             }
-        };
-
-        img.src = localUrl;
-    }
-
-    // Load image when player changes using $effect
-    $effect(() => {
-        if (player?.playerId) {
-            loadPlayerImage(player.playerId);
-        }
-    });
-
-    function _closeComprehensiveDetails(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        if (onclose) onclose();
-    }
-
-    function _handleBackdropClick(event) {
-        if (event.target === event.currentTarget) {
-            if (onclose) onclose();
-        }
-    }
-
-    function _toggleSeasonStats(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        // This will be handled by the parent component
-        const seasonStatsEvent = new CustomEvent("toggle-season-stats");
-        window.dispatchEvent(seasonStatsEvent);
-    }
-
-    const displayName = $derived(player.name?.default || player.name || "Unknown Player");
-    const gamesData = $derived($games);
-    const isLive = $derived(isPlayerGameLive(player, gamesData));
-    const headshotUrl = $derived(player.headshot_url || null);
-    const playerInitials = $derived(
-        displayName
-            .split(" ")
-            .map((part) => part.charAt(0).toUpperCase())
-            .join("")
-            .slice(0, 2),
-    );
-    const isGoalie = $derived(
-        (player.position || "").toUpperCase() === "G" ||
-            (player.position || "").toUpperCase() === "GOALIE",
-    );
-    const iceTime = $derived(player.time_on_ice || player.ice_time);
-    const hasGameStats = $derived(
-        player.goals > 0 ||
-            player.assists > 0 ||
-            player.points > 0 ||
-            (player.penalty_minutes || 0) > 0 ||
-            (!isGoalie && player.plus_minus !== undefined) ||
-            (isGoalie && (player.saves > 0 || player.shots_against > 0)),
-    );
-    const hasAdvancedStats = $derived(
-        player.position !== "G" &&
-            (player.faceoffs_taken > 0 ||
-                player.takeaways > 0 ||
-                player.giveaways > 0 ||
-                player.blocked_shots > 0 ||
-                player.hits > 0 ||
-                player.power_play_goals > 0 ||
-                player.short_handed_goals > 0 ||
-                player.even_strength_goals > 0 ||
-                player.power_play_assists > 0 ||
-                player.short_handed_assists > 0),
-    );
-    const hasContextStats = $derived(
-        player.shifts > 0 ||
-            player.average_ice_time ||
-            iceTime ||
-            (player.blocked_shots > 0 && player.position === "D") ||
-            player.shots > 0 ||
-            (isGoalie && player.time_on_ice),
-    );
-    const goalieSavePct = $derived(
-        player.save_percentage !== undefined
-            ? Math.round(player.save_percentage * 1000) / 10
-            : player.shots_against > 0
-              ? Math.round((player.saves / player.shots_against) * 1000) / 10
-              : null,
-    );
-
-    // Action to portal element to body
-    function portal(node) {
-        // Add a class to hide the element initially
-        const placeholder = document.createElement('div');
-        placeholder.className = 'portal-placeholder';
-        placeholder.style.cssText = 'display: none;';
-        node.parentNode.insertBefore(placeholder, node);
-        node._portalPlaceholder = placeholder;
-
-        // Move to body
-        document.body.appendChild(node);
-
-        return {
-            update() {
-                // Keep it in body
-                if (node.parentNode !== document.body) {
-                    document.body.appendChild(node);
-                }
-            },
-            destroy() {
-                // Remove from body and restore placeholder
-                if (document.body.contains(node)) {
-                    document.body.removeChild(node);
-                }
-                if (node._portalPlaceholder && node._portalPlaceholder.parentNode) {
-                    node._portalPlaceholder.parentNode.removeChild(node._portalPlaceholder);
-                }
+            fallbackImg.onerror = () => {
+                _photoError = true
+                _playerPhotoUrl = null
+                _imageLoading = false
             }
-        };
-    }
-
-    // Prevent body scroll when modal is open
-    $effect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
+            fallbackImg.src = player.headshot_url
         } else {
-            document.body.style.overflow = '';
+            _photoError = true
+            _playerPhotoUrl = null
+            _imageLoading = false
         }
-        return () => {
-            document.body.style.overflow = '';
-        };
-    });
+    }
+
+    img.src = localUrl
+}
+
+// Load image when player changes using $effect
+$effect(() => {
+    if (player?.playerId) {
+        loadPlayerImage(player.playerId)
+    }
+})
+
+function _closeComprehensiveDetails(event) {
+    if (event) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
+    if (onclose) onclose()
+}
+
+function _handleBackdropClick(event) {
+    if (event.target === event.currentTarget) {
+        if (onclose) onclose()
+    }
+}
+
+function _toggleSeasonStats(event) {
+    if (event) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
+    // This will be handled by the parent component
+    const seasonStatsEvent = new CustomEvent('toggle-season-stats')
+    window.dispatchEvent(seasonStatsEvent)
+}
+
+const displayName = $derived(player.name?.default || player.name || 'Unknown Player')
+const gamesData = $derived($games)
+const _isLive = $derived(isPlayerGameLive(player, gamesData))
+const _headshotUrl = $derived(player.headshot_url || null)
+const _playerInitials = $derived(
+    displayName
+        .split(' ')
+        .map((part) => part.charAt(0).toUpperCase())
+        .join('')
+        .slice(0, 2)
+)
+const isGoalie = $derived(
+    (player.position || '').toUpperCase() === 'G' ||
+        (player.position || '').toUpperCase() === 'GOALIE'
+)
+const iceTime = $derived(player.time_on_ice || player.ice_time)
+const _hasGameStats = $derived(
+    player.goals > 0 ||
+        player.assists > 0 ||
+        player.points > 0 ||
+        (player.penalty_minutes || 0) > 0 ||
+        (!isGoalie && player.plus_minus !== undefined) ||
+        (isGoalie && (player.saves > 0 || player.shots_against > 0))
+)
+const _hasAdvancedStats = $derived(
+    player.position !== 'G' &&
+        (player.faceoffs_taken > 0 ||
+            player.takeaways > 0 ||
+            player.giveaways > 0 ||
+            player.blocked_shots > 0 ||
+            player.hits > 0 ||
+            player.power_play_goals > 0 ||
+            player.short_handed_goals > 0 ||
+            player.even_strength_goals > 0 ||
+            player.power_play_assists > 0 ||
+            player.short_handed_assists > 0)
+)
+const _hasContextStats = $derived(
+    player.shifts > 0 ||
+        player.average_ice_time ||
+        iceTime ||
+        (player.blocked_shots > 0 && player.position === 'D') ||
+        player.shots > 0 ||
+        (isGoalie && player.time_on_ice)
+)
+const _goalieSavePct = $derived(
+    player.save_percentage !== undefined
+        ? Math.round(player.save_percentage * 1000) / 10
+        : player.shots_against > 0
+          ? Math.round((player.saves / player.shots_against) * 1000) / 10
+          : null
+)
+
+// Action to portal element to body
+function _portal(node) {
+    // Add a class to hide the element initially
+    const placeholder = document.createElement('div')
+    placeholder.className = 'portal-placeholder'
+    placeholder.style.cssText = 'display: none;'
+    node.parentNode.insertBefore(placeholder, node)
+    node._portalPlaceholder = placeholder
+
+    // Move to body
+    document.body.appendChild(node)
+
+    return {
+        update() {
+            // Keep it in body
+            if (node.parentNode !== document.body) {
+                document.body.appendChild(node)
+            }
+        },
+        destroy() {
+            // Remove from body and restore placeholder
+            if (document.body.contains(node)) {
+                document.body.removeChild(node)
+            }
+            if (node._portalPlaceholder?.parentNode) {
+                node._portalPlaceholder.parentNode.removeChild(node._portalPlaceholder)
+            }
+        },
+    }
+}
+
+// Prevent body scroll when modal is open
+$effect(() => {
+    if (isOpen) {
+        document.body.style.overflow = 'hidden'
+    } else {
+        document.body.style.overflow = ''
+    }
+    return () => {
+        document.body.style.overflow = ''
+    }
+})
 </script>
 
 <!-- Comprehensive Details Modal -->

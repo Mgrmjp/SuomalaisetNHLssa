@@ -1,9 +1,5 @@
 <script>
-    import NavTabs from "$lib/components/ui/NavTabs.svelte";
-    import StandingsView from "$lib/components/standings/StandingsView.svelte";
-    import Snowfall from "$lib/components/ui/Snowfall.svelte";
-    import { base } from "$app/paths";
-    import { resetToDefault } from "$lib/stores/gameData.js";
+
 </script>
 
 <svelte:head>

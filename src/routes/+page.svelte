@@ -1,97 +1,81 @@
 <script>
-    import PlayerList from "$lib/components/game/PlayerList.svelte";
-    import DateControls from "$lib/components/game/DateControls.svelte";
-    import Snowfall from "$lib/components/ui/Snowfall.svelte";
-    import NavTabs from "$lib/components/ui/NavTabs.svelte";
-    import AdBanner from "$lib/components/ui/AdBanner.svelte";
-    import MobileAd from "$lib/components/ui/MobileAd.svelte";
-    import { base } from "$app/paths";
-    import { onMount } from "svelte";
-    import { get } from "svelte/store";
-    import {
-        latestPrepopulatedDate,
-        players,
-        resetToDefault,
-        selectedDate,
-        setDate,
-        yesterdayDate,
-        games,
-        currentBreak,
-    } from "$lib/stores/gameData.js";
-    import { formatFinnishDateWithRelative } from "$lib/utils/dateUtils.js";
+import { onMount } from 'svelte'
+import { get } from 'svelte/store'
+import { latestPrepopulatedDate, setDate, yesterdayDate } from '$lib/stores/gameData.js'
+import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 
-    const _sparkles = Array.from({ length: 12 }, () => ({
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 90}%`,
-        delay: `${Math.random() * 2}s`,
-        duration: `${3.5 + Math.random() * 3}s`,
-        size: `${3 + Math.random() * 6}px`,
-        blur: `${Math.random() > 0.5 ? 0 : 1}px`,
-    }));
+const _sparkles = Array.from({ length: 12 }, () => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 90}%`,
+    delay: `${Math.random() * 2}s`,
+    duration: `${3.5 + Math.random() * 3}s`,
+    size: `${3 + Math.random() * 6}px`,
+    blur: `${Math.random() > 0.5 ? 0 : 1}px`,
+}))
 
-    // Reactive variables
-    const totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0);
-    const totalAssists = $derived($players?.reduce((sum, player) => sum + player.assists, 0) || 0);
-    const totalPoints = $derived($players?.reduce((sum, player) => sum + player.points, 0) || 0);
-    const totalPenaltyMinutes = $derived(
-        $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
-    );
-    const totalPlayers = $derived($players?.length || 0);
+// Reactive variables
+const _totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0)
+const _totalAssists = $derived($players?.reduce((sum, player) => sum + player.assists, 0) || 0)
+const _totalPoints = $derived($players?.reduce((sum, player) => sum + player.points, 0) || 0)
+const _totalPenaltyMinutes = $derived(
+    $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
+)
+const totalPlayers = $derived($players?.length || 0)
 
-    function buildDateLabel(value) {
-        if (!value) {
-            return "valitulle päivälle";
-        }
-
-        const { formatted, relative } = formatFinnishDateWithRelative(value, {
-            showYear: true,
-            showWeekday: true,
-            longFormat: false,
-        });
-
-        return relative ? `${relative} (${formatted})` : formatted;
+function buildDateLabel(value) {
+    if (!value) {
+        return 'valitulle päivälle'
     }
 
-    const selectedDateSummary = $derived.by(() => {
-        const count = $games?.games?.length || 0;
-        const label = buildDateLabel($selectedDate);
-        const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`;
+    const { formatted, relative } = formatFinnishDateWithRelative(value, {
+        showYear: true,
+        showWeekday: true,
+        longFormat: false,
+    })
 
-        return { label, count, summary };
-    });
+    return relative ? `${relative} (${formatted})` : formatted
+}
 
-    const dynamicTitleSuffix = $derived.by(() =>
-        selectedDateSummary?.summary || "suomalaisten NHL-ottelut"
-    );
+const selectedDateSummary = $derived.by(() => {
+    const count = $games?.games?.length || 0
+    const label = buildDateLabel($selectedDate)
+    const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`
 
-    const SEO_KEYWORDS = "Suomalaiset NHL-pelaajat, pistepörssi, live-tilastot";
+    return { label, count, summary }
+})
 
-    const metaDescription = $derived.by(() => {
-        const playerText =
-            totalPlayers > 0
-                ? `Seuraa ${totalPlayers} suomalaisen NHL-tilastoja.`
-                : "Seuraa suomalaisten NHL-matkaa.";
+const _dynamicTitleSuffix = $derived.by(
+    () => selectedDateSummary?.summary || 'suomalaisten NHL-ottelut'
+)
 
-        return `${selectedDateSummary?.summary || "Päivän ottelut"}. ${playerText} ${SEO_KEYWORDS}.`;
-    });
+const SEO_KEYWORDS = 'Suomalaiset NHL-pelaajat, pistepörssi, live-tilastot'
 
-    // Mobile hero stats toggle
-    let showHeroStats = $state(false);
+const _metaDescription = $derived.by(() => {
+    const playerText =
+        totalPlayers > 0
+            ? `Seuraa ${totalPlayers} suomalaisen NHL-tilastoja.`
+            : 'Seuraa suomalaisten NHL-matkaa.'
 
-    // Default to yesterday's date on first load (relative to Finland/Europe)
-    onMount(() => {
-        // Avoid reloading if user already selected a date
-        if ($selectedDate) return;
+    return `${selectedDateSummary?.summary || 'Päivän ottelut'}. ${playerText} ${SEO_KEYWORDS}.`
+})
 
-        // Use yesterday's date - this is what users usually want to see (last night's games)
-        const yesterday = get(yesterdayDate);
-        const latestDate = get(latestPrepopulatedDate);
+// Mobile hero stats toggle
+const _showHeroStats = $state(false)
 
-        const defaultDate = yesterday || latestDate;
-        if (defaultDate) {
-            setDate(defaultDate);
-        }
-    });
+// Default to yesterday's date on first load (relative to Finland/Europe)
+onMount(() => {
+    // Avoid reloading if user already selected a date
+    if ($selectedDate) return
+
+    // Use yesterday's date - this is what users usually want to see (last night's games)
+    const yesterday = get(yesterdayDate)
+    const latestDate = get(latestPrepopulatedDate)
+
+    const defaultDate = yesterday || latestDate
+    if (defaultDate) {
+        setDate(defaultDate)
+    }
+})
 </script>
 
 <svelte:head>

@@ -1,129 +1,125 @@
 <script>
-    import ErrorBoundary from "$lib/components/ui/ErrorBoundary.svelte";
-    import LoadingSpinner from "$lib/components/ui/LoadingSpinner.svelte";
-    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
-    import { onMount } from "svelte";
-    import { fetchLocalJSON } from "$lib/utils/apiHelpers.js";
-    import teamMapping from "$lib/utils/teamMapping.js";
-    import { getTeamColorVariables } from "$lib/utils/teamColors.js";
-    import { correctFullName } from "$lib/utils/finnishNameUtils.js";
+import { onMount } from 'svelte'
+import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
+import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import teamMapping from '$lib/utils/teamMapping.js'
 
-    // State
-    let _players = [];
-    let _teamsMap = new Map();
-    let _loading = true;
-    let _error = null;
+// State
+let _players = []
+let _teamsMap = new Map()
+let _loading = true
+let _error = null
 
-    // Extract team abbreviation from headshot URL
-    function extractTeamFromHeadshot(headshot) {
-        if (!headshot || typeof headshot !== "string") return "";
-        const match = headshot.match(/\/mugs\/nhl\/\d+\/([A-Z]+)\/\d+\.png/);
-        return match ? match[1] : "";
-    }
+// Extract team abbreviation from headshot URL
+function extractTeamFromHeadshot(headshot) {
+    if (!headshot || typeof headshot !== 'string') return ''
+    const match = headshot.match(/\/mugs\/nhl\/\d+\/([A-Z]+)\/\d+\.png/)
+    return match ? match[1] : ''
+}
 
-    // Load and process Finnish players data
-    async function loadFinnishRoster() {
-        _loading = true;
-        _error = null;
+// Load and process Finnish players data
+async function loadFinnishRoster() {
+    _loading = true
+    _error = null
 
-        try {
-            // Load from the cache JSON file directly
-            const rawData = await fetchLocalJSON("/data/players/finnish-roster.json");
+    try {
+        // Load from the cache JSON file directly
+        const rawData = await fetchLocalJSON('/data/players/finnish-roster.json')
 
-            if (!rawData) {
-                throw new Error("Failed to load Finnish players data");
-            }
-
-            // Handle cache format (object keyed by player ID)
-            let playerList;
-            if (Array.isArray(rawData)) {
-                playerList = rawData.map((p) => ({
-                    ...p,
-                    name: correctFullName(p.name),
-                }));
-            } else {
-                // Convert object to array and normalize
-                playerList = Object.values(rawData).map((p) => {
-                    const teamFromHeadshot = extractTeamFromHeadshot(p.headshot);
-                    const originalName = p.name;
-                    const correctedName = correctFullName(originalName);
-                    return {
-                        id: p.playerId || p.id,
-                        name: correctedName,
-                        position: p.position,
-                        team: p.teamAbbrev || p.team || teamFromHeadshot || "",
-                        team_abbrev: p.teamAbbrev || p.team || teamFromHeadshot || "",
-                        jersey_number: p.sweaterNumber || p.jersey_number,
-                        birth_date: p.birthDate || p.birth_date || null,
-                        is_active: p.isActive !== false,
-                    };
-                });
-            }
-
-            // Group players by team
-            const teams = new Map();
-            for (const player of playerList) {
-                const teamAbbr = player.team_abbrev || player.team || "UNKNOWN";
-                if (!teams.has(teamAbbr)) {
-                    teams.set(teamAbbr, []);
-                }
-                teams.get(teamAbbr).push(player);
-            }
-
-            // Sort teams alphabetically by full name
-            const sortedTeams = new Map(
-                [...teams.entries()].sort((a, b) => {
-                    const aName = teamMapping[a[0]] || a[0];
-                    const bName = teamMapping[b[0]] || b[0];
-                    return aName.localeCompare(bName);
-                }),
-            );
-
-            _teamsMap = sortedTeams;
-            _players = playerList;
-        } catch (err) {
-            console.error("Error loading Finnish roster:", err);
-            _error = "Failed to load Finnish players roster";
-        } finally {
-            _loading = false;
+        if (!rawData) {
+            throw new Error('Failed to load Finnish players data')
         }
-    }
 
-    onMount(() => {
-        loadFinnishRoster();
-    });
+        // Handle cache format (object keyed by player ID)
+        let playerList
+        if (Array.isArray(rawData)) {
+            playerList = rawData.map((p) => ({
+                ...p,
+                name: correctFullName(p.name),
+            }))
+        } else {
+            // Convert object to array and normalize
+            playerList = Object.values(rawData).map((p) => {
+                const teamFromHeadshot = extractTeamFromHeadshot(p.headshot)
+                const originalName = p.name
+                const correctedName = correctFullName(originalName)
+                return {
+                    id: p.playerId || p.id,
+                    name: correctedName,
+                    position: p.position,
+                    team: p.teamAbbrev || p.team || teamFromHeadshot || '',
+                    team_abbrev: p.teamAbbrev || p.team || teamFromHeadshot || '',
+                    jersey_number: p.sweaterNumber || p.jersey_number,
+                    birth_date: p.birthDate || p.birth_date || null,
+                    is_active: p.isActive !== false,
+                }
+            })
+        }
 
-    // Get sorted players for a team (by position: C, LW, RW, D, G)
-    function _sortPlayersByPosition(teamPlayers) {
-        const positionOrder = { C: 1, LW: 2, RW: 3, D: 4, G: 5 };
-        return [...teamPlayers].sort((a, b) => {
-            const aPos = (a.position || "Z").toUpperCase();
-            const bPos = (b.position || "Z").toUpperCase();
-            const aOrder = positionOrder[aPos] ?? 99;
-            const bOrder = positionOrder[bPos] ?? 99;
-            if (aOrder !== bOrder) return aOrder - bOrder;
-            return (a.name || "").localeCompare(b.name || "");
-        });
-    }
+        // Group players by team
+        const teams = new Map()
+        for (const player of playerList) {
+            const teamAbbr = player.team_abbrev || player.team || 'UNKNOWN'
+            if (!teams.has(teamAbbr)) {
+                teams.set(teamAbbr, [])
+            }
+            teams.get(teamAbbr).push(player)
+        }
 
-    // Get position display name
-    function _getPositionName(pos) {
-        const positionNames = {
-            C: "Keskushyökkääjä",
-            LW: "Vasen laitahyökkääjä",
-            RW: "Oikea laitahyökkääjä",
-            D: "Puolustaja",
-            G: "Maalivahti",
-        };
-        return positionNames[pos?.toUpperCase()] || pos || "";
-    }
+        // Sort teams alphabetically by full name
+        const sortedTeams = new Map(
+            [...teams.entries()].sort((a, b) => {
+                const aName = teamMapping[a[0]] || a[0]
+                const bName = teamMapping[b[0]] || b[0]
+                return aName.localeCompare(bName)
+            })
+        )
 
-    // Format birth date for display
-    function _formatBirthDate(dateStr) {
-        if (!dateStr) return null;
-        const date = new Date(dateStr);
-        return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+        _teamsMap = sortedTeams
+        _players = playerList
+    } catch (err) {
+        console.error('Error loading Finnish roster:', err)
+        _error = 'Failed to load Finnish players roster'
+    } finally {
+        _loading = false
     }
+}
+
+onMount(() => {
+    loadFinnishRoster()
+})
+
+// Get sorted players for a team (by position: C, LW, RW, D, G)
+function _sortPlayersByPosition(teamPlayers) {
+    const positionOrder = { C: 1, LW: 2, RW: 3, D: 4, G: 5 }
+    return [...teamPlayers].sort((a, b) => {
+        const aPos = (a.position || 'Z').toUpperCase()
+        const bPos = (b.position || 'Z').toUpperCase()
+        const aOrder = positionOrder[aPos] ?? 99
+        const bOrder = positionOrder[bPos] ?? 99
+        if (aOrder !== bOrder) return aOrder - bOrder
+        return (a.name || '').localeCompare(b.name || '')
+    })
+}
+
+// Get position display name
+function _getPositionName(pos) {
+    const positionNames = {
+        C: 'Keskushyökkääjä',
+        LW: 'Vasen laitahyökkääjä',
+        RW: 'Oikea laitahyökkääjä',
+        D: 'Puolustaja',
+        G: 'Maalivahti',
+    }
+    return positionNames[pos?.toUpperCase()] || pos || ''
+}
+
+// Format birth date for display
+function _formatBirthDate(dateStr) {
+    if (!dateStr) return null
+    const date = new Date(dateStr)
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
+}
 </script>
 
 <div class="finnish-roster">

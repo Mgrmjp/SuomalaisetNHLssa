@@ -1,51 +1,51 @@
 <script>
-    import { onMount, onDestroy } from 'svelte';
-    import { base } from '$app/paths';
+import { onDestroy, onMount } from 'svelte'
+import { base } from '$app/paths'
 
-    const width = 160;
-    const height = 600;
+const _width = 160
+const _height = 600
 
-    const ads = [
-        {
-            href: "https://go.adt291.com/t/t?a=2028121988&as=2038972948&t=2&tk=1",
-            src: "https://track.adtraction.com/t/t?a=2028121988&as=2038972948&t=1&tk=1&i=1",
-            alt: "Mainos"
-        },
-        {
-            href: "https://go.adt242.com/t/t?a=2050880477&as=2038972948&t=2&tk=1",
-            src: "https://track.adtraction.com/t/t?a=2050880477&as=2038972948&t=1&tk=1&i=1",
-            alt: "Mainos"
-        },
-        {
-            href: "https://at.valco.fi/t/t?a=2020376424&as=2038972948&t=2&tk=1",
-            src: `${base}/valco.jpg`,
-            alt: "Mainos"
-        }
-    ];
+const ads = [
+    {
+        href: 'https://go.adt291.com/t/t?a=2028121988&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2028121988&as=2038972948&t=1&tk=1&i=1',
+        alt: 'Mainos',
+    },
+    {
+        href: 'https://go.adt242.com/t/t?a=2050880477&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2050880477&as=2038972948&t=1&tk=1&i=1',
+        alt: 'Mainos',
+    },
+    {
+        href: 'https://at.valco.fi/t/t?a=2020376424&as=2038972948&t=2&tk=1',
+        src: `${base}/valco.jpg`,
+        alt: 'Mainos',
+    },
+]
 
-    let currentAdIndex = 0;
-    let isTransitioning = false;
-    let interval;
+let currentAdIndex = 0
+let _isTransitioning = false
+let interval
 
-    function nextAd() {
-        isTransitioning = true;
+function nextAd() {
+    _isTransitioning = true
+    setTimeout(() => {
+        currentAdIndex = (currentAdIndex + 1) % ads.length
         setTimeout(() => {
-            currentAdIndex = (currentAdIndex + 1) % ads.length;
-            setTimeout(() => {
-                isTransitioning = false;
-            }, 100);
-        }, 500);
-    }
+            _isTransitioning = false
+        }, 100)
+    }, 500)
+}
 
-    onMount(() => {
-        interval = setInterval(nextAd, 8000);
-    });
+onMount(() => {
+    interval = setInterval(nextAd, 8000)
+})
 
-    onDestroy(() => {
-        if (interval) clearInterval(interval);
-    });
+onDestroy(() => {
+    if (interval) clearInterval(interval)
+})
 
-    $: currentAd = ads[currentAdIndex];
+$: currentAd = ads[currentAdIndex]
 </script>
 
 <div class="vertical-ad-container">

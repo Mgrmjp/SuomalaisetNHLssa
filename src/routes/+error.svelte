@@ -1,36 +1,33 @@
 <script>
-    import { base } from "$app/paths";
-    import Snowfall from "$lib/components/ui/Snowfall.svelte";
-    import { page } from "$app/stores";
-    import { onMount } from "svelte";
+import { onMount } from 'svelte'
 
-    let status = $page.status || 404;
-    let message = "Sivua ei löytynyt";
-    let randomTrivia = "";
+const status = $page.status || 404
+let _message = 'Sivua ei löytynyt'
+let _randomTrivia = ''
 
-    const TRIVIA_FACTS = [
-        "Jari Kurri teki 601 maalia 1251 NHL-ottelussa - keskimäärin 0.48 maalia per ottelu.",
-        "Suomi on voittanut jääkiekon MM-kultaa neljästi: 1995, 2011, 2019 ja 2022.",
-        "Teemu Selänne on NHL:n kaikkien aikojen paras suomalainen pistemies 1457 tehopisteellä.",
-        "Teemu Selänne pitää hallussaan NHL:n tulakkaiden maaliennätystä (76 maalia kaudella 1992-93).",
-        "Esa Tikkanen voitti urallaan viisi Stanley Cup -mestaruutta.",
-        "Miikka Kiprusoff voitti Vezina Trophyn NHL:n parhaana maalivahtina kaudella 2005-06.",
-        "Aleksander Barkov oli ensimmäinen suomalainen NHL-joukkueen kapteeni, joka johdatti joukkueensa Stanley Cup -mestaruuteen (2024).",
-        "Suomi voitti ensimmäisen olympiakultansa jääkiekossa Pekingissä 2022.",
-        "Saku Koivu toimi Montreal Canadiensin kapteenina 10 vuotta (1999-2009), ollen seuran ensimmäinen eurooppalainen kapteeni.",
-        "Pekka Rinne on ainoa suomalaismaalivahti, joka on tehnyt maalin NHL-ottelussa.",
-        "Tuukka Rask on Boston Bruinsin seurahistorian voitokkain maalivahti.",
-    ];
+const TRIVIA_FACTS = [
+    'Jari Kurri teki 601 maalia 1251 NHL-ottelussa - keskimäärin 0.48 maalia per ottelu.',
+    'Suomi on voittanut jääkiekon MM-kultaa neljästi: 1995, 2011, 2019 ja 2022.',
+    'Teemu Selänne on NHL:n kaikkien aikojen paras suomalainen pistemies 1457 tehopisteellä.',
+    'Teemu Selänne pitää hallussaan NHL:n tulakkaiden maaliennätystä (76 maalia kaudella 1992-93).',
+    'Esa Tikkanen voitti urallaan viisi Stanley Cup -mestaruutta.',
+    'Miikka Kiprusoff voitti Vezina Trophyn NHL:n parhaana maalivahtina kaudella 2005-06.',
+    'Aleksander Barkov oli ensimmäinen suomalainen NHL-joukkueen kapteeni, joka johdatti joukkueensa Stanley Cup -mestaruuteen (2024).',
+    'Suomi voitti ensimmäisen olympiakultansa jääkiekossa Pekingissä 2022.',
+    'Saku Koivu toimi Montreal Canadiensin kapteenina 10 vuotta (1999-2009), ollen seuran ensimmäinen eurooppalainen kapteeni.',
+    'Pekka Rinne on ainoa suomalaismaalivahti, joka on tehnyt maalin NHL-ottelussa.',
+    'Tuukka Rask on Boston Bruinsin seurahistorian voitokkain maalivahti.',
+]
 
-    if (status === 404) {
-        message = "Sivua ei löytynyt";
-    } else if (status === 500) {
-        message = "Palvelinvirhe";
-    }
+if (status === 404) {
+    _message = 'Sivua ei löytynyt'
+} else if (status === 500) {
+    _message = 'Palvelinvirhe'
+}
 
-    onMount(() => {
-        randomTrivia = TRIVIA_FACTS[Math.floor(Math.random() * TRIVIA_FACTS.length)];
-    });
+onMount(() => {
+    _randomTrivia = TRIVIA_FACTS[Math.floor(Math.random() * TRIVIA_FACTS.length)]
+})
 </script>
 
 <svelte:head>

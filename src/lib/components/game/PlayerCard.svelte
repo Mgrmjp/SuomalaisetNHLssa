@@ -1,406 +1,399 @@
 <script>
-    import ComprehensivePlayerDetails from "$lib/components/game/ComprehensivePlayerDetails.svelte";
-    import { onMount } from "svelte";
-    import { base } from "$app/paths";
-    import { games } from "$lib/stores/gameData.js";
-    import {
-        formatGameMatchup,
-        formatGameVenue,
-        formatGameScore,
-    } from "$lib/utils/gameFormatHelpers.mjs";
-    import { getTeamColorVariables } from "$lib/utils/teamColors.js";
-    import { isPlayerGameLive, shouldShowGameResult } from "$lib/utils/gameStateHelpers.mjs";
-    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
-    import { correctFullName } from "$lib/utils/finnishNameUtils.js";
-    import "./PlayerCard.css";
+import { onMount } from 'svelte'
+import { base } from '$app/paths'
+import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { formatGameScore } from '$lib/utils/gameFormatHelpers.mjs'
+import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
+import { getTeamColorVariables } from '$lib/utils/teamColors.js'
+import './PlayerCard.css'
 
-    let { player } = $props();
+const { player } = $props()
 
-    // Reactive variables for player photo
-    let playerPhotoUrl = $state(null);
-    let _photoError = $state(false);
-    let _imageLoading = $state(true);
-    let _lqipUrl = $state(null);
+// Reactive variables for player photo
+let playerPhotoUrl = $state(null)
+let _photoError = $state(false)
+let _imageLoading = $state(true)
+let _lqipUrl = $state(null)
 
-    // Get local WebP headshot URL (optimized, served from our domain)
-    function getLocalHeadshotUrl(playerId) {
-        if (!playerId) return null;
-        return `${base}/headshots/${playerId}.webp`;
+// Get local WebP headshot URL (optimized, served from our domain)
+function getLocalHeadshotUrl(playerId) {
+    if (!playerId) return null
+    return `${base}/headshots/${playerId}.webp`
+}
+
+// Get LQIP thumbnail URL (tiny placeholder)
+function getLqipUrl(playerId) {
+    if (!playerId) return null
+    return `${base}/headshots/thumbs/${playerId}.jpg`
+}
+
+// Load player image - try local WebP first, fallback to NHL CDN
+function loadPlayerImage(playerId) {
+    if (!playerId) return
+
+    _imageLoading = true
+    _photoError = false
+
+    // Set LQIP placeholder immediately
+    _lqipUrl = getLqipUrl(playerId)
+
+    // Try local WebP first
+    const localUrl = getLocalHeadshotUrl(playerId)
+    const img = new Image()
+
+    img.onload = () => {
+        playerPhotoUrl = localUrl
+        _photoError = false
+        _imageLoading = false
     }
 
-    // Get LQIP thumbnail URL (tiny placeholder)
-    function getLqipUrl(playerId) {
-        if (!playerId) return null;
-        return `${base}/headshots/thumbs/${playerId}.jpg`;
-    }
-
-    // Load player image - try local WebP first, fallback to NHL CDN
-    function loadPlayerImage(playerId) {
-        if (!playerId) return;
-
-        _imageLoading = true;
-        _photoError = false;
-
-        // Set LQIP placeholder immediately
-        _lqipUrl = getLqipUrl(playerId);
-
-        // Try local WebP first
-        const localUrl = getLocalHeadshotUrl(playerId);
-        const img = new Image();
-
-        img.onload = () => {
-            playerPhotoUrl = localUrl;
-            _photoError = false;
-            _imageLoading = false;
-        };
-
-        img.onerror = () => {
-            // Fallback to NHL CDN if local not found
-            if (player.headshot_url) {
-                const fallbackImg = new Image();
-                fallbackImg.onload = () => {
-                    playerPhotoUrl = player.headshot_url;
-                    _photoError = false;
-                    _imageLoading = false;
-                };
-                fallbackImg.onerror = () => {
-                    _photoError = true;
-                    playerPhotoUrl = null;
-                    _imageLoading = false;
-                };
-                fallbackImg.src = player.headshot_url;
-            } else {
-                _photoError = true;
-                playerPhotoUrl = null;
-                _imageLoading = false;
+    img.onerror = () => {
+        // Fallback to NHL CDN if local not found
+        if (player.headshot_url) {
+            const fallbackImg = new Image()
+            fallbackImg.onload = () => {
+                playerPhotoUrl = player.headshot_url
+                _photoError = false
+                _imageLoading = false
             }
-        };
-
-        img.src = localUrl;
-    }
-
-    // Load image when player changes
-    $effect(() => {
-        if (player?.playerId) {
-            loadPlayerImage(player.playerId);
-        }
-    });
-    let _photoLoading = $state(true);
-
-    let showSeasonStats = $state(false);
-    let showComprehensiveDetails = $state(false);
-    let _isLogoHovered = $state(false);
-    let isFlipped = $state(false);
-
-    // Convert hex to rgba with opacity for subtle borders
-    function _hexToRgba(hex, opacity = 0.7) {
-        if (!hex || !hex.startsWith("#")) return `rgba(0, 0, 0, ${opacity})`;
-
-        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        if (!result) return `rgba(0, 0, 0, ${opacity})`;
-
-        const r = parseInt(result[1], 16);
-        const g = parseInt(result[2], 16);
-        const b = parseInt(result[3], 16);
-
-        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-    }
-
-    // Subtle border opacity
-    function _hexToRgbaBorder(hex) {
-        return _hexToRgba(hex, 0.3);
-    }
-
-    // Team names are now fetched from API and stored in team_full field
-    function getTeamWithCity(teamAbbrev) {
-        if (!teamAbbrev) return "Unknown Team";
-        // Use team_full from API data if available, otherwise fallback to abbreviation
-        const fullTeamName = player?.team_full || player?.opponent_full;
-        if (fullTeamName && fullTeamName !== teamAbbrev) {
-            return fullTeamName;
-        }
-        return teamAbbrev;
-    }
-
-    function _toggleSeasonStats(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        showSeasonStats = !showSeasonStats;
-    }
-
-    function _closeSeasonStats(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        showSeasonStats = false;
-    }
-
-    function _toggleComprehensiveDetails(event) {
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        showComprehensiveDetails = !showComprehensiveDetails;
-    }
-
-    function _handleBackdropClick(event) {
-        if (event.target === event.currentTarget) {
-            showSeasonStats = false;
-            showComprehensiveDetails = false;
-        }
-    }
-
-    function toggleFlip() {
-        isFlipped = !isFlipped;
-    }
-
-    function _handleCardClick(event) {
-        // Only flip if clicking on the card itself, not on buttons or interactive elements
-        if (event.target.closest("button") || event.target.closest("a")) {
-            return;
-        }
-        toggleFlip();
-    }
-
-    const displayName = $derived(
-        correctFullName(
-            player.name?.default ||
-                player.name ||
-                player.fullName ||
-                player.skaterFullName ||
-                "Unknown Player",
-        ),
-    );
-    const gamesData = $derived($games);
-    const isLive = $derived(isPlayerGameLive(player, gamesData));
-    const showResult = $derived(shouldShowGameResult(player, gamesData));
-    const gameResult = $derived(player.game_result || player.gameResult || null);
-    const teamWithCity = $derived(getTeamWithCity(player.team || "NHL"));
-    const opponentWithCity = $derived(getTeamWithCity(player.opponent || "NHL"));
-    const playerHeadshot = $derived(playerPhotoUrl);
-    const formattedScore = $derived(formatGameScore(player, gamesData));
-
-    // Team color variables
-    let _teamColorVars = $state({
-        "--team-primary-color": "#000000",
-        "--team-secondary-color": "#FFFFFF",
-        "--team-accent-color": "#000000",
-    });
-
-    // Animation control
-    const _enableAnimatedBorders = true;
-
-    // Load team colors when component mounts or player changes
-    onMount(async () => {
-        if (player?.team) {
-            try {
-                _teamColorVars = await getTeamColorVariables(player.team);
-            } catch (error) {
-                console.warn(`Failed to load team colors for ${player.team}:`, error);
+            fallbackImg.onerror = () => {
+                _photoError = true
+                playerPhotoUrl = null
+                _imageLoading = false
             }
-        }
-    });
-
-    // Update colors when player changes
-    $effect(() => {
-        if (player?.team) {
-            loadTeamColors();
-        }
-    });
-
-    async function loadTeamColors() {
-        if (player?.team) {
-            try {
-                _teamColorVars = await getTeamColorVariables(player.team);
-            } catch (error) {
-                console.warn(`Failed to load team colors for ${player.team}:`, error);
-            }
-        }
-    }
-    const playerInitials = $derived(
-        displayName
-            .split(" ")
-            .map((part) => part.charAt(0).toUpperCase())
-            .join("")
-            .slice(0, 2),
-    );
-
-    // Calculate number of stats for responsive grid (skaters)
-    // Note: empty_net_goals are excluded from grid count - they get their own row
-    const statCount = $derived(
-        [
-            player.goals > 0,
-            player.assists > 0,
-            player.points > 0,
-            !isGoalie && player.plus_minus !== undefined,
-            (player.penalty_minutes || 0) > 0,
-        ].filter(Boolean).length,
-    );
-
-    const skaterGridClass = $derived(
-        statCount === 1
-            ? "player-card__stats-grid--single"
-            : statCount >= 5
-              ? "player-card__stats-grid--skater-4" // Cap at 4 columns
-              : `player-card__stats-grid--skater-${statCount}`,
-    );
-
-    // Goalie stats count
-    const goalieStatCount = $derived(
-        [
-            player.saves !== undefined,
-            player.shots_against !== undefined,
-            player.goals_against !== undefined,
-            goalieSavePct !== null,
-            (player.empty_net_goals || 0) > 0,
-        ].filter(Boolean).length,
-    );
-
-    const goalieGridClass = $derived(
-        goalieStatCount === 1
-            ? "player-card__stats-grid--single"
-            : goalieStatCount === 2
-              ? "player-card__stats-grid--goalie-2"
-              : goalieStatCount === 3
-                ? "player-card__stats-grid--goalie-3"
-                : "player-card__stats-grid--goalie-4",
-    );
-
-    // Goalie helpers
-    const isGoalie = $derived(
-        (player.position || "").toUpperCase() === "G" ||
-            (player.position || "").toUpperCase() === "GOALIE",
-    );
-    const goalieSavePct = $derived(getSavePercentage(player));
-
-    // Game result helpers
-    const resultIndicator = $derived(getResultIndicator(gameResult));
-    const hasENG = $derived((player.empty_net_goals || 0) > 0);
-
-    function getResultIndicator(result) {
-        switch (result) {
-            case "W":
-                return {
-                    bg: "bg-green-100",
-                    text: "W",
-                    label: "Voitto",
-                    textColor: "text-green-700",
-                    border: "ring-green-300",
-                };
-            case "SOW":
-                return {
-                    bg: "bg-emerald-100",
-                    text: "SV",
-                    label: "Voitto VL",
-                    textColor: "text-emerald-700",
-                    border: "ring-emerald-300",
-                };
-            case "L":
-                return {
-                    bg: "bg-red-100",
-                    text: "L",
-                    label: "Häviö",
-                    textColor: "text-red-700",
-                    border: "ring-red-300",
-                };
-            case "SOL":
-                return {
-                    bg: "bg-rose-100",
-                    text: "SO",
-                    label: "Häviö VL",
-                    textColor: "text-rose-700",
-                    border: "ring-rose-300",
-                };
-            case "OTW":
-                return {
-                    bg: "bg-amber-100",
-                    text: "JA",
-                    label: "Voitto JA",
-                    textColor: "text-amber-700",
-                    border: "ring-amber-300",
-                };
-            case "OTL":
-                return {
-                    bg: "bg-orange-100",
-                    text: "JA",
-                    label: "Häviö JA",
-                    textColor: "text-orange-700",
-                    border: "ring-orange-300",
-                };
-            default:
-                return {
-                    bg: "bg-gray-100",
-                    text: "?",
-                    label: "Ei tietoa",
-                    textColor: "text-gray-700",
-                    border: "ring-gray-300",
-                };
-        }
-    }
-
-    function getSavePercentage(player) {
-        const provided = player.save_percentage ?? player.savePercentage;
-        // Use provided percentage if it's a positive number
-        if (typeof provided === "number" && provided > 0) {
-            // If it's already a percentage (like 0.857), convert to percentage format
-            // If it's a percentage value (like 85.7), keep it as is
-            return Number(provided > 1 ? provided : (provided * 100).toFixed(1));
-        }
-
-        const saves = Number(player.saves ?? player.goalie_saves);
-        const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst);
-
-        if (Number.isFinite(saves) && Number.isFinite(shotsAgainst) && shotsAgainst > 0) {
-            // Calculate and return as percentage (e.g., 85.7)
-            return Number(((saves / shotsAgainst) * 100).toFixed(1));
-        }
-
-        return null;
-    }
-
-    // Action to portal element to body (for modals to escape parent transforms)
-    function portal(node) {
-        // Create a placeholder to take the element's place
-        const placeholder = document.createElement("div");
-        placeholder.className = "portal-placeholder";
-        placeholder.style.cssText = "display: none;";
-        node.parentNode.insertBefore(placeholder, node);
-        node._portalPlaceholder = placeholder;
-
-        // Move to body
-        document.body.appendChild(node);
-
-        return {
-            update() {
-                // Keep it in body
-                if (node.parentNode !== document.body) {
-                    document.body.appendChild(node);
-                }
-            },
-            destroy() {
-                // Remove from body and remove placeholder
-                if (document.body.contains(node)) {
-                    document.body.removeChild(node);
-                }
-                if (node._portalPlaceholder && node._portalPlaceholder.parentNode) {
-                    node._portalPlaceholder.parentNode.removeChild(node._portalPlaceholder);
-                }
-            },
-        };
-    }
-
-    // Prevent body scroll when modal is open
-    $effect(() => {
-        if (showSeasonStats) {
-            document.body.style.overflow = "hidden";
+            fallbackImg.src = player.headshot_url
         } else {
-            document.body.style.overflow = "";
+            _photoError = true
+            playerPhotoUrl = null
+            _imageLoading = false
         }
-        return () => {
-            document.body.style.overflow = "";
-        };
-    });
+    }
+
+    img.src = localUrl
+}
+
+// Load image when player changes
+$effect(() => {
+    if (player?.playerId) {
+        loadPlayerImage(player.playerId)
+    }
+})
+const _photoLoading = $state(true)
+
+let showSeasonStats = $state(false)
+let showComprehensiveDetails = $state(false)
+const _isLogoHovered = $state(false)
+let isFlipped = $state(false)
+
+// Convert hex to rgba with opacity for subtle borders
+function _hexToRgba(hex, opacity = 0.7) {
+    if (!hex || !hex.startsWith('#')) return `rgba(0, 0, 0, ${opacity})`
+
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+    if (!result) return `rgba(0, 0, 0, ${opacity})`
+
+    const r = parseInt(result[1], 16)
+    const g = parseInt(result[2], 16)
+    const b = parseInt(result[3], 16)
+
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`
+}
+
+// Subtle border opacity
+function _hexToRgbaBorder(hex) {
+    return _hexToRgba(hex, 0.3)
+}
+
+// Team names are now fetched from API and stored in team_full field
+function getTeamWithCity(teamAbbrev) {
+    if (!teamAbbrev) return 'Unknown Team'
+    // Use team_full from API data if available, otherwise fallback to abbreviation
+    const fullTeamName = player?.team_full || player?.opponent_full
+    if (fullTeamName && fullTeamName !== teamAbbrev) {
+        return fullTeamName
+    }
+    return teamAbbrev
+}
+
+function _toggleSeasonStats(event) {
+    if (event) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
+    showSeasonStats = !showSeasonStats
+}
+
+function _closeSeasonStats(event) {
+    event.preventDefault()
+    event.stopPropagation()
+    showSeasonStats = false
+}
+
+function _toggleComprehensiveDetails(event) {
+    if (event) {
+        event.preventDefault()
+        event.stopPropagation()
+    }
+    showComprehensiveDetails = !showComprehensiveDetails
+}
+
+function _handleBackdropClick(event) {
+    if (event.target === event.currentTarget) {
+        showSeasonStats = false
+        showComprehensiveDetails = false
+    }
+}
+
+function toggleFlip() {
+    isFlipped = !isFlipped
+}
+
+function _handleCardClick(event) {
+    // Only flip if clicking on the card itself, not on buttons or interactive elements
+    if (event.target.closest('button') || event.target.closest('a')) {
+        return
+    }
+    toggleFlip()
+}
+
+const displayName = $derived(
+    correctFullName(
+        player.name?.default ||
+            player.name ||
+            player.fullName ||
+            player.skaterFullName ||
+            'Unknown Player'
+    )
+)
+const gamesData = $derived($games)
+const _isLive = $derived(isPlayerGameLive(player, gamesData))
+const _showResult = $derived(shouldShowGameResult(player, gamesData))
+const gameResult = $derived(player.game_result || player.gameResult || null)
+const _teamWithCity = $derived(getTeamWithCity(player.team || 'NHL'))
+const _opponentWithCity = $derived(getTeamWithCity(player.opponent || 'NHL'))
+const _playerHeadshot = $derived(playerPhotoUrl)
+const _formattedScore = $derived(formatGameScore(player, gamesData))
+
+// Team color variables
+let _teamColorVars = $state({
+    '--team-primary-color': '#000000',
+    '--team-secondary-color': '#FFFFFF',
+    '--team-accent-color': '#000000',
+})
+
+// Animation control
+const _enableAnimatedBorders = true
+
+// Load team colors when component mounts or player changes
+onMount(async () => {
+    if (player?.team) {
+        try {
+            _teamColorVars = await getTeamColorVariables(player.team)
+        } catch (error) {
+            console.warn(`Failed to load team colors for ${player.team}:`, error)
+        }
+    }
+})
+
+// Update colors when player changes
+$effect(() => {
+    if (player?.team) {
+        loadTeamColors()
+    }
+})
+
+async function loadTeamColors() {
+    if (player?.team) {
+        try {
+            _teamColorVars = await getTeamColorVariables(player.team)
+        } catch (error) {
+            console.warn(`Failed to load team colors for ${player.team}:`, error)
+        }
+    }
+}
+const _playerInitials = $derived(
+    displayName
+        .split(' ')
+        .map((part) => part.charAt(0).toUpperCase())
+        .join('')
+        .slice(0, 2)
+)
+
+// Calculate number of stats for responsive grid (skaters)
+// Note: empty_net_goals are excluded from grid count - they get their own row
+const statCount = $derived(
+    [
+        player.goals > 0,
+        player.assists > 0,
+        player.points > 0,
+        !isGoalie && player.plus_minus !== undefined,
+        (player.penalty_minutes || 0) > 0,
+    ].filter(Boolean).length
+)
+
+const _skaterGridClass = $derived(
+    statCount === 1
+        ? 'player-card__stats-grid--single'
+        : statCount >= 5
+          ? 'player-card__stats-grid--skater-4' // Cap at 4 columns
+          : `player-card__stats-grid--skater-${statCount}`
+)
+
+// Goalie stats count
+const goalieStatCount = $derived(
+    [
+        player.saves !== undefined,
+        player.shots_against !== undefined,
+        player.goals_against !== undefined,
+        goalieSavePct !== null,
+        (player.empty_net_goals || 0) > 0,
+    ].filter(Boolean).length
+)
+
+const _goalieGridClass = $derived(
+    goalieStatCount === 1
+        ? 'player-card__stats-grid--single'
+        : goalieStatCount === 2
+          ? 'player-card__stats-grid--goalie-2'
+          : goalieStatCount === 3
+            ? 'player-card__stats-grid--goalie-3'
+            : 'player-card__stats-grid--goalie-4'
+)
+
+// Goalie helpers
+const isGoalie = $derived(
+    (player.position || '').toUpperCase() === 'G' ||
+        (player.position || '').toUpperCase() === 'GOALIE'
+)
+const goalieSavePct = $derived(getSavePercentage(player))
+
+// Game result helpers
+const _resultIndicator = $derived(getResultIndicator(gameResult))
+const _hasENG = $derived((player.empty_net_goals || 0) > 0)
+
+function getResultIndicator(result) {
+    switch (result) {
+        case 'W':
+            return {
+                bg: 'bg-green-100',
+                text: 'W',
+                label: 'Voitto',
+                textColor: 'text-green-700',
+                border: 'ring-green-300',
+            }
+        case 'SOW':
+            return {
+                bg: 'bg-emerald-100',
+                text: 'SV',
+                label: 'Voitto VL',
+                textColor: 'text-emerald-700',
+                border: 'ring-emerald-300',
+            }
+        case 'L':
+            return {
+                bg: 'bg-red-100',
+                text: 'L',
+                label: 'Häviö',
+                textColor: 'text-red-700',
+                border: 'ring-red-300',
+            }
+        case 'SOL':
+            return {
+                bg: 'bg-rose-100',
+                text: 'SO',
+                label: 'Häviö VL',
+                textColor: 'text-rose-700',
+                border: 'ring-rose-300',
+            }
+        case 'OTW':
+            return {
+                bg: 'bg-amber-100',
+                text: 'JA',
+                label: 'Voitto JA',
+                textColor: 'text-amber-700',
+                border: 'ring-amber-300',
+            }
+        case 'OTL':
+            return {
+                bg: 'bg-orange-100',
+                text: 'JA',
+                label: 'Häviö JA',
+                textColor: 'text-orange-700',
+                border: 'ring-orange-300',
+            }
+        default:
+            return {
+                bg: 'bg-gray-100',
+                text: '?',
+                label: 'Ei tietoa',
+                textColor: 'text-gray-700',
+                border: 'ring-gray-300',
+            }
+    }
+}
+
+function getSavePercentage(player) {
+    const provided = player.save_percentage ?? player.savePercentage
+    // Use provided percentage if it's a positive number
+    if (typeof provided === 'number' && provided > 0) {
+        // If it's already a percentage (like 0.857), convert to percentage format
+        // If it's a percentage value (like 85.7), keep it as is
+        return Number(provided > 1 ? provided : (provided * 100).toFixed(1))
+    }
+
+    const saves = Number(player.saves ?? player.goalie_saves)
+    const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst)
+
+    if (Number.isFinite(saves) && Number.isFinite(shotsAgainst) && shotsAgainst > 0) {
+        // Calculate and return as percentage (e.g., 85.7)
+        return Number(((saves / shotsAgainst) * 100).toFixed(1))
+    }
+
+    return null
+}
+
+// Action to portal element to body (for modals to escape parent transforms)
+function _portal(node) {
+    // Create a placeholder to take the element's place
+    const placeholder = document.createElement('div')
+    placeholder.className = 'portal-placeholder'
+    placeholder.style.cssText = 'display: none;'
+    node.parentNode.insertBefore(placeholder, node)
+    node._portalPlaceholder = placeholder
+
+    // Move to body
+    document.body.appendChild(node)
+
+    return {
+        update() {
+            // Keep it in body
+            if (node.parentNode !== document.body) {
+                document.body.appendChild(node)
+            }
+        },
+        destroy() {
+            // Remove from body and remove placeholder
+            if (document.body.contains(node)) {
+                document.body.removeChild(node)
+            }
+            if (node._portalPlaceholder?.parentNode) {
+                node._portalPlaceholder.parentNode.removeChild(node._portalPlaceholder)
+            }
+        },
+    }
+}
+
+// Prevent body scroll when modal is open
+$effect(() => {
+    if (showSeasonStats) {
+        document.body.style.overflow = 'hidden'
+    } else {
+        document.body.style.overflow = ''
+    }
+    return () => {
+        document.body.style.overflow = ''
+    }
+})
 </script>
 
 <div class="player-card__container relative w-full h-full" class:goalie-card={isGoalie}>

@@ -1,17 +1,12 @@
 <script>
-    import ErrorBoundary from "$lib/components/ui/ErrorBoundary.svelte";
-    import VerticalAd from "$lib/components/ui/VerticalAd.svelte";
-    import VerticalAdLeft from "$lib/components/ui/VerticalAdLeft.svelte";
-    import { base } from "$app/paths";
-    import { page } from "$app/stores";
-    import "../app.css";
-    // import PlayerPatternBackground from '$lib/components/ui/PlayerPatternBackground.svelte'
-    // import Footer from '$lib/components/ui/Footer.svelte'
+import '../app.css'
+// import PlayerPatternBackground from '$lib/components/ui/PlayerPatternBackground.svelte'
+// import Footer from '$lib/components/ui/Footer.svelte'
 
-    const siteUrl = "https://suomalaisetnhlssa.fi";
-    const siteName = "Suomalaiset NHL:ssä";
-    const defaultDescription =
-        "Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset.";
+const _siteUrl = 'https://suomalaisetnhlssa.fi'
+const _siteName = 'Suomalaiset NHL:ssä'
+const _defaultDescription =
+    'Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset.'
 </script>
 
 <svelte:head>

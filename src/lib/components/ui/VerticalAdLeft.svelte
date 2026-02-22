@@ -1,56 +1,56 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
+import { onDestroy, onMount } from 'svelte'
 
-    const ads = [
-        {
-            href: "https://id.skruvat.fi/t/t?a=1483923855&as=2038972948&t=2&tk=1",
-            src: "https://track.adtraction.com/t/t?a=1483923855&as=2038972948&t=1&tk=1&i=1",
-            width: 160,
-            height: 600,
-            alt: "Mainos",
-        },
-        {
-            href: "https://to.bjornborg.com/t/t?a=1616919154&as=2038972948&t=2&tk=1",
-            src: "https://track.adtraction.com/t/t?a=1616919154&as=2038972948&t=1&tk=1&i=1",
-            width: 120,
-            height: 600,
-            alt: "Mainos",
-        },
-        {
-            href: "https://go.adt242.com/t/t?a=1875158502&as=2038972948&t=2&tk=1",
-            src: "https://track.adtraction.com/t/t?a=1875158502&as=2038972948&t=1&tk=1&i=1",
-            width: 160,
-            height: 600,
-            alt: "Mainos",
-        },
-    ];
+const ads = [
+    {
+        href: 'https://id.skruvat.fi/t/t?a=1483923855&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1483923855&as=2038972948&t=1&tk=1&i=1',
+        width: 160,
+        height: 600,
+        alt: 'Mainos',
+    },
+    {
+        href: 'https://to.bjornborg.com/t/t?a=1616919154&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1616919154&as=2038972948&t=1&tk=1&i=1',
+        width: 120,
+        height: 600,
+        alt: 'Mainos',
+    },
+    {
+        href: 'https://go.adt242.com/t/t?a=1875158502&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1875158502&as=2038972948&t=1&tk=1&i=1',
+        width: 160,
+        height: 600,
+        alt: 'Mainos',
+    },
+]
 
-    let currentAdIndex = 0;
-    let isTransitioning = false;
-    let interval;
+let currentAdIndex = 0
+let _isTransitioning = false
+let interval
 
-    function nextAd() {
-        isTransitioning = true;
+function nextAd() {
+    _isTransitioning = true
+    setTimeout(() => {
+        currentAdIndex = (currentAdIndex + 1) % ads.length
         setTimeout(() => {
-            currentAdIndex = (currentAdIndex + 1) % ads.length;
-            setTimeout(() => {
-                isTransitioning = false;
-            }, 100);
-        }, 500);
-    }
+            _isTransitioning = false
+        }, 100)
+    }, 500)
+}
 
-    onMount(() => {
-        // Start with 2s delay to offset from other ad rotations
-        setTimeout(() => {
-            interval = setInterval(nextAd, 8000);
-        }, 2000);
-    });
+onMount(() => {
+    // Start with 2s delay to offset from other ad rotations
+    setTimeout(() => {
+        interval = setInterval(nextAd, 8000)
+    }, 2000)
+})
 
-    onDestroy(() => {
-        if (interval) clearInterval(interval);
-    });
+onDestroy(() => {
+    if (interval) clearInterval(interval)
+})
 
-    $: currentAd = ads[currentAdIndex];
+$: currentAd = ads[currentAdIndex]
 </script>
 
 <div class="vertical-ad-container-left">

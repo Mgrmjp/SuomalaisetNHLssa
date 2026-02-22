@@ -528,39 +528,37 @@ textarea {
     inset: 0;
     /* Use dvh (dynamic viewport height) when supported, fallback to vh */
     height: 100dvh;
-    height: 100vh;
 }
 
 /* Mobile modal positioning - bottom sheet style */
 @media (max-width: 639px) {
     .modal-overlay-mobile {
-        align-items: flex-end !important;
-        padding: 0 !important;
+        align-items: flex-end;
+        padding: 0;
     }
 
     .modal-dialog-mobile {
-        max-height: 100vh !important;
-        margin: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
+        max-height: 100vh;
+        margin: 0;
+        width: 100%;
+        max-width: 100%;
     }
 
     /* Safe area padding for iOS home indicator */
     .modal-content-mobile {
-        padding-bottom: max(1.5rem, env(safe-area-inset-bottom)) !important;
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
     }
 }
 
 /* Desktop modal positioning */
 @media (min-width: 641px) {
     .modal-overlay-desktop {
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 1rem !important;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
     }
 
     .modal-dialog-desktop {
-        max-height: 85dvh !important;
-        max-height: 85vh !important;
+        max-height: 85dvh;
     }
 }

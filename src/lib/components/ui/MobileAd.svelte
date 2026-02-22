@@ -1,8 +1,8 @@
 <script>
-    const href = "https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1";
-    const src = "https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1";
-    const width = 320;
-    const height = 320;
+const _href = 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1'
+const _src = 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1'
+const _width = 320
+const _height = 320
 </script>
 
 <div class="mobile-ad-container">

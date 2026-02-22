@@ -1,11 +1,11 @@
 <script>
-    const ad = {
-        href: "https://to.bjornborg.com/t/t?a=1616919459&as=2038972948&t=2&tk=1",
-        src: "https://track.adtraction.com/t/t?a=1616919459&as=2038972948&t=1&tk=1&i=1",
-        width: 300,
-        height: 250,
-        alt: "Mainos",
-    };
+const _ad = {
+    href: 'https://to.bjornborg.com/t/t?a=1616919459&as=2038972948&t=2&tk=1',
+    src: 'https://track.adtraction.com/t/t?a=1616919459&as=2038972948&t=1&tk=1&i=1',
+    width: 300,
+    height: 250,
+    alt: 'Mainos',
+}
 </script>
 
 <div class="mobile-ad-banner">

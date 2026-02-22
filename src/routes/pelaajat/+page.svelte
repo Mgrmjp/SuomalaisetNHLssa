@@ -1,47 +1,45 @@
 <script>
-    import { base } from "$app/paths";
-    import Snowfall from "$lib/components/ui/Snowfall.svelte";
-    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
-    import { correctFullName } from "$lib/utils/finnishNameUtils.js";
+import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
-    /** @type {import('./$types').PageData} */
-    export let data;
+/** @type {import('./$types').PageData} */
+export let data
 
-    const { skaters, goalies, seasonId, error } = data;
-    const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`;
+const { skaters, goalies, seasonId, error } = data
+const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
 
-    let searchTerm = "";
+const searchTerm = ''
 
-    $: allPlayers = [...skaters, ...goalies].sort((a, b) => {
-        const nameA = a.skaterFullName || a.goalieFullName;
-        const nameB = b.skaterFullName || b.goalieFullName;
-        return nameA.localeCompare(nameB);
-    });
+$: allPlayers = [...skaters, ...goalies].sort((a, b) => {
+    const nameA = a.skaterFullName || a.goalieFullName
+    const nameB = b.skaterFullName || b.goalieFullName
+    return nameA.localeCompare(nameB)
+})
 
-    $: filteredPlayers = allPlayers.filter((player) => {
-        const name = player.skaterFullName || player.goalieFullName;
-        const team = player.teamAbbrevs;
-        const search = searchTerm.toLowerCase();
-        return name.toLowerCase().includes(search) || team.toLowerCase().includes(search);
-    });
+$: filteredPlayers = allPlayers.filter((player) => {
+    const name = player.skaterFullName || player.goalieFullName
+    const team = player.teamAbbrevs
+    const search = searchTerm.toLowerCase()
+    return name.toLowerCase().includes(search) || team.toLowerCase().includes(search)
+})
 
-    function getPlayerName(player) {
-        return correctFullName(player.skaterFullName || player.goalieFullName);
-    }
+function getPlayerName(player) {
+    return correctFullName(player.skaterFullName || player.goalieFullName)
+}
 
-    // Helper to convert name to URL-friendly slug
-    function nameToSlug(name) {
-        return name.toLowerCase()
-            .replace(/ä/g, 'a')
-            .replace(/ö/g, 'o')
-            .replace(/å/g, 'o')
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '');
-    }
+// Helper to convert name to URL-friendly slug
+function nameToSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/ä/g, 'a')
+        .replace(/ö/g, 'o')
+        .replace(/å/g, 'o')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+}
 
-    function getPlayerSlug(player) {
-        return nameToSlug(getPlayerName(player));
-    }
+function _getPlayerSlug(player) {
+    return nameToSlug(getPlayerName(player))
+}
 </script>
 
 <svelte:head>

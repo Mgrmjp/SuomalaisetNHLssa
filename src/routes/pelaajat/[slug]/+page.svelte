@@ -1,78 +1,76 @@
 <script>
-    import { base } from "$app/paths";
-    import TeamLogo from "$lib/components/ui/TeamLogo.svelte";
-    import Snowfall from "$lib/components/ui/Snowfall.svelte";
-    import { correctFullName } from "$lib/utils/finnishNameUtils.js";
+import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
-    /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
-    let { data } = $props();
+/** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
+const { data } = $props()
 
-    const { player, sameTeamPlayers, seasonId, slug } = data;
-    const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`;
+const { player, sameTeamPlayers, seasonId, slug } = data
+const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
 
-    const playerName = player.skaterFullName || player.goalieFullName || "Unknown Player";
-    const displayName = $derived(correctFullName(playerName));
-    const teamName = player.teamAbbrevs || "NHL";
-    const position = player.positionCode || "N/A";
-    const isGoalie = position === "G";
+const playerName = player.skaterFullName || player.goalieFullName || 'Unknown Player'
+const _displayName = $derived(correctFullName(playerName))
+const teamName = player.teamAbbrevs || 'NHL'
+const position = player.positionCode || 'N/A'
+const _isGoalie = position === 'G'
 
-    function getTeamFullName(abbrev) {
-        const teamNames = {
-            "BOS": "Boston Bruins",
-            "BUF": "Buffalo Sabres",
-            "DET": "Detroit Red Wings",
-            "FLA": "Florida Panthers",
-            "MTL": "Montreal Canadiens",
-            "OTT": "Ottawa Senators",
-            "TBL": "Tampa Bay Lightning",
-            "TOR": "Toronto Maple Leafs",
-            "CAR": "Carolina Hurricanes",
-            "CBJ": "Columbus Blue Jackets",
-            "NJD": "New Jersey Devils",
-            "NYI": "New York Islanders",
-            "NYR": "New York Rangers",
-            "PHI": "Philadelphia Flyers",
-            "PIT": "Pittsburgh Penguins",
-            "WSH": "Washington Capitals",
-            "ARI": "Arizona Coyotes",
-            "CHI": "Chicago Blackhawks",
-            "COL": "Colorado Avalanche",
-            "DAL": "Dallas Stars",
-            "MIN": "Minnesota Wild",
-            "NSH": "Nashville Predators",
-            "STL": "St. Louis Blues",
-            "WPG": "Winnipeg Jets",
-            "ANA": "Anaheim Ducks",
-            "CGY": "Calgary Flames",
-            "EDM": "Edmonton Oilers",
-            "LAK": "Los Angeles Kings",
-            "SJS": "San Jose Sharks",
-            "SEA": "Seattle Kraken",
-            "VAN": "Vancouver Canucks",
-            "VGK": "Vegas Golden Knights"
-        };
-        return teamNames[abbrev] || abbrev;
+function getTeamFullName(abbrev) {
+    const teamNames = {
+        BOS: 'Boston Bruins',
+        BUF: 'Buffalo Sabres',
+        DET: 'Detroit Red Wings',
+        FLA: 'Florida Panthers',
+        MTL: 'Montreal Canadiens',
+        OTT: 'Ottawa Senators',
+        TBL: 'Tampa Bay Lightning',
+        TOR: 'Toronto Maple Leafs',
+        CAR: 'Carolina Hurricanes',
+        CBJ: 'Columbus Blue Jackets',
+        NJD: 'New Jersey Devils',
+        NYI: 'New York Islanders',
+        NYR: 'New York Rangers',
+        PHI: 'Philadelphia Flyers',
+        PIT: 'Pittsburgh Penguins',
+        WSH: 'Washington Capitals',
+        ARI: 'Arizona Coyotes',
+        CHI: 'Chicago Blackhawks',
+        COL: 'Colorado Avalanche',
+        DAL: 'Dallas Stars',
+        MIN: 'Minnesota Wild',
+        NSH: 'Nashville Predators',
+        STL: 'St. Louis Blues',
+        WPG: 'Winnipeg Jets',
+        ANA: 'Anaheim Ducks',
+        CGY: 'Calgary Flames',
+        EDM: 'Edmonton Oilers',
+        LAK: 'Los Angeles Kings',
+        SJS: 'San Jose Sharks',
+        SEA: 'Seattle Kraken',
+        VAN: 'Vancouver Canucks',
+        VGK: 'Vegas Golden Knights',
     }
+    return teamNames[abbrev] || abbrev
+}
 
-    // Helper to convert name to URL-friendly slug
-    function nameToSlug(name) {
-        return name.toLowerCase()
-            .replace(/ä/g, 'a')
-            .replace(/ö/g, 'o')
-            .replace(/å/g, 'o')
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '');
-    }
+// Helper to convert name to URL-friendly slug
+function nameToSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/ä/g, 'a')
+        .replace(/ö/g, 'o')
+        .replace(/å/g, 'o')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+}
 
-    const teamFullName = $derived(getTeamFullName(teamName));
+const _teamFullName = $derived(getTeamFullName(teamName))
 
-    function getPlayerName(p) {
-        return correctFullName(p.skaterFullName || p.goalieFullName);
-    }
+function getPlayerName(p) {
+    return correctFullName(p.skaterFullName || p.goalieFullName)
+}
 
-    function getPlayerSlug(p) {
-        return nameToSlug(getPlayerName(p));
-    }
+function _getPlayerSlug(p) {
+    return nameToSlug(getPlayerName(p))
+}
 </script>
 
 <svelte:head>

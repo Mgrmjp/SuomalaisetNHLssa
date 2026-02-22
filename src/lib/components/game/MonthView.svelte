@@ -1,133 +1,119 @@
 <script>
-    // biome-ignore lint/correctness/noUnusedImports: used in template
-    import {
-        formatDate,
-        setDate,
-        showCalendarView,
-        selectedDate,
-        currentDateReadOnly,
-        availableDates,
-    } from "$lib/stores/gameData.js";
+// biome-ignore lint/correctness/noUnusedImports: used in template
+import { formatDate, setDate, showCalendarView } from '$lib/stores/gameData.js'
 
-    // View state: 'calendar' or 'year'
-    let view = "calendar";
+// View state: 'calendar' or 'year'
+let view = 'calendar'
 
-    // Generate years array (from 2021 to current year)
-    $: years = Array.from(
-        { length: $currentDateReadOnly.getFullYear() - 2020 },
-        (_, i) => 2021 + i,
-    );
+// Generate years array (from 2021 to current year)
+$: years = Array.from({ length: $currentDateReadOnly.getFullYear() - 2020 }, (_, i) => 2021 + i)
 
-    // Toggle between calendar and year view
-    function toggleView() {
-        view = view === "calendar" ? "year" : "calendar";
+// Toggle between calendar and year view
+function _toggleView() {
+    view = view === 'calendar' ? 'year' : 'calendar'
+}
+
+// Select a year and switch back to calendar view
+/** @param {number} year */
+function _selectYear(year) {
+    const newDate = new Date(currentMonth)
+    newDate.setFullYear(year)
+    // Don't go beyond current date
+    if (newDate > $currentDateReadOnly) {
+        newDate.setTime($currentDateReadOnly.getTime())
     }
+    setDate(formatDate(newDate))
+    view = 'calendar'
+}
 
-    // Select a year and switch back to calendar view
-    /** @param {number} year */
-    function selectYear(year) {
-        const newDate = new Date(currentMonth);
-        newDate.setFullYear(year);
+// Check if two dates are in the same month
+/** @param {Date} date1 @param {Date} date2 */
+function _isSameMonth(date1, date2) {
+    return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth()
+}
+
+// Generate calendar days for the current selected date's month
+$: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly))
+$: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $currentDateReadOnly
+
+// Get the month and year display string (reactive)
+$: monthYearDisplay = currentMonth.toLocaleDateString('fi-FI', {
+    month: 'long',
+    year: 'numeric',
+})
+
+// Navigate between months
+/** @param {'prev' | 'next'} direction */
+function _navigateMonth(direction) {
+    const newMonth = new Date(currentMonth)
+    if (direction === 'prev') {
+        newMonth.setMonth(newMonth.getMonth() - 1)
+    } else {
+        newMonth.setMonth(newMonth.getMonth() + 1)
         // Don't go beyond current date
-        if (newDate > $currentDateReadOnly) {
-            newDate.setTime($currentDateReadOnly.getTime());
-        }
-        setDate(formatDate(newDate));
-        view = "calendar";
+        if (newMonth > $currentDateReadOnly) return
     }
 
-    // Check if two dates are in the same month
-    /** @param {Date} date1 @param {Date} date2 */
-    function isSameMonth(date1, date2) {
-        return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth();
+    // Keep the same day of month if possible, otherwise go to last day of month
+    const originalDay = currentMonth.getDate()
+    const daysInNewMonth = new Date(newMonth.getFullYear(), newMonth.getMonth() + 1, 0).getDate()
+    newMonth.setDate(Math.min(originalDay, daysInNewMonth))
+
+    // Update the selected date
+    setDate(formatDate(newMonth))
+}
+
+// Select a specific date
+/** @param {string} dateStr */
+function _selectDate(dateStr) {
+    setDate(dateStr)
+    showCalendarView.set(false)
+}
+
+/** @param {string} selectedDateStr */
+function generateCalendarDays(selectedDateStr) {
+    const date = new Date(`${selectedDateStr}T00:00:00`)
+    const year = date.getFullYear()
+    const month = date.getMonth()
+
+    // First day of month
+    const firstDay = new Date(year, month, 1)
+    // Last day of month
+    const lastDay = new Date(year, month + 1, 0)
+
+    // Start from Monday of the first week
+    const startDate = new Date(firstDay)
+    const dayOfWeek = firstDay.getDay() // 0-6 (Sun-Sat)
+    const diff = (dayOfWeek + 6) % 7 // distance from Monday (0=Mon, 6=Sun)
+    startDate.setDate(startDate.getDate() - diff)
+
+    // End on Sunday of the last week
+    const endDate = new Date(lastDay)
+    const endDayOfWeek = lastDay.getDay()
+    const endDiff = (7 - endDayOfWeek) % 7 // distance to Sunday
+    endDate.setDate(endDate.getDate() + endDiff)
+
+    const days = []
+    const current = new Date(startDate)
+
+    while (current <= endDate) {
+        const dateStr = formatDate(current)
+        const hasData = $availableDates.includes(dateStr)
+
+        days.push({
+            date: new Date(current),
+            dateStr,
+            isCurrentMonth: current.getMonth() === month,
+            isToday: formatDate(current) === formatDate($currentDateReadOnly),
+            isSelected: formatDate(current) === selectedDateStr,
+            hasData: hasData,
+            isFuture: current > $currentDateReadOnly,
+        })
+        current.setDate(current.getDate() + 1)
     }
 
-    // Generate calendar days for the current selected date's month
-    $: calendarDays = generateCalendarDays($selectedDate || formatDate($currentDateReadOnly));
-    $: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $currentDateReadOnly;
-
-    // Get the month and year display string (reactive)
-    $: monthYearDisplay = currentMonth.toLocaleDateString("fi-FI", {
-        month: "long",
-        year: "numeric",
-    });
-
-    // Navigate between months
-    /** @param {'prev' | 'next'} direction */
-    function _navigateMonth(direction) {
-        const newMonth = new Date(currentMonth);
-        if (direction === "prev") {
-            newMonth.setMonth(newMonth.getMonth() - 1);
-        } else {
-            newMonth.setMonth(newMonth.getMonth() + 1);
-            // Don't go beyond current date
-            if (newMonth > $currentDateReadOnly) return;
-        }
-
-        // Keep the same day of month if possible, otherwise go to last day of month
-        const originalDay = currentMonth.getDate();
-        const daysInNewMonth = new Date(
-            newMonth.getFullYear(),
-            newMonth.getMonth() + 1,
-            0,
-        ).getDate();
-        newMonth.setDate(Math.min(originalDay, daysInNewMonth));
-
-        // Update the selected date
-        setDate(formatDate(newMonth));
-    }
-
-    // Select a specific date
-    /** @param {string} dateStr */
-    function _selectDate(dateStr) {
-        setDate(dateStr);
-        showCalendarView.set(false);
-    }
-
-    /** @param {string} selectedDateStr */
-    function generateCalendarDays(selectedDateStr) {
-        const date = new Date(`${selectedDateStr}T00:00:00`);
-        const year = date.getFullYear();
-        const month = date.getMonth();
-
-        // First day of month
-        const firstDay = new Date(year, month, 1);
-        // Last day of month
-        const lastDay = new Date(year, month + 1, 0);
-
-        // Start from Monday of the first week
-        const startDate = new Date(firstDay);
-        const dayOfWeek = firstDay.getDay(); // 0-6 (Sun-Sat)
-        const diff = (dayOfWeek + 6) % 7; // distance from Monday (0=Mon, 6=Sun)
-        startDate.setDate(startDate.getDate() - diff);
-
-        // End on Sunday of the last week
-        const endDate = new Date(lastDay);
-        const endDayOfWeek = lastDay.getDay();
-        const endDiff = (7 - endDayOfWeek) % 7; // distance to Sunday
-        endDate.setDate(endDate.getDate() + endDiff);
-
-        const days = [];
-        const current = new Date(startDate);
-
-        while (current <= endDate) {
-            const dateStr = formatDate(current);
-            const hasData = $availableDates.includes(dateStr);
-
-            days.push({
-                date: new Date(current),
-                dateStr,
-                isCurrentMonth: current.getMonth() === month,
-                isToday: formatDate(current) === formatDate($currentDateReadOnly),
-                isSelected: formatDate(current) === selectedDateStr,
-                hasData: hasData,
-                isFuture: current > $currentDateReadOnly,
-            });
-            current.setDate(current.getDate() + 1);
-        }
-
-        return days;
-    }
+    return days
+}
 </script>
 
 <div

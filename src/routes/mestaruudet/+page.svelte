@@ -1,11 +1,8 @@
 <script>
-    import { base } from "$app/paths";
-    import Snowfall from "$lib/components/ui/Snowfall.svelte";
+/** @type {import('./$types').PageData} */
+export let data
 
-    /** @type {import('./$types').PageData} */
-    export let data;
-
-    const { winners } = data;
+const { winners } = data
 </script>
 
 <svelte:head>

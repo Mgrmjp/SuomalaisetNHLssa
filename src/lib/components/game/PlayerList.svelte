@@ -1,192 +1,183 @@
 <script>
-    import { onMount } from "svelte";
-    import LoadingSpinner from "$lib/components/ui/LoadingSpinner.svelte";
-    import MobileAdBanner from "$lib/components/ui/MobileAdBanner.svelte";
-    import PlayerCard from "$lib/components/game/PlayerCard.svelte";
-    import { displayDate, error, isLoading, players, setDate } from "$lib/stores/gameData.js";
-    import {
-        getSavePercentage,
-        hasPoints,
-        isDefense,
-        isGoalie,
-    } from "$lib/utils/positionHelpers.js";
+import { onMount } from 'svelte'
+// Swiper - only import core, handle CSS in scoped styles
+import Swiper from 'swiper'
+import { FreeMode, Mousewheel } from 'swiper/modules'
+import { setDate } from '$lib/stores/gameData.js'
+import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 
-    // Swiper - only import core, handle CSS in scoped styles
-    import Swiper from "swiper";
-    import { FreeMode, Mousewheel } from "swiper/modules";
+let forwardsSwiper = null
+let defendersSwiper = null
+let goaliesSwiper = null
+let isMobile = false
 
-    let forwardsSwiper = null;
-    let defendersSwiper = null;
-    let goaliesSwiper = null;
-    let isMobile = false;
+function checkMobile() {
+    isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+}
 
-    function checkMobile() {
-        isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+function initSwipers() {
+    checkMobile()
+    if (!isMobile) return
+
+    const swiperConfig = {
+        modules: [FreeMode, Mousewheel],
+        slidesPerView: 'auto',
+        spaceBetween: 12,
+        freeMode: {
+            enabled: true,
+            sticky: false,
+            momentumRatio: 0.8,
+            momentumVelocityRatio: 0.8,
+        },
+        mousewheel: {
+            forceToAxis: true,
+        },
+        grabCursor: true,
+        cssMode: false,
     }
 
-    function initSwipers() {
-        checkMobile();
-        if (!isMobile) return;
+    const forwardsEl = document.querySelector('.swiper-forwards')
+    const defendersEl = document.querySelector('.swiper-defenders')
+    const goaliesEl = document.querySelector('.swiper-goalies')
 
-        const swiperConfig = {
-            modules: [FreeMode, Mousewheel],
-            slidesPerView: "auto",
-            spaceBetween: 12,
-            freeMode: {
-                enabled: true,
-                sticky: false,
-                momentumRatio: 0.8,
-                momentumVelocityRatio: 0.8,
-            },
-            mousewheel: {
-                forceToAxis: true,
-            },
-            grabCursor: true,
-            cssMode: false,
-        };
+    if (forwardsEl && !forwardsSwiper) {
+        forwardsSwiper = new Swiper(forwardsEl, swiperConfig)
+    }
+    if (defendersEl && !defendersSwiper) {
+        defendersSwiper = new Swiper(defendersEl, swiperConfig)
+    }
+    if (goaliesEl && !goaliesSwiper) {
+        goaliesSwiper = new Swiper(goaliesEl, swiperConfig)
+    }
+}
 
-        const forwardsEl = document.querySelector(".swiper-forwards");
-        const defendersEl = document.querySelector(".swiper-defenders");
-        const goaliesEl = document.querySelector(".swiper-goalies");
+function destroySwipers() {
+    if (forwardsSwiper) {
+        forwardsSwiper.destroy(true, true)
+        forwardsSwiper = null
+    }
+    if (defendersSwiper) {
+        defendersSwiper.destroy(true, true)
+        defendersSwiper = null
+    }
+    if (goaliesSwiper) {
+        goaliesSwiper.destroy(true, true)
+        goaliesSwiper = null
+    }
+}
 
-        if (forwardsEl && !forwardsSwiper) {
-            forwardsSwiper = new Swiper(forwardsEl, swiperConfig);
-        }
-        if (defendersEl && !defendersSwiper) {
-            defendersSwiper = new Swiper(defendersEl, swiperConfig);
-        }
-        if (goaliesEl && !goaliesSwiper) {
-            goaliesSwiper = new Swiper(goaliesEl, swiperConfig);
+function handleResize() {
+    const wasMobile = isMobile
+    checkMobile()
+    if (wasMobile !== isMobile) {
+        destroySwipers()
+        if (isMobile) {
+            setTimeout(initSwipers, 100)
         }
     }
+}
 
-    function destroySwipers() {
-        if (forwardsSwiper) {
-            forwardsSwiper.destroy(true, true);
-            forwardsSwiper = null;
-        }
-        if (defendersSwiper) {
-            defendersSwiper.destroy(true, true);
-            defendersSwiper = null;
-        }
-        if (goaliesSwiper) {
-            goaliesSwiper.destroy(true, true);
-            goaliesSwiper = null;
-        }
+// Random ad position: 0 = after forwards, 1 = after defenders
+let _mobileAdPosition = 0
+
+onMount(() => {
+    // Randomly pick which row to show ad after (0 or 1)
+    _mobileAdPosition = Math.random() < 0.5 ? 0 : 1
+
+    checkMobile()
+    setTimeout(initSwipers, 100)
+    window.addEventListener('resize', handleResize)
+    return () => {
+        window.removeEventListener('resize', handleResize)
+        destroySwipers()
     }
+})
 
-    function handleResize() {
-        const wasMobile = isMobile;
-        checkMobile();
-        if (wasMobile !== isMobile) {
-            destroySwipers();
-            if (isMobile) {
-                setTimeout(initSwipers, 100);
-            }
-        }
+// Re-initialize swipers when players data changes
+$: if ($players && isMobile) {
+    destroySwipers()
+    setTimeout(initSwipers, 100)
+}
+
+function _handleRetry() {
+    const currentDate = new Date().toISOString().split('T')[0]
+    setDate(currentDate)
+}
+
+/**
+ * Check if a goalie actually played in the game
+ * Goalie must have logged time, faced shots, made saves, or allowed goals
+ *
+ * @param {Object} player - Player object
+ * @returns {boolean} True if goalie participated in the game
+ */
+function goalieHasPlayed(player) {
+    const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0)
+    const saves = Number(player.saves ?? player.goalie_saves ?? 0)
+    const goalsAgainst = Number(player.goals_against ?? player.goalsAgainst ?? 0)
+    const toi = player.time_on_ice || player.toi || ''
+
+    return (
+        shotsAgainst > 0 ||
+        saves > 0 ||
+        goalsAgainst > 0 ||
+        (toi && toi !== '00:00' && toi !== '0:00')
+    )
+}
+
+/**
+ * Filter players based on position and performance
+ * - Goalies: must have actually played (faced shots, made saves, etc.)
+ * - Skaters: must have recorded at least one point
+ *
+ * @param {Object[]} players - Array of player objects
+ * @returns {Object[]} Filtered array of players
+ */
+$: filteredPlayers = ($players || []).filter((player) => {
+    if (isGoalie(player)) {
+        return goalieHasPlayed(player)
     }
+    return hasPoints(player)
+})
 
-    // Random ad position: 0 = after forwards, 1 = after defenders
-    let mobileAdPosition = 0;
+/**
+ * Sort skaters by points (primary), then goals, plus/minus, and assists
+ *
+ * @param {Object[]} list - Array of skater objects
+ * @returns {Object[]} Sorted array
+ */
+const sortSkatersByPoints = (list) =>
+    [...list].sort(
+        (a, b) =>
+            (b.points || 0) - (a.points || 0) ||
+            (b.goals || 0) - (a.goals || 0) ||
+            (b.plus_minus ?? -Infinity) - (a.plus_minus ?? -Infinity) ||
+            (b.assists || 0) - (a.assists || 0)
+    )
 
-    onMount(() => {
-        // Randomly pick which row to show ad after (0 or 1)
-        mobileAdPosition = Math.random() < 0.5 ? 0 : 1;
+/**
+ * Sort goalies by save percentage (best first)
+ *
+ * @param {Object[]} list - Array of goalie objects
+ * @returns {Object[]} Sorted array
+ */
+const sortGoalies = (list) =>
+    [...list].sort((a, b) => {
+        const aPct = getSavePercentage(a)
+        const bPct = getSavePercentage(b)
 
-        checkMobile();
-        setTimeout(initSwipers, 100);
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-            destroySwipers();
-        };
-    });
+        if (aPct === null && bPct === null) return 0
+        if (aPct === null) return 1
+        if (bPct === null) return -1
 
-    // Re-initialize swipers when players data changes
-    $: if ($players && isMobile) {
-        destroySwipers();
-        setTimeout(initSwipers, 100);
-    }
+        return bPct - aPct
+    })
 
-    function _handleRetry() {
-        const currentDate = new Date().toISOString().split("T")[0];
-        setDate(currentDate);
-    }
+$: forwards = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)))
+$: defenders = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)))
+$: goalies = sortGoalies(filteredPlayers.filter((p) => isGoalie(p)))
 
-    /**
-     * Check if a goalie actually played in the game
-     * Goalie must have logged time, faced shots, made saves, or allowed goals
-     *
-     * @param {Object} player - Player object
-     * @returns {boolean} True if goalie participated in the game
-     */
-    function goalieHasPlayed(player) {
-        const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0);
-        const saves = Number(player.saves ?? player.goalie_saves ?? 0);
-        const goalsAgainst = Number(player.goals_against ?? player.goalsAgainst ?? 0);
-        const toi = player.time_on_ice || player.toi || "";
-
-        return (
-            shotsAgainst > 0 ||
-            saves > 0 ||
-            goalsAgainst > 0 ||
-            (toi && toi !== "00:00" && toi !== "0:00")
-        );
-    }
-
-    /**
-     * Filter players based on position and performance
-     * - Goalies: must have actually played (faced shots, made saves, etc.)
-     * - Skaters: must have recorded at least one point
-     *
-     * @param {Object[]} players - Array of player objects
-     * @returns {Object[]} Filtered array of players
-     */
-    $: filteredPlayers = ($players || []).filter((player) => {
-        if (isGoalie(player)) {
-            return goalieHasPlayed(player);
-        }
-        return hasPoints(player);
-    });
-
-    /**
-     * Sort skaters by points (primary), then goals, plus/minus, and assists
-     *
-     * @param {Object[]} list - Array of skater objects
-     * @returns {Object[]} Sorted array
-     */
-    const sortSkatersByPoints = (list) =>
-        [...list].sort(
-            (a, b) =>
-                (b.points || 0) - (a.points || 0) ||
-                (b.goals || 0) - (a.goals || 0) ||
-                (b.plus_minus ?? -Infinity) - (a.plus_minus ?? -Infinity) ||
-                (b.assists || 0) - (a.assists || 0),
-        );
-
-    /**
-     * Sort goalies by save percentage (best first)
-     *
-     * @param {Object[]} list - Array of goalie objects
-     * @returns {Object[]} Sorted array
-     */
-    const sortGoalies = (list) =>
-        [...list].sort((a, b) => {
-            const aPct = getSavePercentage(a);
-            const bPct = getSavePercentage(b);
-
-            if (aPct === null && bPct === null) return 0;
-            if (aPct === null) return 1;
-            if (bPct === null) return -1;
-
-            return bPct - aPct;
-        });
-
-    $: forwards = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)));
-    $: defenders = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)));
-    $: goalies = sortGoalies(filteredPlayers.filter((p) => isGoalie(p)));
-
-    $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0;
+$: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
 </script>
 
 {#if $isLoading}

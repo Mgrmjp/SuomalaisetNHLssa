@@ -1,16 +1,14 @@
 <script>
-    import { base } from "$app/paths";
+/** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
+const { data } = $props()
 
-    /** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
-    let { data } = $props();
-
-    function formatDate(dateStr) {
-        return new Date(dateStr).toLocaleDateString("fi-FI", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        });
-    }
+function _formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString('fi-FI', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    })
+}
 </script>
 
 <svelte:head>

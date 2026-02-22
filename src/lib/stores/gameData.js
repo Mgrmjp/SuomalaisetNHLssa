@@ -1,9 +1,8 @@
-import { derived, get, readable, readonly, writable } from 'svelte/store'
+import { derived, get, readonly, writable } from 'svelte/store'
 
 import { getFinnishPlayersForDate, getGamesForDate } from '$lib/services/dataService.js'
 import { StandingsService } from '$lib/services/standingsService.js'
 import { formatDate as formatDateUtil } from '$lib/utils/dateUtils.js'
-import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 import logger from '$lib/utils/logger.js'
 
 // Simple date formatting function
@@ -58,7 +57,7 @@ async function fetchAvailableDates() {
             logger.debug(`📅 Loaded ${dates.length} available game dates from API`)
             return
         }
-    } catch (error) {
+    } catch (_error) {
         logger.debug('API not available, using fallback dates...')
     }
 
@@ -323,7 +322,7 @@ export const availableDates = derived(
         const breakDates = []
         if ($breaks && $breaks.length > 0) {
             $breaks.forEach((b) => {
-                let current = new Date(b.startDate)
+                const current = new Date(b.startDate)
                 const end = new Date(b.endDate)
                 while (current <= end) {
                     breakDates.push(current.toISOString().split('T')[0])
@@ -412,16 +411,11 @@ export const players = writable([])
 export const games = writable({}) // Store games data with findGameById function
 
 // Derived store for checking if selected date is in a break
-export const currentBreak = derived(
-    [selectedDate, breaks],
-    ([$selectedDate, $breaks]) => {
-        if (!$selectedDate || !$breaks || $breaks.length === 0) return null
+export const currentBreak = derived([selectedDate, breaks], ([$selectedDate, $breaks]) => {
+    if (!$selectedDate || !$breaks || $breaks.length === 0) return null
 
-        return $breaks.find(b => 
-            $selectedDate >= b.startDate && $selectedDate <= b.endDate
-        ) || null
-    }
-)
+    return $breaks.find((b) => $selectedDate >= b.startDate && $selectedDate <= b.endDate) || null
+})
 
 // Derived store for display date with formatting - European friendly
 export const displayDate = derived([selectedDate, currentDate], ([$selectedDate, $currentDate]) => {
@@ -476,9 +470,9 @@ export async function loadProspects() {
     try {
         const [prospectsRes, rankingsRes] = await Promise.all([
             fetch(`${base}/data/finnish_prospects.json`),
-            fetch(`${base}/data/finnish_draft_rankings.json`)
+            fetch(`${base}/data/finnish_draft_rankings.json`),
         ])
-        
+
         if (prospectsRes.ok) {
             const data = await prospectsRes.json()
             prospectsStore.set(data)
@@ -490,7 +484,6 @@ export async function loadProspects() {
             draftRankingsStore.set(rankings)
             logger.debug(`Loaded draft rankings for ${rankings.year}`)
         }
-
     } catch (error) {
         logger.error('Failed to load prospects data:', error)
     } finally {

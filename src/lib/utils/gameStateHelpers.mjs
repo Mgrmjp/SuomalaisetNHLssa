@@ -59,11 +59,7 @@ function getPlayerGameStatus(player) {
     }
 
     const status =
-        player.game_status ||
-        player.gameStatus ||
-        player.game_state ||
-        player.gameState ||
-        null
+        player.game_status || player.gameStatus || player.game_state || player.gameState || null
 
     if (typeof status !== 'string') {
         return null
@@ -111,17 +107,17 @@ export function isPlayerGameLive(player, gamesData) {
     }
 
     const state = getGameStateForPlayer(player, gamesData)
-    
+
     // If state is a "finished" state, definitely not live
     if (state === GAME_STATE.OFF || state === GAME_STATE.FINAL) {
         return false
     }
-    
+
     // If state is not a live state, not live
     if (state !== GAME_STATE.LIVE && state !== GAME_STATE.CRIT && state !== GAME_STATE.IRT) {
         return false
     }
-    
+
     // Time-based safeguard: if game started more than 5 hours ago, consider it finished
     // This handles edge cases where stale data persists
     const game = gamesData?.findGameById?.(player?.game_id)
@@ -129,13 +125,13 @@ export function isPlayerGameLive(player, gamesData) {
         const startTime = new Date(game.startTime)
         const now = new Date()
         const hoursElapsed = (now - startTime) / (1000 * 60 * 60)
-        
+
         // NHL games typically last 2.5-3.5 hours; 5 hours is a safe buffer
         if (hoursElapsed > 5) {
             return false
         }
     }
-    
+
     return true
 }
 
