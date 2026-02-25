@@ -7,7 +7,7 @@
       "awayTeam": "BUF",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-02-26T00:00:00Z",
       "isOT": false,
@@ -22,7 +22,7 @@
       "awayTeam": "PHI",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-02-26T00:00:00Z",
       "isOT": false,
@@ -124,6 +124,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-25T23:17:21.348977",
+  "generated_at": "2026-02-25T23:31:55.923883",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
