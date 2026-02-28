@@ -6,13 +6,13 @@
       "homeTeam": "NYR",
       "awayTeam": "PIT",
       "homeScore": 0,
-      "awayScore": 1,
+      "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-02-28T17:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -199,6 +199,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-28T18:31:44.896017",
+  "generated_at": "2026-02-28T18:50:33.367578",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
