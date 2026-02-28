@@ -2,21 +2,6 @@
   "date": "2026-02-28",
   "games": [
     {
-      "gameId": 2025020934,
-      "homeTeam": "NYR",
-      "awayTeam": "PIT",
-      "homeScore": 2,
-      "awayScore": 2,
-      "gameState": "LIVE",
-      "gameType": 2,
-      "startTime": "2026-02-28T17:30:00Z",
-      "isOT": false,
-      "isSO": false,
-      "period": 3,
-      "finnish_players_count": 0,
-      "empty_net_goals": 0
-    },
-    {
       "gameId": 2025020935,
       "homeTeam": "PHI",
       "awayTeam": "BOS",
@@ -199,6 +184,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-02-28T19:52:18.357344",
+  "generated_at": "2026-02-28T20:02:51.442368",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
