@@ -35,14 +35,14 @@
       "gameId": 2025020950,
       "homeTeam": "SJS",
       "awayTeam": "WPG",
-      "homeScore": 0,
+      "homeScore": 1,
       "awayScore": 1,
       "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-03-01T21:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 2,
+      "period": 3,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -114,7 +114,7 @@
       "game_id": 2025020949,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-01T22:42:40.632130",
+      "created_at": "2026-03-01T22:54:50.389771",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CHI/8476882.png",
       "goals": 1,
       "assists": 0,
@@ -234,7 +234,7 @@
       "game_id": 2025020949,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-01T22:42:43.969423",
+      "created_at": "2026-03-01T22:54:53.692358",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/UTA/8476874.png",
       "goals": 0,
       "assists": 0,
@@ -335,6 +335,6 @@
     }
   ],
   "total_players": 2,
-  "generated_at": "2026-03-01T22:42:55.825987",
+  "generated_at": "2026-03-01T22:55:05.206516",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
