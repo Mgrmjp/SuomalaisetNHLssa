@@ -27,7 +27,7 @@
       "startTime": "2026-03-01T21:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 2,
       "empty_net_goals": 0
     },
@@ -42,7 +42,7 @@
       "startTime": "2026-03-01T21:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -114,7 +114,7 @@
       "game_id": 2025020949,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-01T21:56:41.049522",
+      "created_at": "2026-03-01T22:05:33.147900",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CHI/8476882.png",
       "goals": 1,
       "assists": 0,
@@ -123,10 +123,10 @@
       "penalty_minutes": 0,
       "shots": 2,
       "plus_minus": 0,
-      "time_on_ice": "06:25",
+      "time_on_ice": "06:45",
       "takeaways": 0,
       "giveaways": 0,
-      "blocked_shots": 1,
+      "blocked_shots": 2,
       "hits": 0,
       "power_play_goals": 1,
       "short_handed_goals": 0,
@@ -234,7 +234,7 @@
       "game_id": 2025020949,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-01T21:56:44.288496",
+      "created_at": "2026-03-01T22:05:36.494502",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/UTA/8476874.png",
       "goals": 0,
       "assists": 0,
@@ -335,6 +335,6 @@
     }
   ],
   "total_players": 2,
-  "generated_at": "2026-03-01T21:56:54.961062",
+  "generated_at": "2026-03-01T22:05:47.128222",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
