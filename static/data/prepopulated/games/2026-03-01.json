@@ -80,14 +80,14 @@
       "gameId": 2025020952,
       "homeTeam": "ANA",
       "awayTeam": "CGY",
-      "homeScore": 0,
-      "awayScore": 1,
+      "homeScore": 1,
+      "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-03-02T01:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 2,
+      "period": 3,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     }
@@ -114,7 +114,7 @@
       "game_id": 2025020949,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-02T02:28:51.655664",
+      "created_at": "2026-03-02T03:24:13.938086",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CHI/8476882.png",
       "goals": 2,
       "assists": 0,
@@ -234,7 +234,7 @@
       "game_id": 2025020948,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-02T02:29:06.428533",
+      "created_at": "2026-03-02T03:24:28.152859",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8482113.png",
       "goals": 0,
       "assists": 0,
@@ -256,6 +256,21 @@
       "shifts": 25,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-03-01",
+          "opponent": "NYI",
+          "opponent_full": "New York Islanders",
+          "team_score": 4,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-02-27",
           "opponent": "BUF",
@@ -315,21 +330,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-01-27",
-          "opponent": "UTA",
-          "opponent_full": "Utah Mammoth",
-          "team_score": 3,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -354,7 +354,7 @@
       "game_id": 2025020948,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-02T02:29:09.692742",
+      "created_at": "2026-03-02T03:24:31.412368",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8480185.png",
       "goals": 0,
       "assists": 0,
@@ -376,6 +376,21 @@
       "shifts": 23,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-03-01",
+          "opponent": "NYI",
+          "opponent_full": "New York Islanders",
+          "team_score": 4,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-02-27",
           "opponent": "BUF",
@@ -435,21 +450,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-02-02",
-          "opponent": "BUF",
-          "opponent_full": "Buffalo Sabres",
-          "team_score": 3,
-          "opponent_score": 5,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -474,7 +474,7 @@
       "game_id": 2025020948,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-02T02:29:13.118060",
+      "created_at": "2026-03-02T03:24:34.480323",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8478859.png",
       "goals": 0,
       "assists": 0,
@@ -496,6 +496,21 @@
       "shifts": 33,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-03-01",
+          "opponent": "NYI",
+          "opponent_full": "New York Islanders",
+          "team_score": 4,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-02-27",
           "opponent": "BUF",
@@ -555,21 +570,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-02-02",
-          "opponent": "BUF",
-          "opponent_full": "Buffalo Sabres",
-          "team_score": 3,
-          "opponent_score": 5,
-          "result": "L",
-          "goals": 0,
-          "assists": 1,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -594,7 +594,7 @@
       "game_id": 2025020949,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-02T02:28:54.922117",
+      "created_at": "2026-03-02T03:24:17.185383",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/UTA/8476874.png",
       "goals": 0,
       "assists": 0,
@@ -706,7 +706,7 @@
       "status": "Active",
       "opponent": "CGY",
       "opponent_full": "Calgary Flames",
-      "game_score": "0-1",
+      "game_score": "1-2",
       "game_result": "L",
       "game_venue": "Honda Center",
       "game_city": "Anaheim",
@@ -714,7 +714,7 @@
       "game_id": 2025020952,
       "game_date": "2026-03-01",
       "game_status": "OFF",
-      "created_at": "2026-03-02T02:29:19.031068",
+      "created_at": "2026-03-02T03:24:40.308354",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8478024.png",
       "goals": 0,
       "assists": 0,
@@ -819,6 +819,6 @@
     }
   ],
   "total_players": 6,
-  "generated_at": "2026-03-02T02:29:22.326697",
+  "generated_at": "2026-03-02T03:24:43.539597",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
