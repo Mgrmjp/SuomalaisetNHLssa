@@ -12,7 +12,7 @@
       "startTime": "2026-03-02T19:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 3,
       "empty_net_goals": 0
     },
@@ -114,7 +114,7 @@
       "game_id": 2025020955,
       "game_date": "2026-03-02",
       "game_status": "OFF",
-      "created_at": "2026-03-02T19:58:41.885163",
+      "created_at": "2026-03-02T20:15:31.022311",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8475287.png",
       "goals": 0,
       "assists": 0,
@@ -123,7 +123,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "05:24",
+      "time_on_ice": "06:53",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -133,7 +133,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 8,
+      "shifts": 10,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -234,7 +234,7 @@
       "game_id": 2025020955,
       "game_date": "2026-03-02",
       "game_status": "OFF",
-      "created_at": "2026-03-02T19:58:45.119167",
+      "created_at": "2026-03-02T20:15:37.649004",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8481020.png",
       "goals": 0,
       "assists": 0,
@@ -358,7 +358,7 @@
       "game_id": 2025020955,
       "game_date": "2026-03-02",
       "game_status": "OFF",
-      "created_at": "2026-03-02T19:58:48.353284",
+      "created_at": "2026-03-02T20:15:40.935551",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NSH/8477424.png",
       "goals": 0,
       "assists": 0,
@@ -367,7 +367,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "20:00",
+      "time_on_ice": "26:34",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -379,9 +379,9 @@
       "short_handed_assists": 0,
       "shifts": 0,
       "average_ice_time": "00:00",
-      "saves": 10,
-      "shots_against": 11,
-      "save_percentage": 0.909,
+      "saves": 15,
+      "shots_against": 16,
+      "save_percentage": 0.938,
       "goals_against": 1,
       "recent_results": [
         {
@@ -463,6 +463,6 @@
     }
   ],
   "total_players": 3,
-  "generated_at": "2026-03-02T19:58:59.554061",
+  "generated_at": "2026-03-02T20:15:52.112336",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
