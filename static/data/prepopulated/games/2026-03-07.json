@@ -37,7 +37,7 @@
       "awayTeam": "NSH",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-03-07T22:30:00Z",
       "isOT": false,
@@ -52,7 +52,7 @@
       "awayTeam": "PHI",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-03-07T22:30:00Z",
       "isOT": false,
@@ -189,7 +189,7 @@
       "game_id": 2025020990,
       "game_date": "2026-03-07",
       "game_status": "OFF",
-      "created_at": "2026-03-07T21:53:27.302115",
+      "created_at": "2026-03-07T22:02:24.085782",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
       "goals": 0,
       "assists": 0,
@@ -313,7 +313,7 @@
       "game_id": 2025020991,
       "game_date": "2026-03-07",
       "game_status": "OFF",
-      "created_at": "2026-03-07T21:53:32.985203",
+      "created_at": "2026-03-07T22:02:30.057323",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/NJD/8484177.png",
       "goals": 0,
       "assists": 0,
@@ -414,6 +414,6 @@
     }
   ],
   "total_players": 2,
-  "generated_at": "2026-03-07T21:53:50.661723",
+  "generated_at": "2026-03-07T22:02:48.568369",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
