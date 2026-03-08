@@ -21,7 +21,7 @@
       "homeTeam": "PIT",
       "awayTeam": "BOS",
       "homeScore": 0,
-      "awayScore": 0,
+      "awayScore": 1,
       "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-03-08T20:30:00Z",
@@ -129,7 +129,7 @@
       "game_id": 2025021001,
       "game_date": "2026-03-08",
       "game_status": "OFF",
-      "created_at": "2026-03-08T21:03:05.437125",
+      "created_at": "2026-03-08T21:15:47.186950",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
       "goals": 0,
       "assists": 1,
@@ -151,6 +151,21 @@
       "shifts": 19,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-03-08",
+          "opponent": "MIN",
+          "opponent_full": "Minnesota Wild",
+          "team_score": 3,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 0,
+          "assists": 1,
+          "points": 1,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-03-06",
           "opponent": "DAL",
@@ -210,21 +225,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-02-02",
-          "opponent": "DET",
-          "opponent_full": "Detroit Red Wings",
-          "team_score": 0,
-          "opponent_score": 2,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -241,15 +241,15 @@
       "status": "Active",
       "opponent": "PIT",
       "opponent_full": "Pittsburgh Penguins",
-      "game_score": "0-0",
-      "game_result": "T",
+      "game_score": "1-0",
+      "game_result": "W",
       "game_venue": "PPG Paints Arena",
       "game_city": "Pittsburgh",
       "game_address": "1001 Fifth Avenue, Pittsburgh, Pennsylvania, United States",
       "game_id": 2025021002,
       "game_date": "2026-03-08",
       "game_status": "OFF",
-      "created_at": "2026-03-08T21:03:11.413631",
+      "created_at": "2026-03-08T21:15:52.839086",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
       "goals": 0,
       "assists": 0,
@@ -258,7 +258,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "07:06",
+      "time_on_ice": "12:03",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -270,8 +270,8 @@
       "short_handed_assists": 0,
       "shifts": 0,
       "average_ice_time": "00:00",
-      "saves": 1,
-      "shots_against": 1,
+      "saves": 3,
+      "shots_against": 3,
       "save_percentage": 1.0,
       "goals_against": 0,
       "recent_results": [
@@ -354,6 +354,6 @@
     }
   ],
   "total_players": 2,
-  "generated_at": "2026-03-08T21:03:22.912288",
+  "generated_at": "2026-03-08T21:16:04.042878",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
