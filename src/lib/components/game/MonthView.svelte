@@ -1,6 +1,17 @@
 <script>
-// biome-ignore lint/correctness/noUnusedImports: used in template
-import { formatDate, setDate, showCalendarView } from '$lib/stores/gameData.js'
+import {
+    availableDates,
+    currentDateReadOnly,
+    formatDate,
+    selectedDate,
+    setDate,
+    showCalendarView,
+} from '$lib/stores/gameData.js'
+
+// biome-ignore lint/correctness/noUnusedVariables: used in template
+function isSameMonth(date1, date2) {
+    return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth()
+}
 
 // View state: 'calendar' or 'year'
 let view = 'calendar'

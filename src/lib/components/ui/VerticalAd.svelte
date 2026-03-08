@@ -57,12 +57,12 @@ $: currentAd = ads[currentAdIndex]
                 rel="noopener noreferrer"
                 class="ad-link"
                 class:active={index === currentAdIndex}
-                class:fade-out={index !== currentAdIndex || isTransitioning}
+                class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
                 <img
                     src={ad.src}
-                    {width}
-                    {height}
+                    width={_width}
+                    height={_height}
                     alt={ad.alt}
                     class="ad-img"
                 />

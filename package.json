@@ -27,11 +27,18 @@
         "players:backup": "node scripts/node_utils/player-cli.js backup",
         "players:restore": "node scripts/node_utils/player-cli.js restore",
         "players:clean": "node scripts/node_utils/player-cli.js clean",
-        "data:realtime": ".venv/bin/python3 scripts/data_collection/realtime_poll.py"
+        "data:realtime": ".venv/bin/python3 scripts/data_collection/realtime_poll.py",
+        "test:browser": "node scripts/test-pages.js",
+        "test:browser:prod": "TEST_URL=https://suomalaisetnhlssa.fi node scripts/test-pages.js",
+        "prospects:demo": ".venv/bin/python3 scripts/data_collection/leagues/demo_collector.py",
+        "prospects:scrape": ".venv/bin/python3 scripts/data_collection/leagues/scraper_ep.py",
+        "prospects:na": ".venv/bin/python3 scripts/data_collection/collegenhl.py",
+        "prospects:cache:build": ".venv/bin/python3 scripts/data_collection/finnish/build_prospects_cache.py",
+        "prospects:leagues": "echo 'Options: npm run prospects:scrape (real data) | npm run prospects:demo (sample data)'",
+        "prospects:leagues:update": "npm run prospects:scrape && npm run prospects:cache:build"
     },
     "devDependencies": {
         "@biomejs/biome": "^2.2.5",
-        "@playwright/test": "^1.56.1",
         "@sveltejs/adapter-static": "^3.0.1",
         "@sveltejs/kit": "^2.49.2",
         "@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
@@ -42,6 +49,7 @@
         "concurrently": "^9.2.1",
         "jsdom": "^27.0.0",
         "postcss": "^8.5.6",
+        "puppeteer": "^24.37.5",
         "svelte": "^5.29.0",
         "svelte-check": "^4.0.0",
         "tailwindcss": "^4.1.16",

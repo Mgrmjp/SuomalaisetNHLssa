@@ -1,0 +1,840 @@
+{
+  "networkLogs": [
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/manifest.json",
+      "method": "GET",
+      "resourceType": "manifest",
+      "timestamp": "2026-03-01T15:39:23.517Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/manifest.json",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:23.642Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/locales/fi/translation.json",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:23.648Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/locales/fi/translation.json",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:23.688Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://syndication.twitter.com/settings?session_id=36c5dcc1c190839ae769a36cc290701ceaa066f9",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:23.805Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://region1.google-analytics.com/g/collect?v=2&tid=G-WEXR7L2VBW&gtm=45je62p1z8831721691za20gzb831721691zd831721691&_p=1772379563540&gcd=13l3l3l2l1l1&npa=1&dma_cps=syphamo&dma=1&tcfd=10001&cid=857493389.1772379564&ul=en-us&sr=800x600&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_s=1&tag_exp=103116026~103200004~104527907~104528501~104684208~104684211~115938466~115938469~117611007&sid=1772379563&sct=1&seg=0&dl=https%3A%2F%2Fwww.liiga.fi%2Ffi%2Ftilastot%2F2025-2026%2Fpelaajat&dt=&en=page_view&_fv=1&_nsi=1&_ss=1&tfd=914",
+      "method": "POST",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:23.846Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/geoip",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:23.873Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/GVL-v2/cmp-list.json",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:23.892Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/GVL-v2/cmp-list.json",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:23.907Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.google-analytics.com/j/collect?v=1&_v=j102&a=888496090&t=pageview&_s=1&dl=https%3A%2F%2Fwww.liiga.fi%2Ffi%2Ftilastot%2F2025-2026%2Fpelaajat&ul=en-us&sr=800x600&vp=1920x1080&_u=aADAAEABEAAAACAAI~&jid=621489771&gjid=1222737106&cid=857493389.1772379564&tid=UA-24293704-2&_gid=175670516.1772379564&_r=1&_slc=1&gtm=45He62p1n81N8VL7B5v831721691za200zd831721691&gcd=13l3l3l2l1l1&dma_cps=syphamo&dma=1&tcfd=10001&tag_exp=103116026~103200004~104527907~104528500~104684208~104684211~115938466~115938468~116024735&npa=1&z=2095191851",
+      "method": "POST",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:23.931Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://region1.analytics.google.com/g/collect?v=2&tid=G-J8J5HNB9RW&gtm=45je62p1v9123139300z8831721691za20gzb831721691zd831721691&_p=1772379563540&_gaz=1&gcd=13l3l3l2l1l1&npa=1&dma_cps=syphamo&dma=1&tcfd=10001&cid=857493389.1772379564&ul=en-us&sr=800x600&ir=1&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_eu=EAAAAGA&_s=1&tag_exp=103116026~103200004~104527907~104528500~104684208~104684211~115616986~115938466~115938468&sid=1772379563&sct=1&seg=0&dl=https%3A%2F%2Fwww.liiga.fi%2Ffi%2Ftilastot%2F2025-2026%2Fpelaajat&dt=&en=page_view&_fv=1&_ss=1&tfd=994",
+      "method": "POST",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:23.931Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/GVL-v3/vendor-list-trimmed-v1.json",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:23.932Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/tcfv2/google-atp-list.json",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:23.932Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://api.cmp.inmobi.com/?log=%7B%22accountId%22%3A%22AaWV-tvCeWhR1%22%2C%22domain%22%3A%22www.liiga.fi%22%2C%22publisher%22%3A%22SM%20liiga%22%2C%22cmpId%22%3A10%2C%22cmpVersion%22%3A%222.53%22%2C%22displayType%22%3A%22tcfui%3Amandatory%22%2C%22configurationHashCode%22%3A%22%2B7nxD8TOXJa%2FxlhWCkUGLw%22%2C%22tagVersion%22%3A%22V3%22%2C%22gvlVersion%22%3A3%2C%22clientTimestamp%22%3A1772379563948%2C%22operationType%22%3A%22init%22%2C%22sessionId%22%3A%22GDPR-u071iw1td0qcanxn1e3c%22%7D",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:23.963Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/geoip",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:23.963Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/tcfv2/google-atp-list.json",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:23.982Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/GVL-v3/vendor-list-trimmed-v1.json",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.009Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/GVL-v3/purposes-fi.json",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.009Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/tournament",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.057Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/gameweeks?season=2027&tournament=runkosarja",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.057Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/team%3A5a9213b6?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=name%2Cdata.teamName%2Cdata.teamLogo%2Cdata.id%2Cdata.externalHomepageLink&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.team%3A5a9213b6.limit=30&options.team%3A5a9213b6.model=%22team%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.057Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/liiga-partner%3A1d28d7e6?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.liiga-partner%3A1d28d7e6.limit=30&options.liiga-partner%3A1d28d7e6.model=%22liiga-partner%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.057Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/footer-data?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.footer-data.model=%22footer-data%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.057Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cmp.inmobi.com/GVL-v3/purposes-fi.json",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.062Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/gameweeks?season=2027&tournament=runkosarja",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.075Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/tournament",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.100Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/tournaments?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.tournaments.model=%22tournaments%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.100Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/footer-data?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.footer-data.model=%22footer-data%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.112Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/liiga-partner%3A1d28d7e6?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.liiga-partner%3A1d28d7e6.limit=30&options.liiga-partner%3A1d28d7e6.model=%22liiga-partner%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.113Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/team%3A5a9213b6?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=name%2Cdata.teamName%2Cdata.teamLogo%2Cdata.id%2Cdata.externalHomepageLink&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.team%3A5a9213b6.limit=30&options.team%3A5a9213b6.model=%22team%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.113Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F6eff46d7d8a84189aa79e84acb93ff24",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.115Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F46a26a5506f543b3a32e0035f260302b",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.130Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F6020edd6d9bc45b68a50bd191b826deb",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F079e0e0bde4f43b8b8afa667d3285ebc",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F5fa94d44327f46b7b4e30ae58a3be7ca",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Ff4d92d41c1c44d34b6ebb117490966f6",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F1183427f2aed401184bc2f96bb1a3303",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fbf4ab47ce42640ebad139fd11a6a7861",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F7d933387f498496094d7ef1928e9fa7b",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F57b5b1a6c04f43368910ee73822513d8",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F48695ce02ec549dab74ad90e65d1e532",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F269341129a1449ccb0a64345337c3273",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F5640db8b21854732baf6afc56fc013b5",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F77efd6df129843699ae9a4c2e94efcb2",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F8bb664ba2392481ebc1091a33ee75513",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.132Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fe07109c96edf4561b8b5021e7fc44526",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.133Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fe4c7031958a043cdb8ca80c3c353f0c6",
+      "method": "GET",
+      "resourceType": "image",
+      "timestamp": "2026-03-01T15:39:24.133Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F6eff46d7d8a84189aa79e84acb93ff24",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.137Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/tournaments?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.tournaments.model=%22tournaments%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.155Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/videos/?limit=10&nextPageToken=",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.167Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/news?limitRequest=16&offsetRequest=0&builderOffsetRequest=0&legacyOffsetRequest=0&isHighlight=true",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.168Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&week=24",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.169Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&date=2026-03-01",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.169Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&date=2026-02-28",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.169Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=chl&date=2026-03-01",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.170Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=chl&date=2026-02-28",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.170Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/watermark-configuration?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.watermark-configuration.model=%22watermark-configuration%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/serie-logo%3A5da400ce?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.serie-logo%3A5da400ce.limit=30&options.serie-logo%3A5da400ce.model=%22serie-logo%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/partner-data?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.partner-data.model=%22partner-data%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/left-column-structure-configuration%3A2d7fa2b8?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.left-column-structure-configuration%3A2d7fa2b8.limit=30&options.left-column-structure-configuration%3A2d7fa2b8.query=%7B%22data%22%3A%7B%22visible%22%3A%7B%22%24eq%22%3Atrue%7D%7D%7D&options.left-column-structure-configuration%3A2d7fa2b8.model=%22left-column-structure-configuration%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/game-day-box-for-serie%3A5c5f67dc?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.game-day-box-for-serie%3A5c5f67dc.limit=30&options.game-day-box-for-serie%3A5c5f67dc.model=%22game-day-box-for-serie%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5c5f67dc?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5c5f67dc.limit=30&options.front-page-banners%3A5c5f67dc.model=%22front-page-banners%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Ff4d92d41c1c44d34b6ebb117490966f6",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fbf4ab47ce42640ebad139fd11a6a7861",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.171Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F5640db8b21854732baf6afc56fc013b5",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.172Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F57b5b1a6c04f43368910ee73822513d8",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.172Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F46a26a5506f543b3a32e0035f260302b",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.172Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F079e0e0bde4f43b8b8afa667d3285ebc",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.179Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F6020edd6d9bc45b68a50bd191b826deb",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.185Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/videos/?limit=10&nextPageToken=",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.186Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/news?limitRequest=16&offsetRequest=0&builderOffsetRequest=0&legacyOffsetRequest=0&isHighlight=true",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.186Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&date=2026-03-01",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.187Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F5fa94d44327f46b7b4e30ae58a3be7ca",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.187Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F7d933387f498496094d7ef1928e9fa7b",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.187Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&week=24",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.187Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F1183427f2aed401184bc2f96bb1a3303",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.190Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F269341129a1449ccb0a64345337c3273",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.191Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&date=2026-02-28",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.193Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=chl&date=2026-03-01",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.201Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F48695ce02ec549dab74ad90e65d1e532",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.201Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F8bb664ba2392481ebc1091a33ee75513",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.202Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fe4c7031958a043cdb8ca80c3c353f0c6",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.205Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F77efd6df129843699ae9a4c2e94efcb2",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.205Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fe07109c96edf4561b8b5021e7fc44526",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.205Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=chl&date=2026-02-28",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.206Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/watermark-configuration?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.watermark-configuration.model=%22watermark-configuration%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.219Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/partner-data?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.partner-data.model=%22partner-data%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.219Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/serie-logo%3A5da400ce?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.serie-logo%3A5da400ce.limit=30&options.serie-logo%3A5da400ce.model=%22serie-logo%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.227Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/left-column-structure-configuration%3A2d7fa2b8?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.left-column-structure-configuration%3A2d7fa2b8.limit=30&options.left-column-structure-configuration%3A2d7fa2b8.query=%7B%22data%22%3A%7B%22visible%22%3A%7B%22%24eq%22%3Atrue%7D%7D%7D&options.left-column-structure-configuration%3A2d7fa2b8.model=%22left-column-structure-configuration%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.227Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/game-day-box-for-serie%3A5c5f67dc?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.game-day-box-for-serie%3A5c5f67dc.limit=30&options.game-day-box-for-serie%3A5c5f67dc.model=%22game-day-box-for-serie%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.227Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5c5f67dc?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5c5f67dc.limit=30&options.front-page-banners%3A5c5f67dc.model=%22front-page-banners%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.228Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/left-column-automation-configuration?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.left-column-automation-configuration.model=%22left-column-automation-configuration%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.408Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5da400ce?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5da400ce.limit=30&options.front-page-banners%3A5da400ce.model=%22front-page-banners%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.408Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A76a84950?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A76a84950.limit=30&options.front-page-banners%3A76a84950.query=%7B%22id%22%3A%22d1c1d560e733458d96a9a536b9985455%22%7D&options.front-page-banners%3A76a84950.model=%22front-page-banners%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.409Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5642a4ca?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5642a4ca.limit=30&options.front-page-banners%3A5642a4ca.query=%7B%22id%22%3A%22c5378a983323497197265c2724a823e5%22%7D&options.front-page-banners%3A5642a4ca.model=%22front-page-banners%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.409Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A74cb5510?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A74cb5510.limit=30&options.front-page-banners%3A74cb5510.query=%7B%22id%22%3A%22ecbfec770fea4568b66d6d60179af0b1%22%7D&options.front-page-banners%3A74cb5510.model=%22front-page-banners%22",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.409Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/left-column-automation-configuration?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.left-column-automation-configuration.model=%22left-column-automation-configuration%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.451Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5da400ce?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5da400ce.limit=30&options.front-page-banners%3A5da400ce.model=%22front-page-banners%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.458Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5642a4ca?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5642a4ca.limit=30&options.front-page-banners%3A5642a4ca.query=%7B%22id%22%3A%22c5378a983323497197265c2724a823e5%22%7D&options.front-page-banners%3A5642a4ca.model=%22front-page-banners%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.458Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A76a84950?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A76a84950.limit=30&options.front-page-banners%3A76a84950.query=%7B%22id%22%3A%22d1c1d560e733458d96a9a536b9985455%22%7D&options.front-page-banners%3A76a84950.model=%22front-page-banners%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.458Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A74cb5510?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A74cb5510.limit=30&options.front-page-banners%3A74cb5510.query=%7B%22id%22%3A%22ecbfec770fea4568b66d6d60179af0b1%22%7D&options.front-page-banners%3A74cb5510.model=%22front-page-banners%22",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.459Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/standings/?season=2026",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:24.520Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/standings/?season=2026",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.532Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.jsdelivr.net/gh/prebid/currency-file@1/latest.json?date=20260301",
+      "method": "GET",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:24.666Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://cdn.jsdelivr.net/gh/prebid/currency-file@1/latest.json?date=20260301",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:24.761Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://api-cdn.ecal.com/apiv3/widget/button/62b48f09d9171f000fe66323?apiKey=qjAjJsc8bWwDN9uVuiQt2D5KafXinqiB359KZfsQ0I620d1040",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:25.415Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://api.cmp.inmobi.com/?log=%7B%22userEvents%22%3A%5B%7B%22clientTimestamp%22%3A1772379563948%2C%22event%22%3A%22startOnPage%3AGDPR_0%22%7D%2C%7B%22clientTimestamp%22%3A1772379569120%2C%22event%22%3A%22acceptAll%3Aclick%22%7D%5D%2C%22acceptanceState%22%3A%22All%22%2C%22objectionState%22%3A%22None%22%2C%22tcData%22%3A%22CQgYw8AQgYw8AAKA1AFICUFsAP_gAEPgAApAMEAABCAEAAFAAYRQAIEAAIQFAGABAAAAAAABACABAAAAAAQAAAAIAADAAAAAAAAAIACAAAIAAAAAAAAAAAAAIAAACAwAYAAAIAAAAAAIAAgAAAAAAoAAAAAAAECAgAIEkAAAAAAAAAAAACgAAAAAAQCQAAAAAACAAAIAAAEAAEAAACAAAAAICAAAAAACAgAAAAAAACBQACAAAACAAAAABf7Ln9_rl_e7X_va_n3zv84XH77v___vf_-7___2b_-_-_b8GBwAABACAACgBMAoAECAAEAAAAAAgAAAAAAAgAAAAAAAAAIACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAYAMAQAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAACQAAAAAAAAAAACBAAAAAAAIAIAAAAAAAAAAAAAACAACAAABAAAAAEBAAAAAAAAAAAAAAAABAIABAAAABAAAAAAmAaPniZLTpNgDYKSMwyYTfhMPNNUQoJcndmlmKunzCgTl2sAQeAggB-AIQATgA5gIcAUyAvAB9gEBQITgSeAoBBQ0FDgKPAUxAp6BUsCq4FYwLCgWIAtMBamC2YLagW3At-BcgC6AF0gLqAXhAvsBgYKAjACEAE4AOYBCAFMgLwAaKA-wCAoEJwJPAUMAocBR4CkgFKwKYgU9AqQBUsCsYFiALHgWRAs8BamC2YLaAW3At-BciC5YLmAXQAuoBfYC_BEAcAEIB9gEBQJPAUOArGBYUCxAFswLfgXUAvCBfYDAxUAwAEIALYAcwFMgLwAfYBAUCTwFDgKPAUrArGBYgC1MFswW1AtuBb8C6AF1ALwgXlAvmBfYDAwAAA.cAAAAGgAAAAA%22%2C%22nonIabConsentData%22%3A%22%22%2C%22clientTimestamp%22%3A1772379569120%2C%22operationType%22%3A%22done%22%2C%22sessionId%22%3A%22GDPR-u071iw1td0qcanxn1e3c%22%7D",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:29.124Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://region1.analytics.google.com/g/collect?v=2&tid=G-J8J5HNB9RW&gtm=45je62p1v9123139300za20gzb831721691zd831721691&_p=1772379563540&gcd=13l3l3l2l1l1&npa=1&dma_cps=syphamo&dma=1&tcfd=10001&cid=857493389.1772379564&ul=en-us&sr=800x600&ir=1&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&are=1&frm=0&pscdl=noapi&_eu=EEAAAGQ&_s=2&tag_exp=103116026~103200004~104527907~104528500~104684208~104684211~115616986~115938466~115938468&dl=https%3A%2F%2Fwww.liiga.fi%2F404&dr=https%3A%2F%2Fwww.liiga.fi%2Ffi%2Ftilastot%2F2025-2026%2Fpelaajat&sid=1772379563&sct=1&seg=1&dt=404%20-%20Liiga.fi&en=page_view&_et=1130&tfd=7126",
+      "method": "POST",
+      "resourceType": "fetch",
+      "timestamp": "2026-03-01T15:39:30.058Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&week=24",
+      "method": "GET",
+      "resourceType": "xhr",
+      "timestamp": "2026-03-01T15:39:39.167Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&week=24",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:39.173Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&week=24",
+      "method": "GET",
+      "resourceType": "other",
+      "timestamp": "2026-03-01T15:39:39.173Z"
+    },
+    {
+      "league": "Liiga",
+      "url": "https://www.liiga.fi/api/v2/games?tournament=runkosarja&week=24",
+      "status": 200,
+      "type": "response",
+      "timestamp": "2026-03-01T15:39:39.199Z"
+    }
+  ],
+  "apiEndpoints": [
+    "https://www.liiga.fi/manifest.json",
+    "https://www.liiga.fi/locales/fi/translation.json",
+    "https://cmp.inmobi.com/GVL-v2/cmp-list.json",
+    "https://cmp.inmobi.com/GVL-v3/vendor-list-trimmed-v1.json",
+    "https://cmp.inmobi.com/tcfv2/google-atp-list.json",
+    "https://cmp.inmobi.com/GVL-v3/purposes-fi.json",
+    "https://www.liiga.fi/api/v2/tournament",
+    "https://www.liiga.fi/api/v2/gameweeks?season=2027&tournament=runkosarja",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/team%3A5a9213b6?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=name%2Cdata.teamName%2Cdata.teamLogo%2Cdata.id%2Cdata.externalHomepageLink&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.team%3A5a9213b6.limit=30&options.team%3A5a9213b6.model=%22team%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/liiga-partner%3A1d28d7e6?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.liiga-partner%3A1d28d7e6.limit=30&options.liiga-partner%3A1d28d7e6.model=%22liiga-partner%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/footer-data?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.footer-data.model=%22footer-data%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/tournaments?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.tournaments.model=%22tournaments%22",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F6eff46d7d8a84189aa79e84acb93ff24",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F46a26a5506f543b3a32e0035f260302b",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F6020edd6d9bc45b68a50bd191b826deb",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F079e0e0bde4f43b8b8afa667d3285ebc",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F5fa94d44327f46b7b4e30ae58a3be7ca",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Ff4d92d41c1c44d34b6ebb117490966f6",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F1183427f2aed401184bc2f96bb1a3303",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fbf4ab47ce42640ebad139fd11a6a7861",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F7d933387f498496094d7ef1928e9fa7b",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F57b5b1a6c04f43368910ee73822513d8",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F48695ce02ec549dab74ad90e65d1e532",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F269341129a1449ccb0a64345337c3273",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F5640db8b21854732baf6afc56fc013b5",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F77efd6df129843699ae9a4c2e94efcb2",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2F8bb664ba2392481ebc1091a33ee75513",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fe07109c96edf4561b8b5021e7fc44526",
+    "https://cdn.builder.io/api/v1/image/assets%2Ff11503eeae084753968caac3899a5d78%2Fe4c7031958a043cdb8ca80c3c353f0c6",
+    "https://www.liiga.fi/api/v2/videos/?limit=10&nextPageToken=",
+    "https://www.liiga.fi/api/v2/news?limitRequest=16&offsetRequest=0&builderOffsetRequest=0&legacyOffsetRequest=0&isHighlight=true",
+    "https://www.liiga.fi/api/v2/games?tournament=runkosarja&week=24",
+    "https://www.liiga.fi/api/v2/games?tournament=runkosarja&date=2026-03-01",
+    "https://www.liiga.fi/api/v2/games?tournament=runkosarja&date=2026-02-28",
+    "https://www.liiga.fi/api/v2/games?tournament=chl&date=2026-03-01",
+    "https://www.liiga.fi/api/v2/games?tournament=chl&date=2026-02-28",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/watermark-configuration?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.watermark-configuration.model=%22watermark-configuration%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/serie-logo%3A5da400ce?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.serie-logo%3A5da400ce.limit=30&options.serie-logo%3A5da400ce.model=%22serie-logo%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/partner-data?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.partner-data.model=%22partner-data%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/left-column-structure-configuration%3A2d7fa2b8?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.left-column-structure-configuration%3A2d7fa2b8.limit=30&options.left-column-structure-configuration%3A2d7fa2b8.query=%7B%22data%22%3A%7B%22visible%22%3A%7B%22%24eq%22%3Atrue%7D%7D%7D&options.left-column-structure-configuration%3A2d7fa2b8.model=%22left-column-structure-configuration%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/game-day-box-for-serie%3A5c5f67dc?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.game-day-box-for-serie%3A5c5f67dc.limit=30&options.game-day-box-for-serie%3A5c5f67dc.model=%22game-day-box-for-serie%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5c5f67dc?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5c5f67dc.limit=30&options.front-page-banners%3A5c5f67dc.model=%22front-page-banners%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/left-column-automation-configuration?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data&noTraverse=false&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.left-column-automation-configuration.model=%22left-column-automation-configuration%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5da400ce?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5da400ce.limit=30&options.front-page-banners%3A5da400ce.model=%22front-page-banners%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A76a84950?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A76a84950.limit=30&options.front-page-banners%3A76a84950.query=%7B%22id%22%3A%22d1c1d560e733458d96a9a536b9985455%22%7D&options.front-page-banners%3A76a84950.model=%22front-page-banners%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A5642a4ca?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A5642a4ca.limit=30&options.front-page-banners%3A5642a4ca.query=%7B%22id%22%3A%22c5378a983323497197265c2724a823e5%22%7D&options.front-page-banners%3A5642a4ca.model=%22front-page-banners%22",
+    "https://cdn.builder.io/api/v3/query/f11503eeae084753968caac3899a5d78/front-page-banners%3A74cb5510?omit=meta.componentsUsed&apiKey=f11503eeae084753968caac3899a5d78&fields=data%2Cname%2Cid&noTraverse=true&includeUnpublished=false&userAttributes=%7B%22urlPath%22%3A%22%2F404%22%2C%22host%22%3A%22www.liiga.fi%22%2C%22device%22%3A%22desktop%22%7D&options.front-page-banners%3A74cb5510.limit=30&options.front-page-banners%3A74cb5510.query=%7B%22id%22%3A%22ecbfec770fea4568b66d6d60179af0b1%22%7D&options.front-page-banners%3A74cb5510.model=%22front-page-banners%22",
+    "https://www.liiga.fi/api/v2/standings/?season=2026",
+    "https://cdn.jsdelivr.net/gh/prebid/currency-file@1/latest.json?date=20260301"
+  ],
+  "timestamp": "2026-03-01T15:39:52.449Z"
+}

@@ -60,6 +60,43 @@ Complete Finnish players cache.
 - Players retire
 - Major roster changes
 
+### `build_prospects_cache.py`
+Builds `static/data/finnish_prospects.json` from NHL + optional non-NHL sources.
+
+**Usage:**
+```bash
+# NHL-only (default)
+python3 scripts/data_collection/finnish/build_prospects_cache.py
+
+# Include EliteProspects API (optional)
+ELITEPROSPECTS_API_KEY=your_key \
+python3 scripts/data_collection/finnish/build_prospects_cache.py
+```
+
+**Optional inputs:**
+- `ELITEPROSPECTS_API_KEY`: enables EliteProspects ingestion
+- `ELITEPROSPECTS_PLAYERS_URL`: override EP players endpoint URL
+- `ELITEPROSPECTS_NATIONALITY`: defaults to `FIN`
+- `ELITEPROSPECTS_LIMIT`: defaults to `500`
+- `THE_SPORTS_DB_KEY`: TheSportsDB API key, defaults to free key `123`
+- `THE_SPORTS_DB_LEAGUES`: comma-separated leagues for team/player scan
+- `THE_SPORTS_DB_MAX_TEAMS`: cap team scans (default `400`)
+- `WIKIDATA_MAX_ROWS`: SPARQL row limit (default `500`)
+- `static/data/external_prospects.json`: optional extra players from any provider
+
+**`external_prospects.json` format:**
+```json
+[
+  {
+    "name": "Example Player",
+    "birthDate": "2006-01-20",
+    "league": "Liiga",
+    "currentTeam": "KalPa",
+    "nhlRights": "N/A"
+  }
+]
+```
+
 ## 📊 Sample Output
 
 ```json

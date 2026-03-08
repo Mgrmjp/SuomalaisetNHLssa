@@ -1,287 +1,4497 @@
 {
   "year": 2026,
-  "north_american_skaters": [
+  "updatedAt": "2026-03-08T15:22:53.872459",
+  "sources": [
     {
-      "lastName": "Hemming",
-      "firstName": "Oscar",
-      "positionCode": "LW",
-      "shootsCatches": "L",
-      "heightInInches": 76,
-      "weightInPounds": 193,
-      "lastAmateurClub": "BOSTON COLLEGE",
-      "lastAmateurLeague": "H-EAST",
-      "birthDate": "2008-08-13",
-      "birthCity": "Vaasa",
-      "birthCountry": "FIN",
-      "midtermRank": 11
+      "name": "NHL Central Scouting",
+      "slug": "nhl-central",
+      "type": "official",
+      "categories": {
+        "north_american": [
+          {
+            "lastName": "Hemming",
+            "firstName": "Oscar",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 76,
+            "weightInPounds": 193,
+            "lastAmateurClub": "BOSTON COLLEGE",
+            "lastAmateurLeague": "H-EAST",
+            "birthDate": "2008-08-13",
+            "birthCity": "Vaasa",
+            "birthCountry": "FIN",
+            "midtermRank": 11
+          },
+          {
+            "lastName": "Vanhanen",
+            "firstName": "Matias",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 71,
+            "weightInPounds": 176,
+            "lastAmateurClub": "EVERETT",
+            "lastAmateurLeague": "WHL",
+            "birthDate": "2007-09-11",
+            "birthCity": "Nokia",
+            "birthCountry": "FIN",
+            "midtermRank": 76
+          },
+          {
+            "lastName": "Kuhta",
+            "firstName": "Jasper",
+            "positionCode": "C",
+            "shootsCatches": "L",
+            "heightInInches": 74,
+            "weightInPounds": 194,
+            "lastAmateurClub": "OTTAWA",
+            "lastAmateurLeague": "OHL",
+            "birthDate": "2006-10-28",
+            "birthCity": "Helsinki",
+            "birthCountry": "FIN",
+            "midtermRank": 93
+          }
+        ],
+        "international": [
+          {
+            "lastName": "Suvanto",
+            "firstName": "Oliver",
+            "positionCode": "C",
+            "shootsCatches": "L",
+            "heightInInches": 75,
+            "weightInPounds": 207,
+            "lastAmateurClub": "TAPPARA",
+            "lastAmateurLeague": "FINLAND",
+            "birthDate": "2008-09-03",
+            "birthCity": "Turku",
+            "birthCountry": "FIN",
+            "midtermRank": 3
+          },
+          {
+            "lastName": "Piiparinen",
+            "firstName": "Juho",
+            "positionCode": "D",
+            "shootsCatches": "R",
+            "heightInInches": 73,
+            "weightInPounds": 201,
+            "lastAmateurClub": "TAPPARA",
+            "lastAmateurLeague": "FINLAND",
+            "birthDate": "2008-08-10",
+            "birthCity": "Lahti",
+            "birthCountry": "FIN",
+            "midtermRank": 6
+          },
+          {
+            "lastName": "Vanhatalo",
+            "firstName": "Vilho",
+            "positionCode": "RW",
+            "shootsCatches": "L",
+            "heightInInches": 75,
+            "weightInPounds": 187,
+            "lastAmateurClub": "TAPPARA JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-01-18",
+            "birthCity": "Tampere",
+            "birthCountry": "FIN",
+            "midtermRank": 14
+          },
+          {
+            "lastName": "Alalauri",
+            "firstName": "Samu",
+            "positionCode": "D",
+            "shootsCatches": "R",
+            "heightInInches": 74,
+            "weightInPounds": 203,
+            "lastAmateurClub": "PELICANS JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-05-31",
+            "birthCity": "Lahti",
+            "birthCountry": "FIN",
+            "midtermRank": 19
+          },
+          {
+            "lastName": "Arkko",
+            "firstName": "Luka",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 75,
+            "weightInPounds": 212,
+            "lastAmateurClub": "PELICANS JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-01-14",
+            "birthCity": "Lahti",
+            "birthCountry": "FIN",
+            "midtermRank": 26
+          },
+          {
+            "lastName": "Tukio",
+            "firstName": "Ossi",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 74,
+            "weightInPounds": 186,
+            "lastAmateurClub": "ILVES JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2007-11-03",
+            "birthCity": "Tampere",
+            "birthCountry": "FIN",
+            "midtermRank": 44
+          },
+          {
+            "lastName": "Laitinen",
+            "firstName": "Jiko",
+            "positionCode": "C",
+            "shootsCatches": "L",
+            "heightInInches": 72,
+            "weightInPounds": 162,
+            "lastAmateurClub": "ILVES JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-04-16",
+            "birthCity": "Tampere",
+            "birthCountry": "FIN",
+            "midtermRank": 48
+          },
+          {
+            "lastName": "Tarvainen",
+            "firstName": "Joel",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 78,
+            "weightInPounds": 220,
+            "lastAmateurClub": "KALPA JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-04-06",
+            "birthCity": "Tampere",
+            "birthCountry": "FIN",
+            "midtermRank": 72
+          },
+          {
+            "lastName": "Tuuva",
+            "firstName": "Leo",
+            "positionCode": "RW",
+            "shootsCatches": "R",
+            "heightInInches": 73,
+            "weightInPounds": 187,
+            "lastAmateurClub": "LUKKO",
+            "lastAmateurLeague": "FINLAND",
+            "birthDate": "2006-08-02",
+            "birthCity": "Lappeenranta",
+            "birthCountry": "FIN",
+            "midtermRank": 74
+          },
+          {
+            "lastName": "Svensk",
+            "firstName": "Vertti",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 72,
+            "weightInPounds": 169,
+            "lastAmateurClub": "SAIPA JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2007-11-09",
+            "birthCity": "Joensuu",
+            "birthCountry": "FIN",
+            "midtermRank": 84
+          },
+          {
+            "lastName": "Uronen",
+            "firstName": "Anttoni",
+            "positionCode": "C",
+            "shootsCatches": "L",
+            "heightInInches": 72,
+            "weightInPounds": 191,
+            "lastAmateurClub": "HIFK",
+            "lastAmateurLeague": "FINLAND",
+            "birthDate": "2008-06-24",
+            "birthCity": "Kerava",
+            "birthCountry": "FIN",
+            "midtermRank": 86
+          },
+          {
+            "lastName": "Wahlroos",
+            "firstName": "Olli",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 72,
+            "weightInPounds": 185,
+            "lastAmateurClub": "TPS JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-02-15",
+            "birthCity": "Kaarina",
+            "birthCountry": "FIN",
+            "midtermRank": 88
+          },
+          {
+            "lastName": "Juntunen",
+            "firstName": "Oiva",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 73,
+            "weightInPounds": 209,
+            "lastAmateurClub": "KOOKOO JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-08-07",
+            "birthCity": "Vantaa",
+            "birthCountry": "FIN",
+            "midtermRank": 91
+          },
+          {
+            "lastName": "Uronen",
+            "firstName": "Eelis",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 72,
+            "weightInPounds": 195,
+            "lastAmateurClub": "HIFK JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-06-24",
+            "birthCity": "Kerava",
+            "birthCountry": "FIN",
+            "midtermRank": 101
+          },
+          {
+            "lastName": "Vaananen",
+            "firstName": "Vilmeri",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 75,
+            "weightInPounds": 183,
+            "lastAmateurClub": "JOKERIT JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-08-13",
+            "birthCity": "Vantaa",
+            "birthCountry": "FIN",
+            "midtermRank": 103
+          },
+          {
+            "lastName": "Rasanen",
+            "firstName": "Veeti",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 74,
+            "weightInPounds": 192,
+            "lastAmateurClub": "JOKERIT JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2006-08-26",
+            "birthCity": "Joensuu",
+            "birthCountry": "FIN",
+            "midtermRank": 108
+          },
+          {
+            "lastName": "Vatjus",
+            "firstName": "Miko",
+            "positionCode": "C",
+            "shootsCatches": "L",
+            "heightInInches": 73,
+            "weightInPounds": 172,
+            "lastAmateurClub": "LUKKO JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-07-02",
+            "birthCity": "Haapavesi",
+            "birthCountry": "FIN",
+            "midtermRank": 113
+          }
+        ]
+      }
     },
     {
-      "lastName": "Vanhanen",
-      "firstName": "Matias",
-      "positionCode": "LW",
-      "shootsCatches": "L",
-      "heightInInches": 70,
-      "weightInPounds": 174,
-      "lastAmateurClub": "EVERETT",
-      "lastAmateurLeague": "WHL",
-      "birthDate": "2007-09-11",
-      "birthCity": "Nokia",
-      "birthCountry": "FIN",
-      "midtermRank": 76
+      "name": "EliteProspects.com",
+      "slug": "eliteprospects.com",
+      "type": "independent",
+      "players": [
+        {
+          "rank": 10,
+          "name": "Oscar Hemming",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "927671"
+        },
+        {
+          "rank": 16,
+          "name": "Oliver Suvanto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "925061"
+        },
+        {
+          "rank": 29,
+          "name": "Juho Piiparinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 203,
+            "metrics": 92
+          },
+          "playerId": "925157"
+        },
+        {
+          "rank": null,
+          "name": "Juuso Ainasto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-03-17",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 194
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "925170"
+        },
+        {
+          "rank": null,
+          "name": "Samu Alalauri",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-05-31",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959462"
+        },
+        {
+          "rank": null,
+          "name": "Luka Arkko",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "959469"
+        },
+        {
+          "rank": null,
+          "name": "William Gammals",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-12",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 192,
+            "metrics": 87
+          },
+          "playerId": "892430"
+        },
+        {
+          "rank": null,
+          "name": "Oiva Juntunen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-07",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "924653"
+        },
+        {
+          "rank": null,
+          "name": "Wilmer Kallio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 165,
+            "metrics": 75
+          },
+          "playerId": "944586"
+        },
+        {
+          "rank": null,
+          "name": "Patrik Kerkola",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-03-29",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "873019"
+        },
+        {
+          "rank": null,
+          "name": "Tino Kossila",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925166"
+        },
+        {
+          "rank": null,
+          "name": "Jasper Kuhta",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "872109"
+        },
+        {
+          "rank": null,
+          "name": "Viljo Kähkönen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-19",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 178
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "872112"
+        },
+        {
+          "rank": null,
+          "name": "Max Laatikainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1008854"
+        },
+        {
+          "rank": null,
+          "name": "Jiko Laitinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-16",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "907654"
+        },
+        {
+          "rank": null,
+          "name": "Noel Pakarinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "1003492"
+        },
+        {
+          "rank": null,
+          "name": "Jesse Pärssinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 185,
+            "metrics": 84
+          },
+          "playerId": "925310"
+        },
+        {
+          "rank": null,
+          "name": "Joonas Rajala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 179
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "924495"
+        },
+        {
+          "rank": null,
+          "name": "Aarni Riihimäki",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925079"
+        },
+        {
+          "rank": null,
+          "name": "Rasmus Rinne",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "872284"
+        },
+        {
+          "rank": null,
+          "name": "Veeti Räsänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-26",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "689035"
+        },
+        {
+          "rank": null,
+          "name": "Jere Somervuori",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 159,
+            "metrics": 72
+          },
+          "playerId": "872107"
+        },
+        {
+          "rank": null,
+          "name": "Vertti Svensk",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "872901"
+        },
+        {
+          "rank": null,
+          "name": "Joel Tarvainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'6\"",
+            "metrics": 198
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 218,
+            "metrics": 99
+          },
+          "playerId": "1032260"
+        },
+        {
+          "rank": null,
+          "name": "Ossi Tukio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "879284"
+        },
+        {
+          "rank": null,
+          "name": "Leo Tuuva",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "796107"
+        },
+        {
+          "rank": null,
+          "name": "Anttoni Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959439"
+        },
+        {
+          "rank": null,
+          "name": "Eelis Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 196,
+            "metrics": 89
+          },
+          "playerId": "959433"
+        },
+        {
+          "rank": null,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 177
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 174,
+            "metrics": 79
+          },
+          "playerId": "865769"
+        },
+        {
+          "rank": null,
+          "name": "Vilho Vanhatalo",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-18",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "958289"
+        },
+        {
+          "rank": null,
+          "name": "Miko Vatjus",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 187
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "962238"
+        },
+        {
+          "rank": null,
+          "name": "Vilmeri Väänänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "977022"
+        },
+        {
+          "rank": null,
+          "name": "Olli Wahlroos",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "944589"
+        }
+      ]
     },
     {
-      "lastName": "Kuhta",
-      "firstName": "Jasper",
-      "positionCode": "C",
-      "shootsCatches": "L",
-      "heightInInches": 74,
-      "weightInPounds": 194,
-      "lastAmateurClub": "OTTAWA",
-      "lastAmateurLeague": "OHL",
-      "birthDate": "2006-10-28",
-      "birthCity": "Helsinki",
-      "birthCountry": "FIN",
-      "midtermRank": 93
-    }
-  ],
-  "international_skaters": [
-    {
-      "lastName": "Suvanto",
-      "firstName": "Oliver",
-      "positionCode": "C",
-      "shootsCatches": "L",
-      "heightInInches": 75,
-      "weightInPounds": 207,
-      "lastAmateurClub": "TAPPARA",
-      "lastAmateurLeague": "FINLAND",
-      "birthDate": "2008-09-03",
-      "birthCity": "Turku",
-      "birthCountry": "FIN",
-      "midtermRank": 3
+      "name": "McKeen's Hockey",
+      "slug": "mckeen-s-hockey",
+      "type": "independent",
+      "players": [
+        {
+          "rank": 11,
+          "name": "Oscar Hemming",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "927671"
+        },
+        {
+          "rank": 15,
+          "name": "Oliver Suvanto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "925061"
+        },
+        {
+          "rank": 20,
+          "name": "Juho Piiparinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 203,
+            "metrics": 92
+          },
+          "playerId": "925157"
+        },
+        {
+          "rank": null,
+          "name": "Juuso Ainasto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-03-17",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 194
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "925170"
+        },
+        {
+          "rank": null,
+          "name": "Samu Alalauri",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-05-31",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959462"
+        },
+        {
+          "rank": null,
+          "name": "Luka Arkko",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "959469"
+        },
+        {
+          "rank": null,
+          "name": "William Gammals",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-12",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 192,
+            "metrics": 87
+          },
+          "playerId": "892430"
+        },
+        {
+          "rank": null,
+          "name": "Oiva Juntunen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-07",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "924653"
+        },
+        {
+          "rank": null,
+          "name": "Wilmer Kallio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 165,
+            "metrics": 75
+          },
+          "playerId": "944586"
+        },
+        {
+          "rank": null,
+          "name": "Patrik Kerkola",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-03-29",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "873019"
+        },
+        {
+          "rank": null,
+          "name": "Tino Kossila",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925166"
+        },
+        {
+          "rank": null,
+          "name": "Jasper Kuhta",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "872109"
+        },
+        {
+          "rank": null,
+          "name": "Viljo Kähkönen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-19",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 178
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "872112"
+        },
+        {
+          "rank": null,
+          "name": "Max Laatikainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1008854"
+        },
+        {
+          "rank": null,
+          "name": "Jiko Laitinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-16",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "907654"
+        },
+        {
+          "rank": null,
+          "name": "Noel Pakarinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "1003492"
+        },
+        {
+          "rank": null,
+          "name": "Jesse Pärssinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 185,
+            "metrics": 84
+          },
+          "playerId": "925310"
+        },
+        {
+          "rank": null,
+          "name": "Joonas Rajala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 179
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "924495"
+        },
+        {
+          "rank": null,
+          "name": "Aarni Riihimäki",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925079"
+        },
+        {
+          "rank": null,
+          "name": "Rasmus Rinne",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "872284"
+        },
+        {
+          "rank": null,
+          "name": "Veeti Räsänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-26",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "689035"
+        },
+        {
+          "rank": null,
+          "name": "Jere Somervuori",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 159,
+            "metrics": 72
+          },
+          "playerId": "872107"
+        },
+        {
+          "rank": null,
+          "name": "Vertti Svensk",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "872901"
+        },
+        {
+          "rank": null,
+          "name": "Joel Tarvainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'6\"",
+            "metrics": 198
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 218,
+            "metrics": 99
+          },
+          "playerId": "1032260"
+        },
+        {
+          "rank": null,
+          "name": "Ossi Tukio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "879284"
+        },
+        {
+          "rank": null,
+          "name": "Leo Tuuva",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "796107"
+        },
+        {
+          "rank": null,
+          "name": "Anttoni Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959439"
+        },
+        {
+          "rank": null,
+          "name": "Eelis Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 196,
+            "metrics": 89
+          },
+          "playerId": "959433"
+        },
+        {
+          "rank": null,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 177
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 174,
+            "metrics": 79
+          },
+          "playerId": "865769"
+        },
+        {
+          "rank": null,
+          "name": "Vilho Vanhatalo",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-18",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "958289"
+        },
+        {
+          "rank": null,
+          "name": "Miko Vatjus",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 187
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "962238"
+        },
+        {
+          "rank": null,
+          "name": "Vilmeri Väänänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "977022"
+        },
+        {
+          "rank": null,
+          "name": "Olli Wahlroos",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "944589"
+        }
+      ]
     },
     {
-      "lastName": "Piiparinen",
-      "firstName": "Juho",
-      "positionCode": "D",
-      "shootsCatches": "R",
-      "heightInInches": 73,
-      "weightInPounds": 201,
-      "lastAmateurClub": "TAPPARA",
-      "lastAmateurLeague": "FINLAND",
-      "birthDate": "2008-08-10",
-      "birthCity": "Lahti",
-      "birthCountry": "FIN",
-      "midtermRank": 6
+      "name": "TSN (Craig Button)",
+      "slug": "tsn-craig-button",
+      "type": "independent",
+      "players": [
+        {
+          "rank": 9,
+          "name": "Oliver Suvanto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "925061"
+        },
+        {
+          "rank": 10,
+          "name": "Oscar Hemming",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "927671"
+        },
+        {
+          "rank": 12,
+          "name": "Juho Piiparinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 203,
+            "metrics": 92
+          },
+          "playerId": "925157"
+        },
+        {
+          "rank": null,
+          "name": "Juuso Ainasto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-03-17",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 194
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "925170"
+        },
+        {
+          "rank": null,
+          "name": "Samu Alalauri",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-05-31",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959462"
+        },
+        {
+          "rank": null,
+          "name": "Luka Arkko",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "959469"
+        },
+        {
+          "rank": null,
+          "name": "William Gammals",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-12",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 192,
+            "metrics": 87
+          },
+          "playerId": "892430"
+        },
+        {
+          "rank": null,
+          "name": "Oiva Juntunen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-07",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "924653"
+        },
+        {
+          "rank": null,
+          "name": "Wilmer Kallio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 165,
+            "metrics": 75
+          },
+          "playerId": "944586"
+        },
+        {
+          "rank": null,
+          "name": "Patrik Kerkola",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-03-29",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "873019"
+        },
+        {
+          "rank": null,
+          "name": "Tino Kossila",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925166"
+        },
+        {
+          "rank": null,
+          "name": "Jasper Kuhta",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "872109"
+        },
+        {
+          "rank": null,
+          "name": "Viljo Kähkönen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-19",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 178
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "872112"
+        },
+        {
+          "rank": null,
+          "name": "Max Laatikainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1008854"
+        },
+        {
+          "rank": null,
+          "name": "Jiko Laitinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-16",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "907654"
+        },
+        {
+          "rank": null,
+          "name": "Noel Pakarinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "1003492"
+        },
+        {
+          "rank": null,
+          "name": "Jesse Pärssinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 185,
+            "metrics": 84
+          },
+          "playerId": "925310"
+        },
+        {
+          "rank": null,
+          "name": "Joonas Rajala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 179
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "924495"
+        },
+        {
+          "rank": null,
+          "name": "Aarni Riihimäki",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925079"
+        },
+        {
+          "rank": null,
+          "name": "Rasmus Rinne",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "872284"
+        },
+        {
+          "rank": null,
+          "name": "Veeti Räsänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-26",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "689035"
+        },
+        {
+          "rank": null,
+          "name": "Jere Somervuori",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 159,
+            "metrics": 72
+          },
+          "playerId": "872107"
+        },
+        {
+          "rank": null,
+          "name": "Vertti Svensk",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "872901"
+        },
+        {
+          "rank": null,
+          "name": "Joel Tarvainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'6\"",
+            "metrics": 198
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 218,
+            "metrics": 99
+          },
+          "playerId": "1032260"
+        },
+        {
+          "rank": null,
+          "name": "Ossi Tukio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "879284"
+        },
+        {
+          "rank": null,
+          "name": "Leo Tuuva",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "796107"
+        },
+        {
+          "rank": null,
+          "name": "Anttoni Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959439"
+        },
+        {
+          "rank": null,
+          "name": "Eelis Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 196,
+            "metrics": 89
+          },
+          "playerId": "959433"
+        },
+        {
+          "rank": null,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 177
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 174,
+            "metrics": 79
+          },
+          "playerId": "865769"
+        },
+        {
+          "rank": null,
+          "name": "Vilho Vanhatalo",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-18",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "958289"
+        },
+        {
+          "rank": null,
+          "name": "Miko Vatjus",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 187
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "962238"
+        },
+        {
+          "rank": null,
+          "name": "Vilmeri Väänänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "977022"
+        },
+        {
+          "rank": null,
+          "name": "Olli Wahlroos",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "944589"
+        }
+      ]
     },
     {
-      "lastName": "Vanhatalo",
-      "firstName": "Vilho",
-      "positionCode": "RW",
-      "shootsCatches": "L",
-      "heightInInches": 75,
-      "weightInPounds": 187,
-      "lastAmateurClub": "TAPPARA JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-01-18",
-      "birthCity": "Tampere",
-      "birthCountry": "FIN",
-      "midtermRank": 14
+      "name": "Draft Prospects Hockey",
+      "slug": "draft-prospects-hockey",
+      "type": "independent",
+      "players": [
+        {
+          "rank": 16,
+          "name": "Oliver Suvanto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "925061"
+        },
+        {
+          "rank": 17,
+          "name": "Juho Piiparinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 203,
+            "metrics": 92
+          },
+          "playerId": "925157"
+        },
+        {
+          "rank": 20,
+          "name": "Oscar Hemming",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "927671"
+        },
+        {
+          "rank": null,
+          "name": "Juuso Ainasto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-03-17",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 194
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "925170"
+        },
+        {
+          "rank": null,
+          "name": "Samu Alalauri",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-05-31",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959462"
+        },
+        {
+          "rank": null,
+          "name": "Luka Arkko",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "959469"
+        },
+        {
+          "rank": null,
+          "name": "William Gammals",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-12",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 192,
+            "metrics": 87
+          },
+          "playerId": "892430"
+        },
+        {
+          "rank": null,
+          "name": "Oiva Juntunen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-07",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "924653"
+        },
+        {
+          "rank": null,
+          "name": "Wilmer Kallio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 165,
+            "metrics": 75
+          },
+          "playerId": "944586"
+        },
+        {
+          "rank": null,
+          "name": "Patrik Kerkola",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-03-29",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "873019"
+        },
+        {
+          "rank": null,
+          "name": "Tino Kossila",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925166"
+        },
+        {
+          "rank": null,
+          "name": "Jasper Kuhta",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "872109"
+        },
+        {
+          "rank": null,
+          "name": "Viljo Kähkönen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-19",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 178
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "872112"
+        },
+        {
+          "rank": null,
+          "name": "Max Laatikainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1008854"
+        },
+        {
+          "rank": null,
+          "name": "Jiko Laitinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-16",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "907654"
+        },
+        {
+          "rank": null,
+          "name": "Noel Pakarinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "1003492"
+        },
+        {
+          "rank": null,
+          "name": "Jesse Pärssinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 185,
+            "metrics": 84
+          },
+          "playerId": "925310"
+        },
+        {
+          "rank": null,
+          "name": "Joonas Rajala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 179
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "924495"
+        },
+        {
+          "rank": null,
+          "name": "Aarni Riihimäki",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925079"
+        },
+        {
+          "rank": null,
+          "name": "Rasmus Rinne",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "872284"
+        },
+        {
+          "rank": null,
+          "name": "Veeti Räsänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-26",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "689035"
+        },
+        {
+          "rank": null,
+          "name": "Jere Somervuori",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 159,
+            "metrics": 72
+          },
+          "playerId": "872107"
+        },
+        {
+          "rank": null,
+          "name": "Vertti Svensk",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "872901"
+        },
+        {
+          "rank": null,
+          "name": "Joel Tarvainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'6\"",
+            "metrics": 198
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 218,
+            "metrics": 99
+          },
+          "playerId": "1032260"
+        },
+        {
+          "rank": null,
+          "name": "Ossi Tukio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "879284"
+        },
+        {
+          "rank": null,
+          "name": "Leo Tuuva",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "796107"
+        },
+        {
+          "rank": null,
+          "name": "Anttoni Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959439"
+        },
+        {
+          "rank": null,
+          "name": "Eelis Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 196,
+            "metrics": 89
+          },
+          "playerId": "959433"
+        },
+        {
+          "rank": null,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 177
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 174,
+            "metrics": 79
+          },
+          "playerId": "865769"
+        },
+        {
+          "rank": null,
+          "name": "Vilho Vanhatalo",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-18",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "958289"
+        },
+        {
+          "rank": null,
+          "name": "Miko Vatjus",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 187
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "962238"
+        },
+        {
+          "rank": null,
+          "name": "Vilmeri Väänänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "977022"
+        },
+        {
+          "rank": null,
+          "name": "Olli Wahlroos",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "944589"
+        }
+      ]
     },
     {
-      "lastName": "Alalauri",
-      "firstName": "Samu",
-      "positionCode": "D",
-      "shootsCatches": "R",
-      "heightInInches": 74,
-      "weightInPounds": 203,
-      "lastAmateurClub": "PELICANS JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-05-31",
-      "birthCity": "Lahti",
-      "birthCountry": "FIN",
-      "midtermRank": 19
+      "name": "Daily Faceoff",
+      "slug": "daily-faceoff",
+      "type": "independent",
+      "players": [
+        {
+          "rank": 13,
+          "name": "Oscar Hemming",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "927671"
+        },
+        {
+          "rank": 17,
+          "name": "Oliver Suvanto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "925061"
+        },
+        {
+          "rank": 21,
+          "name": "Juho Piiparinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 203,
+            "metrics": 92
+          },
+          "playerId": "925157"
+        },
+        {
+          "rank": null,
+          "name": "Juuso Ainasto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-03-17",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 194
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "925170"
+        },
+        {
+          "rank": null,
+          "name": "Samu Alalauri",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-05-31",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959462"
+        },
+        {
+          "rank": null,
+          "name": "Luka Arkko",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "959469"
+        },
+        {
+          "rank": null,
+          "name": "William Gammals",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-12",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 192,
+            "metrics": 87
+          },
+          "playerId": "892430"
+        },
+        {
+          "rank": null,
+          "name": "Oiva Juntunen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-07",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "924653"
+        },
+        {
+          "rank": null,
+          "name": "Wilmer Kallio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 165,
+            "metrics": 75
+          },
+          "playerId": "944586"
+        },
+        {
+          "rank": null,
+          "name": "Patrik Kerkola",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-03-29",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "873019"
+        },
+        {
+          "rank": null,
+          "name": "Tino Kossila",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925166"
+        },
+        {
+          "rank": null,
+          "name": "Jasper Kuhta",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "872109"
+        },
+        {
+          "rank": null,
+          "name": "Viljo Kähkönen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-19",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 178
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "872112"
+        },
+        {
+          "rank": null,
+          "name": "Max Laatikainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1008854"
+        },
+        {
+          "rank": null,
+          "name": "Jiko Laitinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-16",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "907654"
+        },
+        {
+          "rank": null,
+          "name": "Noel Pakarinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "1003492"
+        },
+        {
+          "rank": null,
+          "name": "Jesse Pärssinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 185,
+            "metrics": 84
+          },
+          "playerId": "925310"
+        },
+        {
+          "rank": null,
+          "name": "Joonas Rajala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 179
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "924495"
+        },
+        {
+          "rank": null,
+          "name": "Aarni Riihimäki",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925079"
+        },
+        {
+          "rank": null,
+          "name": "Rasmus Rinne",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "872284"
+        },
+        {
+          "rank": null,
+          "name": "Veeti Räsänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-26",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "689035"
+        },
+        {
+          "rank": null,
+          "name": "Jere Somervuori",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 159,
+            "metrics": 72
+          },
+          "playerId": "872107"
+        },
+        {
+          "rank": null,
+          "name": "Vertti Svensk",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "872901"
+        },
+        {
+          "rank": null,
+          "name": "Joel Tarvainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'6\"",
+            "metrics": 198
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 218,
+            "metrics": 99
+          },
+          "playerId": "1032260"
+        },
+        {
+          "rank": null,
+          "name": "Ossi Tukio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "879284"
+        },
+        {
+          "rank": null,
+          "name": "Leo Tuuva",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "796107"
+        },
+        {
+          "rank": null,
+          "name": "Anttoni Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959439"
+        },
+        {
+          "rank": null,
+          "name": "Eelis Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 196,
+            "metrics": 89
+          },
+          "playerId": "959433"
+        },
+        {
+          "rank": null,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 177
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 174,
+            "metrics": 79
+          },
+          "playerId": "865769"
+        },
+        {
+          "rank": null,
+          "name": "Vilho Vanhatalo",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-18",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "958289"
+        },
+        {
+          "rank": null,
+          "name": "Miko Vatjus",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 187
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "962238"
+        },
+        {
+          "rank": null,
+          "name": "Vilmeri Väänänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "977022"
+        },
+        {
+          "rank": null,
+          "name": "Olli Wahlroos",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "944589"
+        }
+      ]
     },
     {
-      "lastName": "Arkko",
-      "firstName": "Luka",
-      "positionCode": "LW",
-      "shootsCatches": "L",
-      "heightInInches": 75,
-      "weightInPounds": 212,
-      "lastAmateurClub": "PELICANS JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-01-14",
-      "birthCity": "Lahti",
-      "birthCountry": "FIN",
-      "midtermRank": 26
-    },
-    {
-      "lastName": "Tukio",
-      "firstName": "Ossi",
-      "positionCode": "D",
-      "shootsCatches": "L",
-      "heightInInches": 74,
-      "weightInPounds": 186,
-      "lastAmateurClub": "ILVES JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2007-11-03",
-      "birthCity": "Tampere",
-      "birthCountry": "FIN",
-      "midtermRank": 44
-    },
-    {
-      "lastName": "Laitinen",
-      "firstName": "Jiko",
-      "positionCode": "C",
-      "shootsCatches": "L",
-      "heightInInches": 72,
-      "weightInPounds": 162,
-      "lastAmateurClub": "ILVES JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-04-16",
-      "birthCity": "Tampere",
-      "birthCountry": "FIN",
-      "midtermRank": 48
-    },
-    {
-      "lastName": "Tarvainen",
-      "firstName": "Joel",
-      "positionCode": "D",
-      "shootsCatches": "L",
-      "heightInInches": 78,
-      "weightInPounds": 220,
-      "lastAmateurClub": "KALPA JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-04-06",
-      "birthCity": "Tampere",
-      "birthCountry": "FIN",
-      "midtermRank": 72
-    },
-    {
-      "lastName": "Tuuva",
-      "firstName": "Leo",
-      "positionCode": "RW",
-      "shootsCatches": "R",
-      "heightInInches": 73,
-      "weightInPounds": 187,
-      "lastAmateurClub": "LUKKO",
-      "lastAmateurLeague": "FINLAND",
-      "birthDate": "2006-08-02",
-      "birthCity": "Lappeenranta",
-      "birthCountry": "FIN",
-      "midtermRank": 74
-    },
-    {
-      "lastName": "Svensk",
-      "firstName": "Vertti",
-      "positionCode": "D",
-      "shootsCatches": "L",
-      "heightInInches": 72,
-      "weightInPounds": 169,
-      "lastAmateurClub": "SAIPA JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2007-11-09",
-      "birthCity": "Joensuu",
-      "birthCountry": "FIN",
-      "midtermRank": 84
-    },
-    {
-      "lastName": "Uronen",
-      "firstName": "Anttoni",
-      "positionCode": "C",
-      "shootsCatches": "L",
-      "heightInInches": 72,
-      "weightInPounds": 191,
-      "lastAmateurClub": "HIFK",
-      "lastAmateurLeague": "FINLAND",
-      "birthDate": "2008-06-24",
-      "birthCity": "Kerava",
-      "birthCountry": "FIN",
-      "midtermRank": 86
-    },
-    {
-      "lastName": "Wahlroos",
-      "firstName": "Olli",
-      "positionCode": "LW",
-      "shootsCatches": "L",
-      "heightInInches": 72,
-      "weightInPounds": 185,
-      "lastAmateurClub": "TPS JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-02-15",
-      "birthCity": "Kaarina",
-      "birthCountry": "FIN",
-      "midtermRank": 88
-    },
-    {
-      "lastName": "Juntunen",
-      "firstName": "Oiva",
-      "positionCode": "LW",
-      "shootsCatches": "L",
-      "heightInInches": 73,
-      "weightInPounds": 209,
-      "lastAmateurClub": "KOOKOO JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-08-07",
-      "birthCity": "Vantaa",
-      "birthCountry": "FIN",
-      "midtermRank": 91
-    },
-    {
-      "lastName": "Uronen",
-      "firstName": "Eelis",
-      "positionCode": "D",
-      "shootsCatches": "L",
-      "heightInInches": 72,
-      "weightInPounds": 195,
-      "lastAmateurClub": "HIFK JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-06-24",
-      "birthCity": "Kerava",
-      "birthCountry": "FIN",
-      "midtermRank": 101
-    },
-    {
-      "lastName": "Vaananen",
-      "firstName": "Vilmeri",
-      "positionCode": "D",
-      "shootsCatches": "L",
-      "heightInInches": 75,
-      "weightInPounds": 183,
-      "lastAmateurClub": "JOKERIT JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-08-13",
-      "birthCity": "Vantaa",
-      "birthCountry": "FIN",
-      "midtermRank": 103
-    },
-    {
-      "lastName": "Rasanen",
-      "firstName": "Veeti",
-      "positionCode": "LW",
-      "shootsCatches": "L",
-      "heightInInches": 74,
-      "weightInPounds": 192,
-      "lastAmateurClub": "JOKERIT JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2006-08-26",
-      "birthCity": "Joensuu",
-      "birthCountry": "FIN",
-      "midtermRank": 108
-    },
-    {
-      "lastName": "Vatjus",
-      "firstName": "Miko",
-      "positionCode": "C",
-      "shootsCatches": "L",
-      "heightInInches": 73,
-      "weightInPounds": 172,
-      "lastAmateurClub": "LUKKO JR.",
-      "lastAmateurLeague": "FINLAND-JR.",
-      "birthDate": "2008-07-02",
-      "birthCity": "Haapavesi",
-      "birthCountry": "FIN",
-      "midtermRank": 113
+      "name": "Consolidated Ranking",
+      "slug": "consolidated-ranking",
+      "type": "independent",
+      "players": [
+        {
+          "rank": 15,
+          "name": "Oscar Hemming",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "927671"
+        },
+        {
+          "rank": 17,
+          "name": "Oliver Suvanto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "925061"
+        },
+        {
+          "rank": 20,
+          "name": "Juho Piiparinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 203,
+            "metrics": 92
+          },
+          "playerId": "925157"
+        },
+        {
+          "rank": 66,
+          "name": "Vilho Vanhatalo",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-18",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 192
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "958289"
+        },
+        {
+          "rank": 69,
+          "name": "Vertti Svensk",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "872901"
+        },
+        {
+          "rank": 70,
+          "name": "Samu Alalauri",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-05-31",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959462"
+        },
+        {
+          "rank": 86,
+          "name": "Juuso Ainasto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-03-17",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'4\"",
+            "metrics": 194
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "925170"
+        },
+        {
+          "rank": 92,
+          "name": "Luka Arkko",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "959469"
+        },
+        {
+          "rank": null,
+          "name": "William Gammals",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-12",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 192,
+            "metrics": 87
+          },
+          "playerId": "892430"
+        },
+        {
+          "rank": null,
+          "name": "Oiva Juntunen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-07",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "924653"
+        },
+        {
+          "rank": null,
+          "name": "Wilmer Kallio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 165,
+            "metrics": 75
+          },
+          "playerId": "944586"
+        },
+        {
+          "rank": null,
+          "name": "Patrik Kerkola",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-03-29",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "873019"
+        },
+        {
+          "rank": null,
+          "name": "Tino Kossila",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925166"
+        },
+        {
+          "rank": null,
+          "name": "Jasper Kuhta",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "872109"
+        },
+        {
+          "rank": null,
+          "name": "Viljo Kähkönen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-19",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 178
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "872112"
+        },
+        {
+          "rank": null,
+          "name": "Max Laatikainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1008854"
+        },
+        {
+          "rank": null,
+          "name": "Jiko Laitinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-16",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "907654"
+        },
+        {
+          "rank": null,
+          "name": "Noel Pakarinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "1003492"
+        },
+        {
+          "rank": null,
+          "name": "Jesse Pärssinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 181
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 185,
+            "metrics": 84
+          },
+          "playerId": "925310"
+        },
+        {
+          "rank": null,
+          "name": "Joonas Rajala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-10-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 179
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "924495"
+        },
+        {
+          "rank": null,
+          "name": "Aarni Riihimäki",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 181,
+            "metrics": 82
+          },
+          "playerId": "925079"
+        },
+        {
+          "rank": null,
+          "name": "Rasmus Rinne",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "872284"
+        },
+        {
+          "rank": null,
+          "name": "Veeti Räsänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-26",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 194,
+            "metrics": 88
+          },
+          "playerId": "689035"
+        },
+        {
+          "rank": null,
+          "name": "Jere Somervuori",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-08-10",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 159,
+            "metrics": 72
+          },
+          "playerId": "872107"
+        },
+        {
+          "rank": null,
+          "name": "Joel Tarvainen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-04-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'6\"",
+            "metrics": 198
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 218,
+            "metrics": 99
+          },
+          "playerId": "1032260"
+        },
+        {
+          "rank": null,
+          "name": "Ossi Tukio",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "879284"
+        },
+        {
+          "rank": null,
+          "name": "Leo Tuuva",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2006-08-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 186
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "796107"
+        },
+        {
+          "rank": null,
+          "name": "Anttoni Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 201,
+            "metrics": 91
+          },
+          "playerId": "959439"
+        },
+        {
+          "rank": null,
+          "name": "Eelis Uronen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-06-24",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 196,
+            "metrics": 89
+          },
+          "playerId": "959433"
+        },
+        {
+          "rank": null,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 177
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 174,
+            "metrics": 79
+          },
+          "playerId": "865769"
+        },
+        {
+          "rank": null,
+          "name": "Miko Vatjus",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-02",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 187
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "962238"
+        },
+        {
+          "rank": null,
+          "name": "Vilmeri Väänänen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-08-13",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 191
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 183,
+            "metrics": 83
+          },
+          "playerId": "977022"
+        },
+        {
+          "rank": null,
+          "name": "Olli Wahlroos",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-02-15",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 187,
+            "metrics": 85
+          },
+          "playerId": "944589"
+        }
+      ]
     }
   ]
 }

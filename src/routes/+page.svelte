@@ -1,8 +1,15 @@
 <script>
 import { onMount } from 'svelte'
 import { get } from 'svelte/store'
-import { latestPrepopulatedDate, setDate, yesterdayDate } from '$lib/stores/gameData.js'
+import { base } from '$app/paths'
+import { latestPrepopulatedDate, setDate, yesterdayDate, players, games, selectedDate, currentBreak, resetToDefault } from '$lib/stores/gameData.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import DateControls from '$lib/components/game/DateControls.svelte'
+import AdBanner from '$lib/components/ui/AdBanner.svelte'
+import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import PlayerList from '$lib/components/game/PlayerList.svelte'
+import MobileAd from '$lib/components/ui/MobileAd.svelte'
 
 const _sparkles = Array.from({ length: 12 }, () => ({
     left: `${Math.random() * 100}%`,
@@ -60,7 +67,11 @@ const _metaDescription = $derived.by(() => {
 })
 
 // Mobile hero stats toggle
-const _showHeroStats = $state(false)
+let _showHeroStats = $state(false)
+
+function toggleHeroStats() {
+    _showHeroStats = !_showHeroStats
+}
 
 // Default to yesterday's date on first load (relative to Finland/Europe)
 onMount(() => {
@@ -79,10 +90,10 @@ onMount(() => {
 </script>
 
 <svelte:head>
-    <title>Suomalaiset NHL-pelaajat - {dynamicTitleSuffix}</title>
-    <meta name="description" content={metaDescription} />
-    <meta property="og:title" content="Suomalaiset NHL-pelaajat - {dynamicTitleSuffix}" />
-    <meta property="og:description" content={metaDescription} />
+    <title>Suomalaiset NHL-pelaajat - {_dynamicTitleSuffix}</title>
+    <meta name="description" content={_metaDescription} />
+    <meta property="og:title" content="Suomalaiset NHL-pelaajat - {_dynamicTitleSuffix}" />
+    <meta property="og:description" content={_metaDescription} />
     <meta name="keywords" content={SEO_KEYWORDS} />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
 </svelte:head>
@@ -159,14 +170,14 @@ onMount(() => {
                 <!-- Mobile toggle button -->
                 <button
                     class="hero-stats-toggle md:hidden"
-                    onclick={() => showHeroStats = !showHeroStats}
+                    onclick={toggleHeroStats}
                     aria-label="Näytä tilastot"
-                    aria-expanded={showHeroStats}
+                    aria-expanded={_showHeroStats}
                 >
                     <span class="hero-stats-toggle-text">Valitun päivän yhteistilastot</span>
                     <svg
                         class="hero-stats-toggle-icon"
-                        class:rotated={showHeroStats}
+                        class:rotated={_showHeroStats}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -176,7 +187,7 @@ onMount(() => {
                 </button>
 
                 <!-- Stats wrapper (hidden on mobile by default, always visible on desktop) -->
-                <div class="hero-stats-wrapper" class:expanded={showHeroStats}>
+                <div class="hero-stats-wrapper" class:expanded={_showHeroStats}>
                     <div class="flex flex-wrap justify-center gap-8 hero-stats">
                 <div class="text-center hero-stat hero-stat--goals">
                     <div class="flex justify-center mb-1 hero-stat__icon-wrap">
@@ -191,7 +202,7 @@ onMount(() => {
                             />
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-800">{totalGoals}</div>
+                    <div class="text-xl font-bold text-gray-800">{_totalGoals}</div>
                     <div class="text-xs text-gray-600 hero-stat__label" data-full="Maalit (Goals)">
                         Maalit
                     </div>
@@ -209,7 +220,7 @@ onMount(() => {
                             />
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-800">{totalAssists}</div>
+                    <div class="text-xl font-bold text-gray-800">{_totalAssists}</div>
                     <div
                         class="text-xs text-gray-600 hero-stat__label"
                         data-full="Syötöt (Assists)"
@@ -230,7 +241,7 @@ onMount(() => {
                             />
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-900">{totalPoints}</div>
+                    <div class="text-xl font-bold text-gray-900">{_totalPoints}</div>
                     <div
                         class="text-xs text-gray-600 hero-stat__label"
                         data-full="Pisteet (Points)"
@@ -255,7 +266,7 @@ onMount(() => {
                             </g>
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-700">{totalPenaltyMinutes}</div>
+                    <div class="text-xl font-bold text-gray-700">{_totalPenaltyMinutes}</div>
                     <div
                         class="text-xs text-gray-600 hero-stat__label"
                         data-full="Rangaistusmin (PIM)"

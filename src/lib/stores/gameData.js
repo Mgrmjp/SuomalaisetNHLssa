@@ -462,7 +462,7 @@ export const prospects = readonly(prospectsStore)
 export const prospectsLoading = readonly(prospectsLoadingStore)
 
 // Draft Rankings store
-const draftRankingsStore = writable({ north_american_skaters: [], international_skaters: [] })
+const draftRankingsStore = writable({ year: 2026, sources: [] })
 export const draftRankings = readonly(draftRankingsStore)
 
 export async function loadProspects() {
@@ -482,7 +482,7 @@ export async function loadProspects() {
         if (rankingsRes.ok) {
             const rankings = await rankingsRes.json()
             draftRankingsStore.set(rankings)
-            logger.debug(`Loaded draft rankings for ${rankings.year}`)
+            logger.debug(`Loaded draft rankings for ${rankings.year} with ${rankings.sources?.length || 0} sources`)
         }
     } catch (error) {
         logger.error('Failed to load prospects data:', error)

@@ -8,6 +8,7 @@ export async function load({ params }) {
     const { slug } = params
 
     // Helper function to convert player name to URL-friendly slug
+    /** @param {string} name */
     function nameToSlug(name) {
         return name
             .toLowerCase()
@@ -33,6 +34,7 @@ export async function load({ params }) {
         const goaliesFile = join(prebuiltDir, `goalies-${seasonId}.json`)
 
         let player = null
+        /** @type {any[]} */
         let allPlayers = []
 
         try {
@@ -79,6 +81,24 @@ export async function load({ params }) {
             throw error(404, 'Pelaajaa ei löytynyt')
         }
 
+        // Augment with roster data (birthDate, height, weight etc)
+        try {
+            const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
+            const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
+            const rosterInfo = rosterData[player.playerId.toString()]
+            if (rosterInfo) {
+                player.birthDate = rosterInfo.birthDate
+                if (player.birthDate) {
+                    player.age = new Date().getFullYear() - new Date(player.birthDate).getFullYear()
+                }
+                player.heightInches = rosterInfo.heightInches
+                player.weightLbs = rosterInfo.weightLbs
+                player.birthplace = rosterInfo.birthplace
+            }
+        } catch (rosterError) {
+            console.warn('Failed to load roster info for augmentation:', rosterError)
+        }
+
         // Get other players from the same team for related content
         const sameTeamPlayers = allPlayers
             .filter((p) => p.teamAbbrevs === player.teamAbbrevs && p.playerId !== player.playerId)
@@ -92,7 +112,7 @@ export async function load({ params }) {
             updatedAt: new Date().toISOString(),
         }
     } catch (err) {
-        if (err.status) throw err
+        if (err && typeof err === 'object' && 'status' in err) throw err
         console.error('Error fetching player data:', err)
         throw error(500, 'Pelaajatietojen lataus epäonnistui')
     }

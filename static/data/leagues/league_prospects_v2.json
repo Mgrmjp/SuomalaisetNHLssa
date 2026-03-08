@@ -1,0 +1,101 @@
+{
+  "generated_at": "2026-03-01T13:04:16.643Z",
+  "season": "2025-2026",
+  "data_source": "puppeteer-v2",
+  "scraper_version": "3.0",
+  "leagues": {
+    "ahl": {
+      "count": 1,
+      "url": "https://www.theahl.com/stats/player-stats",
+      "type": "hockeytech"
+    },
+    "echl": {
+      "count": 0,
+      "url": "https://www.echl.com/stats/player-stats",
+      "type": "hockeytech"
+    },
+    "nahl": {
+      "count": 3,
+      "url": "https://nahl.com/skater-stats",
+      "type": "hockeytech"
+    },
+    "ohl": {
+      "count": 0,
+      "url": "https://ontariohockeyleague.com/stats/players",
+      "type": "hockeytech"
+    },
+    "whl": {
+      "count": 1,
+      "url": "https://whl.ca/stats/players",
+      "type": "hockeytech"
+    },
+    "qmjhl": {
+      "count": 0,
+      "url": "https://theqmjhl.ca/stats/players",
+      "type": "hockeytech"
+    }
+  },
+  "players": [
+    {
+      "name": "Felix Unger Sörum",
+      "team": "CHI",
+      "position": "RW",
+      "games": "49",
+      "goals": "11",
+      "assists": "34",
+      "points": "45",
+      "league": "AHL",
+      "source": "puppeteer-v2",
+      "scraped_at": "2026-03-01T13:04:35.857Z"
+    },
+    {
+      "name": "AARONMARTIKAINEN",
+      "team": "",
+      "position": "D",
+      "games": "44",
+      "goals": "2",
+      "assists": "8",
+      "points": "10",
+      "league": "NAHL",
+      "source": "puppeteer-v2",
+      "scraped_at": "2026-03-01T13:05:13.902Z"
+    },
+    {
+      "name": "DANIELVIHAVAINEN",
+      "team": "",
+      "position": "D, F",
+      "games": "28",
+      "goals": "0",
+      "assists": "3",
+      "points": "3",
+      "league": "NAHL",
+      "source": "puppeteer-v2",
+      "scraped_at": "2026-03-01T13:05:13.902Z"
+    },
+    {
+      "name": "BLAKEKOHNEN",
+      "team": "",
+      "position": "F",
+      "games": "2",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "league": "NAHL",
+      "source": "puppeteer-v2",
+      "scraped_at": "2026-03-01T13:05:13.902Z"
+    },
+    {
+      "name": "Matias\t\t\t\t\t\t\t\tVanhanen",
+      "team": "",
+      "position": "",
+      "games": "0",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "league": "WHL",
+      "source": "puppeteer-v2",
+      "scraped_at": "2026-03-01T13:05:58.098Z"
+    }
+  ],
+  "total_players": 5
+}

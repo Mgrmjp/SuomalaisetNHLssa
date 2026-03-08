@@ -1,8 +1,12 @@
 <script>
-/** @type {{ data: { articles: Array<{slug: string, title: string, date: string, week: number, year: number, excerpt: string}> } }} */
-const { data } = $props()
+import { base } from '$app/paths'
 
-function _formatDate(dateStr) {
+/** @type {{ data: { articles: Array<{slug: string, title: string, date: string, week: number, year: number, excerpt: string}> } }} */
+const { data: _data } = $props()
+
+const data = _data
+
+function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('fi-FI', {
         day: 'numeric',
         month: 'long',

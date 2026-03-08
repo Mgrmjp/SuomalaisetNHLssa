@@ -1,9 +1,24 @@
 <script>
-import { setDate, showCalendarView } from '$lib/stores/gameData.js'
+import { setDate, showCalendarView, selectedDate, availableDates, currentDateReadOnly, latestPrepopulatedDate } from '$lib/stores/gameData.js'
+import MonthView from './MonthView.svelte'
 
-// availableDates is now a derived store, so we need to use $availableDates
+// Convert reactive statements to $derived
+const currentDateValue = $derived($selectedDate || formatLocalDate($currentDateReadOnly))
+const todayIso = formatLocalDate(new Date())
 
-$: currentDateValue = $selectedDate || formatLocalDate($currentDateReadOnly)
+/** @param {string} a
+ * @param {string} b */
+function minDateString(a, b) {
+    const aDate = new Date(`${a}T00:00:00`)
+    const bDate = new Date(`${b}T00:00:00`)
+    return aDate <= bDate ? a : b
+}
+
+const maxDate = $derived($latestPrepopulatedDate ? minDateString(todayIso, $latestPrepopulatedDate) : todayIso)
+
+// Check if at first or last available date
+const isPrevDisabled = $derived($availableDates.length > 0 && currentDateValue === $availableDates[0])
+const isNextDisabled = $derived($availableDates.length > 0 && currentDateValue === maxDate)
 
 function _goToPreviousDay() {
     const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
@@ -19,43 +34,6 @@ function _goToPreviousDay() {
     }
 }
 
-function _goToToday() {
-    const today = formatLocalDate($currentDateReadOnly)
-
-    // Find the nearest available date (today or most recent past date with games)
-    const todayDate = new Date(`${today}T00:00:00`)
-    const sortedDates = $availableDates
-        .map((d) => new Date(`${d}T00:00:00`))
-        .sort((a, b) => b.getTime() - a.getTime())
-
-    // Find the most recent date with games (today or earlier)
-    let nearestDate = sortedDates.find((d) => d <= todayDate)
-
-    // If no past dates found, use the earliest available date
-    if (!nearestDate && sortedDates.length > 0) {
-        nearestDate = sortedDates[sortedDates.length - 1]
-    }
-
-    if (nearestDate) {
-        setDate(formatLocalDate(nearestDate))
-    }
-}
-
-function _goToNextDay() {
-    const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
-    const today = formatLocalDate($currentDateReadOnly)
-    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
-
-    // Find the next available date (but not past today)
-    const nextDates = availableDateObjects
-        .filter((d) => d > currentDateObj && formatLocalDate(d) <= today)
-        .sort((a, b) => a.getTime() - b.getTime())
-
-    if (nextDates.length > 0 && nextDates[0]) {
-        setDate(formatLocalDate(nextDates[0]))
-    }
-}
-
 /** @param {Date | string} date */
 function formatLocalDate(date) {
     const d = typeof date === 'string' ? new Date(`${date}T00:00:00`) : date
@@ -64,22 +42,6 @@ function formatLocalDate(date) {
     const day = String(d.getDate()).padStart(2, '0')
     return `${year}-${month}-${day}`
 }
-
-$: todayIso = formatLocalDate(new Date())
-
-/** @param {string} a
- * @param {string} b */
-function minDateString(a, b) {
-    const aDate = new Date(`${a}T00:00:00`)
-    const bDate = new Date(`${b}T00:00:00`)
-    return aDate <= bDate ? a : b
-}
-
-$: maxDate = $latestPrepopulatedDate ? minDateString(todayIso, $latestPrepopulatedDate) : todayIso
-
-// Check if at first or last available date
-$: isPrevDisabled = $availableDates.length > 0 && currentDateValue === $availableDates[0]
-$: isNextDisabled = $availableDates.length > 0 && currentDateValue === maxDate
 
 /** @param {string} date */
 function _formatDotted(date) {

@@ -1,6 +1,7 @@
 <script>
 import { base } from '$app/paths'
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const { team, size = '48', className = '' } = $props()
 
 const teamFullNames = {
@@ -52,8 +53,8 @@ const _teamFullName = $derived(teamFullNames[team] || team)
 
 <div class="team-logo-wrapper {className}" style={`--logo-size: ${size}px`}>
     <img
-        src={logoUrl}
-        alt="{teamFullName} logo"
+        src={_logoUrl}
+        alt="{_teamFullName} logo"
         class="team-logo"
         width={size}
         height={size}

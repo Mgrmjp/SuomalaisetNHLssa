@@ -52,7 +52,6 @@ export async function fetchLocalJSON(path) {
         if (!response.ok) return null
         return await response.json()
     } catch (error) {
-        console.debug(`No data found at ${path}:`, error.message)
         return null
     }
 }

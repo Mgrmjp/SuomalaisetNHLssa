@@ -8,7 +8,7 @@ const {
     conferenceName = '',
     loading = false,
     error = null,
-    showAdvancedStats = false,
+    _showAdvancedStats = false,
 } = $props()
 
 // Format conference name for display
@@ -28,25 +28,14 @@ const _wildCardTeams = $derived(wildCardData[conferenceName] || [])
 const isLoading = $derived(loading || !hasData)
 
 // Error state
-// biome-ignore lint/correctness/noUnusedVariables: used in template
-const hasError = $derived(error !== null)
+const _hasError = $derived(error !== null)
 
-// Debug logging
-$effect(() => {
-    console.log('🔍 ConferenceStandings:', {
-        conferenceName,
-        hasData,
-        isLoading,
-        loading,
-        divisionsCount: divisions.length,
-        conferenceDataKeys: Object.keys(conferenceData || {}).length,
-    })
-})
+
 </script>
 
 <div class="conference-standings">
     <!-- Conference Header -->
-    {#if hasError}
+    {#if _hasError}
         <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-center space-x-3">
                 <svg
@@ -82,10 +71,10 @@ $effect(() => {
     {/if}
 
     <!-- Conference Title -->
-    {#if hasData && !hasError}
+    {#if hasData && !_hasError}
         <div class="conference-header mb-8">
             <h2 class="conference-title text-2xl font-bold mb-3 text-gray-900">
-                {displayName}
+                {_displayName}
             </h2>
             <p class="text-gray-600">Sarjataulukko ja pudotuspelipaikat</p>
         </div>
@@ -98,8 +87,8 @@ $effect(() => {
                         {teams}
                         {divisionName}
                         showPlayoffIndicator={true}
-                        {wildCardTeams}
-                        {showAdvancedStats}
+                        wildCardTeams={_wildCardTeams}
+                        showAdvancedStats={_showAdvancedStats}
                     />
                 </div>
             {/each}
@@ -134,7 +123,7 @@ $effect(() => {
                 </div>
             </div>
         </div>
-    {:else if !isLoading && !hasError}
+    {:else if !isLoading && !_hasError}
         <!-- Empty State -->
         <div class="text-center py-12">
             <svg

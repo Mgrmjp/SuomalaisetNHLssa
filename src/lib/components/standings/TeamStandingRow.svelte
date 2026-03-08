@@ -8,9 +8,9 @@ const {
     team,
     teamData = {},
     rank,
-    showPlayoffIndicator = false,
+    _showPlayoffIndicator = false,
     isWildCard = false,
-    showAdvancedStats = false,
+    _showAdvancedStats = false,
 } = $props()
 
 // Get team full name
@@ -35,7 +35,7 @@ $effect(async () => {
         try {
             _teamColorVars = await getTeamColorVariables(team)
         } catch (error) {
-            console.warn(`Failed to load team colors for ${team}:`, error)
+            // Silently ignore color loading errors
         }
     }
 })
@@ -129,8 +129,8 @@ function calculateAdvancedStats(stats) {
 </script>
 
 <tr
-    class={rowClasses}
-    style={Object.entries(teamColorVars)
+    class={_rowClasses}
+    style={Object.entries(_teamColorVars)
         .map(([key, value]) => `${key}: ${value}`)
         .join("; ")}
 >
@@ -144,7 +144,7 @@ function calculateAdvancedStats(stats) {
             <span class="text-gray-600">
                 {rank}
             </span>
-            {#if showPlayoffIndicator && isPlayoffTeam}
+            {#if _showPlayoffIndicator && _isPlayoffTeam}
                 <div
                     class="ml-1 w-2 h-2 {isWildCard
                         ? 'bg-blue-500'
@@ -167,7 +167,7 @@ function calculateAdvancedStats(stats) {
             </div>
             <div class="min-w-0 flex-1">
                 <p class="font-medium text-gray-900 truncate hidden sm:block">
-                    {teamName}
+                    {_teamName}
                 </p>
                 <p class="text-xs font-bold sm:font-normal text-gray-700 sm:text-gray-500">
                     {team}
@@ -178,41 +178,41 @@ function calculateAdvancedStats(stats) {
 
     <!-- Games Played -->
     <td class="standing-cell standing-cell--gp px-3 py-3 text-sm text-center text-gray-900 w-12">
-        <span class="stat-value">{teamStats.gamesPlayed}</span>
+        <span class="stat-value">{_teamStats.gamesPlayed}</span>
     </td>
 
     <!-- Wins -->
     <td class="standing-cell standing-cell--wins px-3 py-3 text-sm text-center w-12">
-        {teamStats.wins}
+        {_teamStats.wins}
     </td>
 
     <!-- Losses -->
     <td class="standing-cell standing-cell--losses px-3 py-3 text-sm text-center w-12">
-        {teamStats.losses}
+        {_teamStats.losses}
     </td>
 
     <!-- Overtime Losses -->
     <td class="standing-cell standing-cell--ot px-3 py-3 text-sm text-center w-12">
-        {teamStats.overtimeLosses}
+        {_teamStats.overtimeLosses}
     </td>
 
     <!-- Points -->
     <td class="standing-cell standing-cell--points px-3 py-3 text-sm font-bold text-center w-12">
-        {teamStats.points}
+        {_teamStats.points}
     </td>
 
     <!-- Points Percentage -->
     <td
         class="standing-cell standing-cell--points-pct px-3 py-3 text-sm text-center text-gray-900 w-14"
     >
-        <span class="stat-value">{teamStats.pointsPercentage.toFixed(3)}</span>
+        <span class="stat-value">{_teamStats.pointsPercentage.toFixed(3)}</span>
     </td>
 
     <!-- Streak -->
     <td class="standing-cell standing-cell--streak px-3 py-3 text-sm text-center w-14">
-        {#if streakDisplay}
+        {#if _streakDisplay}
             <span class="text-gray-600" title="Voitto-, häviö- tai jatkoaikataikkujen määrä">
-                {streakDisplay.text}
+                {_streakDisplay.text}
             </span>
         {:else}
             <span class="text-gray-400">-</span>
@@ -224,42 +224,42 @@ function calculateAdvancedStats(stats) {
         class="standing-cell standing-cell--l10 px-3 py-3 text-sm text-center text-gray-600 w-20 whitespace-nowrap"
     >
         <span class="stat-value tabular-nums" title="Viimeiset 10 pelia: voitot-häviöt-jatkoaika-tappiot">
-            {last10Display}
+            {_last10Display}
         </span>
     </td>
 
-    {#if showAdvancedStats}
+    {#if _showAdvancedStats}
         <!-- Power Play Percentage -->
         <td class="px-3 py-3 text-sm text-center w-14">
-            {advancedStats.powerPlayPercentage}%
+            {_advancedStats.powerPlayPercentage}%
         </td>
 
         <!-- Penalty Kill Percentage -->
         <td class="px-3 py-3 text-sm text-center w-14">
-            {advancedStats.penaltyKillPercentage}%
+            {_advancedStats.penaltyKillPercentage}%
         </td>
 
         <!-- Goal Differential -->
         <td class="px-3 py-3 text-sm text-center w-14">
             <span
-                class={advancedStats.goalDifferential > 0
+                class={_advancedStats.goalDifferential > 0
                     ? "text-green-700"
-                    : advancedStats.goalDifferential < 0
+                    : _advancedStats.goalDifferential < 0
                       ? "text-red-700"
                       : "text-gray-700"}
             >
-                {advancedStats.goalDifferential > 0 ? "+" : ""}{advancedStats.goalDifferential}
+                {_advancedStats.goalDifferential > 0 ? "+" : ""}{_advancedStats.goalDifferential}
             </span>
         </td>
 
         <!-- Goals For Per Game -->
         <td class="px-3 py-3 text-sm text-center text-gray-900 w-14">
-            <span class="stat-value">{advancedStats.goalsForPerGame}</span>
+            <span class="stat-value">{_advancedStats.goalsForPerGame}</span>
         </td>
 
         <!-- Goals Against Per Game -->
         <td class="px-3 py-3 text-sm text-center text-gray-900 w-14">
-            <span class="stat-value">{advancedStats.goalsAgainstPerGame}</span>
+            <span class="stat-value">{_advancedStats.goalsAgainstPerGame}</span>
         </td>
     {/if}
 </tr>

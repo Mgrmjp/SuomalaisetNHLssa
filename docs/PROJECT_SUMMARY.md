@@ -104,7 +104,6 @@ suomalaisetnhlssa/
     "@sveltejs/adapter-static": "^2.0.3",
     "@sveltejs/kit": "^1.30.4",
     "@biomejs/biome": "^2.2.5",
-    "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4.1.16",
     "@vitest/ui": "^3.2.4",
     "svelte": "^4.2.8",

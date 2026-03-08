@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-Build Finnish prospects cache by scanning NHL team prospect lists.
+Build Finnish prospects cache from multiple NHL API sources.
 
-This script fetches prospect data from all NHL teams, filters for Finnish players,
-and then fetches detailed info for each to determine their current league and stats.
+Sources:
+1) Team prospect lists
+2) Historical draft classes
+3) Draft rankings (NA/INT skaters + goalies)
 """
 
-import json
 import requests
 import time
 import sys
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -17,11 +19,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from config import DATA_DIR
-from utils import save_json, load_json
+from utils import save_json
 
 # NHL API endpoints
 NHL_API_BASE = "https://api-web.nhle.com"
+NHL_SEARCH_API = "https://search.d3.nhle.com/api/v1/search/player"
 PROSPECTS_CACHE_FILE = DATA_DIR / "finnish_prospects.json"
+CURRENT_SEASON_ID = 20252026
+EXTERNAL_PROSPECTS_FILE = DATA_DIR / "external_prospects.json"
+THE_SPORTS_DB_BASE = "https://www.thesportsdb.com/api/v1/json"
+WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
+
 
 def fetch_from_api(url, max_retries=3):
     """Fetch data from NHL API with retry logic"""
@@ -37,6 +45,53 @@ def fetch_from_api(url, max_retries=3):
             time.sleep(1)
     return None
 
+
+def normalize_name(name):
+    """Normalize full names for stable matching."""
+    return " ".join((name or "").strip().lower().split())
+
+
+def get_name(first_name, last_name):
+    """Handle NHL name fields that may be dicts or plain strings."""
+    first = first_name.get("default") if isinstance(first_name, dict) else first_name
+    last = last_name.get("default") if isinstance(last_name, dict) else last_name
+    return f"{first or ''} {last or ''}".strip()
+
+
+def _append_source(player_obj, source):
+    sources = player_obj.setdefault("sources", [])
+    if source and source not in sources:
+        sources.append(source)
+
+
+def upsert_candidate(candidates, by_name, player_id, name, **fields):
+    """Insert or merge candidate player data by id/name."""
+    normalized = normalize_name(name)
+    if not normalized:
+        return None
+
+    effective_id = player_id or by_name.get(normalized)
+    if not effective_id:
+        return None
+
+    if effective_id not in candidates:
+        candidates[effective_id] = {"id": effective_id, "name": name}
+
+    target = candidates[effective_id]
+    if name and not target.get("name"):
+        target["name"] = name
+
+    for key, value in fields.items():
+        if key == "source":
+            _append_source(target, value)
+            continue
+        if value is not None and value != "" and not target.get(key):
+            target[key] = value
+
+    by_name[normalized] = effective_id
+    return effective_id
+
+
 def get_all_teams():
     """Get list of all active NHL team abbreviations"""
     url = f"{NHL_API_BASE}/v1/standings/now"
@@ -47,194 +102,516 @@ def get_all_teams():
             teams.append(record.get("teamAbbrev", {}).get("default"))
     return sorted(list(set(filter(None, teams))))
 
+
 def get_team_prospects(team_abbr):
     """Get prospects for a specific team"""
     url = f"{NHL_API_BASE}/v1/prospects/{team_abbr}"
     return fetch_from_api(url)
+
 
 def get_player_landing(player_id):
     """Get detailed player info including current stats"""
     url = f"{NHL_API_BASE}/v1/player/{player_id}/landing"
     return fetch_from_api(url)
 
+
 def normalize_season_stats(stats_list):
-    """
-    Extract the most relevant recent season stats.
-    Prioritize current season (20242025).
-    """
+    """Extract the most relevant recent season stats."""
     if not stats_list:
         return None
-        
-    current_season = "20242025"
-    
-    # Try to find current season in explicit leagues
+
+    current_season = str(CURRENT_SEASON_ID)
+
     for season in stats_list:
         if str(season.get("season")) == current_season:
             return season
-            
-    # Fallback to the most recent one if current season not found
+
     return stats_list[-1] if stats_list else None
 
+
 def get_draft_class(year):
-    """Fetch all players drafted in a specific year"""
-    # Use V1 endpoint which returns all picks for the year
-    # https://api-web.nhle.com/v1/draft/picks/{year}/all
+    """Fetch all players drafted in a specific year."""
     url = f"{NHL_API_BASE}/v1/draft/picks/{year}/all"
     return fetch_from_api(url)
 
-def search_player_id(name):
-    """Search for player ID by name using NHL search API"""
-    url = "https://search.d3.nhle.com/api/v1/search/player"
+
+def get_draft_rankings(year, category_id):
+    """Fetch draft rankings for a specific year/category."""
+    url = f"{NHL_API_BASE}/v1/draft/rankings/{year}/{category_id}"
+    return fetch_from_api(url)
+
+
+def search_player_id(name, birth_date=None):
+    """Search player id by name using NHL search API with basic disambiguation."""
     params = {
         "culture": "en-us",
-        "limit": 5,
-        "q": name
+        "limit": 25,
+        "q": name,
     }
     try:
-        r = requests.get(url, params=params, timeout=5)
+        r = requests.get(NHL_SEARCH_API, params=params, timeout=8)
         if r.status_code == 200:
             data = r.json()
-            if len(data) > 0:
-                # Return the ID of the first match
-                return data[0].get("playerId")
+            if not data:
+                return None
+
+            target_name = normalize_name(name)
+
+            def row_name(row):
+                full = row.get("name")
+                if full:
+                    return normalize_name(full)
+                return normalize_name(f"{row.get('firstName', '')} {row.get('lastName', '')}")
+
+            exact_name = [row for row in data if row_name(row) == target_name]
+            pool = exact_name or data
+
+            if birth_date:
+                birth_match = [
+                    row for row in pool
+                    if str(row.get("birthDate", "")).startswith(str(birth_date))
+                ]
+                if birth_match:
+                    return birth_match[0].get("playerId")
+
+            return pool[0].get("playerId")
     except Exception as e:
         print(f"Error searching for {name}: {e}")
     return None
+
+
+def ingest_eliteprospects(candidates, by_name):
+    """
+    Optionally ingest Finnish players from EliteProspects API.
+    Requires ELITEPROSPECTS_API_KEY.
+    """
+    api_key = os.getenv("ELITEPROSPECTS_API_KEY", "").strip()
+    if not api_key:
+        print("EliteProspects API key not provided, skipping EP ingestion")
+        return 0
+
+    # Keep this configurable because EP endpoint/version may vary by account.
+    endpoint = os.getenv("ELITEPROSPECTS_PLAYERS_URL", "https://api.eliteprospects.com/v1/players")
+    params = {
+        "nationality": os.getenv("ELITEPROSPECTS_NATIONALITY", "FIN"),
+        "limit": int(os.getenv("ELITEPROSPECTS_LIMIT", "500")),
+    }
+    headers = {"Authorization": f"Bearer {api_key}"}
+
+    try:
+        r = requests.get(endpoint, headers=headers, params=params, timeout=20)
+        r.raise_for_status()
+        payload = r.json()
+    except Exception as e:
+        print(f"EliteProspects fetch failed: {e}")
+        return 0
+
+    rows = payload.get("data") or payload.get("players") or payload.get("results") or []
+    added = 0
+    for row in rows:
+        full_name = (
+            row.get("name")
+            or get_name(row.get("firstName"), row.get("lastName"))
+            or get_name(row.get("first_name"), row.get("last_name"))
+        )
+        if not full_name:
+            continue
+
+        birth_date = row.get("birthDate") or row.get("birth_date")
+        nhl_id = row.get("nhlPlayerId") or row.get("nhl_player_id")
+        if not nhl_id:
+            nhl_id = search_player_id(full_name, birth_date)
+        if not nhl_id:
+            continue
+
+        before = len(candidates)
+        upsert_candidate(
+            candidates,
+            by_name,
+            nhl_id,
+            full_name,
+            birthDate=birth_date,
+            currentTeam=row.get("team") or row.get("currentTeam"),
+            league=row.get("league"),
+            source="eliteprospects",
+        )
+        if len(candidates) > before:
+            added += 1
+
+    print(f"Added {added} candidates from EliteProspects")
+    return added
+
+
+def ingest_external_file(candidates, by_name):
+    """
+    Optionally ingest additional players from local file:
+    static/data/external_prospects.json
+
+    Expected rows: [{\"name\": \"...\", \"birthDate\": \"YYYY-MM-DD\", \"nhlRights\": \"...\"}, ...]
+    """
+    if not EXTERNAL_PROSPECTS_FILE.exists():
+        print(f"No external prospects file at {EXTERNAL_PROSPECTS_FILE}, skipping")
+        return 0
+
+    try:
+        import json
+        rows = json.loads(EXTERNAL_PROSPECTS_FILE.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"Failed to parse {EXTERNAL_PROSPECTS_FILE}: {e}")
+        return 0
+
+    if not isinstance(rows, list):
+        print(f"External prospects file must be a list, got {type(rows)}")
+        return 0
+
+    added = 0
+    for row in rows:
+        full_name = row.get("name")
+        if not full_name:
+            continue
+        birth_date = row.get("birthDate")
+        nhl_id = row.get("id") or row.get("nhlPlayerId") or search_player_id(full_name, birth_date)
+        if not nhl_id:
+            continue
+
+        before = len(candidates)
+        upsert_candidate(
+            candidates,
+            by_name,
+            nhl_id,
+            full_name,
+            birthDate=birth_date,
+            nhlRights=row.get("nhlRights"),
+            currentTeam=row.get("currentTeam"),
+            league=row.get("league"),
+            source="external_file",
+        )
+        if len(candidates) > before:
+            added += 1
+
+    print(f"Added {added} candidates from external file")
+    return added
+
+
+def ingest_the_sports_db(candidates, by_name):
+    """
+    Optionally ingest players from TheSportsDB free API (key 123 by default).
+    Scans configured leagues -> teams -> players.
+    """
+    key = os.getenv("THE_SPORTS_DB_KEY", "123").strip()
+    leagues = [
+        league.strip() for league in os.getenv(
+            "THE_SPORTS_DB_LEAGUES",
+            "NHL,Liiga,SHL,AHL,OHL,WHL,QMJHL,NCAA Hockey",
+        ).split(",")
+        if league.strip()
+    ]
+    max_teams = int(os.getenv("THE_SPORTS_DB_MAX_TEAMS", "400"))
+
+    team_ids = []
+    for league_name in leagues:
+        url = f"{THE_SPORTS_DB_BASE}/{key}/search_all_teams.php"
+        try:
+            r = requests.get(url, params={"l": league_name}, timeout=20)
+            r.raise_for_status()
+            data = r.json()
+        except Exception as e:
+            print(f"TheSportsDB teams fetch failed for {league_name}: {e}")
+            continue
+
+        for team in data.get("teams") or []:
+            team_id = team.get("idTeam")
+            if team_id:
+                team_ids.append(team_id)
+
+    # dedupe while preserving order
+    seen = set()
+    ordered_team_ids = []
+    for tid in team_ids:
+        if tid not in seen:
+            seen.add(tid)
+            ordered_team_ids.append(tid)
+    ordered_team_ids = ordered_team_ids[:max_teams]
+
+    added = 0
+    for team_id in ordered_team_ids:
+        players_url = f"{THE_SPORTS_DB_BASE}/{key}/lookup_all_players.php"
+        try:
+            r = requests.get(players_url, params={"id": team_id}, timeout=20)
+            r.raise_for_status()
+            payload = r.json()
+        except Exception:
+            continue
+
+        for row in payload.get("player") or []:
+            nationality = (row.get("strNationality") or "").upper()
+            if "FINLAND" not in nationality and nationality != "FIN":
+                continue
+
+            full_name = row.get("strPlayer")
+            if not full_name:
+                continue
+
+            birth_date = row.get("dateBorn")
+            nhl_id = search_player_id(full_name, birth_date)
+            if not nhl_id:
+                continue
+
+            before = len(candidates)
+            upsert_candidate(
+                candidates,
+                by_name,
+                nhl_id,
+                full_name,
+                birthDate=birth_date,
+                position=row.get("strPosition"),
+                currentTeam=row.get("strTeam"),
+                league=row.get("strLeague"),
+                source="thesportsdb",
+            )
+            if len(candidates) > before:
+                added += 1
+
+    print(f"Added {added} candidates from TheSportsDB")
+    return added
+
+
+def ingest_wikidata(candidates, by_name):
+    """
+    Optionally ingest Finnish ice hockey players from Wikidata SPARQL.
+    """
+    limit = int(os.getenv("WIKIDATA_MAX_ROWS", "500"))
+    query = f"""
+SELECT ?playerLabel ?dob WHERE {{
+  ?player wdt:P31 wd:Q5;
+          wdt:P106 wd:Q11774891;
+          wdt:P27 wd:Q33.
+  OPTIONAL {{ ?player wdt:P569 ?dob. }}
+  SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en,fi". }}
+}}
+LIMIT {limit}
+"""
+    headers = {
+        "Accept": "application/sparql-results+json",
+        "User-Agent": "suomalaisetnhlssa-prospects/1.0 (data pipeline)",
+    }
+
+    try:
+        r = requests.get(
+            WIKIDATA_SPARQL_ENDPOINT,
+            params={"format": "json", "query": query},
+            headers=headers,
+            timeout=30,
+        )
+        r.raise_for_status()
+        payload = r.json()
+    except Exception as e:
+        print(f"Wikidata query failed: {e}")
+        return 0
+
+    rows = payload.get("results", {}).get("bindings", [])
+    added = 0
+    for row in rows:
+        full_name = row.get("playerLabel", {}).get("value")
+        if not full_name:
+            continue
+        dob_raw = row.get("dob", {}).get("value", "")
+        birth_date = dob_raw[:10] if dob_raw else None
+        nhl_id = search_player_id(full_name, birth_date)
+        if not nhl_id:
+            continue
+
+        before = len(candidates)
+        upsert_candidate(
+            candidates,
+            by_name,
+            nhl_id,
+            full_name,
+            birthDate=birth_date,
+            source="wikidata",
+        )
+        if len(candidates) > before:
+            added += 1
+
+    print(f"Added {added} candidates from Wikidata")
+    return added
+
 
 def main():
     print("Building Finnish prospects cache...")
     print("=" * 60)
 
-    # ensure data dir exists
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     finnish_prospects = {}
-    
-    # 1. Scan Team Prospect Lists
+    prospects_by_name = {}
+
+    # 1) Team prospect lists
     teams = get_all_teams()
     print(f"Scanning {len(teams)} teams for Finnish prospects...")
-    
+
     for i, team in enumerate(teams, 1):
         print(f"[{i}/{len(teams)}] Checking {team}...", end=" ")
-        
+
         prospects_data = get_team_prospects(team)
         if not prospects_data:
             print("Failed to fetch")
             continue
 
         team_finnish_count = 0
-        
+
         for category in ["forwards", "defensemen", "goalies"]:
             for player in prospects_data.get(category, []):
                 if player.get("birthCountry") == "FIN":
                     player_id = player.get("id")
-                    
-                    # Store minimal info to start, will enrich later
-                    finnish_prospects[player_id] = {
-                        "id": player_id,
-                        "nhlRights": team, 
-                        # Name/Position/etc will be solidified during enrichment
-                        "name": f"{player.get('firstName', {}).get('default')} {player.get('lastName', {}).get('default')}",
-                        "position": player.get("positionCode"),
-                        "headshot": player.get("headshot"),
-                        "height": player.get("heightInCentimeters"),
-                        "weight": player.get("weightInKilograms"),
-                        "birthDate": player.get("birthDate"),
-                    }
+                    full_name = get_name(player.get("firstName"), player.get("lastName"))
+
+                    upsert_candidate(
+                        finnish_prospects,
+                        prospects_by_name,
+                        player_id,
+                        full_name,
+                        nhlRights=team,
+                        position=player.get("positionCode"),
+                        headshot=player.get("headshot"),
+                        height=player.get("heightInCentimeters"),
+                        weight=player.get("weightInKilograms"),
+                        birthDate=player.get("birthDate"),
+                        source=f"team_prospects:{team}",
+                    )
                     team_finnish_count += 1
 
         print(f"Found {team_finnish_count}")
         time.sleep(0.1)
 
-    # 2. Scan Recent Drafts (Robustness Check)
-    # Scan last 5 drafts (2020-2024)
-    # Adjust range to include 2024 (current latest)
+    # 2) Draft history
     current_year = datetime.now().year
-    draft_years = range(2020, 2025) 
-    
+    draft_start_year = max(2005, current_year - 10)
+    draft_years = range(draft_start_year, current_year + 1)
+
     print(f"\nScanning Draft History ({draft_years[0]}-{draft_years[-1]}) for missing prospects...")
-    
+
     for year in draft_years:
         print(f"Checking Draft {year}...", end=" ")
         draft_data = get_draft_class(year)
-        
+
         year_count = 0
         if draft_data and "picks" in draft_data:
             for pick in draft_data["picks"]:
-                # V1 structure: pick has 'countryCode' (e.g. "FIN")
-                if pick.get("countryCode") == "FIN":
-                    # Check if we already have this player via ID (if present) or Name
-                    # V1 draft response usually lacks ID, so we might duplicate check by name if needed?
-                    # For now, let's assume we lack ID and MUST search if we want to confirm absence.
-                    # Or better: search only if we suspect they are missing.
-                    # But without ID, we can't check 'if pid in finnish_prospects'.
-                    # So we construct name.
-                    fname = pick.get("firstName")
-                    if isinstance(fname, dict): fname = fname.get("default")
-                    lname = pick.get("lastName")
-                    if isinstance(lname, dict): lname = lname.get("default")
-                    
-                    full_name = f"{fname} {lname}"
-                    
-                    # Check if name already exists in our list? (Optimization)
-                    already_have = False
-                    for existing in finnish_prospects.values():
-                        if existing.get("name") == full_name:
-                            already_have = True
-                            break
-                    
-                    if not already_have:
-                        # Missing! Need to find ID.
-                        print(f"  Searching for missing: {full_name}...", end=" ")
-                        pid = search_player_id(full_name)
-                        
-                        if pid:
-                            # Double check ID existence (maybe name match was fuzzy?)
-                            if pid in finnish_prospects:
-                                print(f"Found (ID {pid} already exists)")
-                                continue
-                                
-                            print(f"FOUND ID: {pid}")
-                            finnish_prospects[pid] = {
-                                "id": pid,
-                                "nhlRights": pick.get("teamAbbrev"), # Drafting team
-                                "name": full_name,
-                                # birthDate will come from landing
-                            }
-                            year_count += 1
-                        else:
-                            print("ID Not Found")
-                            
+                if pick.get("countryCode") != "FIN":
+                    continue
+
+                full_name = get_name(pick.get("firstName"), pick.get("lastName"))
+                if not full_name:
+                    continue
+
+                pid = search_player_id(full_name, pick.get("birthDate"))
+                if not pid:
+                    continue
+
+                before = len(finnish_prospects)
+                upsert_candidate(
+                    finnish_prospects,
+                    prospects_by_name,
+                    pid,
+                    full_name,
+                    nhlRights=pick.get("teamAbbrev"),
+                    birthDate=pick.get("birthDate"),
+                    source=f"draft_picks:{year}",
+                )
+                if len(finnish_prospects) > before:
+                    year_count += 1
+
         print(f"Added {year_count} new")
         time.sleep(0.5)
 
-    # 3. Enrich and Validate
+    # 3) Draft rankings (captures draft-eligible Finns outside NHL-rights lists)
+    ranking_categories = {
+        1: "north_american_skaters",
+        2: "international_skaters",
+        3: "north_american_goalies",
+        4: "international_goalies",
+    }
+    ranking_years = [current_year, current_year + 1]
+    print(f"\nScanning draft rankings ({ranking_years[0]} and {ranking_years[1]})...")
+    rankings_added = 0
+
+    for year in ranking_years:
+        for category_id, category_name in ranking_categories.items():
+            rankings_data = get_draft_rankings(year, category_id)
+            if not rankings_data:
+                continue
+
+            for player in rankings_data.get("rankings", []):
+                if player.get("birthCountry") != "FIN":
+                    continue
+
+                full_name = get_name(player.get("firstName"), player.get("lastName"))
+                if not full_name:
+                    continue
+
+                pid = player.get("playerId") or search_player_id(full_name, player.get("birthDate"))
+                if not pid:
+                    continue
+
+                before = len(finnish_prospects)
+                upsert_candidate(
+                    finnish_prospects,
+                    prospects_by_name,
+                    pid,
+                    full_name,
+                    birthDate=player.get("birthDate"),
+                    position=player.get("positionCode"),
+                    nhlRights=player.get("teamAbbrev"),
+                    source=f"draft_rankings:{year}:{category_name}",
+                )
+                if len(finnish_prospects) > before:
+                    rankings_added += 1
+
+    print(f"Added {rankings_added} candidates from draft rankings")
+
+    # 4) Optional non-NHL sources
+    ingest_eliteprospects(finnish_prospects, prospects_by_name)
+    ingest_the_sports_db(finnish_prospects, prospects_by_name)
+    ingest_wikidata(finnish_prospects, prospects_by_name)
+    ingest_external_file(finnish_prospects, prospects_by_name)
+
+    # 5) Enrich with landing data
     print(f"\nEnriching data for {len(finnish_prospects)} total players...")
     final_list = []
-    
+
     for pid, p_data in finnish_prospects.items():
-        if not pid: continue # Skip invalid IDs
+        if not pid:
+            continue
+
         landing = get_player_landing(pid)
         if not landing:
-            print(f"Skipping {pid} (No landing data)")
+            p_data.setdefault("nhlRights", "N/A")
+            p_data.setdefault("league", "Unknown")
+            p_data.setdefault("currentTeam", "Unknown")
+            p_data.setdefault("stats", {"gp": 0, "goals": 0, "assists": 0, "points": 0, "savePct": 0.0, "gaa": 0.0, "shutouts": 0})
+            final_list.append(p_data)
             continue
-            
-        # Extract current status
+
+        if landing.get("birthCountry") and landing.get("birthCountry") != "FIN":
+            continue
+
         current_stats = None
         league = "Unknown"
         current_team = "Unknown"
         stats = {}
-        
-        # Try featured stats first
+
         featured = landing.get("featuredStats", {})
-        if featured and featured.get("season") == 20242025:
-             current_stats = featured.get("regularSeason", {}).get("subSeason", {})
-             
-        # Fallback to season totals
+        has_current_season = featured and featured.get("season") == CURRENT_SEASON_ID
+        if has_current_season:
+            current_stats = featured.get("regularSeason", {}).get("subSeason", {})
+
+        last_season = None
         if not current_stats:
             season_totals = landing.get("seasonTotals", [])
             most_recent = normalize_season_stats(season_totals)
             if most_recent:
+                last_season = most_recent.get("season")
                 league = most_recent.get("leagueAbbrev", "Unknown")
                 current_team = most_recent.get("teamName", {}).get("default", "Unknown")
                 stats = {
@@ -242,13 +619,14 @@ def main():
                     "goals": most_recent.get("goals", 0),
                     "assists": most_recent.get("assists", 0),
                     "points": most_recent.get("points", 0),
-                    "savePct": most_recent.get("savePctg", 0.0) 
+                    "savePct": most_recent.get("savePctg", 0.0),
+                    "gaa": most_recent.get("goalsAgainstAverage", 0.0),
+                    "shutouts": most_recent.get("shutouts", 0),
                 }
         else:
-            # Re-do: Always prioritized finding the season entry in SeasonTotals that matches 20242025
             season_totals = landing.get("seasonTotals", [])
-            # Find 20242025 or last
             target = normalize_season_stats(season_totals)
+            last_season = CURRENT_SEASON_ID
             if target:
                 league = target.get("leagueAbbrev", "Unknown")
                 current_team = target.get("teamName", {}).get("default", "Unknown")
@@ -257,36 +635,36 @@ def main():
                     "goals": target.get("goals", 0),
                     "assists": target.get("assists", 0),
                     "points": target.get("points", 0),
-                    "savePct": current_stats.get("savePctg", 0.0) 
+                    "savePct": current_stats.get("savePctg", 0.0),
+                    "gaa": target.get("goalsAgainstAverage", 0.0),
+                    "shutouts": target.get("shutouts", 0),
                 }
-
-        # Check if playing in NHL but already "established"?
-        # User wants "Prospects". If GP > 100? or Age > 24?
-        # Let's keep everyone for now, maybe filter in frontend or here.
-        # Ideally, we filter out guys like Luukkonen (starter).
-        # Heuristic: If NHL games > 50 in career? 
-        # For robustness, let's keep them in the file but maybe flag them?
-        # Or just keep it simple. User said "Prospects". Luukkonen is borderline 'Alumni' now.
-        # Leaving as is for now.
 
         p_data["currentTeam"] = current_team
         p_data["league"] = league
         p_data["stats"] = stats
-        # Ensure basics are populated if coming from Draft loop
+        p_data["lastSeason"] = last_season
+        p_data["hasCurrentSeasonStats"] = has_current_season
+        p_data.setdefault("nhlRights", "N/A")
+
         if "headshot" not in p_data or not p_data["headshot"]:
-             p_data["headshot"] = landing.get("headshot")
+            p_data["headshot"] = landing.get("headshot")
         if "position" not in p_data:
-             p_data["position"] = landing.get("position", "U") 
+            p_data["position"] = landing.get("position", "U")
         if "birthDate" not in p_data or not p_data["birthDate"]:
-             p_data["birthDate"] = landing.get("birthDate")
+            p_data["birthDate"] = landing.get("birthDate")
 
         final_list.append(p_data)
-        # print(f"  Processed {p_data['name']}")
         time.sleep(0.05)
+
+    final_list.sort(
+        key=lambda p: (-(p.get("stats", {}).get("points", 0)), p.get("name", ""))
+    )
 
     print(f"\nFinal count: {len(final_list)}")
     save_json(final_list, PROSPECTS_CACHE_FILE)
     print(f"Saved to {PROSPECTS_CACHE_FILE}")
+
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-03-07T11:28:28.141Z",
+  "season": "2025-2026",
+  "data_source": "puppeteer-advanced",
+  "scraper_version": "4.0",
+  "leagues": {
+    "liiga": {
+      "count": 0,
+      "url": "https://www.liiga.fi/tilastot/pelaajat",
+      "type": "european"
+    },
+    "shl": {
+      "count": 0,
+      "url": "https://www.shl.se/statistik/spelare",
+      "type": "european"
+    },
+    "khl": {
+      "count": 0,
+      "url": "https://en.khl.ru/stat/players/2025-2026/",
+      "type": "european"
+    },
+    "mestis": {
+      "count": 0,
+      "url": "https://www.mestis.fi/tilastot/pelaajat",
+      "type": "european"
+    },
+    "ahl": {
+      "count": 0,
+      "url": "https://www.theahl.com/stats/player-stats",
+      "type": "hockeytech"
+    },
+    "echl": {
+      "count": 0,
+      "url": "https://www.echl.com/stats/player-stats",
+      "type": "hockeytech"
+    },
+    "nahl": {
+      "count": 5,
+      "url": "https://nahl.com/skater-stats",
+      "type": "hockeytech"
+    },
+    "ohl": {
+      "count": 0,
+      "url": "https://ontariohockeyleague.com/stats/players",
+      "type": "hockeytech"
+    },
+    "whl": {
+      "count": 0,
+      "url": "https://whl.ca/stats/players",
+      "type": "hockeytech"
+    },
+    "qmjhl": {
+      "count": 0,
+      "url": "https://theqmjhl.ca/stats/players",
+      "type": "hockeytech"
+    }
+  },
+  "players": [
+    {
+      "name": "AARONMARTIKAINEN",
+      "team": "",
+      "position": "D",
+      "games": "45",
+      "goals": "2",
+      "assists": "8",
+      "points": "10",
+      "league": "NAHL",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-07T11:31:56.293Z"
+    },
+    {
+      "name": "EMMETMCCLAINE",
+      "team": "",
+      "position": "F",
+      "games": "38",
+      "goals": "4",
+      "assists": "6",
+      "points": "10",
+      "league": "NAHL",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-07T11:31:56.293Z"
+    },
+    {
+      "name": "DANIELVIHAVAINEN",
+      "team": "",
+      "position": "D, F",
+      "games": "28",
+      "goals": "0",
+      "assists": "3",
+      "points": "3",
+      "league": "NAHL",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-07T11:31:56.293Z"
+    },
+    {
+      "name": "DANIELHALONEN",
+      "team": "",
+      "position": "F",
+      "games": "0",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "league": "NAHL",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-07T11:31:56.293Z"
+    },
+    {
+      "name": "BLAKEKOHNEN",
+      "team": "",
+      "position": "F",
+      "games": "2",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "league": "NAHL",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-07T11:31:56.293Z"
+    }
+  ],
+  "network_logs": [],
+  "api_endpoints": [],
+  "total_players": 5
+}

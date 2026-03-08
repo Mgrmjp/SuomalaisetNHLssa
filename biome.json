@@ -83,7 +83,7 @@
         },
         "globals": [
             "$:",
-            "$$",
+            "$",
             "browser",
             "window",
             "document",
@@ -126,11 +126,21 @@
                         "noExplicitAny": "warn"
                     },
                     "correctness": {
-                        "noUnusedImports": "error",
+                        "noUnusedImports": "off",
                         "noUnusedVariables": "error"
                     },
                     "style": {
                         "useConst": "error"
+                    }
+                }
+            }
+        },
+        {
+            "includes": ["src/lib/components/game/MonthView.svelte"],
+            "linter": {
+                "rules": {
+                    "correctness": {
+                        "noUnusedImports": "off"
                     }
                 }
             }

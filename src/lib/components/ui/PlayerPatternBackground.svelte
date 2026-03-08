@@ -128,11 +128,11 @@ onMount(async () => {
         try {
             const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
             if (data?.players) {
-                data.players.forEach((p) => {
+                for (const p of data.players) {
                     if (p?.name) {
                         nameSet.add(p.name)
                     }
-                })
+                }
             }
         } catch (_e) {
             // Skip errors, just continue with other dates

@@ -3,8 +3,12 @@ import { onMount } from 'svelte'
 // Swiper - only import core, handle CSS in scoped styles
 import Swiper from 'swiper'
 import { FreeMode, Mousewheel } from 'swiper/modules'
-import { setDate } from '$lib/stores/gameData.js'
+import { setDate, players, isLoading, error, displayDate } from '$lib/stores/gameData.js'
 import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
+import PlayerCard from './PlayerCard.svelte'
+import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
+import MobileAdBanner from '$lib/components/ui/MobileAdBanner.svelte'
+import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 
 let forwardsSwiper = null
 let defendersSwiper = null
@@ -78,7 +82,7 @@ function handleResize() {
 }
 
 // Random ad position: 0 = after forwards, 1 = after defenders
-let _mobileAdPosition = 0
+let _mobileAdPosition = $state(0)
 
 onMount(() => {
     // Randomly pick which row to show ad after (0 or 1)
@@ -94,10 +98,12 @@ onMount(() => {
 })
 
 // Re-initialize swipers when players data changes
-$: if ($players && isMobile) {
-    destroySwipers()
-    setTimeout(initSwipers, 100)
-}
+$effect(() => {
+    if ($players && isMobile) {
+        destroySwipers()
+        setTimeout(initSwipers, 100)
+    }
+})
 
 function _handleRetry() {
     const currentDate = new Date().toISOString().split('T')[0]
@@ -126,6 +132,20 @@ function goalieHasPlayed(player) {
 }
 
 /**
+ * Filter out invalid players that don't have required fields
+ * This prevents duplicate key errors in the each blocks
+ *
+ * @param {Object[]} players - Array of player objects
+ * @returns {Object[]} Filtered array of valid players
+ */
+function getValidPlayers(players) {
+    if (!Array.isArray(players)) return []
+    return players.filter((player) => {
+        return player && typeof player === 'object' && player.playerId != null && player.game_id != null
+    })
+}
+
+/**
  * Filter players based on position and performance
  * - Goalies: must have actually played (faced shots, made saves, etc.)
  * - Skaters: must have recorded at least one point
@@ -133,12 +153,12 @@ function goalieHasPlayed(player) {
  * @param {Object[]} players - Array of player objects
  * @returns {Object[]} Filtered array of players
  */
-$: filteredPlayers = ($players || []).filter((player) => {
+const filteredPlayers = $derived(getValidPlayers($players || []).filter((player) => {
     if (isGoalie(player)) {
         return goalieHasPlayed(player)
     }
     return hasPoints(player)
-})
+}))
 
 /**
  * Sort skaters by points (primary), then goals, plus/minus, and assists
@@ -173,11 +193,14 @@ const sortGoalies = (list) =>
         return bPct - aPct
     })
 
-$: forwards = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)))
-$: defenders = sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)))
-$: goalies = sortGoalies(filteredPlayers.filter((p) => isGoalie(p)))
+const forwards = $derived(sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p))))
+const defenders = $derived(sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p))))
+const goalies = $derived(sortGoalies(filteredPlayers.filter((p) => isGoalie(p))))
 
-$: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
+const hasAnyPlayers = $derived(forwards.length + defenders.length + goalies.length > 0)
+
+// Use $derived for the mobile ad position
+const mobileAdPosition = $derived(_mobileAdPosition)
 </script>
 
 {#if $isLoading}
@@ -279,14 +302,14 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
                             <div
                                 class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
                             >
-                                {#each forwards as player (`${player.playerId}-${player.game_id}`)}
+                                {#each forwards as player, index (`${player.playerId}-${index}`)}
                                     <PlayerCard {player} />
                                 {/each}
                             </div>
                             <!-- Mobile Swiper -->
                             <div class="swiper swiper-forwards md:hidden">
                                 <div class="swiper-wrapper">
-                                    {#each forwards as player (`${player.playerId}-${player.game_id}-mobile`)}
+                                    {#each forwards as player, index (`${player.playerId}-${index}-mobile`)}
                                         <div class="swiper-slide mobile-card-slide">
                                             <PlayerCard {player} />
                                         </div>
@@ -315,14 +338,14 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
                             <div
                                 class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
                             >
-                                {#each defenders as player (`${player.playerId}-${player.game_id}`)}
+                                {#each defenders as player, index (`${player.playerId}-${index}`)}
                                     <PlayerCard {player} />
                                 {/each}
                             </div>
                             <!-- Mobile Swiper -->
                             <div class="swiper swiper-defenders md:hidden">
                                 <div class="swiper-wrapper">
-                                    {#each defenders as player (`${player.playerId}-${player.game_id}-mobile`)}
+                                    {#each defenders as player, index (`${player.playerId}-${index}-mobile`)}
                                         <div class="swiper-slide mobile-card-slide">
                                             <PlayerCard {player} />
                                         </div>
@@ -351,14 +374,14 @@ $: hasAnyPlayers = forwards.length + defenders.length + goalies.length > 0
                             <div
                                 class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
                             >
-                                {#each goalies as player (`${player.playerId}-${player.game_id}`)}
+                                {#each goalies as player, index (`${player.playerId}-${index}`)}
                                     <PlayerCard {player} />
                                 {/each}
                             </div>
                             <!-- Mobile Swiper -->
                             <div class="swiper swiper-goalies md:hidden">
                                 <div class="swiper-wrapper">
-                                    {#each goalies as player (`${player.playerId}-${player.game_id}-mobile`)}
+                                    {#each goalies as player, index (`${player.playerId}-${index}-mobile`)}
                                         <div class="swiper-slide mobile-card-slide">
                                             <PlayerCard {player} />
                                         </div>

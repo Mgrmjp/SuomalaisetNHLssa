@@ -1,6 +1,6 @@
-// Redirect to prospects page
+// Redirect to lupaukset page
 import { redirect } from '@sveltejs/kit'
 
 export function load() {
-    throw redirect(307, '/prospects')
+    throw redirect(301, '/lupaukset')
 }

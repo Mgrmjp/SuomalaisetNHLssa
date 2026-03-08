@@ -6,6 +6,7 @@
  */
 
 import { base } from '$app/paths'
+import logger from '$lib/utils/logger.js'
 
 // Configuration
 const CONFIG = {
@@ -286,7 +287,7 @@ async function scanAllTeamsForFinnishPlayers() {
         teamAbbreviations.push(...knownTeams)
     }
 
-    console.log(`Scanning ${teamAbbreviations.length} teams for Finnish players...`)
+    logger.debug(`Scanning ${teamAbbreviations.length} teams for Finnish players...`)
 
     // Get current season ID (format: YYYYYY+YY, e.g., 20252026)
     const currentYear = new Date().getFullYear()
@@ -304,7 +305,7 @@ async function scanAllTeamsForFinnishPlayers() {
                 !rosterData.defensemen ||
                 !rosterData.goalies
             ) {
-                console.warn(`Invalid roster data for ${teamAbbrev}`)
+                logger.warn(`Invalid roster data for ${teamAbbrev}`)
                 continue
             }
 
@@ -330,11 +331,11 @@ async function scanAllTeamsForFinnishPlayers() {
             // Small delay to avoid overwhelming the API
             await new Promise((resolve) => setTimeout(resolve, 100))
         } catch (error) {
-            console.warn(`Error scanning team ${teamAbbrev}:`, error)
+            logger.warn(`Error scanning team ${teamAbbrev}:`, error)
         }
     }
 
-    console.log(`Found ${finnishPlayers.length} Finnish players across all teams`)
+    logger.debug(`Found ${finnishPlayers.length} Finnish players across all teams`)
     return finnishPlayers
 }
 

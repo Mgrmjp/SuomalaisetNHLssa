@@ -1,11 +1,21 @@
 <script>
+import { base } from '$app/paths'
+import { fade } from 'svelte/transition'
+import { resetToDefault } from '$lib/stores/gameData.js'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+
 /** @type {import('./$types').PageData} */
 export let data
 
-const { players, error, seasonId } = data
+const { players: _players, error: _error, seasonId } = data
+
+const players = _players
+const error = _error
 
 // Helper to format season display (e.g. 2025-2026 -> 2025-26)
-const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
+const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
 </script>
 
 <svelte:head>

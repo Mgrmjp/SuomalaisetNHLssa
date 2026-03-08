@@ -1,7 +1,10 @@
 <script>
 import { onMount } from 'svelte'
+import { page } from '$app/stores'
+import { base } from '$app/paths'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
 
-const status = $page.status || 404
+const status = page.status || 404
 let _message = 'Sivua ei löytynyt'
 let _randomTrivia = ''
 
@@ -31,7 +34,7 @@ onMount(() => {
 </script>
 
 <svelte:head>
-    <title>{status} - {message} | Suomalaiset NHL:ssä</title>
+    <title>{status} - {_message} | Suomalaiset NHL:ssä</title>
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50 relative overflow-hidden flex items-center justify-center">
@@ -58,7 +61,7 @@ onMount(() => {
 
         <!-- Error Message -->
         <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            {message}
+            {_message}
         </h1>
         <p class="text-lg text-slate-600 mb-8 max-w-md mx-auto">
             {#if status === 404}
@@ -110,7 +113,7 @@ onMount(() => {
                 Tiesitkö?
             </p>
             <p class="text-slate-700">
-                {randomTrivia}
+                {_randomTrivia}
             </p>
         </div>
     </div>

@@ -62,7 +62,7 @@ $: currentAd = ads[currentAdIndex]
                 rel="noopener noreferrer"
                 class="ad-link"
                 class:active={index === currentAdIndex}
-                class:fade-out={index !== currentAdIndex || isTransitioning}
+                class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
                 <img src={ad.src} width={ad.width} height={ad.height} alt={ad.alt} class="ad-img" />
                 <span class="ad-disclaimer">Mainos</span>

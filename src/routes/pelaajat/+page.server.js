@@ -21,6 +21,29 @@ export async function load({ fetch }) {
             const skatersData = JSON.parse(readFileSync(skatersFile, 'utf-8'))
             const goaliesData = JSON.parse(readFileSync(goaliesFile, 'utf-8'))
 
+            // Augment with roster data
+            try {
+                const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
+                const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
+                
+                /** @param {any} p */
+                const augmentPlayer = (p) => {
+                    const rosterInfo = rosterData[p.playerId.toString()]
+                    if (rosterInfo) {
+                        p.birthDate = rosterInfo.birthDate
+                        if (p.birthDate) {
+                            p.age = new Date().getFullYear() - new Date(p.birthDate).getFullYear()
+                        }
+                    }
+                    return p
+                }
+
+                skatersData.forEach(augmentPlayer)
+                goaliesData.forEach(augmentPlayer)
+            } catch (rosterError) {
+                console.warn('Failed to load roster info for list augmentation:', rosterError)
+            }
+
             return {
                 skaters: skatersData,
                 goalies: goaliesData,
@@ -41,12 +64,35 @@ export async function load({ fetch }) {
                 throw new Error(`Failed to fetch stats`)
             }
 
-            const skatersData = await skaterRes.json()
-            const goaliesData = await goalieRes.json()
+            const skatersData = (await skaterRes.json()).data || []
+            const goaliesData = (await goalieRes.json()).data || []
+
+            // Augment with roster data
+            try {
+                const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
+                const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
+                
+                /** @param {any} p */
+                const augmentPlayer = (p) => {
+                    const rosterInfo = rosterData[p.playerId.toString()]
+                    if (rosterInfo) {
+                        p.birthDate = rosterInfo.birthDate
+                        if (p.birthDate) {
+                            p.age = new Date().getFullYear() - new Date(p.birthDate).getFullYear()
+                        }
+                    }
+                    return p
+                }
+
+                skatersData.forEach(augmentPlayer)
+                goaliesData.forEach(augmentPlayer)
+            } catch (rosterError) {
+                console.warn('Failed to load roster info for list augmentation:', rosterError)
+            }
 
             return {
-                skaters: skatersData.data || [],
-                goalies: goaliesData.data || [],
+                skaters: skatersData,
+                goalies: goaliesData,
                 seasonId,
                 updatedAt: new Date().toISOString(),
                 source: 'api',

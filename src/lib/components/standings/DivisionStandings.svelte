@@ -7,9 +7,9 @@ import { getTeamColorVariables } from '$lib/utils/teamColors.js'
 const {
     teams = [],
     divisionName = '',
-    showPlayoffIndicator = true,
-    wildCardTeams = [],
-    showAdvancedStats = false,
+    _showPlayoffIndicator = true,
+    _wildCardTeams = [],
+    _showAdvancedStats = false,
 } = $props()
 
 // Format division name for display
@@ -31,7 +31,7 @@ $effect(() => {
             try {
                 _divisionLeaderColors = await getTeamColorVariables(leaderTeam)
             } catch (error) {
-                console.warn(`Failed to load colors for division leader ${leaderTeam}:`, error)
+                // Silently ignore color loading errors
             }
         }
     })()
@@ -59,30 +59,29 @@ const advancedHeaders = [
     { key: 'goalsAgainstPerGame', label: 'VM/O', center: true, width: 'w-14' },
 ]
 
-// biome-ignore lint/correctness/noUnusedVariables: used in template
-const headers = $derived(showAdvancedStats ? [...baseHeaders, ...advancedHeaders] : baseHeaders)
+const _headers = $derived(_showAdvancedStats ? [...baseHeaders, ...advancedHeaders] : baseHeaders)
 </script>
 
 <div
     class="division-container bg-white rounded-lg shadow-lg overflow-hidden relative w-full max-w-full"
-    style={Object.entries(divisionLeaderColors)
+    style={Object.entries(_divisionLeaderColors)
         .map(([key, value]) => `${key}: ${value}`)
         .join("; ")}
 >
     <!-- Division Header -->
     <div class="division-header px-4 py-4 text-white relative overflow-hidden">
         <h3 class="division-title text-xl font-bold relative z-10 text-shadow">
-            {displayName}
+            {_displayName}
         </h3>
     </div>
 
-    {#if hasTeams}
+    {#if _hasTeams}
         <div class="standings-table-wrapper overflow-x-auto w-full">
             <table class="standings-table w-full text-sm">
                 <!-- Table Header -->
                 <thead class="bg-gray-100 border-b border-gray-200">
                     <tr>
-                        {#each headers as header}
+                        {#each _headers as header}
                             <th
                                 class="px-3 py-2 text-xs font-medium text-gray-600 uppercase tracking-wider whitespace-nowrap {header.width} {header.center
                                     ? 'text-center'
@@ -105,9 +104,9 @@ const headers = $derived(showAdvancedStats ? [...baseHeaders, ...advancedHeaders
                             team={team.team}
                             rank={index + 1}
                             teamData={team}
-                            {showPlayoffIndicator}
-                            isWildCard={wildCardTeams.includes(team.team)}
-                            {showAdvancedStats}
+                            {_showPlayoffIndicator}
+                            isWildCard={_wildCardTeams.includes(team.team)}
+                            {_showAdvancedStats}
                         />
                     {/each}
                 </tbody>

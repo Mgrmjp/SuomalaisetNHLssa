@@ -3,6 +3,8 @@ import { onMount } from 'svelte'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import teamMapping from '$lib/utils/teamMapping.js'
+import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 
 // State
 let _players = []
@@ -152,8 +154,6 @@ function _formatBirthDate(dateStr) {
             {#each Array.from(_teamsMap.entries()) as [teamAbbr, teamPlayers]}
                 {@const teamName = teamMapping[teamAbbr] || teamAbbr}
                 {@const sortedPlayers = _sortPlayersByPosition(teamPlayers)}
-                {@const teamColors = getTeamColorVariables(teamAbbr)}
-
                 <div class="team-card" style:--team-primary-color="#1e40af">
                     <!-- Team Header -->
                     <div class="team-header">

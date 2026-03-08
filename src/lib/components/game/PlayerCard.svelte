@@ -1,6 +1,7 @@
 <script>
 import { onMount } from 'svelte'
 import { base } from '$app/paths'
+import { games } from '$lib/stores/gameData.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { formatGameScore } from '$lib/utils/gameFormatHelpers.mjs'
 import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
@@ -78,7 +79,7 @@ $effect(() => {
         loadPlayerImage(player.playerId)
     }
 })
-const _photoLoading = $state(true)
+let _photoLoading = $state(true)
 
 let showSeasonStats = $state(false)
 let showComprehensiveDetails = $state(false)
@@ -156,6 +157,14 @@ function _handleCardClick(event) {
     toggleFlip()
 }
 
+const playerAge = $derived(
+    player.age ||
+        (player.birthDate
+            ? new Date().getFullYear() - new Date(player.birthDate).getFullYear()
+            : player.birth_date
+              ? new Date().getFullYear() - new Date(player.birth_date).getFullYear()
+              : null)
+)
 const displayName = $derived(
     correctFullName(
         player.name?.default ||
@@ -190,7 +199,7 @@ onMount(async () => {
         try {
             _teamColorVars = await getTeamColorVariables(player.team)
         } catch (error) {
-            console.warn(`Failed to load team colors for ${player.team}:`, error)
+            // Silently ignore color loading errors
         }
     }
 })
@@ -207,7 +216,7 @@ async function loadTeamColors() {
         try {
             _teamColorVars = await getTeamColorVariables(player.team)
         } catch (error) {
-            console.warn(`Failed to load team colors for ${player.team}:`, error)
+            // Silently ignore color loading errors
         }
     }
 }
@@ -218,6 +227,13 @@ const _playerInitials = $derived(
         .join('')
         .slice(0, 2)
 )
+
+// Goalie helpers - declared first since they're used by stat counts
+const isGoalie = $derived(
+    (player.position || '').toUpperCase() === 'G' ||
+        (player.position || '').toUpperCase() === 'GOALIE'
+)
+const goalieSavePct = $derived(getSavePercentage(player))
 
 // Calculate number of stats for responsive grid (skaters)
 // Note: empty_net_goals are excluded from grid count - they get their own row
@@ -259,13 +275,6 @@ const _goalieGridClass = $derived(
             ? 'player-card__stats-grid--goalie-3'
             : 'player-card__stats-grid--goalie-4'
 )
-
-// Goalie helpers
-const isGoalie = $derived(
-    (player.position || '').toUpperCase() === 'G' ||
-        (player.position || '').toUpperCase() === 'GOALIE'
-)
-const goalieSavePct = $derived(getSavePercentage(player))
 
 // Game result helpers
 const _resultIndicator = $derived(getResultIndicator(gameResult))
@@ -444,6 +453,10 @@ $effect(() => {
                             {#if player.jersey_number || player.jerseyNumber}
                                 <span class="text-gray-200">|</span>
                                 <span>#{player.jersey_number || player.jerseyNumber}</span>
+                            {/if}
+                            {#if playerAge}
+                                <span class="text-gray-200">|</span>
+                                <span>{playerAge}v</span>
                             {/if}
                         </div>
                     </div>

@@ -76,11 +76,11 @@ export class StandingsService {
         try {
             // Initialize standings structure
             const standings = initializeStandings()
-            console.log('📊 Initialized standings structure:', Object.keys(standings))
+            logger.debug('📊 Initialized standings structure')
 
             // Get available game dates from season start to today
             const gameDates = await this.getGameDatesInRange(effectiveSeasonStart)
-            console.log(`📊 Processing ${gameDates.length} game dates from ${effectiveSeasonStart}`)
+            logger.debug(`📊 Processing ${gameDates.length} game dates`)
 
             // Process each game date
             // Parallelize fetching of game data
@@ -109,15 +109,12 @@ export class StandingsService {
                 }
             }
 
-            console.log('📊 Standings after processing games:', standings)
+
 
             // Calculate final rankings
             updateRankings(standings)
 
-            console.log('📊 Final standings structure:', {
-                eastern: Object.keys(standings.eastern || {}),
-                western: Object.keys(standings.western || {}),
-            })
+            logger.debug('📊 Final standings structure calculated')
 
             // Cache the results
             this.cache.set(cacheKey, {

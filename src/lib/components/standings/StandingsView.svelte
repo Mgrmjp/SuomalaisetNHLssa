@@ -3,18 +3,14 @@ import { onMount } from 'svelte'
 import { getCurrentSeason } from '$lib/api/nhlApi.js'
 // biome-ignore lint/correctness/noUnusedImports: used in template
 import ConferenceStandings from '$lib/components/standings/ConferenceStandings.svelte'
-// biome-ignore lint/correctness/noUnusedImports: used for types/stores
+// biome-ignore lint/correctness/noUnusedImports: used via $store syntax
 import { loadStandings, standings, standingsLoading } from '$lib/stores/gameData.js'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 
 let _error = $state(null)
-// biome-ignore lint/style/useConst: Svelte 5 state
 let _activeConference = $state('eastern') // 'eastern' or 'western'
-// biome-ignore lint/style/useConst: Svelte 5 state
 let _showAdvancedStats = $state(false) // Advanced stats toggle
-// biome-ignore lint/style/useConst: Svelte 5 state
 let _lastGameDate = $state('') // Most recent game date in manifest
-// biome-ignore lint/style/useConst: Svelte 5 state
 let _manifestLastUpdated = $state('') // Manifest last updated timestamp
 
 // Get current season
@@ -25,13 +21,6 @@ let _loading = $state($standingsLoading)
 
 $effect(() => {
     _loading = $standingsLoading
-    console.log('🔍 $effect fired:', {
-        _loading,
-        $standingsLoading,
-        hasAnyData,
-        easternKeys: Object.keys($standings?.eastern || {}).length,
-        westernKeys: Object.keys($standings?.western || {}).length,
-    })
 })
 
 // Conference data - using Svelte 5 $derived runes
@@ -41,16 +30,7 @@ const hasEasternData = $derived(Object.keys(easternConference).length > 0)
 const hasWesternData = $derived(Object.keys(westernConference).length > 0)
 const hasAnyData = $derived(hasEasternData || hasWesternData)
 
-// Debug $derived
-$effect(() => {
-    console.log('🔍 $derived values:', {
-        hasAnyData,
-        hasEasternData,
-        hasWesternData,
-        _loading,
-        loadingCondition: _loading && !hasAnyData,
-    })
-})
+
 
 // Load standings on component mount
 onMount(async () => {

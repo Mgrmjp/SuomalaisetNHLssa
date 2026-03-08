@@ -1,5 +1,6 @@
 <script>
 import { base } from '$app/paths'
+import { page } from '$app/stores'
 
 // Navigation items
 const _navItems = [
@@ -30,7 +31,7 @@ const _navItems = [
     },
 ]
 
-$: currentPath = $page.url.pathname
+const currentPath = $derived($page.url.pathname)
 </script>
 
 <div class="nav-tabs-container flex md:justify-center mb-10 overflow-x-auto pr-4 py-2">
@@ -38,7 +39,7 @@ $: currentPath = $page.url.pathname
         class="nav-tabs-list inline-flex bg-slate-100/80 backdrop-blur-md p-1.5 rounded-2xl gap-1 border border-slate-200/50 shadow-inner"
         role="group"
     >
-        {#each navItems as item}
+        {#each _navItems as item}
             {@const isActive =
                 currentPath === item.href ||
                 (item.href !== `${base}/` && currentPath.startsWith(item.href))}

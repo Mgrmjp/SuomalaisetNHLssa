@@ -59,6 +59,7 @@
 }
 
 @media (min-width: 768px) {
+
     .player-card__container,
     .player-card,
     .player-card__inner,
@@ -249,7 +250,7 @@
     min-height: 0;
 }
 
-.player-card__face .relative > * {
+.player-card__face .relative>* {
     flex-shrink: 0;
 }
 
@@ -325,7 +326,7 @@
 .player-card__modal-avatar {
     width: 64px;
     height: 64px;
-    border-radius: 14px;
+    border-radius: 9999px;
     background: linear-gradient(135deg, #e2e8f0, #f8fafc);
     box-shadow:
         0 6px 16px rgba(15, 23, 42, 0.12),

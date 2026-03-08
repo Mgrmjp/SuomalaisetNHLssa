@@ -1,18 +1,18 @@
 <script>
 import { onMount } from 'svelte'
+import { fade, fly, slide } from 'svelte/transition'
 
-export let error = null
-export let errorInfo = null
+let { error = null, errorInfo = null, children } = $props()
 
-const _showDetails = false
-let errorReport = {
+let _showDetails = $state(false)
+let errorReport = $state({
     message: '',
     stack: '',
     component: '',
     timestamp: '',
     userAgent: '',
     url: '',
-}
+})
 
 onMount(() => {
     if (error) {
@@ -41,6 +41,10 @@ function _handleDismiss() {
     error = null
     errorInfo = null
 }
+
+function _toggleDetails() {
+    _showDetails = !_showDetails
+}
 </script>
 
 {#if error}
@@ -51,7 +55,7 @@ function _handleDismiss() {
         <h2>Something went wrong</h2>
         <button
           class="close-btn"
-          on:click={_handleDismiss}
+          onclick={_handleDismiss}
           aria-label="Dismiss error"
         >
           ✕
@@ -86,28 +90,28 @@ function _handleDismiss() {
       <div class="error-actions">
         <button
           class="action-btn primary"
-          on:click={_handleReload}
+          onclick={_handleReload}
         >
           🔄 Reload Page
         </button>
 
         <button
           class="action-btn secondary"
-          on:click={_handleReportError}
+          onclick={_handleReportError}
         >
           📋 Report Error
         </button>
 
         <button
           class="action-btn"
-          on:click={() => _showDetails = !_showDetails}
+          onclick={_toggleDetails}
         >
           {_showDetails ? '🙈 Hide Details' : '👁️ Show Details'}
         </button>
 
         <button
           class="action-btn dismiss"
-          on:click={_handleDismiss}
+          onclick={_handleDismiss}
         >
           Dismiss
         </button>
@@ -115,7 +119,7 @@ function _handleDismiss() {
     </div>
   </div>
 {:else}
-  <slot />
+  {@render children()}
 {/if}
 
 <style>

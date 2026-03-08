@@ -1,26 +1,29 @@
 <script>
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { base } from '$app/paths'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 
-/** @type {import('./$types').PageData} */
-export let data
+/** @type {{ data: { skaters: any[], goalies: any[], seasonId: string, error: string | null, updatedAt: string } }} */
+const { data } = $props()
 
-const { skaters, goalies, seasonId, error } = data
+const { skaters, goalies, seasonId, error: _error } = data
 const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
 
-const searchTerm = ''
+let searchTerm = $state('')
 
-$: allPlayers = [...skaters, ...goalies].sort((a, b) => {
+const allPlayers = $derived([...skaters, ...goalies].sort((a, b) => {
     const nameA = a.skaterFullName || a.goalieFullName
     const nameB = b.skaterFullName || b.goalieFullName
     return nameA.localeCompare(nameB)
-})
+}))
 
-$: filteredPlayers = allPlayers.filter((player) => {
+const filteredPlayers = $derived(allPlayers.filter((player) => {
     const name = player.skaterFullName || player.goalieFullName
     const team = player.teamAbbrevs
     const search = searchTerm.toLowerCase()
     return name.toLowerCase().includes(search) || team.toLowerCase().includes(search)
-})
+}))
 
 function getPlayerName(player) {
     return correctFullName(player.skaterFullName || player.goalieFullName)
@@ -37,21 +40,21 @@ function nameToSlug(name) {
         .replace(/[^a-z0-9-]/g, '')
 }
 
-function _getPlayerSlug(player) {
+function getPlayerSlug(player) {
     return nameToSlug(getPlayerName(player))
 }
 </script>
 
 <svelte:head>
-    <title>Kaikki suomalaiset NHL-pelaajat {formattedSeason} - Lista ja tilastot</title>
+    <title>Kaikki suomalaiset NHL-pelaajat {_formattedSeason} - Lista ja tilastot</title>
     <meta
         name="description"
-        content="Katso lista kaikista suomalaisista NHL-pelaajista kaudella {formattedSeason}. Mukana kaikki kenttäpelaajat ja maalivahdit joukkueineen."
+        content="Katso lista kaikista suomalaisista NHL-pelaajista kaudella {_formattedSeason}. Mukana kaikki kenttäpelaajat ja maalivahdit joukkueineen."
     />
-    <meta property="og:title" content="Kaikki suomalaiset NHL-pelaajat {formattedSeason}" />
+    <meta property="og:title" content="Kaikki suomalaiset NHL-pelaajat {_formattedSeason}" />
     <meta
         property="og:description"
-        content="Katso lista kaikista suomalaisista NHL-pelaajista kaudella {formattedSeason}. Mukana kaikki kenttäpelaajat ja maalivahdit joukkueineen."
+        content="Katso lista kaikista suomalaisista NHL-pelaajista kaudella {_formattedSeason}. Mukana kaikki kenttäpelaajat ja maalivahdit joukkueineen."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/pelaajat" />
 
@@ -79,8 +82,8 @@ function _getPlayerSlug(player) {
     {@html `<script type="application/ld+json">${JSON.stringify({
         "@context": "https://schema.org",
         "@type": "CollectionPage",
-        name: `Suomalaiset NHL-pelaajat ${formattedSeason}`,
-        description: `Kaikki suomalaiset NHL-pelaajat kaudella ${formattedSeason}`,
+        name: `Suomalaiset NHL-pelaajat ${_formattedSeason}`,
+        description: `Kaikki suomalaiset NHL-pelaajat kaudella ${_formattedSeason}`,
         url: "https://suomalaisetnhlssa.fi/pelaajat",
         numberOfItems: filteredPlayers.length,
         inLanguage: "fi"
@@ -101,7 +104,7 @@ function _getPlayerSlug(player) {
             </a>
             <h1 class="text-4xl font-bold text-slate-900 mb-4">Kaikki suomalaiset NHL-pelaajat</h1>
             <p class="text-lg text-slate-600 mb-8">
-                Kausi {formattedSeason}
+                Kausi {_formattedSeason}
             </p>
 
             <!-- Search -->
@@ -115,9 +118,9 @@ function _getPlayerSlug(player) {
             </div>
         </div>
 
-        {#if error}
+        {#if _error}
             <div class="bg-red-50 text-red-700 p-4 rounded-lg text-center max-w-lg mx-auto">
-                {error}
+                {_error}
             </div>
         {:else}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -137,6 +140,9 @@ function _getPlayerSlug(player) {
                             </h3>
                             <div class="text-sm text-slate-500 mt-1">
                                 {player.teamAbbrevs} • {player.positionCode}
+                                {#if player.birthDate || player.age}
+                                    • {player.age || (new Date().getFullYear() - new Date(player.birthDate).getFullYear())}v
+                                {/if}
                             </div>
                             <div class="text-xs text-slate-400 mt-2">
                                 {player.gamesPlayed} ottelua

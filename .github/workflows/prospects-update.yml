@@ -1,0 +1,42 @@
+name: Daily Prospects Update
+
+on:
+  schedule:
+    # Run once a day at 07:00 UTC (after the main daily data update)
+    - cron: '0 7 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  update-prospects:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Create virtual environment and install dependencies
+        run: |
+          python -m venv .venv
+          . .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r scripts/data_collection/requirements.txt
+
+      - name: Run Prospects Update
+        run: |
+          chmod +x scripts/update_prospects.sh
+          ./scripts/update_prospects.sh
+
+      - name: Commit and push updated prospect data
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add static/data/finnish_draft_rankings.json static/data/finnish_draft_rankings_ep.json static/data/finnish_prospects.json
+          git commit -m "chore: automated daily prospects update $(date +%Y-%m-%d)" || echo "No changes to commit"
+          git push

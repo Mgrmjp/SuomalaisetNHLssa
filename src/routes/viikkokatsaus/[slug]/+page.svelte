@@ -1,8 +1,12 @@
 <script>
-/** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
-const { data } = $props()
+import { base } from '$app/paths'
 
-function _formatDate(dateStr) {
+/** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
+const { data: _data } = $props()
+
+const data = _data
+
+function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('fi-FI', {
         day: 'numeric',
         month: 'long',

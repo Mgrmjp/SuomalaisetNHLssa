@@ -1,17 +1,19 @@
 <script>
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { base } from '$app/paths'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
 
 /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
 const { data } = $props()
 
 const { player, sameTeamPlayers, seasonId, slug } = data
-const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
+const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
 
 const playerName = player.skaterFullName || player.goalieFullName || 'Unknown Player'
-const _displayName = $derived(correctFullName(playerName))
+const displayName = $derived(correctFullName(playerName))
 const teamName = player.teamAbbrevs || 'NHL'
 const position = player.positionCode || 'N/A'
-const _isGoalie = position === 'G'
+const isGoalie = position === 'G'
 
 function getTeamFullName(abbrev) {
     const teamNames = {
@@ -62,13 +64,13 @@ function nameToSlug(name) {
         .replace(/[^a-z0-9-]/g, '')
 }
 
-const _teamFullName = $derived(getTeamFullName(teamName))
+const teamFullName = $derived(getTeamFullName(teamName))
 
 function getPlayerName(p) {
     return correctFullName(p.skaterFullName || p.goalieFullName)
 }
 
-function _getPlayerSlug(p) {
+function getPlayerSlug(p) {
     return nameToSlug(getPlayerName(p))
 }
 </script>
@@ -179,6 +181,10 @@ function _getPlayerSlug(p) {
                             <span>{position}</span>
                             <span>•</span>
                             <span>#{player.jerseyNumber || player.playerId}</span>
+                            {#if player.age}
+                                <span>•</span>
+                                <span>{player.age}v</span>
+                            {/if}
                         </div>
                     </div>
                 </div>
