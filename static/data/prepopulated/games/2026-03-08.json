@@ -12,7 +12,7 @@
       "startTime": "2026-03-08T18:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 2,
+      "period": 3,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     },
@@ -22,7 +22,7 @@
       "awayTeam": "BOS",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-03-08T20:30:00Z",
       "isOT": false,
@@ -129,7 +129,7 @@
       "game_id": 2025021001,
       "game_date": "2026-03-08",
       "game_status": "OFF",
-      "created_at": "2026-03-08T19:55:29.066785",
+      "created_at": "2026-03-08T20:02:27.367225",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
       "goals": 0,
       "assists": 0,
@@ -230,6 +230,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-03-08T19:55:42.154876",
+  "generated_at": "2026-03-08T20:02:39.970650",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
