@@ -9,8 +9,8 @@ const _ad = {
 </script>
 
 <div class="mobile-ad-banner">
-    <a href={ad.href} target="_blank" rel="noopener noreferrer" class="ad-link">
-        <img src={ad.src} width={ad.width} height={ad.height} alt={ad.alt} class="ad-img" />
+    <a href={_ad.href} target="_blank" rel="noopener noreferrer" class="ad-link">
+        <img src={_ad.src} width={_ad.width} height={_ad.height} alt={_ad.alt} class="ad-img" />
     </a>
     <span class="ad-disclaimer">Mainos</span>
 </div>
