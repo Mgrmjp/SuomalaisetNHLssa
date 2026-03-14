@@ -478,7 +478,7 @@ $effect(() => {
                         {#if isGoalie}
                             <div class="player-card__stats w-full">
                                 <div
-                                    class={`player-card__stats-grid ${goalieGridClass} grid gap-4 text-center justify-items-center w-fit mx-auto`}
+                                    class={`player-card__stats-grid ${_goalieGridClass} grid gap-4 text-center justify-items-center w-fit mx-auto`}
                                 >
                                     <div
                                         class="player-card__stat-item player-card__stat-item--saves flex flex-col justify-center min-w-0 text-center"
@@ -567,7 +567,7 @@ $effect(() => {
                             <div class="player-card__stats w-full">
                                 <!-- Main stats row -->
                                 <div
-                                    class={`player-card__stats-grid ${skaterGridClass} grid gap-2 text-center justify-items-center w-fit mx-auto`}
+                                    class={`player-card__stats-grid ${_skaterGridClass} grid gap-2 text-center justify-items-center w-fit mx-auto`}
                                 >
                                     {#if player.goals > 0}
                                         <div
@@ -676,9 +676,9 @@ $effect(() => {
                                 <div class="text-[10px] tracking-wider font-medium text-gray-400">
                                     {formatGameMatchup(player, gamesData)}
                                 </div>
-                                {#if formattedScore}
+                                {#if _formattedScore}
                                     <div class="text-xs font-bold text-gray-700">
-                                        {formattedScore}
+                                        {_formattedScore}
                                     </div>
                                 {/if}
                                 {#if formatGameVenue(player)}
@@ -1060,7 +1060,7 @@ $effect(() => {
                             class="absolute inset-0 w-full h-full object-cover"
                         />
                     {:else}
-                        <div class="player-card__modal-initials">{playerInitials}</div>
+                        <div class="player-card__modal-initials">{_playerInitials}</div>
                     {/if}
                 </div>
                 <div>
