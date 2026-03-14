@@ -22,7 +22,7 @@
       "awayTeam": "BOS",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-03-14T19:00:00Z",
       "isOT": false,
@@ -234,7 +234,7 @@
       "game_id": 2025021043,
       "game_date": "2026-03-14",
       "game_status": "OFF",
-      "created_at": "2026-03-14T18:22:49.621132",
+      "created_at": "2026-03-14T18:43:45.681619",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8475798.png",
       "goals": 0,
       "assists": 0,
@@ -243,7 +243,7 @@
       "penalty_minutes": 2,
       "shots": 1,
       "plus_minus": 0,
-      "time_on_ice": "08:21",
+      "time_on_ice": "11:19",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -253,7 +253,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 12,
+      "shifts": 15,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -354,7 +354,7 @@
       "game_id": 2025021043,
       "game_date": "2026-03-14",
       "game_status": "OFF",
-      "created_at": "2026-03-14T18:22:56.272858",
+      "created_at": "2026-03-14T18:43:52.184945",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8484321.png",
       "goals": 0,
       "assists": 0,
@@ -363,7 +363,7 @@
       "penalty_minutes": 0,
       "shots": 1,
       "plus_minus": 1,
-      "time_on_ice": "06:26",
+      "time_on_ice": "09:14",
       "takeaways": 1,
       "giveaways": 0,
       "blocked_shots": 1,
@@ -373,7 +373,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 12,
+      "shifts": 16,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -474,7 +474,7 @@
       "game_id": 2025021043,
       "game_date": "2026-03-14",
       "game_status": "OFF",
-      "created_at": "2026-03-14T18:22:52.962541",
+      "created_at": "2026-03-14T18:43:48.930334",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8478024.png",
       "goals": 0,
       "assists": 0,
@@ -483,7 +483,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "29:21",
+      "time_on_ice": "40:00",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -495,9 +495,9 @@
       "short_handed_assists": 0,
       "shifts": 0,
       "average_ice_time": "00:00",
-      "saves": 18,
-      "shots_against": 20,
-      "save_percentage": 0.9,
+      "saves": 22,
+      "shots_against": 24,
+      "save_percentage": 0.917,
       "goals_against": 2,
       "recent_results": [
         {
@@ -579,6 +579,6 @@
     }
   ],
   "total_players": 3,
-  "generated_at": "2026-03-14T18:23:20.270404",
+  "generated_at": "2026-03-14T18:44:16.069420",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
