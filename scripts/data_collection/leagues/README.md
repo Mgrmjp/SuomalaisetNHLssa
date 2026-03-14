@@ -27,7 +27,7 @@ npm run prospects:scrape
 - ✅ AHL (North America) - 10+ Finnish players
 - ✅ More leagues can be added
 
-**Output:** `static/data/leagues/league_prospects_ep.json`
+**Output:** `static/data/leagues/league_prospects_official.json`
 
 **Notes:**
 - Rate limited (1 sec between requests)
@@ -62,7 +62,7 @@ scripts/data_collection/leagues/
 ├── __init__.py               # Package exports
 │
 # Working Scrapers
-├── scraper_ep.py             # ⭐ EliteProspects scraper (ACTIVE)
+├── official_leagues.py       # ⭐ Official league websites (ACTIVE)
 │
 # Demo/Sample Data
 ├── demo_generator.py         # Sample data generator
@@ -97,6 +97,8 @@ All collectors return standardized player data:
   "plus_minus": 0,
   "penalty_minutes": 30,
   "nationality": "FIN",
+  "headshot_url": "https://liiga.fi/path/to/player-photo.jpg",
+  "profile_url": "https://liiga.fi/fi/pelaajat/12345/atro-leppanen",
   "source_league": "liiga",
   "source": "eliteprospects",
   "scraped_at": "2026-02-28T16:30:00"
@@ -107,8 +109,6 @@ All collectors return standardized player data:
 
 ### Basic Scraping
 
-```python
-from scripts.data_collection.leagues.scraper_ep import EliteProspectsScraper
 
 scraper = EliteProspectsScraper()
 
@@ -123,7 +123,7 @@ print(f"Total: {all_data['total_players']} Finnish prospects")
 
 ### Adding New Leagues
 
-Edit `scraper_ep.py` and add to `LEAGUES` dict:
+Edit `official_leagues.py` and add a method:
 
 ```python
 LEAGUES = {
@@ -159,7 +159,7 @@ The scraper detects Finnish players using:
 
 ### Too many false positives
 - This was a bug in earlier versions (nationality defaulting to 'FIN')
-- Make sure you're using the latest scraper_ep.py
+- Make sure you're using official_leagues.py
 
 ### Rate limiting / blocked
 - The scraper has built-in delays (1 sec between requests)

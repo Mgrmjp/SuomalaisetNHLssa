@@ -6,7 +6,7 @@ const config = {
     adapter: adapter({
       pages: "build",
       assets: "build",
-      fallback: "404.html",
+      fallback: "200.html",
       precompress: false, // GitHub Pages handles compression via CDN
       strict: true,
     }),

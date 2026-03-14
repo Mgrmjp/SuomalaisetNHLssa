@@ -204,9 +204,20 @@ class LiigaScraper:
                 continue
             
             name = cells[name_idx].get_text(strip=True)
-            
+            name_cell = cells[name_idx]
+
             if not self.is_finnish(name):
                 continue
+
+            link = name_cell.find('a')
+            profile_url = None
+            if link and link.get('href'):
+                profile_url = link.get('href')
+                if profile_url.startswith('/'):
+                    profile_url = f"{self.BASE_URL}{profile_url}"
+
+            image = name_cell.find('img')
+            headshot_url = self._extract_image_url(image)
             
             player = {
                 'player_id': f"liiga_scrape_{len(players)}",
@@ -224,6 +235,8 @@ class LiigaScraper:
                 'goals_against_average': None,
                 'shutouts': None,
                 'nationality': 'FIN',
+                'headshot_url': headshot_url,
+                'profile_url': profile_url,
                 'source_league': 'liiga',
                 'source': 'liiga.fi scrape',
                 'scraped_at': datetime.now().isoformat()
@@ -251,6 +264,34 @@ class LiigaScraper:
                 urls.append(match)
         
         return list(set(urls))
+
+    def _extract_image_url(self, image) -> Optional[str]:
+        """Extract a player photo URL from an img tag."""
+        if not image:
+            return None
+
+        for attr in ('src', 'data-src', 'data-lazy-src'):
+            value = image.get(attr)
+            if value:
+                return self._normalize_url(value)
+
+        srcset = image.get('srcset') or image.get('data-srcset')
+        if srcset:
+            first = srcset.split(',')[0].strip().split(' ')[0]
+            if first:
+                return self._normalize_url(first)
+
+        return None
+
+    def _normalize_url(self, url: str) -> str:
+        if url.startswith('//'):
+            return f"https:{url}"
+        # Check if URL is already absolute to avoid duplication
+        if url.startswith(self.BASE_URL):
+            return url
+        if url.startswith('/'):
+            return f"{self.BASE_URL}{url}"
+        return url
     
     def _fetch_api_data(self, url: str) -> List[Dict]:
         """Fetch data from internal API"""

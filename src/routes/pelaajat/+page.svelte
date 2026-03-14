@@ -19,7 +19,7 @@ const allPlayers = $derived([...skaters, ...goalies].sort((a, b) => {
 }))
 
 const filteredPlayers = $derived(allPlayers.filter((player) => {
-    const name = player.skaterFullName || player.goalieFullName
+    const name = correctFullName(player.skaterFullName || player.goalieFullName)
     const team = player.teamAbbrevs
     const search = searchTerm.toLowerCase()
     return name.toLowerCase().includes(search) || team.toLowerCase().includes(search)

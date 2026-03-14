@@ -1,5 +1,6 @@
 <script>
 import { base } from '$app/paths'
+import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 
 /** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
 const { data: _data } = $props()
@@ -114,10 +115,10 @@ function formatDate(dateStr) {
                 <div
                     class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white shadow-lg border-4 border-white flex-shrink-0 overflow-hidden"
                 >
-                    <img
-                        src={`${base}/headshots/${data.article.featured_player_id}.webp`}
+                    <PlayerHeadshot
+                        playerId={data.article.featured_player_id}
                         alt="Viikon tähti"
-                        class="w-full h-full object-cover"
+                        imageClass="w-full h-full object-cover"
                         loading="eager"
                     />
                 </div>

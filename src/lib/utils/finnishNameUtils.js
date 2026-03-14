@@ -9,12 +9,18 @@ const defaultCorrections = {
     Armiä: 'Armia',
     Pyyhtia: 'Pyyhtiä',
     Kaskimaki: 'Kaskimäki',
+    Kivenmaki: 'Kivenmäki',
     Raty: 'Räty',
     Raaty: 'Räty',
+    Rasanen: 'Räsänen',
     Teravainen: 'Teräväinen',
     Parssinen: 'Pärssinen',
     Puljujarvi: 'Puljujärvi',
     Maatta: 'Määttä',
+    Niemelainen: 'Niemeläinen',
+    Hameenaho: 'Hämeenaho',
+    Jamsen: 'Jämsén',
+    Vaananen: 'Väänänen',
     Liljegren: 'Liljegren',
     Helenius: 'Helenius',
     Jarvi: 'Järvi',
@@ -29,6 +35,7 @@ const defaultCorrections = {
 
 // In-memory cache (starts with defaults)
 const nameCache = { ...defaultCorrections }
+const llmCorrectionCache = new Map()
 
 /**
  * Correct Finnish name using cache and patterns.
@@ -153,6 +160,74 @@ export function correctFullName(fullName) {
     const corrected = parts.map((part) => correctFinnishName(part))
 
     return corrected.join(' ')
+}
+
+/**
+ * Conservative server-side LLM fallback for Finnish names.
+ * Uses a small model only when deterministic rules are insufficient.
+ *
+ * @param {string} fullName
+ * @param {string | null | undefined} apiKey
+ * @returns {Promise<string>}
+ */
+export async function correctFullNameWithLLM(fullName, apiKey) {
+    if (!fullName || typeof fullName !== 'string') {
+        return fullName
+    }
+
+    const deterministic = correctFullName(fullName)
+
+    if (!apiKey) {
+        return deterministic
+    }
+
+    const cacheKey = fullName.trim()
+    if (llmCorrectionCache.has(cacheKey)) {
+        return llmCorrectionCache.get(cacheKey)
+    }
+
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                temperature: 0,
+                max_tokens: 40,
+                messages: [
+                    {
+                        role: 'user',
+                        content: `Correct this Finnish hockey player name only if it is missing obvious Finnish characters like ä, ö, or å.
+
+Rules:
+- Be conservative.
+- Keep the same person and same spelling otherwise.
+- Return only the corrected full name.
+- If no correction is needed, return the input unchanged.
+
+Name: "${fullName}"`,
+                    },
+                ],
+            }),
+        })
+
+        if (!response.ok) {
+            return deterministic
+        }
+
+        const data = await response.json()
+        const content = data?.choices?.[0]?.message?.content?.trim()
+        const corrected = content ? content.replace(/^"|"$/g, '').split('\n')[0].trim() : ''
+
+        const finalName = corrected || deterministic
+        llmCorrectionCache.set(cacheKey, finalName)
+        return finalName
+    } catch (_error) {
+        return deterministic
+    }
 }
 
 /**

@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { json } from '@sveltejs/kit'
+import { sanitizeImageUrl } from '$lib/utils/playerHeadshots.js'
 
 // Security: Define allowed formats to prevent command injection
 const ALLOWED_FORMATS = ['full', 'simple', 'names']
@@ -74,7 +75,8 @@ async function loadFinnishPlayers() {
                 draft_overall: p.draftOverall || p.draft_overall || null,
                 is_rookie: p.isRookie || p.is_rookie || false,
                 is_active: p.isActive !== false,
-                headshot: p.headshot || null,
+                // Sanitize headshot URL to strip malformed transformation parameters
+                headshot: sanitizeImageUrl(p.headshot) || null,
             }
         })
     } catch (error) {

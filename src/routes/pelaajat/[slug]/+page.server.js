@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { error } from '@sveltejs/kit'
-import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { env } from '$env/dynamic/private'
+import { correctFullName, correctFullNameWithLLM } from '$lib/utils/finnishNameUtils.js'
+import { sanitizeImageUrl } from '$lib/utils/playerHeadshots.js'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
@@ -17,6 +19,40 @@ export async function load({ params }) {
             .replace(/å/g, 'o')
             .replace(/\s+/g, '-')
             .replace(/[^a-z0-9-]/g, '')
+    }
+
+    /**
+     * @param {any[]} players
+     * @param {string} targetSlug
+     * @returns {any | null}
+     */
+    function findPlayerByDeterministicSlug(players, targetSlug) {
+        return (
+            players.find((p) => {
+                const playerName = p.skaterFullName || p.goalieFullName
+                const correctedName = correctFullName(playerName)
+                const playerSlug = nameToSlug(correctedName)
+                return playerSlug === targetSlug
+            }) || null
+        )
+    }
+
+    /**
+     * Optional server-side LLM fallback for hard cases that survive deterministic correction.
+     *
+     * @param {any[]} players
+     * @param {string} targetSlug
+     * @returns {Promise<any | null>}
+     */
+    async function findPlayerByLLMSlug(players, targetSlug) {
+        for (const player of players) {
+            const playerName = player.skaterFullName || player.goalieFullName
+            const correctedName = await correctFullNameWithLLM(playerName, env.OPENAI_API_KEY)
+            if (nameToSlug(correctedName) === targetSlug) {
+                return player
+            }
+        }
+        return null
     }
 
     try {
@@ -43,16 +79,15 @@ export async function load({ params }) {
             allPlayers = [...skatersData, ...goaliesData]
 
             // Find player by slug (name-based URL)
-            player = allPlayers.find((p) => {
-                const playerName = p.skaterFullName || p.goalieFullName
-                const correctedName = correctFullName(playerName)
-                const playerSlug = nameToSlug(correctedName)
-                return playerSlug === slug.toLowerCase()
-            })
+            player = findPlayerByDeterministicSlug(allPlayers, slug.toLowerCase())
 
             // Also support numeric IDs for backwards compatibility
             if (!player && !Number.isNaN(parseInt(slug, 10))) {
                 player = allPlayers.find((p) => p.playerId === parseInt(slug, 10))
+            }
+
+            if (!player && Number.isNaN(parseInt(slug, 10))) {
+                player = await findPlayerByLLMSlug(allPlayers, slug.toLowerCase())
             }
         } catch (_fileError) {
             // Fallback to API if pre-built files don't exist
@@ -68,12 +103,11 @@ export async function load({ params }) {
                 const goaliesData = await goalieRes.json()
                 allPlayers = [...(skatersData.data || []), ...(goaliesData.data || [])]
 
-                player = allPlayers.find((p) => {
-                    const playerName = p.skaterFullName || p.goalieFullName
-                    const correctedName = correctFullName(playerName)
-                    const playerSlug = nameToSlug(correctedName)
-                    return playerSlug === slug.toLowerCase()
-                })
+                player = findPlayerByDeterministicSlug(allPlayers, slug.toLowerCase())
+
+                if (!player && Number.isNaN(parseInt(slug, 10))) {
+                    player = await findPlayerByLLMSlug(allPlayers, slug.toLowerCase())
+                }
             }
         }
 
@@ -94,6 +128,8 @@ export async function load({ params }) {
                 player.heightInches = rosterInfo.heightInches
                 player.weightLbs = rosterInfo.weightLbs
                 player.birthplace = rosterInfo.birthplace
+                // Sanitize headshot URL to strip malformed transformation parameters
+                player.headshot = sanitizeImageUrl(rosterInfo.headshot) || player.headshot
             }
         } catch (rosterError) {
             console.warn('Failed to load roster info for augmentation:', rosterError)

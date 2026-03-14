@@ -2,6 +2,7 @@
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { base } from '$app/paths'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 
 /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
 const { data } = $props()
@@ -159,19 +160,17 @@ function getPlayerSlug(p) {
             <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
                 <div class="flex items-center gap-6">
                     <div class="w-32 h-32 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border-4 border-white/20">
-                        <img
-                            src={`${base}/headshots/${player.playerId}.webp`}
+                        <PlayerHeadshot
+                            playerId={player.playerId}
+                            explicitUrl={player.headshot}
+                            teamAbbrev={player.teamAbbrevs}
+                            seasonId={seasonId}
                             alt={`${displayName} - ${teamFullName}`}
-                            class="w-full h-full rounded-full object-cover"
+                            imageClass="w-full h-full rounded-full object-cover"
+                            fallbackClass="w-full h-full flex items-center justify-center text-4xl font-bold text-white"
+                            initials={displayName.split(' ').map(n => n[0]).join('')}
                             loading="eager"
-                            onerror={(e) => {
-                                e.currentTarget.style.display = 'none';
-                                e.currentTarget.nextElementSibling.style.display = 'flex';
-                            }}
                         />
-                        <div class="w-full h-full hidden items-center justify-center text-4xl font-bold text-white">
-                            {displayName.split(' ').map(n => n[0]).join('')}
-                        </div>
                     </div>
                     <div>
                         <h1 class="text-3xl font-bold mb-2">{displayName}</h1>
@@ -266,19 +265,16 @@ function getPlayerSlug(p) {
                             class="flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/30 transition-all group"
                         >
                             <div class="w-14 h-14 rounded-full bg-slate-100 flex-shrink-0 overflow-hidden">
-                                <img
-                                    src={`${base}/headshots/${teammate.playerId}.webp`}
+                                <PlayerHeadshot
+                                    playerId={teammate.playerId}
+                                    teamAbbrev={teammate.teamAbbrevs}
+                                    seasonId={seasonId}
                                     alt={`${getPlayerName(teammate)} - ${teamFullName}`}
-                                    class="w-full h-full object-cover"
+                                    imageClass="w-full h-full object-cover"
+                                    fallbackClass="w-full h-full flex items-center justify-center text-sm font-bold text-gray-600"
+                                    initials={getPlayerName(teammate).split(' ').map(n => n[0]).join('')}
                                     loading="lazy"
-                                    onerror={(e) => {
-                                        e.currentTarget.style.display = 'none';
-                                        e.currentTarget.nextElementSibling.style.display = 'flex';
-                                    }}
                                 />
-                                <div class="w-full h-full hidden items-center justify-center text-sm font-bold text-gray-600">
-                                    {getPlayerName(teammate).split(' ').map(n => n[0]).join('')}
-                                </div>
                             </div>
                             <div>
                                 <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">

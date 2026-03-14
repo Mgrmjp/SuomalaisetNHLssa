@@ -9,6 +9,46 @@ import requests
 import time
 import json
 
+HEADSHOT_CANDIDATE_KEYS = (
+    'headshot_url', 'headshotUrl', 'headshot',
+    'photo_url', 'photoUrl', 'photo',
+    'image_url', 'imageUrl', 'image',
+    'avatar_url', 'avatarUrl', 'avatar',
+    'portrait_url', 'portraitUrl', 'portrait',
+)
+
+PROFILE_CANDIDATE_KEYS = (
+    'profile_url', 'profileUrl',
+    'player_url', 'playerUrl',
+    'url', 'link',
+)
+
+
+def _first_non_empty_string(value):
+    if isinstance(value, str):
+        value = value.strip()
+        return value or None
+    return None
+
+
+def _extract_nested_string(data, keys):
+    if not isinstance(data, dict):
+        return None
+
+    for key in keys:
+        value = _first_non_empty_string(data.get(key))
+        if value:
+            return value
+
+    for nested_key in ('player', 'person', 'athlete', 'media', 'image'):
+        nested = data.get(nested_key)
+        if isinstance(nested, dict):
+            nested_value = _extract_nested_string(nested, keys)
+            if nested_value:
+                return nested_value
+
+    return None
+
 
 @dataclass
 class PlayerStats:
@@ -36,6 +76,8 @@ class PlayerStats:
     height_cm: Optional[int] = None
     weight_kg: Optional[int] = None
     nationality: Optional[str] = None
+    headshot_url: Optional[str] = None
+    profile_url: Optional[str] = None
     
     # Source tracking
     source_league: Optional[str] = None
@@ -44,6 +86,9 @@ class PlayerStats:
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
+        headshot_url = self.headshot_url or _extract_nested_string(self.raw_data, HEADSHOT_CANDIDATE_KEYS)
+        profile_url = self.profile_url or _extract_nested_string(self.raw_data, PROFILE_CANDIDATE_KEYS)
+
         return {
             'player_id': self.player_id,
             'name': self.name,
@@ -64,6 +109,8 @@ class PlayerStats:
             'height_cm': self.height_cm,
             'weight_kg': self.weight_kg,
             'nationality': self.nationality,
+            'headshot_url': headshot_url,
+            'profile_url': profile_url,
             'source_league': self.source_league,
             'last_updated': self.last_updated.isoformat() if self.last_updated else None,
         }

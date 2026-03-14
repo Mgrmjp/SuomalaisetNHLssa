@@ -3,6 +3,10 @@ import { onMount } from 'svelte'
 import { fade } from 'svelte/transition'
 import { loadProspects, prospects, draftRankings, prospectsLoading } from '$lib/stores/gameData'
 import { base } from '$app/paths'
+import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { normalizeTeamAbbreviation } from '$lib/utils/teamMapping.js'
 
 
 // Filter state
@@ -15,16 +19,229 @@ let sortDirection = $state('desc')
 // Draft ranking source selection
 let selectedRankingSlug = $state('nhl-central')
 const selectedRankingSource = $derived($draftRankings.sources?.find(s => s.slug === selectedRankingSlug) || $draftRankings.sources?.[0])
+let _officialSeasonStatsByName = $state(new Map())
+let _epSeasonStatsByName = $state(new Map())
+let _nhlSeasonStatsById = $state(new Map())
+let _selectedSeasonIndexByPlayer = $state({})
 
 onMount(() => {
     loadProspects()
+    _loadDraftSeasonStats()
 })
+
+function _normalizeName(name) {
+    return (name || '')
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9\s-]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .toLowerCase()
+}
+
+async function _loadDraftSeasonStats() {
+    try {
+        const [officialResponse, skatersResponse, goaliesResponse] = await Promise.all([
+            fetch(`${base}/data/leagues/league_prospects_official.json`),
+            fetch(`${base}/data/player-stats/skaters-20252026.json`),
+            fetch(`${base}/data/player-stats/goalies-20252026.json`)
+        ])
+
+        const officialLookup = new Map()
+        const nhlLookup = new Map()
+
+        const appendEntry = (map, key, value) => {
+            const existing = map.get(key) || []
+            existing.push(value)
+            map.set(key, existing)
+        }
+
+        if (officialResponse.ok) {
+            const officialData = await officialResponse.json()
+            const officialPlayers = Array.isArray(officialData?.players) ? officialData.players : []
+
+            for (const player of officialPlayers) {
+                appendEntry(officialLookup, _normalizeName(player.name), player)
+            }
+        }
+
+
+        if (skatersResponse.ok) {
+            const skaters = await skatersResponse.json()
+            for (const skater of skaters) {
+                nhlLookup.set(String(skater.playerId), {
+                    league: 'NHL',
+                    team: skater.teamAbbrev || '',
+                    gp: Number(skater.gamesPlayed) || 0,
+                    goals: Number(skater.goals) || 0,
+                    assists: Number(skater.assists) || 0,
+                    points: Number(skater.points) || 0,
+                    savePct: 0,
+                    gaa: 0,
+                    shutouts: 0,
+                    headshotUrl: skater.headshot || skater.headshotUrl || null,
+                })
+            }
+        }
+
+        if (goaliesResponse.ok) {
+            const goalies = await goaliesResponse.json()
+            for (const goalie of goalies) {
+                nhlLookup.set(String(goalie.playerId), {
+                    league: 'NHL',
+                    team: goalie.teamAbbrev || '',
+                    gp: Number(goalie.gamesPlayed) || 0,
+                    goals: 0,
+                    assists: 0,
+                    points: 0,
+                    savePct: Number(goalie.savePercentage) || 0,
+                    gaa: Number(goalie.goalsAgainstAverage) || 0,
+                    shutouts: Number(goalie.shutouts) || 0,
+                    headshotUrl: goalie.headshot || goalie.headshotUrl || null,
+                })
+            }
+        }
+
+        _officialSeasonStatsByName = officialLookup
+        _nhlSeasonStatsById = nhlLookup
+    } catch (_error) {
+        // Leave prospects without enrichment if league files are unavailable.
+    }
+}
+
+function _normalizeSeasonEntry(entry) {
+    if (!entry) return null
+
+    return {
+        league: entry.league || '',
+        team: entry.team || '',
+        gp: Number(entry.gp ?? entry.games_played) || 0,
+        goals: Number(entry.goals) || 0,
+        assists: Number(entry.assists) || 0,
+        points: Number(entry.points) || 0,
+        savePct: Number(entry.savePct ?? entry.save_percentage) || 0,
+        gaa: Number(entry.gaa ?? entry.goals_against_average) || 0,
+        shutouts: Number(entry.shutouts) || 0,
+        headshotUrl: entry.headshotUrl || entry.headshot_url || entry.headshot || entry.photo_url || entry.photoUrl || null,
+    }
+}
+
+function _normalizeSeasonTeamKey(team) {
+    return (team || '')
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/\b(hockey|hc|hk)\b/g, '')
+        .replace(/[^a-z0-9]/g, '')
+        .trim()
+}
+
+function _getSeasonEntryKey(entry) {
+    const normalizedLeague = _normalizeLeagueForPhoto(entry?.league)
+    const normalizedTeam = _normalizeSeasonTeamKey(entry?.team)
+    const statSignature = `${entry?.gp || 0}:${entry?.goals || 0}:${entry?.assists || 0}:${entry?.points || 0}:${entry?.savePct || 0}:${entry?.gaa || 0}:${entry?.shutouts || 0}`
+    return `${normalizedLeague}::${normalizedTeam}::${statSignature}`
+}
+
+function _mergeSeasonEntries(officialEntries, epEntries) {
+    const merged = new Map()
+
+    const mergeIntoMap = (rawEntries, isOfficial) => {
+        for (const rawEntry of rawEntries) {
+            const entry = _normalizeSeasonEntry(rawEntry)
+            const key = _getSeasonEntryKey(entry)
+            const existing = merged.get(key)
+
+            if (!existing) {
+                merged.set(key, entry)
+                continue
+            }
+
+            merged.set(key, {
+                ...existing,
+                ...entry,
+                team: existing.team || entry.team,
+                league: existing.league || entry.league,
+                headshotUrl: isOfficial ? (entry.headshotUrl || existing.headshotUrl) : (existing.headshotUrl || entry.headshotUrl),
+                gp: existing.gp || entry.gp,
+                goals: existing.goals || entry.goals,
+                assists: existing.assists || entry.assists,
+                points: existing.points || entry.points,
+                savePct: existing.savePct || entry.savePct,
+                gaa: existing.gaa || entry.gaa,
+                shutouts: existing.shutouts || entry.shutouts,
+            })
+        }
+    }
+
+    mergeIntoMap(officialEntries, true)
+    mergeIntoMap(epEntries, false)
+
+    return Array.from(merged.values())
+}
+
+function _sortSeasonEntries(entries) {
+    return [...entries].sort((a, b) => {
+        if ((b.gp || 0) !== (a.gp || 0)) return (b.gp || 0) - (a.gp || 0)
+        if ((b.points || 0) !== (a.points || 0)) return (b.points || 0) - (a.points || 0)
+        return (b.savePct || 0) - (a.savePct || 0)
+    })
+}
+
+function _buildSeasonData(player, fallbackStats = null) {
+    const normalizedName = _normalizeName(player.name || `${player.firstName || ''} ${player.lastName || ''}`)
+    const officialEntries = _officialSeasonStatsByName.get(normalizedName) || []
+    const epEntries = _epSeasonStatsByName.get(normalizedName) || []
+    const seasonEntries = _mergeSeasonEntries(officialEntries, epEntries)
+    const playerId = player?.id || player?.playerId
+    const nhlEntry = playerId ? _nhlSeasonStatsById.get(String(playerId)) : null
+
+    if (nhlEntry) {
+        seasonEntries.push(_normalizeSeasonEntry(nhlEntry))
+    }
+
+    const fallbackEntry = fallbackStats ? _normalizeSeasonEntry({
+        ...fallbackStats,
+        league: player?.league,
+        team: player?.currentTeam || player?.team || '',
+    }) : null
+
+    if (fallbackEntry) {
+        const hasMatch = seasonEntries.some((entry) =>
+            _getSeasonEntryKey(entry) === _getSeasonEntryKey(fallbackEntry)
+        )
+        if (!hasMatch) {
+            seasonEntries.push(fallbackEntry)
+        }
+    }
+
+    const sortedEntries = _sortSeasonEntries(seasonEntries.filter(Boolean))
+    const primaryEntry = sortedEntries[0] || _normalizeSeasonEntry(fallbackStats) || {
+        league: player?.league || '',
+        team: player?.currentTeam || player?.team || '',
+        gp: 0,
+        goals: 0,
+        assists: 0,
+        points: 0,
+        savePct: 0,
+        gaa: 0,
+        shutouts: 0,
+        headshotUrl: null,
+    }
+
+    return {
+        entries: sortedEntries,
+        primaryEntry,
+    }
+}
 
 // Filter active prospects based on season data and age
 // A prospect is considered active if they:
-// 1. Are under 35 years old
+// 1. Are 26 or younger
 // 2. Are NOT established NHL regulars (20+ NHL games this season)
-const ACTIVE_AGE_CUTOFF = 35
+const ACTIVE_AGE_CUTOFF = 27
 const NHL_REGULAR_GP_THRESHOLD = 20 // Players with 20+ NHL games are considered regulars, not prospects
 
 // Track NHL regulars (loaded from stats)
@@ -60,7 +277,11 @@ $effect(() => {
     }
 })
 
-const activeProspects = $derived($prospects.filter(p => {
+const activeProspects = $derived(_dedupeProspects($prospects).filter(p => {
+    if (_isDraftRankingOnlyProspect(p)) {
+        return false
+    }
+
     // Check age
     let age = null
     if (p.birthDate) {
@@ -84,11 +305,21 @@ const allPlayers = $derived(() => {
     
     // Add drafted prospects with stats
     for (const p of activeProspects) {
-        players.push({
-            ...p,
-            type: 'prospect',
-            sortKey: p.stats?.points || 0
-        })
+            const seasonData = _buildSeasonData(p, p.stats)
+            const primarySeason = seasonData.primaryEntry
+            players.push({
+                ...p,
+                playerId: p.id || null,
+                name: correctFullName(p.name),
+                currentTeam: primarySeason.team || p.currentTeam,
+                league: primarySeason.league || p.league,
+                stats: primarySeason,
+                seasonEntries: seasonData.entries,
+                displayHeadshot: _getPreferredProspectHeadshot({ ...p, league: primarySeason.league }, primarySeason),
+                photoFallbackPlayerId: _getPhotoFallbackPlayerId(primarySeason.league, p.id || null, _getPreferredProspectHeadshot({ ...p, league: primarySeason.league }, primarySeason)),
+                type: 'prospect',
+                sortKey: primarySeason.points || 0
+            })
     }
     
     // Add 2026 draft rankings from selected source
@@ -107,23 +338,31 @@ const allPlayers = $derived(() => {
             const firstName = p.firstName || p.name?.split(' ')[0] || ''
             const lastName = p.lastName || (p.name?.includes(' ') ? p.name.split(' ').slice(1).join(' ') : p.name) || ''
             const rank = p.midtermRank || p.rank
+            const draftName = p.name || `${firstName} ${lastName}`
+            const draftLeague = p.lastAmateurLeague?.replace('FINLAND-', '')?.replace('H-EAST', 'NCAA') || p.league?.replace('FINLAND-', '') || 'Jr'
+            const seasonData = _buildSeasonData({ ...p, name: draftName, playerId: p.playerId || null }, null)
+            const primarySeason = seasonData.primaryEntry
             
             players.push({
                 id: `draft2026-${selectedRankingSource.slug}-${rank}`,
-                name: p.name || `${firstName} ${lastName}`,
+                name: correctFullName(draftName),
                 position: p.positionCode || p.position,
                 birthDate: p.birthDate,
                 birthCity: p.birthCity,
                 nhlRights: '2026',
-                league: p.lastAmateurLeague?.replace('FINLAND-', '')?.replace('H-EAST', 'NCAA') || p.league?.replace('FINLAND-', '') || 'Jr',
-                currentTeam: p.lastAmateurClub || p.team,
+                league: primarySeason.league || draftLeague,
+                currentTeam: primarySeason.team || p.lastAmateurClub || p.team,
                 draftRank: rank,
                 height: p.heightInInches ? Math.round(p.heightInInches * 2.54) : (typeof p.height === 'number' ? p.height : null),
                 weight: p.weightInPounds ? Math.round(p.weightInPounds * 0.453592) : (typeof p.weight === 'number' ? p.weight : null),
+                playerId: p.playerId || null,
                 headshot: p.playerId ? `https://assets.nhle.com/mugs/nhl/20262027/2026/${p.playerId}.png` : `https://assets.nhle.com/mugs/nhl/20262027/2026/${rank}.png`,
-                stats: { gp: 0, goals: 0, assists: 0, points: 0, savePct: 0, gaa: 0, shutouts: 0 },
+                seasonEntries: seasonData.entries,
+                displayHeadshot: _getPreferredDraftHeadshot(primarySeason.league || draftLeague, p.playerId || null, primarySeason),
+                photoFallbackPlayerId: _getPhotoFallbackPlayerId(primarySeason.league || draftLeague, p.playerId || null, _getPreferredDraftHeadshot(primarySeason.league || draftLeague, p.playerId || null, primarySeason)),
+                stats: primarySeason,
                 type: 'draft2026',
-                sortKey: 0
+                sortKey: primarySeason.points || 0
             })
         }
     }
@@ -212,6 +451,156 @@ function getGoalieSortIcon(field) {
     if (goalieSortBy !== field) return ''
     return goalieSortDirection === 'asc' ? '↑' : '↓'
 }
+
+function _getDisplayNhlRights(teamAbbrev) {
+    if (!teamAbbrev || teamAbbrev === 'N/A') return ''
+    return normalizeTeamAbbreviation(teamAbbrev)
+}
+
+function _hasKnownNhlRights(player) {
+    return Boolean(_getDisplayNhlRights(player?.nhlRights))
+}
+
+function _normalizeLeagueForPhoto(league) {
+    return (league || '').toString().trim().toUpperCase()
+}
+
+function _shouldUseNhlMugshot(league) {
+    const normalizedLeague = _normalizeLeagueForPhoto(league)
+    return ['NHL', 'AHL', 'ECHL'].includes(normalizedLeague)
+}
+
+function _getPreferredProspectHeadshot(player, seasonStats = null) {
+    const currentLeaguePhoto = seasonStats?.headshotUrl || null
+    if (currentLeaguePhoto) return currentLeaguePhoto
+
+    // If player has an NHL headshot URL, use it regardless of current league
+    // This handles cases where prospects play in leagues like Mestis but have NHL mugshots
+    const playerHeadshot = player?.headshot || null
+    if (playerHeadshot && playerHeadshot.includes('assets.nhle.com/mugs/')) {
+        return playerHeadshot
+    }
+
+    if (_shouldUseNhlMugshot(player?.league) && _hasKnownNhlRights(player)) {
+        return playerHeadshot
+    }
+
+    return null
+}
+
+function _getPreferredDraftHeadshot(playerLeague, playerId, seasonStats) {
+    if (seasonStats?.headshotUrl) return seasonStats.headshotUrl
+
+    if (_shouldUseNhlMugshot(playerLeague) && playerId) {
+        return `https://assets.nhle.com/mugs/nhl/20262027/2026/${playerId}.png`
+    }
+
+    return null
+}
+
+function _getSeasonSelectionKey(player) {
+    return String(player?.id || player?.playerId || player?.name || '')
+}
+
+function _getSelectedSeasonIndex(player) {
+    const key = _getSeasonSelectionKey(player)
+    const selectedIndex = _selectedSeasonIndexByPlayer[key]
+    return Number.isInteger(selectedIndex) ? selectedIndex : 0
+}
+
+function _getSelectedSeasonEntry(player) {
+    const entries = Array.isArray(player?.seasonEntries) ? player.seasonEntries : []
+    return entries[_getSelectedSeasonIndex(player)] || player?.stats || null
+}
+
+function _getBestAvailableSeasonHeadshot(player) {
+    const selectedSeason = _getSelectedSeasonEntry(player)
+    if (selectedSeason?.headshotUrl) return selectedSeason.headshotUrl
+
+    const entries = Array.isArray(player?.seasonEntries) ? player.seasonEntries : []
+    for (const entry of entries) {
+        if (entry?.headshotUrl) return entry.headshotUrl
+    }
+
+    return player?.displayHeadshot || null
+}
+
+function _getBestFallbackPlayerId(player) {
+    const selectedSeason = _getSelectedSeasonEntry(player)
+    const playerId = player?.playerId || player?.id || null
+    if (!playerId) return null
+
+    const selectedLeague = selectedSeason?.league || player?.league
+    if (_shouldUseNhlMugshot(selectedLeague) && _hasKnownNhlRights(player)) return playerId
+
+    const explicitUrl = _getBestAvailableSeasonHeadshot(player) || ''
+    
+    // Return playerId if there's an explicit NHL headshot URL (handles Mestis and other leagues)
+    if (typeof explicitUrl === 'string' && explicitUrl.includes('assets.nhle.com/mugs/')) {
+        return playerId
+    }
+    
+    if (typeof explicitUrl === 'string' && explicitUrl.includes('www.shl.se/imageproxy/')) {
+        return playerId
+    }
+
+    const entries = Array.isArray(player?.seasonEntries) ? player.seasonEntries : []
+    const fallbackLeagueEntry = entries.find((entry) => _shouldUseNhlMugshot(entry?.league))
+    return fallbackLeagueEntry ? playerId : null
+}
+
+function _selectSeasonEntry(player, index) {
+    const key = _getSeasonSelectionKey(player)
+    _selectedSeasonIndexByPlayer = {
+        ..._selectedSeasonIndexByPlayer,
+        [key]: index,
+    }
+}
+
+function _getPhotoFallbackPlayerId(playerLeague, playerId, explicitPhotoUrl) {
+    if (explicitPhotoUrl) return null
+    return _shouldUseNhlMugshot(playerLeague) ? playerId || null : null
+}
+
+function _getProspectIdentityKey(player) {
+    if (player?.id) return `id:${player.id}`
+    if (player?.name && player?.birthDate) return `name:${player.name}:${player.birthDate}`
+    return `fallback:${player?.name || ''}:${player?.currentTeam || ''}:${player?.league || ''}`
+}
+
+function _getProspectPriority(player) {
+    const sources = Array.isArray(player?.sources) ? player.sources : []
+
+    if (sources.some((source) => source.startsWith('team_prospects:'))) return 3
+    if (player?.league === 'NHL') return 2
+    if (sources.some((source) => source.startsWith('draft_picks:'))) return 1
+    return 0
+}
+
+function _isDraftRankingOnlyProspect(player) {
+    const sources = Array.isArray(player?.sources) ? player.sources : []
+    if (sources.length === 0) return false
+
+    const hasDraftRankingSource = sources.some((source) => source.startsWith('draft_rankings:'))
+    const hasNonDraftSource = sources.some((source) => !source.startsWith('draft_rankings:'))
+
+    return hasDraftRankingSource && !hasNonDraftSource && !_hasKnownNhlRights(player)
+}
+
+function _dedupeProspects(players) {
+    const deduped = new Map()
+
+    for (const player of players) {
+        const key = _getProspectIdentityKey(player)
+        const existing = deduped.get(key)
+
+        if (!existing || _getProspectPriority(player) > _getProspectPriority(existing)) {
+            deduped.set(key, player)
+        }
+    }
+
+    return Array.from(deduped.values())
+}
 </script>
 
 <svelte:head>
@@ -263,7 +652,7 @@ function getGoalieSortIcon(field) {
             </div>
 
             <!-- Ranking Source Selector (only visible when Draft 2026 is active) -->
-            {#if activeFilter === 'draft2026' || activeFilter === 'all'}
+            {#if activeFilter === 'draft2026'}
                 <div class="mt-8 max-w-xs mx-auto">
                     <label for="ranking-source" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Rankings-lähde</label>
                     <select 
@@ -335,35 +724,41 @@ function getGoalieSortIcon(field) {
                     {:else}
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {#each sortedProspects as player, index (`${player.id}-${index}`)}
+                                {@const selectedSeason = _getSelectedSeasonEntry(player)}
                                 <div 
                                     class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md hover:border-blue-200 transition-all group p-4"
                                 >
                                     <div class="flex items-center gap-4 mb-4">
                                         <div class="relative w-20 h-20 flex-shrink-0">
                                             <div class="w-full h-full rounded-full border-2 border-slate-100 overflow-hidden bg-slate-50 relative z-10">
-                                                <img 
-                                                    src={player.headshot} 
+                                                <PlayerHeadshot
+                                                    playerId={_getBestFallbackPlayerId(player)}
+                                                    explicitUrl={_getBestAvailableSeasonHeadshot(player)}
+                                                    teamAbbrev={player.nhlRights}
                                                     alt={player.name}
-                                                    class="w-full h-full object-cover object-top"
+                                                    imageClass="w-full h-full object-cover object-top"
+                                                    fallbackClass="w-full h-full flex items-center justify-center text-2xl font-bold text-slate-400"
+                                                    initials={player.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                                     loading="lazy"
-                                                    onerror={(e) => e.target.style.display = 'none'} 
                                                 />
                                             </div>
-                                            <div class="absolute -bottom-1 -right-1 z-20 bg-white rounded-full p-1 shadow-sm border border-slate-100">
-                                                <div class="w-7 h-7 flex items-center justify-center">
-                                                    {#if player.type === 'draft2026'}
-                                                        <span class="text-[10px] font-black text-amber-600">#{player.draftRank}</span>
-                                                    {:else}
-                                                        <span class="text-[10px] font-black text-slate-800">{player.nhlRights}</span>
-                                                    {/if}
+                                            {#if player.type === 'draft2026' || _hasKnownNhlRights(player)}
+                                                <div class="absolute -bottom-1 -right-1 z-20 bg-white rounded-full p-1 shadow-sm border border-slate-100">
+                                                    <div class="w-7 h-7 flex items-center justify-center">
+                                                        {#if player.type === 'draft2026'}
+                                                            <span class="text-[10px] font-black text-amber-600">#{player.draftRank}</span>
+                                                        {:else if _getDisplayNhlRights(player.nhlRights)}
+                                                            <TeamLogo team={_getDisplayNhlRights(player.nhlRights)} size="24" />
+                                                        {/if}
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            {/if}
                                         </div>
                                         
                                         <div class="min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
                                                 <div class="inline-block bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                                    {player.league}
+                                                    {selectedSeason?.league || player.league}
                                                 </div>
                                                 {#if player.type === 'draft2026'}
                                                     <div class="inline-block bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -372,34 +767,59 @@ function getGoalieSortIcon(field) {
                                                 {/if}
                                             </div>
                                             <h3 class="text-base font-bold text-slate-900 truncate">{player.name}</h3>
-                                            <div class="flex items-center gap-2 text-xs text-slate-500">
-                                                <span>{player.currentTeam}</span>
-                                                {#if player.birthDate}
-                                                    <span class="text-slate-300">•</span>
-                                                    <span>{new Date().getFullYear() - new Date(player.birthDate).getFullYear()} vuotta</span>
-                                                {/if}
+                                            <div class="space-y-1 text-xs text-slate-500">
+                                                <div class="truncate">{selectedSeason?.team || player.currentTeam}</div>
+                                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                                    {#if _hasKnownNhlRights(player)}
+                                                        <span>NHL-oikeudet: {_getDisplayNhlRights(player.nhlRights)}</span>
+                                                    {/if}
+                                                    {#if _hasKnownNhlRights(player) && player.birthDate}
+                                                        <span class="text-slate-300">•</span>
+                                                    {/if}
+                                                    {#if player.birthDate}
+                                                        <span>{new Date().getFullYear() - new Date(player.birthDate).getFullYear()} vuotta</span>
+                                                    {/if}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
+                                    {#if player.seasonEntries?.length > 1}
+                                        <div class="mb-3 flex flex-wrap gap-2">
+                                            {#each player.seasonEntries as entry, entryIndex}
+                                                <button
+                                                    class={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
+                                                        _getSelectedSeasonIndex(player) === entryIndex
+                                                            ? 'border-blue-200 bg-blue-50 text-blue-700'
+                                                            : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
+                                                    }`}
+                                                    onclick={() => _selectSeasonEntry(player, entryIndex)}
+                                                    type="button"
+                                                >
+                                                    {entry.league} {entry.gp || 0} GP
+                                                </button>
+                                            {/each}
+                                        </div>
+                                    {/if}
+
                                     {#if player.type === 'draft2026'}
-                                        <!-- Draft prospect stats (height/weight instead of games) -->
+                                        <!-- Draft prospect stats -->
                                         <div class="grid grid-cols-4 gap-2 bg-amber-50/50 rounded-lg p-3 text-center border border-amber-100/50">
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Pituus</div>
-                                                <div class="font-mono font-bold text-slate-700">{player.height || '-'}</div>
+                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
+                                                <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Paino</div>
-                                                <div class="font-mono font-bold text-slate-700">{player.weight || '-'}</div>
+                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">G</div>
+                                                <div class="font-mono font-bold text-emerald-600">{selectedSeason?.goals || 0}</div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Rank</div>
-                                                <div class="font-mono font-bold text-amber-600">#{player.draftRank}</div>
+                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">A</div>
+                                                <div class="font-mono font-bold text-amber-600">{selectedSeason?.assists || 0}</div>
                                             </div>
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">P</div>
-                                                <div class="font-mono font-bold text-slate-900">{player.position}</div>
+                                                <div class="font-mono font-bold text-slate-900">{selectedSeason?.points || 0}</div>
                                             </div>
                                         </div>
                                     {:else}
@@ -407,19 +827,19 @@ function getGoalieSortIcon(field) {
                                         <div class="grid grid-cols-4 gap-2 bg-slate-50/50 rounded-lg p-3 text-center border border-slate-100/50">
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
-                                                <div class="font-mono font-bold text-slate-700">{player.stats?.gp || 0}</div>
+                                                <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
                                             </div>
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">G</div>
-                                                <div class="font-mono font-bold text-emerald-600">{player.stats?.goals || 0}</div>
+                                                <div class="font-mono font-bold text-emerald-600">{selectedSeason?.goals || 0}</div>
                                             </div>
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">A</div>
-                                                <div class="font-mono font-bold text-amber-600">{player.stats?.assists || 0}</div>
+                                                <div class="font-mono font-bold text-amber-600">{selectedSeason?.assists || 0}</div>
                                             </div>
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">P</div>
-                                                <div class="font-mono font-bold text-slate-900">{player.stats?.points || 0}</div>
+                                                <div class="font-mono font-bold text-slate-900">{selectedSeason?.points || 0}</div>
                                             </div>
                                         </div>
                                     {/if}
@@ -461,35 +881,41 @@ function getGoalieSortIcon(field) {
                             <!-- Goalies Grid -->
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {#each sortedGoalies as goalie, index (`${goalie.id}-${index}`)}
+                                    {@const selectedSeason = _getSelectedSeasonEntry(goalie)}
                                     <div 
                                         class="bg-white rounded-xl shadow-sm border border-emerald-200 overflow-hidden hover:shadow-md hover:border-emerald-300 transition-all group p-4"
                                     >
                                         <div class="flex items-center gap-4 mb-4">
                                             <div class="relative w-20 h-20 flex-shrink-0">
                                                 <div class="w-full h-full rounded-full border-2 border-emerald-100 overflow-hidden bg-slate-50 relative z-10">
-                                                    <img 
-                                                        src={goalie.headshot} 
+                                                    <PlayerHeadshot
+                                                        playerId={_getBestFallbackPlayerId(goalie)}
+                                                        explicitUrl={_getBestAvailableSeasonHeadshot(goalie)}
+                                                        teamAbbrev={goalie.nhlRights}
                                                         alt={goalie.name}
-                                                        class="w-full h-full object-cover object-top"
+                                                        imageClass="w-full h-full object-cover object-top"
+                                                        fallbackClass="w-full h-full flex items-center justify-center text-2xl font-bold text-slate-400"
+                                                        initials={goalie.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                                         loading="lazy"
-                                                        onerror={(e) => e.target.style.display = 'none'} 
                                                     />
                                                 </div>
-                                                <div class="absolute -bottom-1 -right-1 z-20 bg-white rounded-full p-1 shadow-sm border border-emerald-100">
-                                                    <div class="w-7 h-7 flex items-center justify-center">
-                                                        {#if goalie.type === 'draft2026'}
-                                                            <span class="text-[10px] font-black text-amber-600">#{goalie.draftRank}</span>
-                                                        {:else}
-                                                            <span class="text-[10px] font-black text-slate-800">{goalie.nhlRights}</span>
-                                                        {/if}
+                                                {#if goalie.type === 'draft2026' || _hasKnownNhlRights(goalie)}
+                                                    <div class="absolute -bottom-1 -right-1 z-20 bg-white rounded-full p-1 shadow-sm border border-emerald-100">
+                                                        <div class="w-7 h-7 flex items-center justify-center">
+                                                            {#if goalie.type === 'draft2026'}
+                                                                <span class="text-[10px] font-black text-amber-600">#{goalie.draftRank}</span>
+                                                            {:else if _getDisplayNhlRights(goalie.nhlRights)}
+                                                                <TeamLogo team={_getDisplayNhlRights(goalie.nhlRights)} size="24" />
+                                                            {/if}
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                {/if}
                                             </div>
                                             
                                             <div class="min-w-0">
                                                 <div class="flex items-center gap-2 mb-1">
                                                     <div class="inline-block bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                                                        {goalie.league}
+                                                        {selectedSeason?.league || goalie.league}
                                                     </div>
                                                     {#if goalie.type === 'draft2026'}
                                                         <div class="inline-block bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
@@ -498,34 +924,59 @@ function getGoalieSortIcon(field) {
                                                     {/if}
                                                 </div>
                                                 <h3 class="text-base font-bold text-slate-900 truncate">{goalie.name}</h3>
-                                                <div class="flex items-center gap-2 text-xs text-slate-500">
-                                                    <span>{goalie.currentTeam}</span>
-                                                    {#if goalie.birthDate}
-                                                        <span class="text-slate-300">•</span>
-                                                        <span>{new Date().getFullYear() - new Date(goalie.birthDate).getFullYear()} vuotta</span>
-                                                    {/if}
+                                                <div class="space-y-1 text-xs text-slate-500">
+                                                    <div class="truncate">{selectedSeason?.team || goalie.currentTeam}</div>
+                                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                                        {#if _hasKnownNhlRights(goalie)}
+                                                            <span>NHL-oikeudet: {_getDisplayNhlRights(goalie.nhlRights)}</span>
+                                                        {/if}
+                                                        {#if _hasKnownNhlRights(goalie) && goalie.birthDate}
+                                                            <span class="text-slate-300">•</span>
+                                                        {/if}
+                                                        {#if goalie.birthDate}
+                                                            <span>{new Date().getFullYear() - new Date(goalie.birthDate).getFullYear()} vuotta</span>
+                                                        {/if}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {#if goalie.seasonEntries?.length > 1}
+                                            <div class="mb-3 flex flex-wrap gap-2">
+                                                {#each goalie.seasonEntries as entry, entryIndex}
+                                                    <button
+                                                        class={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
+                                                            _getSelectedSeasonIndex(goalie) === entryIndex
+                                                                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                                                                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
+                                                        }`}
+                                                        onclick={() => _selectSeasonEntry(goalie, entryIndex)}
+                                                        type="button"
+                                                    >
+                                                        {entry.league} {entry.gp || 0} GP
+                                                    </button>
+                                                {/each}
+                                            </div>
+                                        {/if}
 
                                         {#if goalie.type === 'draft2026'}
                                             <!-- Draft prospect stats -->
                                             <div class="grid grid-cols-4 gap-2 bg-amber-50/50 rounded-lg p-3 text-center border border-amber-100/50">
                                                 <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Pituus</div>
-                                                    <div class="font-mono font-bold text-slate-700">{goalie.height || '-'}</div>
+                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
+                                                    <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
                                                 </div>
                                                 <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Paino</div>
-                                                    <div class="font-mono font-bold text-slate-700">{goalie.weight || '-'}</div>
+                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SV%</div>
+                                                    <div class="font-mono font-bold text-emerald-600">{selectedSeason?.savePct ? selectedSeason.savePct.toFixed(3) : '-'}</div>
                                                 </div>
                                                 <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Rank</div>
-                                                    <div class="font-mono font-bold text-amber-600">#{goalie.draftRank}</div>
+                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GAA</div>
+                                                    <div class="font-mono font-bold text-amber-600">{selectedSeason?.gaa ? selectedSeason.gaa.toFixed(2) : '-'}</div>
                                                 </div>
                                                 <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">P</div>
-                                                    <div class="font-mono font-bold text-slate-900">{goalie.position}</div>
+                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SO</div>
+                                                    <div class="font-mono font-bold text-slate-900">{selectedSeason?.shutouts || 0}</div>
                                                 </div>
                                             </div>
                                         {:else}
@@ -533,19 +984,19 @@ function getGoalieSortIcon(field) {
                                             <div class="grid grid-cols-4 gap-2 bg-emerald-50/50 rounded-lg p-3 text-center border border-emerald-100/50">
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
-                                                    <div class="font-mono font-bold text-slate-700">{goalie.stats?.gp || 0}</div>
+                                                    <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SV%</div>
-                                                    <div class="font-mono font-bold text-emerald-600">{(goalie.stats?.savePct || 0).toFixed(3)}</div>
+                                                    <div class="font-mono font-bold text-emerald-600">{(selectedSeason?.savePct || 0).toFixed(3)}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GAA</div>
-                                                    <div class="font-mono font-bold text-amber-600">{(goalie.stats?.gaa || 0).toFixed(2)}</div>
+                                                    <div class="font-mono font-bold text-amber-600">{(selectedSeason?.gaa || 0).toFixed(2)}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SO</div>
-                                                    <div class="font-mono font-bold text-slate-900">{goalie.stats?.shutouts || 0}</div>
+                                                    <div class="font-mono font-bold text-slate-900">{selectedSeason?.shutouts || 0}</div>
                                                 </div>
                                             </div>
                                         {/if}

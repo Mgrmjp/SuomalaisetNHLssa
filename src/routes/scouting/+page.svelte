@@ -103,7 +103,7 @@ const draftRankings = [
                         Tutustu suomalaisten NHL-varausten historiaan ja tilastoihin.
                     </p>
                     <a 
-                        href="{base}/drafts/historia"
+                        href={`${base}/drafts`}
                         class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
                     >
                         Näytä historia

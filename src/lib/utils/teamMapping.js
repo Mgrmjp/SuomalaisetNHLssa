@@ -37,4 +37,18 @@ export const teamMapping = {
     WSH: 'Washington Capitals',
 }
 
+export function normalizeTeamAbbreviation(teamAbbrev) {
+    if (!teamAbbrev) return ''
+
+    const normalized = teamAbbrev
+        .toString()
+        .split(',')[0]
+        .trim()
+        .toUpperCase()
+
+    if (normalized === 'ARI') return 'UTA'
+    if (normalized === 'VEG') return 'VGK'
+    return normalized
+}
+
 export default teamMapping

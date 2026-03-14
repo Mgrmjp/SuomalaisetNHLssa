@@ -6,6 +6,7 @@ import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { formatGameScore } from '$lib/utils/gameFormatHelpers.mjs'
 import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
+import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/playerHeadshots.js'
 import './PlayerCard.css'
 
 const { player } = $props()
@@ -16,16 +17,10 @@ let _photoError = $state(false)
 let _imageLoading = $state(true)
 let _lqipUrl = $state(null)
 
-// Get local WebP headshot URL (optimized, served from our domain)
-function getLocalHeadshotUrl(playerId) {
-    if (!playerId) return null
-    return `${base}/headshots/${playerId}.webp`
-}
-
 // Get LQIP thumbnail URL (tiny placeholder)
 function getLqipUrl(playerId) {
-    if (!playerId) return null
-    return `${base}/headshots/thumbs/${playerId}.jpg`
+    const url = getLocalHeadshotThumbUrl(playerId)
+    return url ? `${base}${url}` : null
 }
 
 // Load player image - try local WebP first, fallback to NHL CDN
@@ -39,7 +34,8 @@ function loadPlayerImage(playerId) {
     _lqipUrl = getLqipUrl(playerId)
 
     // Try local WebP first
-    const localUrl = getLocalHeadshotUrl(playerId)
+    const localHeadshotUrl = getLocalHeadshotUrl(playerId)
+    const localUrl = localHeadshotUrl ? `${base}${localHeadshotUrl}` : null
     const img = new Image()
 
     img.onload = () => {
@@ -1027,9 +1023,9 @@ $effect(() => {
         <div
             class="bg-white shadow-2xl w-full max-w-lg max-h-[100vh] overflow-y-auto relative modal-dialog-mobile md:rounded-xl"
             role="dialog"
+            tabindex="-1"
             aria-modal="true"
             aria-labelledby="season-stats-title"
-            onclick={(e) => e.stopPropagation()}
         >
             <!-- Header -->
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">

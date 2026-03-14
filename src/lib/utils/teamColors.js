@@ -5,6 +5,7 @@
 
 import { base } from '$app/paths'
 import logger from './logger.js'
+import { normalizeTeamAbbreviation } from './teamMapping.js'
 
 // Cache for extracted team colors
 const teamColorCache = new Map()
@@ -42,6 +43,7 @@ const fallbackTeamColors = {
     UTA: ['#00275D', '#8B8C89'], // Utah Hockey Club - Navy Blue & Ice Silver
     VAN: ['#00205B', '#041C2C'], // Vancouver Canucks - Royal Blue & Navy Blue
     VEG: ['#333F48', '#B9975B'], // Vegas Golden Knights - Steel Gray & Gold
+    VGK: ['#333F48', '#B9975B'], // Vegas Golden Knights - Steel Gray & Gold
     WPG: ['#01408D', '#AF1E2D'], // Winnipeg Jets - Royal Blue & Aviator Navy
     WSH: ['#C8102E', '#041E42'], // Washington Capitals - Red & Navy Blue
 }
@@ -195,7 +197,7 @@ function _calculateColorVibrancyScore(hexColor, frequency) {
  * @returns {Promise<Array>} Array of hex colors extracted from the SVG
  */
 async function extractTeamColors(teamAbbr) {
-    const normalizedTeam = teamAbbr.toLowerCase()
+    const normalizedTeam = normalizeTeamAbbreviation(teamAbbr).toLowerCase()
 
     const svgPath = `${base}/nhl-logos/${normalizedTeam}.svg`
 
@@ -354,7 +356,7 @@ function isValidColor(color) {
  * @returns {Promise<Array>} Array of team colors
  */
 export async function getTeamColors(teamAbbr) {
-    const upperTeamAbbr = teamAbbr.toUpperCase()
+    const upperTeamAbbr = normalizeTeamAbbreviation(teamAbbr)
 
     // For debugging: clear cache to force re-extraction
     if (teamColorCache.has(upperTeamAbbr)) {

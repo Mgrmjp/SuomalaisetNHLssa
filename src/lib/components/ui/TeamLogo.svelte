@@ -1,5 +1,6 @@
 <script>
 import { base } from '$app/paths'
+import { normalizeTeamAbbreviation } from '$lib/utils/teamMapping.js'
 
 // biome-ignore lint/correctness/noUnusedVariables: used in template
 const { team, size = '48', className = '' } = $props()
@@ -40,7 +41,7 @@ const teamFullNames = {
 }
 
 function getTeamLogoUrl(teamAbbrev) {
-    const normalizedTeam = (teamAbbrev || '').toString().toLowerCase().trim()
+    const normalizedTeam = normalizeTeamAbbreviation(teamAbbrev).toLowerCase()
     if (!normalizedTeam) return `${base}/nhl-logos/placeholder.svg`
 
     const pathPrefix = base === '' || base === '.' ? '' : base
@@ -48,7 +49,8 @@ function getTeamLogoUrl(teamAbbrev) {
 }
 
 const _logoUrl = $derived(getTeamLogoUrl(team))
-const _teamFullName = $derived(teamFullNames[team] || team)
+const _normalizedTeam = $derived(normalizeTeamAbbreviation(team))
+const _teamFullName = $derived(teamFullNames[_normalizedTeam] || _normalizedTeam || team)
 </script>
 
 <div class="team-logo-wrapper {className}" style={`--logo-size: ${size}px`}>

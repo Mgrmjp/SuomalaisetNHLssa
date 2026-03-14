@@ -13,9 +13,26 @@ import re
 from datetime import datetime
 from typing import List, Dict, Optional
 from pathlib import Path
+from bs4 import BeautifulSoup
 from leagues import (
     DELAdapter, SwissNLAdapter, CzechExtraligaAdapter, ICEHLAdapter
 )
+
+CHL_TEAM_SITE_BASES = {
+    'whl': {
+        'Everett Silvertips': 'https://chl.ca/whl-silvertips',
+        'Medicine Hat Tigers': 'https://chl.ca/whl-tigers',
+    },
+    'ohl': {
+        'Flint Firebirds': 'https://chl.ca/ohl-firebirds',
+    },
+    'qmjhl': {
+        'Halifax Mooseheads': 'https://chl.ca/lhjmq-mooseheads',
+        'Halifax, Mooseheads': 'https://chl.ca/lhjmq-mooseheads',
+        'Chicoutimi Saguenéens': 'https://chl.ca/lhjmq-sagueneens',
+        'Chicoutimi, Saguenéens': 'https://chl.ca/lhjmq-sagueneens',
+    },
+}
 
 
 class OfficialLeagueCollector:
@@ -28,6 +45,147 @@ class OfficialLeagueCollector:
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         })
         self.request_delay = 1.0
+        self._profile_photo_cache = {}
+        self._chl_roster_cache = {}
+
+    def _build_hockeytech_headshot_url(self, client_code: str, player_id: str, size: str = "240x240") -> Optional[str]:
+        """Build a direct HockeyTech CDN headshot URL."""
+        normalized_player_id = str(player_id or "").strip()
+        normalized_client_code = str(client_code or "").strip().lower()
+        if not normalized_player_id or not normalized_client_code:
+            return None
+        return f"https://assets.leaguestat.com/{normalized_client_code}/{size}/{normalized_player_id}.jpg"
+
+    def _build_ahl_profile_url(self, player_id: str, season_id: str, player_name: str) -> Optional[str]:
+        """Build the canonical AHL player stats page URL."""
+        normalized_player_id = str(player_id or "").strip()
+        normalized_season_id = str(season_id or "").strip()
+        normalized_name = re.sub(r"[^a-z0-9]+", "-", player_name.lower()).strip("-")
+        if not normalized_player_id or not normalized_season_id or not normalized_name:
+            return None
+        return f"https://theahl.com/stats/player/{normalized_player_id}/{normalized_season_id}/{normalized_name}"
+
+    def _normalize_url(self, value: Optional[str]) -> Optional[str]:
+        """Normalize protocol-relative or absolute URLs."""
+        if not isinstance(value, str):
+            return None
+
+        value = value.strip()
+        if not value:
+            return None
+        if value.startswith('//'):
+            return f"https:{value}"
+        if value.startswith('http://') or value.startswith('https://'):
+            return value
+        return None
+
+    def _extract_shl_headshot_url(self, player_media: Optional[Dict]) -> Optional[str]:
+        """Build a stable portrait URL from SHL playerMedia."""
+        if not isinstance(player_media, dict):
+            return None
+
+        media_string = player_media.get('mediaString')
+        if not isinstance(media_string, str) or '|' not in media_string:
+            return None
+
+        filename = media_string.split('|')[-1].strip()
+        if not filename:
+            return None
+
+        return f"https://www.shl.se/imageproxy/{filename}?type=portrait"
+
+    def _looks_like_player_photo(self, url: Optional[str], alt: Optional[str], player_name: str = '') -> bool:
+        """Heuristic to filter profile photos from generic page images."""
+        if not url:
+            return False
+
+        normalized_url = url.lower()
+        if any(token in normalized_url for token in ('flag', 'logo', 'icon', 'sprite', 'blank', 'placeholder')):
+            return False
+
+        alt_text = (alt or '').strip().lower()
+        player_name_lower = player_name.strip().lower()
+        if player_name_lower and player_name_lower in alt_text:
+            return True
+
+        return any(token in normalized_url for token in ('player', 'photo', 'headshot', 'portrait'))
+
+    def _fetch_profile_photo(self, profile_url: Optional[str], player_name: str) -> Optional[str]:
+        """Fetch a player portrait from an official profile page when the stats feed lacks one."""
+        normalized_profile_url = self._normalize_url(profile_url)
+        if not normalized_profile_url:
+            return None
+
+        cached = self._profile_photo_cache.get(normalized_profile_url)
+        if cached is not None:
+            return cached
+
+        try:
+            response = self.session.get(normalized_profile_url, timeout=8)
+            response.raise_for_status()
+        except Exception:
+            self._profile_photo_cache[normalized_profile_url] = None
+            return None
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        for image in soup.find_all('img'):
+            candidate = self._normalize_url(
+                image.get('src') or image.get('data-src') or image.get('data-lazy-src')
+            )
+            if self._looks_like_player_photo(candidate, image.get('alt'), player_name):
+                self._profile_photo_cache[normalized_profile_url] = candidate
+                return candidate
+
+        for attrs in ({'property': 'og:image'}, {'name': 'twitter:image'}):
+            meta = soup.find('meta', attrs=attrs)
+            candidate = self._normalize_url(meta.get('content')) if meta else None
+            if self._looks_like_player_photo(candidate, player_name, player_name):
+                self._profile_photo_cache[normalized_profile_url] = candidate
+                return candidate
+
+        self._profile_photo_cache[normalized_profile_url] = None
+        return None
+
+    def _get_chl_team_site_base(self, league_code: str, team_name: str) -> Optional[str]:
+        league_sites = CHL_TEAM_SITE_BASES.get(league_code, {})
+        return league_sites.get(team_name)
+
+    def _fetch_chl_roster_entries(self, league_code: str, team_name: str, team_id: str, season_id: str) -> Dict[str, Dict[str, Optional[str]]]:
+        """Fetch official CHL roster page data and map player IDs to portrait/profile URLs."""
+        if not team_id or not season_id:
+            return {}
+
+        team_base = self._get_chl_team_site_base(league_code, team_name)
+        if not team_base:
+            return {}
+
+        roster_url = f"{team_base}/roster/{team_id}/{season_id}/"
+        cached = self._chl_roster_cache.get(roster_url)
+        if cached is not None:
+            return cached
+
+        try:
+            response = self.session.get(roster_url, timeout=12)
+            response.raise_for_status()
+        except Exception:
+            self._chl_roster_cache[roster_url] = {}
+            return {}
+
+        pattern = re.compile(
+            r'(?P<headshot_url>https:\\/\\/assets\.leaguestat\.com\\/[a-z]+\\/240x240\\/(?P<player_id>\d+)\.jpg)","(?P<profile_url>https:\\/\\/chl\.ca\\\/[^"]+\\/players\\/\d+)","(?P<display_name>[^"]+)"'
+        )
+
+        entries = {}
+        for match in pattern.finditer(response.text):
+            player_id = match.group('player_id')
+            entries[player_id] = {
+                'headshot_url': match.group('headshot_url').replace('https:\\/\\/', 'https://').replace('\\/', '/'),
+                'profile_url': match.group('profile_url').replace('https:\\/\\/', 'https://').replace('\\/', '/'),
+            }
+
+        self._chl_roster_cache[roster_url] = entries
+        return entries
         
     def _make_request(self, url: str) -> Optional[str]:
         """Make rate-limited request."""
@@ -165,6 +323,8 @@ class OfficialLeagueCollector:
                         'plus_minus': int(row.get('plus_minus', 0) or 0),
                         'penalty_minutes': int(row.get('penalty_minutes', 0) or 0),
                         'nationality': 'FIN',
+                        'headshot_url': self._build_hockeytech_headshot_url('ahl', row.get('player_id', '')),
+                        'profile_url': self._build_ahl_profile_url(row.get('player_id', ''), ahl_season, name),
                         'source': 'hockeytech',
                         'source_league': 'ahl',
                         'scraped_at': datetime.now().isoformat()
@@ -175,7 +335,7 @@ class OfficialLeagueCollector:
         print(f"  AHL: {len(players)} Finnish players")
         return players
     
-    def _parse_modulekit_skaters(self, data: dict, league: str, league_code: str) -> List[Dict]:
+    def _parse_modulekit_skaters(self, data: dict, league: str, league_code: str, season_id: str) -> List[Dict]:
         """Parse HockeyTech modulekit SiteKit.Skaters response."""
         players = []
         skaters = data.get('SiteKit', {}).get('Skaters', [])
@@ -188,10 +348,24 @@ class OfficialLeagueCollector:
             # Nationality field is empty in CHL response; use name-based detection
             if not self.is_finnish(name):
                 continue
+            team_name = p.get('team_name', p.get('team_code', 'Unknown'))
+            roster_entries = self._fetch_chl_roster_entries(
+                league_code,
+                team_name,
+                str(p.get('latest_team_id') or p.get('team_id') or ''),
+                season_id,
+            )
+            roster_entry = roster_entries.get(str(p.get('player_id', '')))
+            profile_url = self._normalize_url((roster_entry or {}).get('profile_url') or p.get('player_page_link'))
+            headshot_url = self._normalize_url(
+                (roster_entry or {}).get('headshot_url') or p.get('headshot_url') or p.get('headshot') or p.get('photo') or p.get('image')
+            )
+            if not headshot_url and profile_url:
+                headshot_url = self._fetch_profile_photo(profile_url, name)
             players.append({
                 'player_id': f"{league_code}_{p.get('player_id', '')}",
                 'name': name,
-                'team': p.get('team_name', p.get('team_code', 'Unknown')),
+                'team': team_name,
                 'league': league,
                 'position': p.get('position', 'F'),
                 'games_played': int(p.get('games_played', 0) or 0),
@@ -201,6 +375,8 @@ class OfficialLeagueCollector:
                 'plus_minus': int(p.get('plus_minus', 0) or 0),
                 'penalty_minutes': int(p.get('penalty_minutes', 0) or 0),
                 'nationality': 'FIN',
+                'headshot_url': headshot_url,
+                'profile_url': profile_url,
                 'source': 'hockeytech-modulekit',
                 'source_league': league_code,
                 'scraped_at': datetime.now().isoformat()
@@ -368,7 +544,7 @@ class OfficialLeagueCollector:
         try:
             response = self.session.get(url, params=params, timeout=30)
             if response.status_code == 200:
-                players = self._parse_modulekit_skaters(response.json(), 'OHL', 'ohl')
+                players = self._parse_modulekit_skaters(response.json(), 'OHL', 'ohl', '83')
             else:
                 print(f"  OHL HTTP {response.status_code}")
         except Exception as e:
@@ -395,7 +571,7 @@ class OfficialLeagueCollector:
         try:
             response = self.session.get(url, params=params, timeout=30)
             if response.status_code == 200:
-                players = self._parse_modulekit_skaters(response.json(), 'WHL', 'whl')
+                players = self._parse_modulekit_skaters(response.json(), 'WHL', 'whl', '289')
             else:
                 print(f"  WHL HTTP {response.status_code}")
         except Exception as e:
@@ -422,7 +598,7 @@ class OfficialLeagueCollector:
         try:
             response = self.session.get(url, params=params, timeout=30)
             if response.status_code == 200:
-                players = self._parse_modulekit_skaters(response.json(), 'QMJHL', 'qmjhl')
+                players = self._parse_modulekit_skaters(response.json(), 'QMJHL', 'qmjhl', '211')
             else:
                 print(f"  QMJHL HTTP {response.status_code}")
         except Exception as e:
@@ -524,6 +700,7 @@ class OfficialLeagueCollector:
                         'plus_minus': int(row.get('PlusMinus', 0) or 0),
                         'penalty_minutes': int(row.get('PIM', 0) or 0),
                         'nationality': nat or 'FIN',
+                        'headshot_url': self._extract_shl_headshot_url(info.get('playerMedia')),
                         'source': 'shl-statsv2',
                         'source_league': 'shl',
                         'scraped_at': datetime.now().isoformat()
@@ -582,6 +759,7 @@ class OfficialLeagueCollector:
                         'plus_minus': player.get('plusMinus', 0),
                         'penalty_minutes': player.get('penaltyMinutes', 0),
                         'nationality': nat or 'FIN',
+                        'headshot_url': self._normalize_url(player.get('pictureUrl')),
                         'source': 'liiga-api-v2',
                         'source_league': 'liiga',
                         'scraped_at': datetime.now().isoformat()
@@ -755,7 +933,7 @@ class OfficialLeagueCollector:
 
 def save_data(data: Dict, filename: str = "league_prospects_official.json"):
     """Save scraped data to JSON."""
-    output_dir = Path(__file__).parent.parent / 'static' / 'data' / 'leagues'
+    output_dir = Path(__file__).parent.parent.parent / 'static' / 'data' / 'leagues'
     output_dir.mkdir(parents=True, exist_ok=True)
     
     output_path = output_dir / filename
