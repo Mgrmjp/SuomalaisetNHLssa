@@ -695,7 +695,7 @@ $effect(() => {
                         class="player-card__footer flex items-center justify-between pt-4 md:pt-5 border-t border-gray-100"
                     >
                         <!-- Enhanced Result Indicator - More subtle -->
-                        {#if isLive}
+                        {#if _isLive}
                             <div class="player-card__live-indicator flex items-center gap-1.5">
                                 <span
                                     class="player-card__live-badge bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap"
@@ -706,13 +706,13 @@ $effect(() => {
                         {:else if gameResult}
                             <div class="player-card__result-status flex items-center gap-2">
                                 <div
-                                    class={`w-5 h-5 rounded-md ${resultIndicator.bg} ${resultIndicator.textColor} flex items-center justify-center text-[10px] font-bold shadow-sm`}
-                                    title={resultIndicator.label}
+                                    class={`w-5 h-5 rounded-md ${_resultIndicator.bg} ${_resultIndicator.textColor} flex items-center justify-center text-[10px] font-bold shadow-sm`}
+                                    title={_resultIndicator.label}
                                 >
-                                    {resultIndicator.text}
+                                    {_resultIndicator.text}
                                 </div>
                                 <span class="text-xs font-medium text-gray-500"
-                                    >{resultIndicator.label}</span
+                                    >{_resultIndicator.label}</span
                                 >
                             </div>
                         {:else}
