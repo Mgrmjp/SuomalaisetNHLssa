@@ -34,6 +34,38 @@ function _goToPreviousDay() {
     }
 }
 
+function _goToToday() {
+    const todayDateObj = new Date()
+    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
+
+    // Find the closest available date to today (including today)
+    const todayOrClosest = availableDateObjects
+        .filter((d) => d.getTime() <= todayDateObj.getTime())
+        .sort((a, b) => b.getTime() - a.getTime())
+
+    if (todayOrClosest.length > 0 && todayOrClosest[0]) {
+        setDate(formatLocalDate(todayOrClosest[0]))
+    } else if (availableDateObjects.length > 0) {
+        // If no dates are available up to today, use the latest available date
+        const latestAvailable = availableDateObjects.sort((a, b) => b.getTime() - a.getTime())[0]
+        setDate(formatLocalDate(latestAvailable))
+    }
+}
+
+function _goToNextDay() {
+    const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
+    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
+
+    // Find the next available date
+    const nextDates = availableDateObjects
+        .filter((d) => d.getTime() > currentDateObj.getTime())
+        .sort((a, b) => a.getTime() - b.getTime())
+
+    if (nextDates.length > 0 && nextDates[0]) {
+        setDate(formatLocalDate(nextDates[0]))
+    }
+}
+
 /** @param {Date | string} date */
 function formatLocalDate(date) {
     const d = typeof date === 'string' ? new Date(`${date}T00:00:00`) : date
