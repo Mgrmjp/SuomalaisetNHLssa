@@ -386,19 +386,27 @@ async function extractPlayers(page, leagueName) {
             const headers = Array.from(table.querySelectorAll('th, thead td'));
             const headerText = headers.map(h => h.textContent.toLowerCase().trim());
             
-            const hasName = headerText.some(h => /name|player|pelaaja|namn/i.test(h));
-            const hasStats = headerText.some(h => /goal|assist|point|gp|game/i.test(h));
+            const hasName = headerText.some(h => /name|player|pelaaja|namn|nimi/i.test(h));
+            const hasStats = headerText.some(h => /goal|assist|point|gp|game|o|ottelut|m|maalit|s|sy.t.t|syötöt|p|pisteet/i.test(h));
             
             if (!hasName || !hasStats) continue;
             
-            let nameIdx = headerText.findIndex(h => /name|player|pelaaja|namn/i.test(h));
-            let teamIdx = headerText.findIndex(h => /team|lag/i.test(h));
-            let posIdx = headerText.findIndex(h => /pos/i.test(h));
-            let gpIdx = headerText.findIndex(h => /gp|game/i.test(h));
-            let gIdx = headerText.findIndex(h => /g$|^g$|goal/i.test(h));
-            let aIdx = headerText.findIndex(h => /a$|^a$|assist/i.test(h));
-            let ptsIdx = headerText.findIndex(h => /pts|point/i.test(h));
-            let natIdx = headerText.findIndex(h => /nat|country|land/i.test(h));
+            // Special handling for Mestis - the table structure is different
+            const isMestisTable = headerText.some(h => /nimi/i.test(h)) && 
+                                  headerText.some(h => /joukkue/i.test(h)) &&
+                                  headerText.some(h => /pp/i.test(h)) &&
+                                  headerText.some(h => /o/i.test(h));
+            
+
+            
+            let nameIdx = headerText.findIndex(h => /name|player|pelaaja|namn|nimi/i.test(h));
+            let teamIdx = headerText.findIndex(h => /team|lag|joukkue/i.test(h));
+            let posIdx = headerText.findIndex(h => /pos|pp|pelipaikka/i.test(h));
+            let gpIdx = headerText.findIndex(h => /gp|game|o|ottelut/i.test(h));
+            let gIdx = headerText.findIndex(h => /g$|^g$|goal|m|maalit/i.test(h));
+            let aIdx = headerText.findIndex(h => /a$|^a$|assist|s|sy.t.t|syötöt/i.test(h));
+            let ptsIdx = headerText.findIndex(h => /pts|point|p|pisteet/i.test(h));
+            let natIdx = headerText.findIndex(h => /nat|country|land|maa/i.test(h));
             
             if (nameIdx === -1) nameIdx = 0;
             
@@ -407,6 +415,16 @@ async function extractPlayers(page, leagueName) {
             for (const row of rows) {
                 const cells = row.querySelectorAll('td, th');
                 if (cells.length < 4) continue;
+                
+                // For Mestis tables, skip the first data row as it contains headers
+                if (isMestisTable) {
+                    const firstCellText = cells[0]?.textContent?.trim() || '';
+                    if (firstCellText === '#' || firstCellText === 'Nimi') {
+                        continue;
+                    }
+                }
+                
+
                 
                 // Check nationality first if available
                 if (natIdx >= 0 && cells[natIdx]) {
@@ -418,7 +436,19 @@ async function extractPlayers(page, leagueName) {
                 if (!name || name.length < 3) continue;
                 
                 // If nationality not available, check if name is Finnish
-                if (natIdx === -1 && !isFinnishName(name)) continue;
+                // For Mestis specifically, include all players since it's a Finnish league
+                if (natIdx === -1) {
+                    if (isMestisTable) {
+                        // Mestis is a Finnish league, include all players
+                        // Only exclude clearly non-Finnish names
+                        const clearlyNotFinnish = name.split(',')[0].trim(); // Get lastname
+                        if (clearlyNotFinnish && !isFinnishName(clearlyNotFinnish) && !isFinnishName(name)) {
+                            continue;
+                        }
+                    } else if (!isFinnishName(name)) {
+                        continue;
+                    }
+                }
                 
                 players.push({
                     name: name,
@@ -800,6 +830,90 @@ async function tryApiEndpoints(leagueName, config) {
     return foundPlayers;
 }
 
+// Special function to extract Mestis player images
+async function extractMestisPlayerImages(browser, players, mainPage) {
+    const playersWithImages = [];
+    const startTime = Date.now();
+    const maxDuration = 120000; // 2 minutes max for image extraction
+    
+    for (let i = 0; i < players.length; i++) {
+        // Check timeout
+        if (Date.now() - startTime > maxDuration) {
+            console.log('  Image extraction timeout reached, stopping...');
+            break;
+        }
+        const player = players[i];
+        let playerWithImage = {...player};
+        
+        try {
+            // Create a format suitable for Mestis URL (remove spaces, commas, etc.)
+            const nameForUrl = player.name
+                .replace(/\s*,\s*/g, '-')  // Replace comma+space with dash
+                .replace(/\s+/g, '-')    // Replace spaces with dashes
+                .replace(/[^\w\u00C0-\u024F-]/g, '')  // Remove special chars but keep Finnish letters
+                .toLowerCase();
+            
+            // Try to find player ID from the main page by matching name
+            const playerLinks = await mainPage.evaluate((playerName) => {
+                const links = Array.from(document.querySelectorAll('a[href*="/pelaajat/"]'));
+                return links
+                    .filter(link => {
+                        const linkText = link.textContent.trim();
+                        const playerNameNormalized = playerName.replace(/\s*,\s*/g, ' ').trim();
+                        const linkTextNormalized = linkText.replace(/\s*,\s*/g, ' ').trim();
+                        return linkTextNormalized === playerNameNormalized;
+                    })
+                    .map(link => link.getAttribute('href'));
+            }, player.name);
+            
+            if (playerLinks.length > 0) {
+                const playerUrl = playerLinks[0];
+                const fullPlayerUrl = playerUrl.startsWith('http') ? playerUrl : `https://www.mestis.fi${playerUrl}`;
+                
+                // Visit player page to extract image
+                const playerPage = await browser.newPage();
+                try {
+                    await playerPage.goto(fullPlayerUrl, {
+                        waitUntil: 'networkidle2',
+                        timeout: 30000
+                    });
+                    
+                    const imageUrl = await playerPage.evaluate(() => {
+                        const imgElement = document.querySelector('.player-image-wrapper img');
+                        return imgElement ? imgElement.getAttribute('src') : null;
+                    });
+                    
+                    if (imageUrl) {
+                        // Convert relative URL to absolute
+                        if (imageUrl.startsWith('/')) {
+                            playerWithImage.image = `https://www.mestis.fi${imageUrl}`;
+                        } else {
+                            playerWithImage.image = imageUrl;
+                        }
+                        console.log(`    Image found for ${player.name}`);
+                    } else {
+                        console.log(`    No image found for ${player.name}`);
+                    }
+                    
+                    await playerPage.close();
+                } catch (error) {
+                    console.log(`    Error getting image for ${player.name}: ${error.message}`);
+                    await playerPage.close();
+                }
+            } else {
+                console.log(`    No player link found for ${player.name}`);
+            }
+            
+        } catch (error) {
+            console.log(`    Error processing player ${player.name}: ${error.message}`);
+        }
+        
+        playersWithImages.push(playerWithImage);
+    }
+    
+    return playersWithImages;
+}
+
 // Main scrape function for a league
 async function scrapeLeague(browser, config) {
     console.log(`\n--- ${config.name} ---`);
@@ -853,6 +967,17 @@ async function scrapeLeague(browser, config) {
                 console.log(`  Found ${apiPlayers.length} players via API`);
                 players = [...players, ...apiPlayers];
             }
+        }
+        
+        // Special handling for Mestis - extract player images
+        if (config.name === 'Mestis' && players.length > 0) {
+            console.log('  Extracting player images...');
+            const playersWithImages = await extractMestisPlayerImages(browser, players, page);
+            // Merge the players with images back into the full list
+            players = players.map(player => {
+                const playerWithImage = playersWithImages.find(p => p.name === player.name);
+                return playerWithImage || player;
+            });
         }
         
         await page.close();
