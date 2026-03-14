@@ -15,7 +15,8 @@ const LOG_LEVELS = {
 
 // Current log level (can be adjusted based on environment)
 const currentLogLevel =
-    typeof process !== 'undefined' && process.env.NODE_ENV === 'production'
+    (typeof process !== 'undefined' && process.env.NODE_ENV === 'production') ||
+    (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
         ? LOG_LEVELS.ERROR
         : LOG_LEVELS.INFO
 
