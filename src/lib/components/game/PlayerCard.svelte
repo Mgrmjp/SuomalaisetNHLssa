@@ -7,6 +7,7 @@ import { formatGameScore } from '$lib/utils/gameFormatHelpers.mjs'
 import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
 import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/playerHeadshots.js'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import './PlayerCard.css'
 
 const { player } = $props()
