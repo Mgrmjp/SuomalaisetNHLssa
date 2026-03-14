@@ -441,7 +441,7 @@ $effect(() => {
                         <div
                             class="player-card__team-subtitle text-xs font-semibold text-gray-600 mb-1.5"
                         >
-                            {teamWithCity}
+                            {_teamWithCity}
                         </div>
                         <div
                             class="player-card__player-details text-[10px] font-bold text-gray-400 tracking-widest uppercase flex items-center gap-1.5"
@@ -772,7 +772,7 @@ $effect(() => {
                             </h3>
                         </div>
                         <div class="player-card__team-subtitle text-xs font-semibold text-gray-600">
-                            {teamWithCity}
+                            {_teamWithCity}
                         </div>
                     </div>
 
@@ -1068,7 +1068,7 @@ $effect(() => {
                         {displayName}
                     </h3>
                     <div class="text-sm text-gray-500 flex items-center gap-2">
-                        <span>{teamWithCity}</span>
+                        <span>{_teamWithCity}</span>
                         <span>•</span>
                         <span>Kauden 2024-2025 tilastot</span>
                     </div>
