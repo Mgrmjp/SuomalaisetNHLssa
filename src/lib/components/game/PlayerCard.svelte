@@ -544,7 +544,7 @@ $effect(() => {
                                             </div>
                                         </div>
                                     {/if}
-                                    {#if hasENG}
+                                    {#if _hasENG}
                                         <div
                                             class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
                                         >
@@ -572,7 +572,7 @@ $effect(() => {
                                     {#if player.goals > 0}
                                         <div
                                             class="player-card__stat-item player-card__stat-item--goals flex flex-col justify-center min-w-0 text-center relative"
-                                            title={hasENG
+                                            title={_hasENG
                                                 ? `Sisältää ${player.empty_net_goals} tyhjään maaliin tehtyä maalia`
                                                 : undefined}
                                         >
@@ -580,7 +580,7 @@ $effect(() => {
                                                 class="player-card__stat-value text-sm font-bold text-gray-900 truncate flex items-center justify-center gap-0.5"
                                             >
                                                 <span>{player.goals}</span>
-                                                {#if hasENG}
+                                                {#if _hasENG}
                                                     <span
                                                         class="player-card__eng-indicator"
                                                         title="Tyhjä maali">🥅</span
