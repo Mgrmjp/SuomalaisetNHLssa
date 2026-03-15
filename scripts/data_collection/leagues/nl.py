@@ -77,8 +77,11 @@ class SwissNLAdapter(BaseLeagueAdapter):
             # Team name is often in 'team_name' or similar
             team_name = data.get('team_name', data.get('team', {}).get('name', "Unknown"))
             
+            player_id = str(data.get('playerId', '') or '')
+            headshot_url = f"{self.base_url}/player/{player_id}/image" if player_id else None
+
             stats = PlayerStats(
-                player_id=str(data.get('playerId', '')),
+                player_id=player_id,
                 name=f"{data.get('firstName', '')} {data.get('lastName', '')}".strip(),
                 team=data.get('teamName', 'Unknown'),
                 league="NL",
@@ -96,6 +99,7 @@ class SwissNLAdapter(BaseLeagueAdapter):
                 height_cm=data.get('height'),
                 weight_kg=data.get('weight'),
                 nationality='FIN' if data.get('noc') == 1 else None,
+                headshot_url=headshot_url,
                 source_league="nl",
                 raw_data=data
             )

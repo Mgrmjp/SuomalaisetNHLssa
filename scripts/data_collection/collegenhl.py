@@ -8,12 +8,17 @@ Collects Finnish player stats from:
 - Canadian Junior Leagues (WHL, OHL, QMJHL)
 """
 import requests
+import urllib3
 import json
 import time
 import os
+import re
 from datetime import datetime
 from typing import List, Dict, Optional
 from pathlib import Path
+from bs4 import BeautifulSoup
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 class CollegeAndJuniorCollector:
@@ -48,6 +53,112 @@ class CollegeAndJuniorCollector:
         except Exception as e:
             print(f"  Request error: {e}")
         return None
+
+    def _make_text_request(self, url: str) -> str:
+        """Make rate-limited request and return response text."""
+        time.sleep(self.request_delay)
+        try:
+            response = self.session.get(url, timeout=30)
+            print(f"  Requesting: {url}")
+            print(f"  Status: {response.status_code}")
+            if response.status_code == 200:
+                return response.text
+            print(f"  Error: {response.status_code}")
+        except Exception as e:
+            print(f"  Request error: {e}")
+        return ""
+
+    def _normalize_ncaa_name(self, name: str) -> str:
+        cleaned = (name or "").strip()
+        if not cleaned:
+            return ""
+        if "," in cleaned:
+            parts = [part.strip() for part in cleaned.split(",") if part.strip()]
+            if len(parts) >= 2:
+                cleaned = " ".join(parts[1:] + [parts[0]])
+        cleaned = re.sub(r"\s+", " ", cleaned)
+        return cleaned
+
+    def _parse_ncaa_teams_from_html(self, html: str) -> List[Dict]:
+        soup = BeautifulSoup(html, "html.parser")
+        teams = []
+        seen = set()
+
+        for link in soup.find_all("a", href=True):
+            href = link["href"].strip()
+            match = re.match(r"^/reports/team/([^/]+)/(\d+)$", href)
+            if not match:
+                continue
+
+            slug, team_id = match.groups()
+            if team_id in seen:
+                continue
+            seen.add(team_id)
+
+            team_name = " ".join(link.get_text(" ", strip=True).split())
+            if not team_name:
+                team_name = slug.replace("-", " ")
+
+            teams.append({
+                "id": team_id,
+                "slug": slug,
+                "name": team_name,
+            })
+
+        return teams
+
+    def _parse_ncaa_stats_table(self, html: str) -> Dict[str, Dict]:
+        soup = BeautifulSoup(html, "html.parser")
+        tables = soup.find_all("table")
+        stats_by_name: Dict[str, Dict] = {}
+
+        def parse_int(value: str) -> int:
+            try:
+                return int(str(value).strip())
+            except Exception:
+                return 0
+
+        def parse_float(value: str) -> float:
+            try:
+                return float(str(value).strip())
+            except Exception:
+                return 0.0
+
+        if tables:
+            for row in tables[0].find_all("tr"):
+                cells = [cell.get_text(" ", strip=True) for cell in row.find_all("td")]
+                if len(cells) < 9:
+                    continue
+                name = self._normalize_ncaa_name(cells[0].split(" , ", 1)[0])
+                if not name:
+                    continue
+                stats_by_name[name] = {
+                    "position": cells[0].split(" , ")[1] if " , " in cells[0] else "F",
+                    "games_played": parse_int(cells[1]),
+                    "goals": parse_int(cells[2]),
+                    "assists": parse_int(cells[3]),
+                    "points": parse_int(cells[4]),
+                    "penalty_minutes": parse_int(cells[8]),
+                }
+
+        if len(tables) > 1:
+            for row in tables[1].find_all("tr"):
+                cells = [cell.get_text(" ", strip=True) for cell in row.find_all("td")]
+                if len(cells) < 11:
+                    continue
+                name = self._normalize_ncaa_name(cells[0].split(" , ", 1)[0])
+                if not name:
+                    continue
+                stats_by_name[name] = {
+                    "position": "G",
+                    "games_played": parse_int(cells[1]),
+                    "wins": parse_int(cells[2]),
+                    "goals_against_average": parse_float(cells[7]),
+                    "shutouts": parse_int(cells[8]),
+                    "save_percentage": parse_float(cells[10]),
+                }
+
+        return stats_by_name
     
     def is_finnish(self, name: str, nationality: str = '', birthplace: str = '') -> bool:
         """Check if player is Finnish."""
@@ -69,16 +180,14 @@ class CollegeAndJuniorCollector:
     def get_ncaa_teams(self) -> List[Dict]:
         """Get list of NCAA Division I teams."""
         url = "https://www.collegehockeynews.com/api/v1/teams"
-        data = self._make_request(url)
-        if data and isinstance(data, list):
-            return data
-        return []
+        html = self._make_text_request(url)
+        if not html:
+            return []
+        return self._parse_ncaa_teams_from_html(html)
     
     def get_ncaa_player_stats(self, season: str = "2024-2025") -> List[Dict]:
         """
-        Get NCAA player stats from collegehockeynews.com.
-        Note: The API provides team rosters, not full season stats.
-        We'll get roster data and estimate stats from points if available.
+        Get NCAA player stats from collegehockeynews.com HTML pages.
         """
         players = []
         
@@ -90,51 +199,62 @@ class CollegeAndJuniorCollector:
         for i, team in enumerate(teams[:60]):
             team_name = team.get('name', 'Unknown')
             team_id = team.get('id', '')
+            team_slug = team.get('slug', '')
             
-            if not team_id:
+            if not team_id or not team_slug:
                 continue
-                
-            # Get team roster
-            roster_url = f"https://www.collegehockeynews.com/api/v1/teams/{team_id}/roster"
-            roster_data = self._make_request(roster_url)
-            
-            if roster_data and isinstance(roster_data, dict):
-                roster = roster_data.get('roster', [])
-                for player in roster:
-                    name = player.get('name', '')
-                    if not name:
-                        # Try firstName + lastName
-                        first = player.get('firstName', '')
-                        last = player.get('lastName', '')
-                        name = f"{first} {last}".strip()
-                    
-                    if not name:
-                        continue
-                    
-                    nationality = player.get('nationality', '')
-                    birthplace = player.get('birthplace', '')
-                    
-                    if self.is_finnish(name, nationality, birthplace):
-                        # Get stats if available
-                        stats = player.get('stats', {})
-                        
-                        players.append({
-                            'player_id': f"ncaa_{player.get('id', name.replace(' ', '_'))}",
-                            'name': name,
-                            'team': team_name,
-                            'league': 'NCAA',
-                            'position': player.get('position', 'F'),
-                            'games_played': stats.get('games', 0),
-                            'goals': stats.get('goals', 0),
-                            'assists': stats.get('assists', 0),
-                            'points': stats.get('points', 0),
-                            'plus_minus': stats.get('plusMinus', 0),
-                            'penalty_minutes': stats.get('penaltyMinutes', 0),
-                            'nationality': nationality or 'FIN',
-                            'source': 'collegehockeynews',
-                            'source_league': 'ncaa',
-                            'scraped_at': datetime.now().isoformat()
-                        })
+
+            roster_url = f"https://www.collegehockeynews.com/reports/roster/{team_slug}/{team_id}"
+            stats_url = f"https://www.collegehockeynews.com/stats/team/{team_slug}/{team_id}"
+            roster_html = self._make_text_request(roster_url)
+            stats_html = self._make_text_request(stats_url)
+
+            if not roster_html:
+                continue
+
+            stats_by_name = self._parse_ncaa_stats_table(stats_html) if stats_html else {}
+            soup = BeautifulSoup(roster_html, "html.parser")
+            tables = soup.find_all("table")
+            if not tables:
+                continue
+
+            for row in tables[0].find_all("tr"):
+                cells = [cell.get_text(" ", strip=True) for cell in row.find_all("td")]
+                if len(cells) < 10:
+                    continue
+
+                name = self._normalize_ncaa_name(cells[2])
+                birth_date = cells[7]
+                hometown = cells[8]
+
+                if not name or not self.is_finnish(name, '', hometown):
+                    continue
+
+                stat_row = stats_by_name.get(name, {})
+                player_id = f"ncaa_{team_id}_{re.sub(r'[^a-z0-9]+', '_', name.lower()).strip('_')}"
+
+                players.append({
+                    'player_id': player_id,
+                    'name': name,
+                    'team': team_name,
+                    'league': 'NCAA',
+                    'position': stat_row.get('position') or cells[4] or 'F',
+                    'games_played': stat_row.get('games_played', 0),
+                    'goals': stat_row.get('goals', 0),
+                    'assists': stat_row.get('assists', 0),
+                    'points': stat_row.get('points', 0),
+                    'plus_minus': 0,
+                    'penalty_minutes': stat_row.get('penalty_minutes', 0),
+                    'save_percentage': stat_row.get('save_percentage'),
+                    'goals_against_average': stat_row.get('goals_against_average'),
+                    'shutouts': stat_row.get('shutouts'),
+                    'wins': stat_row.get('wins'),
+                    'birth_date': birth_date,
+                    'nationality': 'FIN',
+                    'source': 'collegehockeynews-html',
+                    'source_league': 'ncaa',
+                    'scraped_at': datetime.now().isoformat()
+                })
             
             if (i + 1) % 10 == 0:
                 print(f"  Processed {i + 1}/{min(len(teams), 60)} teams, found {len(players)} Finnish players")
@@ -443,7 +563,7 @@ class CollegeAndJuniorCollector:
 
 def save_data(data: Dict, filename: str = "league_prospects_na.json"):
     """Save scraped data to JSON."""
-    output_dir = Path(__file__).parent.parent / 'static' / 'data' / 'leagues'
+    output_dir = Path(__file__).parent.parent.parent / 'static' / 'data' / 'leagues'
     output_dir.mkdir(parents=True, exist_ok=True)
     
     output_path = output_dir / filename

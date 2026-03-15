@@ -30,6 +30,7 @@ EXTERNAL_PROSPECTS_FILE = DATA_DIR / "external_prospects.json"
 LEAGUE_PROSPECTS_FILES = (
     DATA_DIR / "leagues" / "league_prospects_official.json",
     DATA_DIR / "leagues" / "league_prospects_advanced.json",
+    DATA_DIR / "leagues" / "league_prospects_na.json",
 )
 THE_SPORTS_DB_BASE = "https://www.thesportsdb.com/api/v1/json"
 WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"

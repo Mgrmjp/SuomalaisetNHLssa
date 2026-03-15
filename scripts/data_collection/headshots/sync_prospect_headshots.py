@@ -22,6 +22,7 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 DATA_FILES = (
     PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_official.json",
     PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_advanced.json",
+    PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_na.json",
 )
 OUT_DIR = PROJECT_ROOT / "static" / "prospect-headshots"
 

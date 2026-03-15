@@ -37,7 +37,7 @@
         "prospects:cache:build": ".venv/bin/python3 scripts/data_collection/finnish/build_prospects_cache.py",
         "prospects:headshots:sync": ".venv/bin/python3 scripts/data_collection/headshots/sync_prospect_headshots.py",
         "prospects:leagues": "echo 'Options: npm run prospects:scrape (real data) | npm run prospects:demo (sample data)'",
-        "prospects:leagues:update": "npm run prospects:scrape && npm run prospects:mestis && npm run prospects:headshots:sync && npm run prospects:cache:build"
+        "prospects:leagues:update": "npm run prospects:scrape && npm run prospects:na && npm run prospects:mestis && npm run prospects:headshots:sync && npm run prospects:cache:build"
     },
     "devDependencies": {
         "@biomejs/biome": "^2.2.5",
