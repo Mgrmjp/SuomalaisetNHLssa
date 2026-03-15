@@ -27,6 +27,10 @@ NHL_SEARCH_API = "https://search.d3.nhle.com/api/v1/search/player"
 PROSPECTS_CACHE_FILE = DATA_DIR / "finnish_prospects.json"
 CURRENT_SEASON_ID = 20252026
 EXTERNAL_PROSPECTS_FILE = DATA_DIR / "external_prospects.json"
+LEAGUE_PROSPECTS_FILES = (
+    DATA_DIR / "leagues" / "league_prospects_official.json",
+    DATA_DIR / "leagues" / "league_prospects_advanced.json",
+)
 THE_SPORTS_DB_BASE = "https://www.thesportsdb.com/api/v1/json"
 WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 
@@ -51,6 +55,21 @@ def normalize_name(name):
     return " ".join((name or "").strip().lower().split())
 
 
+def normalize_person_name(name):
+    """Normalize person names and collapse Last, First / First Last into a shared key."""
+    normalized = normalize_name(name)
+    if not normalized:
+        return ""
+
+    cleaned = normalized.replace("*", "").strip()
+    if "," in cleaned:
+        parts = [part.strip() for part in cleaned.split(",") if part.strip()]
+        if len(parts) >= 2:
+            cleaned = " ".join(parts[1:] + [parts[0]])
+
+    return " ".join(cleaned.split())
+
+
 def get_name(first_name, last_name):
     """Handle NHL name fields that may be dicts or plain strings."""
     first = first_name.get("default") if isinstance(first_name, dict) else first_name
@@ -66,11 +85,13 @@ def _append_source(player_obj, source):
 
 def upsert_candidate(candidates, by_name, player_id, name, **fields):
     """Insert or merge candidate player data by id/name."""
-    normalized = normalize_name(name)
+    normalized = normalize_person_name(name)
     if not normalized:
         return None
 
     effective_id = player_id or by_name.get(normalized)
+    if effective_id is not None:
+        effective_id = str(effective_id)
     if not effective_id:
         return None
 
@@ -90,6 +111,42 @@ def upsert_candidate(candidates, by_name, player_id, name, **fields):
 
     by_name[normalized] = effective_id
     return effective_id
+
+
+def dedupe_final_players(players):
+    """Collapse duplicate final player rows caused by mixed int/string ids."""
+    deduped = {}
+
+    for player in players:
+        player_id = player.get("id")
+        if player_id is not None:
+            player["id"] = str(player_id)
+
+        key = str(player.get("id") or "") or f"{normalize_person_name(player.get('name'))}:{player.get('birthDate') or ''}"
+        existing = deduped.get(key)
+        if not existing:
+            deduped[key] = player
+            continue
+
+        existing_sources = existing.get("sources") or []
+        current_sources = player.get("sources") or []
+
+        if len(current_sources) > len(existing_sources):
+            deduped[key] = player
+            existing = deduped[key]
+
+        merged_sources = []
+        for source in [*(existing.get("sources") or []), *current_sources]:
+            if source and source not in merged_sources:
+                merged_sources.append(source)
+        existing["sources"] = merged_sources
+
+        if not existing.get("headshot") and player.get("headshot"):
+            existing["headshot"] = player["headshot"]
+        if not existing.get("headshotCrop") and player.get("headshotCrop"):
+            existing["headshotCrop"] = player["headshotCrop"]
+
+    return list(deduped.values())
 
 
 def get_all_teams():
@@ -291,6 +348,69 @@ def ingest_external_file(candidates, by_name):
 
     print(f"Added {added} candidates from external file")
     return added
+
+
+def ingest_league_prospects_files(candidates, by_name):
+    """Merge non-NHL league prospect photos and metadata from generated JSON files."""
+    import json
+
+    added = 0
+    merged = 0
+
+    for source_file in LEAGUE_PROSPECTS_FILES:
+        if not source_file.exists():
+            print(f"No league prospects file at {source_file}, skipping")
+            continue
+
+        try:
+            payload = json.loads(source_file.read_text(encoding="utf-8"))
+        except Exception as e:
+            print(f"Failed to parse {source_file}: {e}")
+            continue
+
+        rows = payload.get("players") if isinstance(payload, dict) else payload
+        if not isinstance(rows, list):
+            continue
+
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+
+            full_name = row.get("name")
+            if not full_name:
+                continue
+
+            normalized_name = normalize_person_name(full_name)
+            candidate_id = by_name.get(normalized_name)
+
+            if not candidate_id:
+                nhl_id = search_player_id(full_name)
+                if nhl_id:
+                    candidate_id = str(nhl_id)
+
+            if not candidate_id:
+                continue
+
+            before = len(candidates)
+            result_id = upsert_candidate(
+                candidates,
+                by_name,
+                candidate_id,
+                full_name,
+                currentTeam=row.get("team"),
+                league=row.get("league"),
+                headshot=row.get("headshot_url") or row.get("headshotUrl") or row.get("headshot") or row.get("image"),
+                headshotCrop=row.get("headshot_crop") or row.get("headshotCrop"),
+                source=f"league_file:{source_file.stem}",
+            )
+
+            if result_id and len(candidates) > before:
+                added += 1
+            elif result_id:
+                merged += 1
+
+    print(f"Merged league prospect data: {merged} existing, {added} new")
+    return added + merged
 
 
 def ingest_the_sports_db(candidates, by_name):
@@ -575,6 +695,7 @@ def main():
     ingest_the_sports_db(finnish_prospects, prospects_by_name)
     ingest_wikidata(finnish_prospects, prospects_by_name)
     ingest_external_file(finnish_prospects, prospects_by_name)
+    ingest_league_prospects_files(finnish_prospects, prospects_by_name)
 
     # 5) Enrich with landing data
     print(f"\nEnriching data for {len(finnish_prospects)} total players...")
@@ -656,6 +777,8 @@ def main():
 
         final_list.append(p_data)
         time.sleep(0.05)
+
+    final_list = dedupe_final_players(final_list)
 
     final_list.sort(
         key=lambda p: (-(p.get("stats", {}).get("points", 0)), p.get("name", ""))

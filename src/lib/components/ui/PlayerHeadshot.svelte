@@ -11,6 +11,9 @@ const {
     imageClass = '',
     fallbackClass = '',
     initials = '',
+    zoom = 1,
+    objectPosition = '50% 20%',
+    autoFocusFace = false,
 } = $props()
 
 let _candidateIndex = $state(0)
@@ -31,6 +34,7 @@ $effect(() => {
     explicitUrl
     teamAbbrev
     seasonId
+    autoFocusFace
     _candidateIndex = 0
 })
 
@@ -48,6 +52,7 @@ function _handleError() {
         src={_currentSrc}
         alt={alt}
         class={imageClass}
+        style={`display: block; object-position: ${objectPosition}; transform: scale(${zoom}); transform-origin: center top;`}
         {loading}
         onerror={_handleError}
     />

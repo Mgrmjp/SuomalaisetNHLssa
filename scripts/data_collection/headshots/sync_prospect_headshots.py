@@ -16,9 +16,13 @@ from pathlib import Path
 from typing import Optional
 
 import requests
+from crop_profiles import resolve_headshot_crop
 
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
-DATA_FILE = PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_official.json"
+DATA_FILES = (
+    PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_official.json",
+    PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_advanced.json",
+)
 OUT_DIR = PROJECT_ROOT / "static" / "prospect-headshots"
 
 USER_AGENT = "suomalaisetnhlssa-headshot-sync/1.0"
@@ -231,22 +235,23 @@ def _optimize_existing_local_headshot(player: dict, local_url: str) -> Optional[
     return optimized_url
 
 
-def main() -> int:
-    if not DATA_FILE.exists():
-        print(f"[ERROR] Missing data file: {DATA_FILE}")
-        return 1
+def _assign_headshot_crop(player: dict, source_url: Optional[str]) -> None:
+    player["headshot_crop"] = resolve_headshot_crop(player, source_url)
 
-    data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+
+def _process_data_file(data_file: Path, session: requests.Session) -> tuple[int, int, int]:
+    if not data_file.exists():
+        print(f"[WARN] Missing data file: {data_file}")
+        return 0, 0, 0
+
+    data = json.loads(data_file.read_text(encoding="utf-8"))
     players = _get_players_container(data)
     if players is None:
-        print(f"[ERROR] Unsupported data shape in {DATA_FILE}")
-        return 1
+        print(f"[WARN] Unsupported data shape in {data_file}")
+        return 0, 0, 0
     downloaded = 0
     rewritten = 0
     optimized_existing = 0
-
-    session = requests.Session()
-    session.headers.update({"User-Agent": USER_AGENT})
 
     for player in players:
         headshot_url = player.get("headshot_url")
@@ -255,6 +260,7 @@ def main() -> int:
             if optimized_local_url and optimized_local_url != headshot_url:
                 player["headshot_url"] = optimized_local_url
                 optimized_existing += 1
+            _assign_headshot_crop(player, player.get("original_headshot_url") or player.get("resolved_headshot_url") or headshot_url)
             continue
 
         if not _is_remote_headshot(headshot_url):
@@ -275,14 +281,35 @@ def main() -> int:
         if resolved_headshot_url != headshot_url:
             player["resolved_headshot_url"] = resolved_headshot_url
         player["headshot_url"] = local_path
+        _assign_headshot_crop(player, resolved_headshot_url)
         downloaded += 1
         rewritten += 1
 
-    DATA_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"Downloaded {downloaded} prospect headshots")
-    print(f"Rewrote {rewritten} headshot URLs to local paths")
-    print(f"Optimized {optimized_existing} existing local headshots")
-    print(f"Saved data to {DATA_FILE}")
+    data_file.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"Downloaded {downloaded} prospect headshots for {data_file.name}")
+    print(f"Rewrote {rewritten} headshot URLs to local paths for {data_file.name}")
+    print(f"Optimized {optimized_existing} existing local headshots for {data_file.name}")
+    print(f"Saved data to {data_file}")
+    return downloaded, rewritten, optimized_existing
+
+
+def main() -> int:
+    session = requests.Session()
+    session.headers.update({"User-Agent": USER_AGENT})
+
+    total_downloaded = 0
+    total_rewritten = 0
+    total_optimized = 0
+
+    for data_file in DATA_FILES:
+        downloaded, rewritten, optimized_existing = _process_data_file(data_file, session)
+        total_downloaded += downloaded
+        total_rewritten += rewritten
+        total_optimized += optimized_existing
+
+    print(f"Total downloaded prospect headshots: {total_downloaded}")
+    print(f"Total rewritten headshot URLs: {total_rewritten}")
+    print(f"Total optimized existing local headshots: {total_optimized}")
     return 0
 
 

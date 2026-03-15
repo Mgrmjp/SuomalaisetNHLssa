@@ -124,6 +124,7 @@ function _normalizeSeasonEntry(entry) {
         gaa: Number(entry.gaa ?? entry.goals_against_average) || 0,
         shutouts: Number(entry.shutouts) || 0,
         headshotUrl: entry.headshotUrl || entry.headshot_url || entry.headshot || entry.photo_url || entry.photoUrl || null,
+        headshotCrop: entry.headshotCrop || entry.headshot_crop || null,
     }
 }
 
@@ -165,6 +166,7 @@ function _mergeSeasonEntries(officialEntries, epEntries) {
                 team: existing.team || entry.team,
                 league: existing.league || entry.league,
                 headshotUrl: isOfficial ? (entry.headshotUrl || existing.headshotUrl) : (existing.headshotUrl || entry.headshotUrl),
+                headshotCrop: isOfficial ? (entry.headshotCrop || existing.headshotCrop) : (existing.headshotCrop || entry.headshotCrop),
                 gp: existing.gp || entry.gp,
                 goals: existing.goals || entry.goals,
                 assists: existing.assists || entry.assists,
@@ -241,7 +243,7 @@ function _buildSeasonData(player, fallbackStats = null) {
 // A prospect is considered active if they:
 // 1. Are 26 or younger
 // 2. Are NOT established NHL regulars (20+ NHL games this season)
-const ACTIVE_AGE_CUTOFF = 27
+const ACTIVE_AGE_CUTOFF = 24
 const NHL_REGULAR_GP_THRESHOLD = 20 // Players with 20+ NHL games are considered regulars, not prospects
 
 // Track NHL regulars (loaded from stats)
@@ -315,7 +317,9 @@ const allPlayers = $derived(() => {
                 league: primarySeason.league || p.league,
                 stats: primarySeason,
                 seasonEntries: seasonData.entries,
+                headshotCrop: p.headshotCrop || p.headshot_crop || null,
                 displayHeadshot: _getPreferredProspectHeadshot({ ...p, league: primarySeason.league }, primarySeason),
+                displayHeadshotCrop: primarySeason.headshotCrop || p.headshotCrop || p.headshot_crop || null,
                 photoFallbackPlayerId: _getPhotoFallbackPlayerId(primarySeason.league, p.id || null, _getPreferredProspectHeadshot({ ...p, league: primarySeason.league }, primarySeason)),
                 type: 'prospect',
                 sortKey: primarySeason.points || 0
@@ -358,7 +362,9 @@ const allPlayers = $derived(() => {
                 playerId: p.playerId || null,
                 headshot: p.playerId ? `https://assets.nhle.com/mugs/nhl/20262027/2026/${p.playerId}.png` : `https://assets.nhle.com/mugs/nhl/20262027/2026/${rank}.png`,
                 seasonEntries: seasonData.entries,
+                headshotCrop: p.headshotCrop || p.headshot_crop || null,
                 displayHeadshot: _getPreferredDraftHeadshot(primarySeason.league || draftLeague, p.playerId || null, primarySeason),
+                displayHeadshotCrop: primarySeason.headshotCrop || p.headshotCrop || p.headshot_crop || null,
                 photoFallbackPlayerId: _getPhotoFallbackPlayerId(primarySeason.league || draftLeague, p.playerId || null, _getPreferredDraftHeadshot(primarySeason.league || draftLeague, p.playerId || null, primarySeason)),
                 stats: primarySeason,
                 type: 'draft2026',
@@ -367,7 +373,7 @@ const allPlayers = $derived(() => {
         }
     }
     
-    return players
+    return _dedupeDisplayPlayers(players)
 })
 
 // Filter players
@@ -470,18 +476,37 @@ function _shouldUseNhlMugshot(league) {
     return ['NHL', 'AHL', 'ECHL'].includes(normalizedLeague)
 }
 
+function _getProspectHeadshotZoom(league) {
+    return _shouldUseNhlMugshot(league) ? 1.08 : 1.26
+}
+
+function _getProspectHeadshotPosition(league) {
+    return _shouldUseNhlMugshot(league) ? '50% 18%' : '50% 10%'
+}
+
+function _getProspectHeadshotSettings(player, league) {
+    const selectedSeason = _getSelectedSeasonEntry(player)
+    const crop = selectedSeason?.headshotCrop || player?.headshotCrop || player?.displayHeadshotCrop || null
+    return {
+        zoom: crop?.zoom || _getProspectHeadshotZoom(league),
+        objectPosition: crop?.objectPosition || _getProspectHeadshotPosition(league),
+    }
+}
+
+function _isNhlMugshotUrl(url) {
+    return typeof url === 'string' && url.includes('assets.nhle.com/mugs/')
+}
+
 function _getPreferredProspectHeadshot(player, seasonStats = null) {
     const currentLeaguePhoto = seasonStats?.headshotUrl || null
     if (currentLeaguePhoto) return currentLeaguePhoto
 
-    // If player has an NHL headshot URL, use it regardless of current league
-    // This handles cases where prospects play in leagues like Mestis but have NHL mugshots
     const playerHeadshot = player?.headshot || null
-    if (playerHeadshot && playerHeadshot.includes('assets.nhle.com/mugs/')) {
+    if (playerHeadshot && !_isNhlMugshotUrl(playerHeadshot)) {
         return playerHeadshot
     }
 
-    if (_shouldUseNhlMugshot(player?.league) && _hasKnownNhlRights(player)) {
+    if (_isNhlMugshotUrl(playerHeadshot) && _shouldUseNhlMugshot(player?.league) && _hasKnownNhlRights(player)) {
         return playerHeadshot
     }
 
@@ -513,13 +538,47 @@ function _getSelectedSeasonEntry(player) {
     return entries[_getSelectedSeasonIndex(player)] || player?.stats || null
 }
 
+function _getSeasonSelectorEntries(player) {
+    const entries = Array.isArray(player?.seasonEntries) ? player.seasonEntries : []
+    const deduped = new Map()
+
+    entries.forEach((entry, index) => {
+        const key = `${_normalizeLeagueForPhoto(entry?.league)}::${_normalizeSeasonTeamKey(entry?.team)}`
+        const existing = deduped.get(key)
+
+        if (!existing || (entry?.gp || 0) > (existing.entry?.gp || 0)) {
+            deduped.set(key, { entry, index })
+        }
+    })
+
+    return Array.from(deduped.values())
+}
+
 function _getBestAvailableSeasonHeadshot(player) {
     const selectedSeason = _getSelectedSeasonEntry(player)
     if (selectedSeason?.headshotUrl) return selectedSeason.headshotUrl
 
     const entries = Array.isArray(player?.seasonEntries) ? player.seasonEntries : []
+    const selectedLeague = _normalizeLeagueForPhoto(selectedSeason?.league || player?.league)
+
+    if (!_shouldUseNhlMugshot(selectedLeague)) {
+        const preferredLeagueEntry = entries.find((entry) =>
+            entry?.headshotUrl &&
+            _normalizeLeagueForPhoto(entry?.league) === selectedLeague &&
+            !_isNhlMugshotUrl(entry.headshotUrl)
+        )
+        if (preferredLeagueEntry?.headshotUrl) return preferredLeagueEntry.headshotUrl
+
+        const anyNonNhlEntry = entries.find((entry) => entry?.headshotUrl && !_isNhlMugshotUrl(entry.headshotUrl))
+        if (anyNonNhlEntry?.headshotUrl) return anyNonNhlEntry.headshotUrl
+    }
+
     for (const entry of entries) {
         if (entry?.headshotUrl) return entry.headshotUrl
+    }
+
+    if (!_shouldUseNhlMugshot(selectedLeague) && player?.displayHeadshot && !_isNhlMugshotUrl(player.displayHeadshot)) {
+        return player.displayHeadshot
     }
 
     return player?.displayHeadshot || null
@@ -563,7 +622,7 @@ function _getPhotoFallbackPlayerId(playerLeague, playerId, explicitPhotoUrl) {
 }
 
 function _getProspectIdentityKey(player) {
-    if (player?.id) return `id:${player.id}`
+    if (player?.id !== undefined && player?.id !== null) return `id:${String(player.id)}`
     if (player?.name && player?.birthDate) return `name:${player.name}:${player.birthDate}`
     return `fallback:${player?.name || ''}:${player?.currentTeam || ''}:${player?.league || ''}`
 }
@@ -575,6 +634,35 @@ function _getProspectPriority(player) {
     if (player?.league === 'NHL') return 2
     if (sources.some((source) => source.startsWith('draft_picks:'))) return 1
     return 0
+}
+
+function _getDisplayPlayerIdentityKey(player) {
+    if (player?.name && player?.birthDate) {
+        return `name:${_normalizeName(player.name)}:${player.birthDate}`
+    }
+    if (player?.playerId) return `playerId:${String(player.playerId)}`
+    return _getProspectIdentityKey(player)
+}
+
+function _getDisplayPlayerPriority(player) {
+    if (player?.type === 'prospect') return 2
+    if (player?.type === 'draft2026') return 1
+    return 0
+}
+
+function _dedupeDisplayPlayers(players) {
+    const deduped = new Map()
+
+    for (const player of players) {
+        const key = _getDisplayPlayerIdentityKey(player)
+        const existing = deduped.get(key)
+
+        if (!existing || _getDisplayPlayerPriority(player) > _getDisplayPlayerPriority(existing)) {
+            deduped.set(key, player)
+        }
+    }
+
+    return Array.from(deduped.values())
 }
 
 function _isDraftRankingOnlyProspect(player) {
@@ -725,6 +813,8 @@ function _dedupeProspects(players) {
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {#each sortedProspects as player, index (`${player.id}-${index}`)}
                                 {@const selectedSeason = _getSelectedSeasonEntry(player)}
+                                {@const headshotUrl = _getBestAvailableSeasonHeadshot(player)}
+                                {@const headshotSettings = _getProspectHeadshotSettings(player, selectedSeason?.league || player.league)}
                                 <div 
                                     class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md hover:border-blue-200 transition-all group p-4"
                                 >
@@ -733,10 +823,13 @@ function _dedupeProspects(players) {
                                             <div class="w-full h-full rounded-full border-2 border-slate-100 overflow-hidden bg-slate-50 relative z-10">
                                                 <PlayerHeadshot
                                                     playerId={_getBestFallbackPlayerId(player)}
-                                                    explicitUrl={_getBestAvailableSeasonHeadshot(player)}
+                                                    explicitUrl={headshotUrl}
                                                     teamAbbrev={player.nhlRights}
                                                     alt={player.name}
                                                     imageClass="w-full h-full object-cover object-top"
+                                                    zoom={headshotSettings.zoom}
+                                                    objectPosition={headshotSettings.objectPosition}
+                                                    autoFocusFace={false}
                                                     fallbackClass="w-full h-full flex items-center justify-center text-2xl font-bold text-slate-400"
                                                     initials={player.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                                     loading="lazy"
@@ -770,12 +863,6 @@ function _dedupeProspects(players) {
                                             <div class="space-y-1 text-xs text-slate-500">
                                                 <div class="truncate">{selectedSeason?.team || player.currentTeam}</div>
                                                 <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                                    {#if _hasKnownNhlRights(player)}
-                                                        <span>NHL-oikeudet: {_getDisplayNhlRights(player.nhlRights)}</span>
-                                                    {/if}
-                                                    {#if _hasKnownNhlRights(player) && player.birthDate}
-                                                        <span class="text-slate-300">•</span>
-                                                    {/if}
                                                     {#if player.birthDate}
                                                         <span>{new Date().getFullYear() - new Date(player.birthDate).getFullYear()} vuotta</span>
                                                     {/if}
@@ -784,16 +871,16 @@ function _dedupeProspects(players) {
                                         </div>
                                     </div>
 
-                                    {#if player.seasonEntries?.length > 1}
+                                    {#if _getSeasonSelectorEntries(player).length > 1}
                                         <div class="mb-3 flex flex-wrap gap-2">
-                                            {#each player.seasonEntries as entry, entryIndex}
+                                            {#each _getSeasonSelectorEntries(player) as { entry, index }}
                                                 <button
                                                     class={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
-                                                        _getSelectedSeasonIndex(player) === entryIndex
+                                                        _getSelectedSeasonIndex(player) === index
                                                             ? 'border-blue-200 bg-blue-50 text-blue-700'
                                                             : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
                                                     }`}
-                                                    onclick={() => _selectSeasonEntry(player, entryIndex)}
+                                                    onclick={() => _selectSeasonEntry(player, index)}
                                                     type="button"
                                                 >
                                                     {entry.league} {entry.gp || 0} GP
@@ -882,6 +969,8 @@ function _dedupeProspects(players) {
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {#each sortedGoalies as goalie, index (`${goalie.id}-${index}`)}
                                     {@const selectedSeason = _getSelectedSeasonEntry(goalie)}
+                                    {@const headshotUrl = _getBestAvailableSeasonHeadshot(goalie)}
+                                    {@const headshotSettings = _getProspectHeadshotSettings(goalie, selectedSeason?.league || goalie.league)}
                                     <div 
                                         class="bg-white rounded-xl shadow-sm border border-emerald-200 overflow-hidden hover:shadow-md hover:border-emerald-300 transition-all group p-4"
                                     >
@@ -890,10 +979,13 @@ function _dedupeProspects(players) {
                                                 <div class="w-full h-full rounded-full border-2 border-emerald-100 overflow-hidden bg-slate-50 relative z-10">
                                                     <PlayerHeadshot
                                                         playerId={_getBestFallbackPlayerId(goalie)}
-                                                        explicitUrl={_getBestAvailableSeasonHeadshot(goalie)}
+                                                        explicitUrl={headshotUrl}
                                                         teamAbbrev={goalie.nhlRights}
                                                         alt={goalie.name}
                                                         imageClass="w-full h-full object-cover object-top"
+                                                        zoom={headshotSettings.zoom}
+                                                        objectPosition={headshotSettings.objectPosition}
+                                                        autoFocusFace={false}
                                                         fallbackClass="w-full h-full flex items-center justify-center text-2xl font-bold text-slate-400"
                                                         initials={goalie.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                                                         loading="lazy"
@@ -927,12 +1019,6 @@ function _dedupeProspects(players) {
                                                 <div class="space-y-1 text-xs text-slate-500">
                                                     <div class="truncate">{selectedSeason?.team || goalie.currentTeam}</div>
                                                     <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                                        {#if _hasKnownNhlRights(goalie)}
-                                                            <span>NHL-oikeudet: {_getDisplayNhlRights(goalie.nhlRights)}</span>
-                                                        {/if}
-                                                        {#if _hasKnownNhlRights(goalie) && goalie.birthDate}
-                                                            <span class="text-slate-300">•</span>
-                                                        {/if}
                                                         {#if goalie.birthDate}
                                                             <span>{new Date().getFullYear() - new Date(goalie.birthDate).getFullYear()} vuotta</span>
                                                         {/if}
@@ -941,16 +1027,16 @@ function _dedupeProspects(players) {
                                             </div>
                                         </div>
 
-                                        {#if goalie.seasonEntries?.length > 1}
+                                        {#if _getSeasonSelectorEntries(goalie).length > 1}
                                             <div class="mb-3 flex flex-wrap gap-2">
-                                                {#each goalie.seasonEntries as entry, entryIndex}
+                                                {#each _getSeasonSelectorEntries(goalie) as { entry, index }}
                                                     <button
                                                         class={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
-                                                            _getSelectedSeasonIndex(goalie) === entryIndex
+                                                            _getSelectedSeasonIndex(goalie) === index
                                                                 ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
                                                                 : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
                                                         }`}
-                                                        onclick={() => _selectSeasonEntry(goalie, entryIndex)}
+                                                        onclick={() => _selectSeasonEntry(goalie, index)}
                                                         type="button"
                                                     >
                                                         {entry.league} {entry.gp || 0} GP

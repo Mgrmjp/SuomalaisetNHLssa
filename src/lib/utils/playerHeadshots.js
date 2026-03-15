@@ -11,6 +11,25 @@ export function sanitizeImageUrl(url) {
         return url
     }
 
+    // Mestis player media URLs often have an auto-generated transformed variant that
+    // looks softer in small circular crops. Prefer the original asset when possible.
+    if (/^https?:\/\/(?:www\.)?mestis\.fi\/media\/players\//i.test(url)) {
+        const transformationPattern = /\.\d+x\d+(?:_q\d+)?(?:_box-[\d%,]+)*\.(png|jpg|jpeg|webp|gif)$/i
+        const match = url.match(transformationPattern)
+        if (match && match.index !== undefined) {
+            const baseUrl = url.substring(0, match.index)
+            const extension = match[1].toLowerCase()
+            return `${baseUrl}.${extension}`
+        }
+        return url
+    }
+
+    // External CDN/media URLs often rely on transformation segments for a valid asset.
+    // Do not rewrite other fully-qualified remote URLs.
+    if (/^https?:\/\//i.test(url)) {
+        return url
+    }
+
     // Pattern matches URLs with transformation parameters like:
     // .600x750_q85_box-8%2C0%2C501%2C617.png
     // The pattern is: dot, dimensions (e.g., 600x750), optional _qXX quality,
