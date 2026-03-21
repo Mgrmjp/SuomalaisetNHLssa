@@ -5,14 +5,14 @@
       "gameId": 2025021099,
       "homeTeam": "PIT",
       "awayTeam": "WPG",
-      "homeScore": 0,
+      "homeScore": 2,
       "awayScore": 0,
-      "gameState": "PRE",
+      "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-03-21T17:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 1,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -169,6 +169,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-03-21T16:59:46.574255",
+  "generated_at": "2026-03-21T17:12:00.001422",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
