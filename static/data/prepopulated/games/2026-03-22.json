@@ -5,7 +5,7 @@
       "gameId": 2025021110,
       "homeTeam": "NYR",
       "awayTeam": "WPG",
-      "homeScore": 1,
+      "homeScore": 2,
       "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 2,
@@ -27,7 +27,7 @@
       "startTime": "2026-03-22T16:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     },
@@ -159,7 +159,7 @@
       "game_id": 2025021111,
       "game_date": "2026-03-22",
       "game_status": "OFF",
-      "created_at": "2026-03-22T17:28:52.627422",
+      "created_at": "2026-03-22T17:42:12.124071",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8481641.png",
       "goals": 0,
       "assists": 0,
@@ -168,7 +168,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "04:01",
+      "time_on_ice": "04:18",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -178,7 +178,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 6,
+      "shifts": 7,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -260,6 +260,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-03-22T17:29:06.937485",
+  "generated_at": "2026-03-22T17:42:26.915418",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
