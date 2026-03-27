@@ -29,8 +29,6 @@ const isLoading = $derived(loading || !hasData)
 
 // Error state
 const _hasError = $derived(error !== null)
-
-
 </script>
 
 <div class="conference-standings">

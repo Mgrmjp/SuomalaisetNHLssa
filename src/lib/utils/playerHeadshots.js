@@ -14,7 +14,8 @@ export function sanitizeImageUrl(url) {
     // Mestis player media URLs often have an auto-generated transformed variant that
     // looks softer in small circular crops. Prefer the original asset when possible.
     if (/^https?:\/\/(?:www\.)?mestis\.fi\/media\/players\//i.test(url)) {
-        const transformationPattern = /\.\d+x\d+(?:_q\d+)?(?:_box-[\d%,]+)*\.(png|jpg|jpeg|webp|gif)$/i
+        const transformationPattern =
+            /\.\d+x\d+(?:_q\d+)?(?:_box-[\d%,]+)*\.(png|jpg|jpeg|webp|gif)$/i
         const match = url.match(transformationPattern)
         if (match && match.index !== undefined) {
             const baseUrl = url.substring(0, match.index)

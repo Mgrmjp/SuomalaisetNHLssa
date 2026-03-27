@@ -3,12 +3,12 @@ import { onMount } from 'svelte'
 // Swiper - only import core, handle CSS in scoped styles
 import Swiper from 'swiper'
 import { FreeMode, Mousewheel } from 'swiper/modules'
-import { setDate, players, isLoading, error, displayDate } from '$lib/stores/gameData.js'
-import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
-import PlayerCard from './PlayerCard.svelte'
+import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import MobileAdBanner from '$lib/components/ui/MobileAdBanner.svelte'
-import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
+import { displayDate, error, isLoading, players, setDate } from '$lib/stores/gameData.js'
+import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
+import PlayerCard from './PlayerCard.svelte'
 
 let forwardsSwiper = null
 let defendersSwiper = null
@@ -141,7 +141,12 @@ function goalieHasPlayed(player) {
 function getValidPlayers(players) {
     if (!Array.isArray(players)) return []
     return players.filter((player) => {
-        return player && typeof player === 'object' && player.playerId != null && player.game_id != null
+        return (
+            player &&
+            typeof player === 'object' &&
+            player.playerId != null &&
+            player.game_id != null
+        )
     })
 }
 
@@ -153,12 +158,14 @@ function getValidPlayers(players) {
  * @param {Object[]} players - Array of player objects
  * @returns {Object[]} Filtered array of players
  */
-const filteredPlayers = $derived(getValidPlayers($players || []).filter((player) => {
-    if (isGoalie(player)) {
-        return goalieHasPlayed(player)
-    }
-    return hasPoints(player)
-}))
+const filteredPlayers = $derived(
+    getValidPlayers($players || []).filter((player) => {
+        if (isGoalie(player)) {
+            return goalieHasPlayed(player)
+        }
+        return hasPoints(player)
+    })
+)
 
 /**
  * Sort skaters by points (primary), then goals, plus/minus, and assists
@@ -193,8 +200,12 @@ const sortGoalies = (list) =>
         return bPct - aPct
     })
 
-const forwards = $derived(sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p))))
-const defenders = $derived(sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p))))
+const forwards = $derived(
+    sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)))
+)
+const defenders = $derived(
+    sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)))
+)
 const goalies = $derived(sortGoalies(filteredPlayers.filter((p) => isGoalie(p))))
 
 const hasAnyPlayers = $derived(forwards.length + defenders.length + goalies.length > 0)

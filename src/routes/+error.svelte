@@ -1,7 +1,7 @@
 <script>
 import { onMount } from 'svelte'
-import { page } from '$app/stores'
 import { base } from '$app/paths'
+import { page } from '$app/stores'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
 
 const status = page.status || 404

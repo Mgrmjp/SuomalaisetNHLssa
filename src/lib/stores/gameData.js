@@ -482,7 +482,9 @@ export async function loadProspects() {
         if (rankingsRes.ok) {
             const rankings = await rankingsRes.json()
             draftRankingsStore.set(rankings)
-            logger.debug(`Loaded draft rankings for ${rankings.year} with ${rankings.sources?.length || 0} sources`)
+            logger.debug(
+                `Loaded draft rankings for ${rankings.year} with ${rankings.sources?.length || 0} sources`
+            )
         }
     } catch (error) {
         logger.error('Failed to load prospects data:', error)
@@ -506,12 +508,17 @@ export function setView(view) {
  * @param {string} seasonStart - Season start date (YYYY-MM-DD)
  * @returns {Promise<object>} Standings data
  */
-export async function loadStandings(seasonStart = earliestPrepopulatedDate) {
+export async function loadStandings(seasonStart) {
+    const effectiveSeasonStart =
+        !seasonStart || typeof seasonStart !== 'string'
+            ? get(earliestPrepopulatedDate)
+            : seasonStart
+
     standingsLoadingStore.set(true)
 
     try {
-        logger.debug('📊 Starting standings calculation from', seasonStart)
-        const standingsData = await standingsService.calculateSeasonStandings(seasonStart)
+        logger.debug('📊 Starting standings calculation from', effectiveSeasonStart)
+        const standingsData = await standingsService.calculateSeasonStandings(effectiveSeasonStart)
         logger.debug('📊 Standings calculation result:', standingsData)
         logger.debug('📊 Eastern conference keys:', Object.keys(standingsData?.eastern || {}))
         logger.debug('📊 Western conference keys:', Object.keys(standingsData?.western || {}))
@@ -532,7 +539,7 @@ export async function loadStandings(seasonStart = earliestPrepopulatedDate) {
  * @param {string} seasonStart - Season start date
  * @returns {Promise<object>} Updated standings data
  */
-export async function refreshStandings(seasonStart = earliestPrepopulatedDate) {
+export async function refreshStandings(seasonStart) {
     standingsService.clearCache()
     return await loadStandings(seasonStart)
 }

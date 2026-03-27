@@ -1,10 +1,10 @@
 <script>
 import { onMount } from 'svelte'
+import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import teamMapping from '$lib/utils/teamMapping.js'
-import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
-import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 
 // State
 let _players = []

@@ -1,9 +1,9 @@
 <script>
 import { base } from '$app/paths'
-import { resetToDefault } from '$lib/stores/gameData.js'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
-import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import StandingsView from '$lib/components/standings/StandingsView.svelte'
+import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import { resetToDefault } from '$lib/stores/gameData.js'
 </script>
 
 <svelte:head>

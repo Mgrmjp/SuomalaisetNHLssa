@@ -1,13 +1,17 @@
 <script>
 import { onMount } from 'svelte'
 import { base } from '$app/paths'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { games } from '$lib/stores/gameData.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
-import { formatGameScore, formatGameVenue, formatGameMatchup } from '$lib/utils/gameFormatHelpers.mjs'
+import {
+    formatGameMatchup,
+    formatGameScore,
+    formatGameVenue,
+} from '$lib/utils/gameFormatHelpers.mjs'
 import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
-import { getTeamColorVariables } from '$lib/utils/teamColors.js'
 import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/playerHeadshots.js'
-import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import { getTeamColorVariables } from '$lib/utils/teamColors.js'
 import './PlayerCard.css'
 
 const { player } = $props()
@@ -80,7 +84,7 @@ let _photoLoading = $state(true)
 
 let showSeasonStats = $state(false)
 let showComprehensiveDetails = $state(false)
-const _isLogoHovered = $state(false)
+let _isLogoHovered = $state(false)
 let isFlipped = $state(false)
 
 // Convert hex to rgba with opacity for subtle borders

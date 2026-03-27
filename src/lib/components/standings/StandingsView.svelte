@@ -30,8 +30,6 @@ const hasEasternData = $derived(Object.keys(easternConference).length > 0)
 const hasWesternData = $derived(Object.keys(westernConference).length > 0)
 const hasAnyData = $derived(hasEasternData || hasWesternData)
 
-
-
 // Load standings on component mount
 onMount(async () => {
     try {

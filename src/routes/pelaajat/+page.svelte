@@ -1,8 +1,8 @@
 <script>
-import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { base } from '$app/paths'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
 /** @type {{ data: { skaters: any[], goalies: any[], seasonId: string, error: string | null, updatedAt: string } }} */
 const { data } = $props()
@@ -12,18 +12,22 @@ const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)
 
 let searchTerm = $state('')
 
-const allPlayers = $derived([...skaters, ...goalies].sort((a, b) => {
-    const nameA = a.skaterFullName || a.goalieFullName
-    const nameB = b.skaterFullName || b.goalieFullName
-    return nameA.localeCompare(nameB)
-}))
+const allPlayers = $derived(
+    [...skaters, ...goalies].sort((a, b) => {
+        const nameA = a.skaterFullName || a.goalieFullName
+        const nameB = b.skaterFullName || b.goalieFullName
+        return nameA.localeCompare(nameB)
+    })
+)
 
-const filteredPlayers = $derived(allPlayers.filter((player) => {
-    const name = correctFullName(player.skaterFullName || player.goalieFullName)
-    const team = player.teamAbbrevs
-    const search = searchTerm.toLowerCase()
-    return name.toLowerCase().includes(search) || team.toLowerCase().includes(search)
-}))
+const filteredPlayers = $derived(
+    allPlayers.filter((player) => {
+        const name = correctFullName(player.skaterFullName || player.goalieFullName)
+        const team = player.teamAbbrevs
+        const search = searchTerm.toLowerCase()
+        return name.toLowerCase().includes(search) || team.toLowerCase().includes(search)
+    })
+)
 
 function getPlayerName(player) {
     return correctFullName(player.skaterFullName || player.goalieFullName)

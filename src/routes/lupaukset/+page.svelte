@@ -1,13 +1,12 @@
 <script>
 import { onMount } from 'svelte'
 import { fade } from 'svelte/transition'
-import { loadProspects, prospects, draftRankings, prospectsLoading } from '$lib/stores/gameData'
 import { base } from '$app/paths'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import { draftRankings, loadProspects, prospects, prospectsLoading } from '$lib/stores/gameData'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { normalizeTeamAbbreviation } from '$lib/utils/teamMapping.js'
-
 
 // Filter state
 let activeFilter = $state('all') // 'all' | 'prospects' | 'draft2026'
@@ -18,9 +17,12 @@ let sortDirection = $state('desc')
 
 // Draft ranking source selection
 let selectedRankingSlug = $state('nhl-central')
-const selectedRankingSource = $derived($draftRankings.sources?.find(s => s.slug === selectedRankingSlug) || $draftRankings.sources?.[0])
+const selectedRankingSource = $derived(
+    $draftRankings.sources?.find((s) => s.slug === selectedRankingSlug) ||
+        $draftRankings.sources?.[0]
+)
 let _officialSeasonStatsByName = $state(new Map())
-let _epSeasonStatsByName = $state(new Map())
+const _epSeasonStatsByName = $state(new Map())
 let _nhlSeasonStatsById = $state(new Map())
 let _selectedSeasonIndexByPlayer = $state({})
 
@@ -45,7 +47,7 @@ async function _loadDraftSeasonStats() {
         const [officialResponse, skatersResponse, goaliesResponse] = await Promise.all([
             fetch(`${base}/data/leagues/league_prospects_official.json`),
             fetch(`${base}/data/player-stats/skaters-20252026.json`),
-            fetch(`${base}/data/player-stats/goalies-20252026.json`)
+            fetch(`${base}/data/player-stats/goalies-20252026.json`),
         ])
 
         const officialLookup = new Map()
@@ -65,7 +67,6 @@ async function _loadDraftSeasonStats() {
                 appendEntry(officialLookup, _normalizeName(player.name), player)
             }
         }
-
 
         if (skatersResponse.ok) {
             const skaters = await skatersResponse.json()
@@ -123,7 +124,13 @@ function _normalizeSeasonEntry(entry) {
         savePct: Number(entry.savePct ?? entry.save_percentage) || 0,
         gaa: Number(entry.gaa ?? entry.goals_against_average) || 0,
         shutouts: Number(entry.shutouts) || 0,
-        headshotUrl: entry.headshotUrl || entry.headshot_url || entry.headshot || entry.photo_url || entry.photoUrl || null,
+        headshotUrl:
+            entry.headshotUrl ||
+            entry.headshot_url ||
+            entry.headshot ||
+            entry.photo_url ||
+            entry.photoUrl ||
+            null,
         headshotCrop: entry.headshotCrop || entry.headshot_crop || null,
     }
 }
@@ -165,8 +172,12 @@ function _mergeSeasonEntries(officialEntries, epEntries) {
                 ...entry,
                 team: existing.team || entry.team,
                 league: existing.league || entry.league,
-                headshotUrl: isOfficial ? (entry.headshotUrl || existing.headshotUrl) : (existing.headshotUrl || entry.headshotUrl),
-                headshotCrop: isOfficial ? (entry.headshotCrop || existing.headshotCrop) : (existing.headshotCrop || entry.headshotCrop),
+                headshotUrl: isOfficial
+                    ? entry.headshotUrl || existing.headshotUrl
+                    : existing.headshotUrl || entry.headshotUrl,
+                headshotCrop: isOfficial
+                    ? entry.headshotCrop || existing.headshotCrop
+                    : existing.headshotCrop || entry.headshotCrop,
                 gp: existing.gp || entry.gp,
                 goals: existing.goals || entry.goals,
                 assists: existing.assists || entry.assists,
@@ -193,7 +204,9 @@ function _sortSeasonEntries(entries) {
 }
 
 function _buildSeasonData(player, fallbackStats = null) {
-    const normalizedName = _normalizeName(player.name || `${player.firstName || ''} ${player.lastName || ''}`)
+    const normalizedName = _normalizeName(
+        player.name || `${player.firstName || ''} ${player.lastName || ''}`
+    )
     const officialEntries = _officialSeasonStatsByName.get(normalizedName) || []
     const epEntries = _epSeasonStatsByName.get(normalizedName) || []
     const seasonEntries = _mergeSeasonEntries(officialEntries, epEntries)
@@ -204,15 +217,17 @@ function _buildSeasonData(player, fallbackStats = null) {
         seasonEntries.push(_normalizeSeasonEntry(nhlEntry))
     }
 
-    const fallbackEntry = fallbackStats ? _normalizeSeasonEntry({
-        ...fallbackStats,
-        league: player?.league,
-        team: player?.currentTeam || player?.team || '',
-    }) : null
+    const fallbackEntry = fallbackStats
+        ? _normalizeSeasonEntry({
+              ...fallbackStats,
+              league: player?.league,
+              team: player?.currentTeam || player?.team || '',
+          })
+        : null
 
     if (fallbackEntry) {
-        const hasMatch = seasonEntries.some((entry) =>
-            _getSeasonEntryKey(entry) === _getSeasonEntryKey(fallbackEntry)
+        const hasMatch = seasonEntries.some(
+            (entry) => _getSeasonEntryKey(entry) === _getSeasonEntryKey(fallbackEntry)
         )
         if (!hasMatch) {
             seasonEntries.push(fallbackEntry)
@@ -220,18 +235,19 @@ function _buildSeasonData(player, fallbackStats = null) {
     }
 
     const sortedEntries = _sortSeasonEntries(seasonEntries.filter(Boolean))
-    const primaryEntry = sortedEntries[0] || _normalizeSeasonEntry(fallbackStats) || {
-        league: player?.league || '',
-        team: player?.currentTeam || player?.team || '',
-        gp: 0,
-        goals: 0,
-        assists: 0,
-        points: 0,
-        savePct: 0,
-        gaa: 0,
-        shutouts: 0,
-        headshotUrl: null,
-    }
+    const primaryEntry = sortedEntries[0] ||
+        _normalizeSeasonEntry(fallbackStats) || {
+            league: player?.league || '',
+            team: player?.currentTeam || player?.team || '',
+            gp: 0,
+            goals: 0,
+            assists: 0,
+            points: 0,
+            savePct: 0,
+            gaa: 0,
+            shutouts: 0,
+            headshotUrl: null,
+        }
 
     return {
         entries: sortedEntries,
@@ -253,8 +269,8 @@ let _nhlRegularIds = $state(new Set())
 $effect(() => {
     if ($prospects.length > 0) {
         fetch(`${base}/data/player-stats/skaters-20252026.json`)
-            .then(r => r.ok ? r.json() : [])
-            .then(skaters => {
+            .then((r) => (r.ok ? r.json() : []))
+            .then((skaters) => {
                 const regulars = new Set()
                 for (const s of skaters) {
                     if (s.gamesPlayed >= NHL_REGULAR_GP_THRESHOLD) {
@@ -263,10 +279,11 @@ $effect(() => {
                 }
                 // Also check goalies (lower threshold)
                 return fetch(`${base}/data/player-stats/goalies-20252026.json`)
-                    .then(r => r.ok ? r.json() : [])
-                    .then(goalies => {
+                    .then((r) => (r.ok ? r.json() : []))
+                    .then((goalies) => {
                         for (const g of goalies) {
-                            if (g.gamesPlayed >= 10) { // Goalies: 10+ games = regular
+                            if (g.gamesPlayed >= 10) {
+                                // Goalies: 10+ games = regular
                                 regulars.add(g.playerId)
                             }
                         }
@@ -279,60 +296,70 @@ $effect(() => {
     }
 })
 
-const activeProspects = $derived(_dedupeProspects($prospects).filter(p => {
-    if (_isDraftRankingOnlyProspect(p)) {
-        return false
-    }
+const activeProspects = $derived(
+    _dedupeProspects($prospects).filter((p) => {
+        if (_isDraftRankingOnlyProspect(p)) {
+            return false
+        }
 
-    // Check age
-    let age = null
-    if (p.birthDate) {
-        age = new Date().getFullYear() - new Date(p.birthDate).getFullYear()
-    }
-    const ageOk = age === null || age < ACTIVE_AGE_CUTOFF
-    
-    // Skip if NHL regular (established player, not a prospect)
-    const playerId = parseInt(p.id, 10)
-    if (_nhlRegularIds.has(playerId)) {
-        return false
-    }
-    
-    return ageOk
-}))
+        // Check age
+        let age = null
+        if (p.birthDate) {
+            age = new Date().getFullYear() - new Date(p.birthDate).getFullYear()
+        }
+        const ageOk = age === null || age < ACTIVE_AGE_CUTOFF
+
+        // Skip if NHL regular (established player, not a prospect)
+        const playerId = parseInt(p.id, 10)
+        if (_nhlRegularIds.has(playerId)) {
+            return false
+        }
+
+        return ageOk
+    })
+)
 
 // Derived prospects
 // Combine all prospects: drafted prospects + draft rankings
 const allPlayers = $derived(() => {
     const players = []
-    
+
     // Add drafted prospects with stats
     for (const p of activeProspects) {
-            const seasonData = _buildSeasonData(p, p.stats)
-            const primarySeason = seasonData.primaryEntry
-            players.push({
-                ...p,
-                playerId: p.id || null,
-                name: correctFullName(p.name),
-                currentTeam: primarySeason.team || p.currentTeam,
-                league: primarySeason.league || p.league,
-                stats: primarySeason,
-                seasonEntries: seasonData.entries,
-                headshotCrop: p.headshotCrop || p.headshot_crop || null,
-                displayHeadshot: _getPreferredProspectHeadshot({ ...p, league: primarySeason.league }, primarySeason),
-                displayHeadshotCrop: primarySeason.headshotCrop || p.headshotCrop || p.headshot_crop || null,
-                photoFallbackPlayerId: _getPhotoFallbackPlayerId(primarySeason.league, p.id || null, _getPreferredProspectHeadshot({ ...p, league: primarySeason.league }, primarySeason)),
-                type: 'prospect',
-                sortKey: primarySeason.points || 0
-            })
+        const seasonData = _buildSeasonData(p, p.stats)
+        const primarySeason = seasonData.primaryEntry
+        players.push({
+            ...p,
+            playerId: p.id || null,
+            name: correctFullName(p.name),
+            currentTeam: primarySeason.team || p.currentTeam,
+            league: primarySeason.league || p.league,
+            stats: primarySeason,
+            seasonEntries: seasonData.entries,
+            headshotCrop: p.headshotCrop || p.headshot_crop || null,
+            displayHeadshot: _getPreferredProspectHeadshot(
+                { ...p, league: primarySeason.league },
+                primarySeason
+            ),
+            displayHeadshotCrop:
+                primarySeason.headshotCrop || p.headshotCrop || p.headshot_crop || null,
+            photoFallbackPlayerId: _getPhotoFallbackPlayerId(
+                primarySeason.league,
+                p.id || null,
+                _getPreferredProspectHeadshot({ ...p, league: primarySeason.league }, primarySeason)
+            ),
+            type: 'prospect',
+            sortKey: primarySeason.points || 0,
+        })
     }
-    
+
     // Add 2026 draft rankings from selected source
     if (selectedRankingSource) {
         let draftPlayers = []
         if (selectedRankingSource.slug === 'nhl-central') {
             draftPlayers = [
                 ...(selectedRankingSource.categories?.north_american || []),
-                ...(selectedRankingSource.categories?.international || [])
+                ...(selectedRankingSource.categories?.international || []),
             ]
         } else {
             draftPlayers = selectedRankingSource.players || []
@@ -340,13 +367,22 @@ const allPlayers = $derived(() => {
 
         for (const p of draftPlayers) {
             const firstName = p.firstName || p.name?.split(' ')[0] || ''
-            const lastName = p.lastName || (p.name?.includes(' ') ? p.name.split(' ').slice(1).join(' ') : p.name) || ''
+            const lastName =
+                p.lastName ||
+                (p.name?.includes(' ') ? p.name.split(' ').slice(1).join(' ') : p.name) ||
+                ''
             const rank = p.midtermRank || p.rank
             const draftName = p.name || `${firstName} ${lastName}`
-            const draftLeague = p.lastAmateurLeague?.replace('FINLAND-', '')?.replace('H-EAST', 'NCAA') || p.league?.replace('FINLAND-', '') || 'Jr'
-            const seasonData = _buildSeasonData({ ...p, name: draftName, playerId: p.playerId || null }, null)
+            const draftLeague =
+                p.lastAmateurLeague?.replace('FINLAND-', '')?.replace('H-EAST', 'NCAA') ||
+                p.league?.replace('FINLAND-', '') ||
+                'Jr'
+            const seasonData = _buildSeasonData(
+                { ...p, name: draftName, playerId: p.playerId || null },
+                null
+            )
             const primarySeason = seasonData.primaryEntry
-            
+
             players.push({
                 id: `draft2026-${selectedRankingSource.slug}-${rank}`,
                 name: correctFullName(draftName),
@@ -357,77 +393,104 @@ const allPlayers = $derived(() => {
                 league: primarySeason.league || draftLeague,
                 currentTeam: primarySeason.team || p.lastAmateurClub || p.team,
                 draftRank: rank,
-                height: p.heightInInches ? Math.round(p.heightInInches * 2.54) : (typeof p.height === 'number' ? p.height : null),
-                weight: p.weightInPounds ? Math.round(p.weightInPounds * 0.453592) : (typeof p.weight === 'number' ? p.weight : null),
+                height: p.heightInInches
+                    ? Math.round(p.heightInInches * 2.54)
+                    : typeof p.height === 'number'
+                      ? p.height
+                      : null,
+                weight: p.weightInPounds
+                    ? Math.round(p.weightInPounds * 0.453592)
+                    : typeof p.weight === 'number'
+                      ? p.weight
+                      : null,
                 playerId: p.playerId || null,
-                headshot: p.playerId ? `https://assets.nhle.com/mugs/nhl/20262027/2026/${p.playerId}.png` : `https://assets.nhle.com/mugs/nhl/20262027/2026/${rank}.png`,
+                headshot: p.playerId
+                    ? `https://assets.nhle.com/mugs/nhl/20262027/2026/${p.playerId}.png`
+                    : `https://assets.nhle.com/mugs/nhl/20262027/2026/${rank}.png`,
                 seasonEntries: seasonData.entries,
                 headshotCrop: p.headshotCrop || p.headshot_crop || null,
-                displayHeadshot: _getPreferredDraftHeadshot(primarySeason.league || draftLeague, p.playerId || null, primarySeason),
-                displayHeadshotCrop: primarySeason.headshotCrop || p.headshotCrop || p.headshot_crop || null,
-                photoFallbackPlayerId: _getPhotoFallbackPlayerId(primarySeason.league || draftLeague, p.playerId || null, _getPreferredDraftHeadshot(primarySeason.league || draftLeague, p.playerId || null, primarySeason)),
+                displayHeadshot: _getPreferredDraftHeadshot(
+                    primarySeason.league || draftLeague,
+                    p.playerId || null,
+                    primarySeason
+                ),
+                displayHeadshotCrop:
+                    primarySeason.headshotCrop || p.headshotCrop || p.headshot_crop || null,
+                photoFallbackPlayerId: _getPhotoFallbackPlayerId(
+                    primarySeason.league || draftLeague,
+                    p.playerId || null,
+                    _getPreferredDraftHeadshot(
+                        primarySeason.league || draftLeague,
+                        p.playerId || null,
+                        primarySeason
+                    )
+                ),
                 stats: primarySeason,
                 type: 'draft2026',
-                sortKey: primarySeason.points || 0
+                sortKey: primarySeason.points || 0,
             })
         }
     }
-    
+
     return _dedupeDisplayPlayers(players)
 })
 
 // Filter players
 const filteredPlayers = $derived(() => {
     const all = allPlayers()
-    if (activeFilter === 'prospects') return all.filter(p => p.type === 'prospect')
-    if (activeFilter === 'draft2026') return all.filter(p => p.type === 'draft2026')
+    if (activeFilter === 'prospects') return all.filter((p) => p.type === 'prospect')
+    if (activeFilter === 'draft2026') return all.filter((p) => p.type === 'draft2026')
     return all
 })
 
 // Separate goalies and skaters
-const goalies = $derived(filteredPlayers().filter(p => p.position === 'G'))
-const skaters = $derived(filteredPlayers().filter(p => p.position !== 'G'))
+const goalies = $derived(filteredPlayers().filter((p) => p.position === 'G'))
+const skaters = $derived(filteredPlayers().filter((p) => p.position !== 'G'))
 
 // Sort options for goalies
 let goalieSortBy = $state('savePct') // 'savePct', 'gaa', 'gp'
 let goalieSortDirection = $state('desc')
 
 // Sorted skaters (existing sort logic)
-const sortedProspects = $derived([...skaters].sort((a, b) => {
-    if (sortBy === 'league') {
-        return sortDirection === 'asc'
-            ? a.league.localeCompare(b.league)
-            : b.league.localeCompare(a.league)
-    }
-    if (sortBy === 'age') {
-        if (sortDirection === 'asc') {
-            return b.birthDate.localeCompare(a.birthDate)
+const sortedProspects = $derived(
+    [...skaters].sort((a, b) => {
+        if (sortBy === 'league') {
+            return sortDirection === 'asc'
+                ? a.league.localeCompare(b.league)
+                : b.league.localeCompare(a.league)
         }
-        return a.birthDate.localeCompare(b.birthDate)
-    }
+        if (sortBy === 'age') {
+            if (sortDirection === 'asc') {
+                return b.birthDate.localeCompare(a.birthDate)
+            }
+            return a.birthDate.localeCompare(b.birthDate)
+        }
 
-    const valA = a.stats?.[sortBy] || 0
-    const valB = b.stats?.[sortBy] || 0
-    return sortDirection === 'asc' ? valA - valB : valB - valA
-}))
+        const valA = a.stats?.[sortBy] || 0
+        const valB = b.stats?.[sortBy] || 0
+        return sortDirection === 'asc' ? valA - valB : valB - valA
+    })
+)
 
 // Sorted goalies (goalie-specific sort logic)
-const sortedGoalies = $derived([...goalies].sort((a, b) => {
-    if (goalieSortBy === 'savePct') {
-        const valA = a.stats?.savePct || 0
-        const valB = b.stats?.savePct || 0
+const sortedGoalies = $derived(
+    [...goalies].sort((a, b) => {
+        if (goalieSortBy === 'savePct') {
+            const valA = a.stats?.savePct || 0
+            const valB = b.stats?.savePct || 0
+            return goalieSortDirection === 'asc' ? valA - valB : valB - valA
+        }
+        if (goalieSortBy === 'gaa') {
+            // GAA: lower is better, so reverse the sort
+            const valA = a.stats?.gaa || 99
+            const valB = b.stats?.gaa || 99
+            return goalieSortDirection === 'asc' ? valA - valB : valB - valA
+        }
+        const valA = a.stats?.[goalieSortBy] || 0
+        const valB = b.stats?.[goalieSortBy] || 0
         return goalieSortDirection === 'asc' ? valA - valB : valB - valA
-    }
-    if (goalieSortBy === 'gaa') {
-        // GAA: lower is better, so reverse the sort
-        const valA = a.stats?.gaa || 99
-        const valB = b.stats?.gaa || 99
-        return goalieSortDirection === 'asc' ? valA - valB : valB - valA
-    }
-    const valA = a.stats?.[goalieSortBy] || 0
-    const valB = b.stats?.[goalieSortBy] || 0
-    return goalieSortDirection === 'asc' ? valA - valB : valB - valA
-}))
+    })
+)
 
 function _setSort(field) {
     if (sortBy === field) {
@@ -486,7 +549,8 @@ function _getProspectHeadshotPosition(league) {
 
 function _getProspectHeadshotSettings(player, league) {
     const selectedSeason = _getSelectedSeasonEntry(player)
-    const crop = selectedSeason?.headshotCrop || player?.headshotCrop || player?.displayHeadshotCrop || null
+    const crop =
+        selectedSeason?.headshotCrop || player?.headshotCrop || player?.displayHeadshotCrop || null
     return {
         zoom: crop?.zoom || _getProspectHeadshotZoom(league),
         objectPosition: crop?.objectPosition || _getProspectHeadshotPosition(league),
@@ -506,7 +570,11 @@ function _getPreferredProspectHeadshot(player, seasonStats = null) {
         return playerHeadshot
     }
 
-    if (_isNhlMugshotUrl(playerHeadshot) && _shouldUseNhlMugshot(player?.league) && _hasKnownNhlRights(player)) {
+    if (
+        _isNhlMugshotUrl(playerHeadshot) &&
+        _shouldUseNhlMugshot(player?.league) &&
+        _hasKnownNhlRights(player)
+    ) {
         return playerHeadshot
     }
 
@@ -562,14 +630,17 @@ function _getBestAvailableSeasonHeadshot(player) {
     const selectedLeague = _normalizeLeagueForPhoto(selectedSeason?.league || player?.league)
 
     if (!_shouldUseNhlMugshot(selectedLeague)) {
-        const preferredLeagueEntry = entries.find((entry) =>
-            entry?.headshotUrl &&
-            _normalizeLeagueForPhoto(entry?.league) === selectedLeague &&
-            !_isNhlMugshotUrl(entry.headshotUrl)
+        const preferredLeagueEntry = entries.find(
+            (entry) =>
+                entry?.headshotUrl &&
+                _normalizeLeagueForPhoto(entry?.league) === selectedLeague &&
+                !_isNhlMugshotUrl(entry.headshotUrl)
         )
         if (preferredLeagueEntry?.headshotUrl) return preferredLeagueEntry.headshotUrl
 
-        const anyNonNhlEntry = entries.find((entry) => entry?.headshotUrl && !_isNhlMugshotUrl(entry.headshotUrl))
+        const anyNonNhlEntry = entries.find(
+            (entry) => entry?.headshotUrl && !_isNhlMugshotUrl(entry.headshotUrl)
+        )
         if (anyNonNhlEntry?.headshotUrl) return anyNonNhlEntry.headshotUrl
     }
 
@@ -577,7 +648,11 @@ function _getBestAvailableSeasonHeadshot(player) {
         if (entry?.headshotUrl) return entry.headshotUrl
     }
 
-    if (!_shouldUseNhlMugshot(selectedLeague) && player?.displayHeadshot && !_isNhlMugshotUrl(player.displayHeadshot)) {
+    if (
+        !_shouldUseNhlMugshot(selectedLeague) &&
+        player?.displayHeadshot &&
+        !_isNhlMugshotUrl(player.displayHeadshot)
+    ) {
         return player.displayHeadshot
     }
 
@@ -593,12 +668,12 @@ function _getBestFallbackPlayerId(player) {
     if (_shouldUseNhlMugshot(selectedLeague) && _hasKnownNhlRights(player)) return playerId
 
     const explicitUrl = _getBestAvailableSeasonHeadshot(player) || ''
-    
+
     // Return playerId if there's an explicit NHL headshot URL (handles Mestis and other leagues)
     if (typeof explicitUrl === 'string' && explicitUrl.includes('assets.nhle.com/mugs/')) {
         return playerId
     }
-    
+
     if (typeof explicitUrl === 'string' && explicitUrl.includes('www.shl.se/imageproxy/')) {
         return playerId
     }

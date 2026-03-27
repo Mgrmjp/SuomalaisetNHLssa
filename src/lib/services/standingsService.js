@@ -61,7 +61,7 @@ export class StandingsService {
         const effectiveSeasonStart =
             prepopulatedDates.find((d) => d >= seasonStart) || EARLIEST_PREPOP_DATE
 
-        const cacheKey = `standings_${seasonStart}`
+        const cacheKey = `standings_${effectiveSeasonStart}`
         const cached = this.cache.get(cacheKey)
 
         if (cached && Date.now() - cached.timestamp < this.cacheTimeout) {
@@ -108,8 +108,6 @@ export class StandingsService {
                     this.processGame(game, standings)
                 }
             }
-
-
 
             // Calculate final rankings
             updateRankings(standings)
@@ -297,7 +295,7 @@ export class StandingsService {
 
         if (homeScore > awayScore) {
             // Home team wins
-            this.applyWin(homeTeamStats, homeTeamStats.home)
+            this.applyWin(homeTeamStats, homeTeamStats.home, isOT)
             if (isOT) {
                 this.applyOTLoss(awayTeamStats, awayTeamStats.away)
                 this.updateStreak(homeTeamStats, 'W')
@@ -313,7 +311,7 @@ export class StandingsService {
             }
         } else if (awayScore > homeScore) {
             // Away team wins
-            this.applyWin(awayTeamStats, awayTeamStats.away)
+            this.applyWin(awayTeamStats, awayTeamStats.away, isOT)
             if (isOT) {
                 this.applyOTLoss(homeTeamStats, homeTeamStats.home)
                 this.updateStreak(awayTeamStats, 'W')
@@ -343,11 +341,13 @@ export class StandingsService {
      * @param {object} teamStats - Team stats to update
      * @param {object} locationStats - Home or away stats to update
      */
-    applyWin(teamStats, locationStats) {
+    applyWin(teamStats, locationStats, isOT = false) {
         teamStats.wins++
         locationStats.wins++
         teamStats.points += 2
-        teamStats.regulationWins++
+        if (!isOT) {
+            teamStats.regulationWins++
+        }
         teamStats.regulationPlusOTWins++
     }
 

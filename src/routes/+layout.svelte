@@ -1,12 +1,12 @@
 <script>
 import '../app.css'
-import { page } from '$app/stores'
 import { base } from '$app/paths'
+import { page } from '$app/stores'
+import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import VerticalAd from '$lib/components/ui/VerticalAd.svelte'
 import VerticalAdLeft from '$lib/components/ui/VerticalAdLeft.svelte'
-import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 
-let { children } = $props()
+const { children } = $props()
 
 const _siteUrl = 'https://suomalaisetnhlssa.fi'
 const _siteName = 'Suomalaiset NHL:ssä'

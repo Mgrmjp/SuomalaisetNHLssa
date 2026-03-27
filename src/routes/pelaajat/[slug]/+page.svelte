@@ -1,8 +1,8 @@
 <script>
-import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { base } from '$app/paths'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
 /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
 const { data } = $props()

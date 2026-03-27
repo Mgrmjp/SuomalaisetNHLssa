@@ -59,7 +59,6 @@
 }
 
 @media (min-width: 768px) {
-
     .player-card__container,
     .player-card,
     .player-card__inner,
@@ -250,7 +249,7 @@
     min-height: 0;
 }
 
-.player-card__face .relative>* {
+.player-card__face .relative > * {
     flex-shrink: 0;
 }
 

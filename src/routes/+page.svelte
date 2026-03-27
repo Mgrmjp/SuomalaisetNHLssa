@@ -2,14 +2,23 @@
 import { onMount } from 'svelte'
 import { get } from 'svelte/store'
 import { base } from '$app/paths'
-import { latestPrepopulatedDate, setDate, yesterdayDate, players, games, selectedDate, currentBreak, resetToDefault } from '$lib/stores/gameData.js'
-import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import DateControls from '$lib/components/game/DateControls.svelte'
-import AdBanner from '$lib/components/ui/AdBanner.svelte'
-import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
+import AdBanner from '$lib/components/ui/AdBanner.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
+import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import {
+    currentBreak,
+    games,
+    latestPrepopulatedDate,
+    players,
+    resetToDefault,
+    selectedDate,
+    setDate,
+    yesterdayDate,
+} from '$lib/stores/gameData.js'
+import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 
 const _sparkles = Array.from({ length: 12 }, () => ({
     left: `${Math.random() * 100}%`,

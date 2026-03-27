@@ -1,10 +1,10 @@
 <script>
-import { base } from '$app/paths'
 import { fade } from 'svelte/transition'
-import { resetToDefault } from '$lib/stores/gameData.js'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import { base } from '$app/paths'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import { resetToDefault } from '$lib/stores/gameData.js'
 
 /** @type {import('./$types').PageData} */
 export let data

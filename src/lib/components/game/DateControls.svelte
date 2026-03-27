@@ -1,5 +1,12 @@
 <script>
-import { setDate, showCalendarView, selectedDate, availableDates, currentDateReadOnly, latestPrepopulatedDate } from '$lib/stores/gameData.js'
+import {
+    availableDates,
+    currentDateReadOnly,
+    latestPrepopulatedDate,
+    selectedDate,
+    setDate,
+    showCalendarView,
+} from '$lib/stores/gameData.js'
 import MonthView from './MonthView.svelte'
 
 // Convert reactive statements to $derived
@@ -14,10 +21,14 @@ function minDateString(a, b) {
     return aDate <= bDate ? a : b
 }
 
-const maxDate = $derived($latestPrepopulatedDate ? minDateString(todayIso, $latestPrepopulatedDate) : todayIso)
+const maxDate = $derived(
+    $latestPrepopulatedDate ? minDateString(todayIso, $latestPrepopulatedDate) : todayIso
+)
 
 // Check if at first or last available date
-const isPrevDisabled = $derived($availableDates.length > 0 && currentDateValue === $availableDates[0])
+const isPrevDisabled = $derived(
+    $availableDates.length > 0 && currentDateValue === $availableDates[0]
+)
 const isNextDisabled = $derived($availableDates.length > 0 && currentDateValue === maxDate)
 
 function _goToPreviousDay() {

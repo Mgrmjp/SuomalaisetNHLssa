@@ -1,8 +1,8 @@
 <script>
-let href = 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1'
-let src = 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1'
-let width = 320
-let height = 320
+const href = 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1'
+const src = 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1'
+const width = 320
+const height = 320
 </script>
 
 <div class="mobile-ad-container">

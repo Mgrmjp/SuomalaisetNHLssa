@@ -25,7 +25,7 @@ export async function load({ fetch }) {
             try {
                 const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
                 const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
-                
+
                 /** @param {any} p */
                 const augmentPlayer = (p) => {
                     const rosterInfo = rosterData[p.playerId.toString()]
@@ -71,7 +71,7 @@ export async function load({ fetch }) {
             try {
                 const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
                 const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
-                
+
                 /** @param {any} p */
                 const augmentPlayer = (p) => {
                     const rosterInfo = rosterData[p.playerId.toString()]
