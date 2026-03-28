@@ -25,3 +25,10 @@
 - **Result**: headshot_coverage_rate=84.78% (+2.24%), DEL=100% (was 0%)
 - **Insight**: DEL website stores headshots at /fileadmin/_processed_/* which doesn't match generic heuristics. Needed DEL-specific extraction.
 - **Next**: Fix ICEHL adapter (also 0%)
+
+### Run 3: USHL Headshot Extraction
+- **Timestamp**: 2026-03-28 17:16
+- **What changed**: Added _build_hockeytech_headshot_url() call to USHL player extraction
+- **Result**: headshot_coverage_rate=85.55% (+0.77%), USHL=100% (was 0%)
+- **Insight**: USHL HockeyTech API doesn't include headshot URLs in response, but standard assets.leaguestat.com URL pattern works.
+- **Next**: ICEHL has no accessible headshot source - skip. Focus on Liiga (81.76%) and SHL (89.47%)
