@@ -545,9 +545,10 @@ class OfficialLeagueCollector:
                             name = row.get("name", "").strip()
                             if not name or not self.is_finnish(name):
                                 continue
+                            player_id = row.get("player_id", "")
                             players.append(
                                 {
-                                    "player_id": f"ushl_{row.get('player_id', '')}",
+                                    "player_id": f"ushl_{player_id}",
                                     "name": name,
                                     "team": row.get("team_code", "Unknown"),
                                     "league": "USHL",
@@ -563,6 +564,11 @@ class OfficialLeagueCollector:
                                         row.get("penalty_minutes", 0) or 0
                                     ),
                                     "nationality": "FIN",
+                                    "headshot_url": self._build_hockeytech_headshot_url(
+                                        "ushl", str(player_id)
+                                    )
+                                    if player_id
+                                    else None,
                                     "source": "hockeytech",
                                     "source_league": "ushl",
                                     "scraped_at": datetime.now().isoformat(),
