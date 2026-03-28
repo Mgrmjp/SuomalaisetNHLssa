@@ -25,31 +25,45 @@ const ads = [
 
 let currentAdIndex = 0
 let _isTransitioning = false
+let _isPaused = false
 let interval
 
+function pauseAds() {
+    _isPaused = true
+}
+
+function resumeAds() {
+    _isPaused = false
+}
+
 function nextAd() {
+    if (_isPaused) return
     _isTransitioning = true
     setTimeout(() => {
         currentAdIndex = (currentAdIndex + 1) % ads.length
         setTimeout(() => {
             _isTransitioning = false
-        }, 100)
+        }, 500)
     }, 500)
 }
 
 onMount(() => {
-    interval = setInterval(nextAd, 8000)
+    setTimeout(() => {
+        interval = setInterval(nextAd, 20000)
+    }, 4000)
 })
 
 onDestroy(() => {
     if (interval) clearInterval(interval)
 })
-
-$: currentAd = ads[currentAdIndex]
 </script>
 
 <div class="vertical-ad-container">
-    <div class="ad-wrapper">
+    <div 
+        class="ad-wrapper"
+        on:mouseenter={pauseAds}
+        on:mouseleave={resumeAds}
+    >
         {#each ads as ad, index (index)}
             <a
                 href={ad.href}
@@ -101,7 +115,7 @@ $: currentAd = ads[currentAdIndex]
         display: block;
         border: none;
         opacity: 0;
-        transition: opacity 0.5s ease-in-out;
+        transition: opacity 1s ease-in-out;
         pointer-events: none;
     }
 
@@ -136,5 +150,11 @@ $: currentAd = ads[currentAdIndex]
         text-transform: uppercase;
         letter-spacing: 0.5px;
         pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ad-link {
+            transition: none;
+        }
     }
 </style>

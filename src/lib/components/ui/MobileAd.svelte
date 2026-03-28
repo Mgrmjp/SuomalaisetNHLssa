@@ -1,15 +1,76 @@
 <script>
-const href = 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1'
-const src = 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1'
-const width = 320
-const height = 320
+import { onDestroy, onMount } from 'svelte'
+
+const ads = [
+    {
+        href: 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1',
+        width: 320,
+        height: 320,
+    },
+    {
+        href: 'https://go.adt267.com/t/t?a=1538795916&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1538795916&as=2038972948&t=1&tk=1&i=1',
+        width: 300,
+        height: 250,
+    },
+]
+
+let currentAdIndex = 0
+let _isTransitioning = false
+let _isPaused = false
+let interval
+
+function pauseAds() {
+    _isPaused = true
+}
+
+function resumeAds() {
+    _isPaused = false
+}
+
+function nextAd() {
+    if (_isPaused) return
+    _isTransitioning = true
+    setTimeout(() => {
+        currentAdIndex = (currentAdIndex + 1) % ads.length
+        setTimeout(() => {
+            _isTransitioning = false
+        }, 500)
+    }, 500)
+}
+
+onMount(() => {
+    setTimeout(() => {
+        interval = setInterval(nextAd, 20000)
+    }, 16000)
+})
+
+onDestroy(() => {
+    if (interval) clearInterval(interval)
+})
 </script>
 
 <div class="mobile-ad-container">
-    <a {href} target="_blank" rel="noopener noreferrer" class="mobile-ad-link">
-        <img {src} {width} {height} alt="Mainos" class="mobile-ad-img" />
-        <span class="ad-disclaimer">Mainos</span>
-    </a>
+    <div 
+        class="ad-wrapper"
+        on:mouseenter={pauseAds}
+        on:mouseleave={resumeAds}
+    >
+        {#each ads as ad, index (index)}
+            <a
+                href={ad.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mobile-ad-link"
+                class:active={index === currentAdIndex}
+                class:fade-out={index !== currentAdIndex || _isTransitioning}
+            >
+                <img src={ad.src} width={ad.width} height={ad.height} alt="Mainos" class="mobile-ad-img" />
+                <span class="ad-disclaimer">Mainos</span>
+            </a>
+        {/each}
+    </div>
 </div>
 
 <style>
@@ -26,10 +87,31 @@ const height = 320
         }
     }
 
+    .ad-wrapper {
+        position: relative;
+        min-width: 300px;
+        min-height: 250px;
+    }
+
     .mobile-ad-link {
+        position: absolute;
+        top: 0;
+        left: 0;
         display: block;
         border: none;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        pointer-events: none;
+    }
+
+    .mobile-ad-link.active {
         position: relative;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .mobile-ad-link.fade-out {
+        opacity: 0;
     }
 
     .mobile-ad-img {
@@ -53,5 +135,11 @@ const height = 320
         text-transform: uppercase;
         letter-spacing: 0.5px;
         pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mobile-ad-link {
+            transition: none;
+        }
     }
 </style>
