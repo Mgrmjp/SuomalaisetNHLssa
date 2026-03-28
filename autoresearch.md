@@ -1,42 +1,39 @@
-# Autoresearch: Headshot Coverage Optimization
+# Autoresearch: Player Data Quality Validation
 
 ## Objective
-Improve headshot coverage for Finnish prospects across all leagues from ~70% to 95%+. Current issues:
-- DEL, ICEHL, USHL have 0% headshot coverage (no extraction in adapters)
-- Liiga missing 81/444 (18%), SHL missing 12/114 (10%)
-- Schema inconsistency: Puppeteer uses `image`, Python uses `headshot_url`
+Improve player data quality by catching and fixing inconsistent/bad data. Issues found:
+- Wrong birthdates (e.g., Juuso Välimäki: born 2008 but drafted 2017 = age 9!)
+- Wrong stats (e.g., 3 GP instead of correct 27 GP)
+- Cross-league headshot assignment (Otto Salin using Otto Kivenmäki's photo)
 
 ## Metrics
-- **Primary**: headshot_coverage_rate (% of players with headshot_url populated, higher is better)
-- **Secondary**: league_coverage_DEL, league_coverage_ICEHL, league_coverage_Liiga, league_coverage_SHL
+- **Primary**: data_quality_score (% of players passing all validation checks, higher is better)
+- **Secondary**: issue_count_birthdate, issue_count_stats, issue_count_headshot, issue_count_age_impossible
 
 ## How to Run
 ```bash
 cd /home/miikka/dev/suomalaisetnhlssa
-python -c "
-import json
-data = json.load(open('static/data/leagues/league_prospects_official.json'))
-total = len(data['players'])
-with_headshot = sum(1 for p in data['players'] if p.get('headshot_url'))
-print(f'headshot_coverage_rate={with_headshot/total*100:.2f}')
-"
+python scripts/data_collection/validate_prospect_data.py
 ```
 
+## Validation Checks
+1. **Age consistency**: birthDate must be consistent with draft year (age 17-40 at draft)
+2. **Stats plausibility**: games played > 0 implies goals/assists should exist for skaters
+3. **Headshot ownership**: headshot filename ID must match player's actual ID in source league
+4. **League consistency**: headshot league prefix must match player's current league
+
 ## Files in Scope
-- `scripts/data_collection/leagues/del_.py` - DEL adapter (no headshot extraction)
-- `scripts/data_collection/leagues/icehl.py` - ICEHL adapter (no headshot in JSON)
-- `scripts/data_collection/leagues/scraper_liiga.py` - Liiga scraper
-- `scripts/data_collection/official_leagues.py` - Main orchestrator
-- `scripts/data_collection/leagues/base.py` - Base adapter with headshot extraction helpers
-- `scripts/data_collection/headshots/sync_prospect_headshots.py` - Headshot downloader
+- `scripts/data_collection/finnish/build_prospects_cache.py` - Data pipeline with validation
+- `scripts/data_collection/validate_prospect_data.py` - Standalone validation script
+- `static/data/finnish_prospects.json` - Target data file
 
 ## Off Limits
-- Don't modify PlayerStats dataclass field names (breaks serialization)
-- Don't remove league adapters entirely
+- Don't delete players without data - mark them as needing review instead
+- Don't modify PlayerStats dataclass field names
 
 ## Constraints
-- Must maintain >90% success rate for existing working leagues
-- Headshot URLs must be valid (reachable, not placeholder)
+- Validation must run in < 30 seconds
+- All existing players with GOOD data must not be modified
 
 ## What's Been Tried
-- Run 1: Added player page validation to Mestis scraper (preventing wrong images)
+- Run 6: Fixed merge logic to prefer league_file sources over draft_picks/wikidata
