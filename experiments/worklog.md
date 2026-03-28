@@ -42,3 +42,14 @@
 - **Result**: 0 mismatches (was 50!), but coverage may drop temporarily as wrong headshots were cleared
 - **Insight**: Root cause was name-based matching could incorrectly match players (especially similar first names like 'Otto') and assign wrong headshots. Otto Salin (AHL) had Otto Kivenmäki's Liiga headshot!
 - **Next**: Need to re-fetch correct headshots for affected players or accept showing no photo for now
+
+### Run 5: Robust Headshot Validation System
+- **Timestamp**: 2026-03-28 17:45
+- **What changed**: Added comprehensive validation to PREVENT wrong assignments:
+  1. _build_league_player_lookups() - Maps player IDs to names for each league
+  2. _extract_league_id_from_headshot() - Extracts ID from headshot URL filename
+  3. _names_are_compatible() - Validates first AND last name match
+  4. _validate_headshot_assignment() - Pre-assignment validation
+- **Result**: Validation correctly catches Otto Salin trying to use Otto Kivenmäki's headshot (Invalid!)
+- **Insight**: Now when pipeline runs, wrong headshots will be rejected BEFORE assignment, not after
+- **Next**: Rebuild finnish_prospects.json with the fixed pipeline to re-fetch correct headshots
