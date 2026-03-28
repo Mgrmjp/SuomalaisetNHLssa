@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#003366"/>
+      <stop offset="100%" style="stop-color:#001533"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#003366"/>
+      <stop offset="50%" style="stop-color:#004080"/>
+      <stop offset="100%" style="stop-color:#003366"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Ice texture effect - subtle lines -->
+  <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="100" x2="1200" y2="100"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/>
+    <line x1="0" y1="400" x2="1200" y2="400"/>
+    <line x1="0" y1="500" x2="1200" y2="500"/>
+  </g>
+
+  <!-- Decorative circle - puck inspired -->
+  <circle cx="950" cy="315" r="180" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.1"/>
+  <circle cx="950" cy="315" r="140" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.15"/>
+  <circle cx="950" cy="315" r="100" fill="#ffffff" opacity="0.08"/>
+
+  <!-- Finnish colors accent bar at top -->
+  <rect x="0" y="0" width="1200" height="8" fill="#003891"/>
+  <rect x="0" y="8" width="1200" height="4" fill="#ffffff"/>
+
+  <!-- Finnish colors accent bar at bottom -->
+  <rect x="0" y="618" width="1200" height="4" fill="#ffffff"/>
+  <rect x="0" y="622" width="1200" height="8" fill="#003891"/>
+
+  <!-- Hockey stick icon -->
+  <g transform="translate(100, 215)" opacity="0.9">
+    <!-- Stick blade -->
+    <path d="M0,100 Q50,80 100,100 L100,200 Q50,220 0,200 Z" fill="#ffffff" opacity="0.9"/>
+    <!-- Stick shaft -->
+    <rect x="85" y="0" width="15" height="110" fill="#ffffff" opacity="0.9" transform="rotate(15, 92, 55)"/>
+    <!-- Tape on blade -->
+    <rect x="10" y="130" width="80" height="8" fill="#003366" opacity="0.5"/>
+    <rect x="10" y="150" width="80" height="8" fill="#003366" opacity="0.5"/>
+    <rect x="10" y="170" width="80" height="8" fill="#003366" opacity="0.5"/>
+  </g>
+
+  <!-- NHL Shield shape -->
+  <g transform="translate(850, 115)">
+    <path d="M0,0 L100,0 L100,60 L50,100 L0,60 Z" fill="#ffffff" opacity="0.9"/>
+    <path d="M15,15 L85,15 L85,55 L50,85 L15,55 Z" fill="#003366"/>
+    <text x="50" y="50" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle">NHL</text>
+  </g>
+
+  <!-- Main title -->
+  <text x="600" y="260" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Suomalaiset
+  </text>
+  <text x="600" y="350" font-family="Arial, sans-serif" font-size="88" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    NHL:ssä
+  </text>
+
+  <!-- Tagline -->
+  <text x="600" y="420" font-family="Arial, sans-serif" font-size="24" fill="#ffffff" opacity="0.8" text-anchor="middle">
+    Suomalaisten NHL-pelaajien tilastot ja ottelut
+  </text>
+
+  <!-- Stars/decorative elements -->
+  <g fill="#ffffff" opacity="0.6">
+    <polygon points="200,500 205,515 220,515 208,525 213,540 200,530 187,540 192,525 180,515 195,515" />
+    <polygon points="300,530 303,510 320,510 307,525 312,505 300,518 288,505 293,525 280,510 297,510" transform="scale(0.7)"/>
+    <polygon points="1000,500 1005,515 1020,515 1008,525 1013,540 1000,530 987,540 992,525 980,515 995,515" />
+  </g>
+
+  <!-- Finnish flag colors accent - small flag icon -->
+  <g transform="translate(580, 480)">
+    <rect x="0" y="0" width="45" height="30" fill="#003891"/>
+    <rect x="0" y="10" width="45" height="10" fill="#ffffff"/>
+    <rect x="15" y="0" width="10" height="30" fill="#ffffff"/>
+  </g>
+</svg>

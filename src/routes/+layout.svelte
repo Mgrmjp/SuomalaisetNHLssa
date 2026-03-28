@@ -26,10 +26,17 @@ const _defaultDescription =
     <meta property="og:site_name" content={_siteName} />
     <meta property="og:locale" content="fi_FI" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="{_siteUrl}/logo.svg" />
+    <meta property="og:image" content="{_siteUrl}/og-image.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={_siteName} />
+    <meta name="twitter:description" content={_defaultDescription} />
+    <meta name="twitter:image" content="{_siteUrl}/og-image.svg" />
+    <meta name="twitter:image:alt" content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot" />
 
     <!-- Canonical URL -->
     <link rel="canonical" href="{_siteUrl}{$page.url.pathname}" />

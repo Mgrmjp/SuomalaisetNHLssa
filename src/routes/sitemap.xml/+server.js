@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-export const prerender = false
+export const prerender = true
 
 const siteUrl = 'https://suomalaisetnhlssa.fi'
 

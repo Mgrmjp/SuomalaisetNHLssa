@@ -44,6 +44,47 @@ onMount(() => {
         content="Tietoa Suomalaiset NHL:ssä -sivustosta, tietolähteistä ja mainosilmoitus."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/tietoa" />
+
+    <!-- FAQPage Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+            {
+                "@type": "Question",
+                name: "Mistä saan tietoa suomalaisten NHL-pelaajien tilastoista?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Suomalaiset NHL:ssä -sivusto seuraa päivittäin suomalaisten NHL-pelaajien ottelutilastoja, mukaan lukien maalit, syötöt, pisteet ja jääajat."
+                }
+            },
+            {
+                "@type": "Question",
+                name: "Miten voin tukea sivustoa?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Voit tukea sivustoa lahjoittamalla Ko-fi-palvelun kautta tai klikkaamalla affiliate-linkkejä. Kaikki tuet menevät sivuston ylläpitokustannuksiin."
+                }
+            },
+            {
+                "@type": "Question",
+                name: "Kuinka usein sivusto päivittyy?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Sivusto päivittyy automaattisesti kun uutta pelitietoa on saatavilla NHL:n virallisista lähteistä."
+                }
+            },
+            {
+                "@type": "Question",
+                name: "Mistä tiedot tulevat?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Pelaajatiedot haetaan NHL:n virallisista lähteistä (NHL.com API)."
+                }
+            }
+        ]
+    })}</script>`}
+
     <script src="https://storage.ko-fi.com/cdn/widget/Widget_2.js" on:load={initKofi}></script>
 </svelte:head>
 

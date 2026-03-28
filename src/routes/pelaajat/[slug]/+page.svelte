@@ -94,8 +94,15 @@ function getPlayerSlug(p) {
         "@context": "https://schema.org",
         "@type": "Person",
         "name": displayName,
+        "url": `https://suomalaisetnhlssa.fi/pelaajat/${slug}`,
+        "image": player.headshot ? `https://cms.nhk.bamgrid.com/images/${player.headshot}` : undefined,
         "jobTitle": `Professional Ice Hockey ${isGoalie ? "Goaltender" : "Player"}`,
         "memberOf": {
+            "@type": "SportsTeam",
+            "name": teamFullName,
+            "sport": "Ice Hockey"
+        },
+        "affiliation": {
             "@type": "SportsTeam",
             "name": teamFullName,
             "sport": "Ice Hockey"
