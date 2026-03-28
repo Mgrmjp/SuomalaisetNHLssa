@@ -18,3 +18,10 @@
 - **Result**: headshot_coverage_rate=82.54%
 - **Insight**: Main gaps are leagues with 0% coverage - DEL, ICEHL, USHL
 - **Next**: Add headshot extraction to DEL adapter (HTML-based, should have images)
+
+### Run 2: DEL Headshot Extraction
+- **Timestamp**: 2026-03-28 17:10
+- **What changed**: Added _fetch_del_headshot method to DELAdapter - extracts profile_url from player table, then fetches headshot from alc-player-info-banner__img div
+- **Result**: headshot_coverage_rate=84.78% (+2.24%), DEL=100% (was 0%)
+- **Insight**: DEL website stores headshots at /fileadmin/_processed_/* which doesn't match generic heuristics. Needed DEL-specific extraction.
+- **Next**: Fix ICEHL adapter (also 0%)
