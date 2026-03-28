@@ -25,6 +25,7 @@ let _officialSeasonStatsByName = $state(new Map())
 const _epSeasonStatsByName = $state(new Map())
 let _nhlSeasonStatsById = $state(new Map())
 let _selectedSeasonIndexByPlayer = $state({})
+const _unifiedGoalieStats = $state(new Map())
 
 onMount(() => {
     loadProspects()
@@ -44,11 +45,13 @@ function _normalizeName(name) {
 
 async function _loadDraftSeasonStats() {
     try {
-        const [officialResponse, skatersResponse, goaliesResponse] = await Promise.all([
-            fetch(`${base}/data/leagues/league_prospects_official.json`),
-            fetch(`${base}/data/player-stats/skaters-20252026.json`),
-            fetch(`${base}/data/player-stats/goalies-20252026.json`),
-        ])
+        const [officialResponse, skatersResponse, goaliesResponse, unifiedGoaliesResponse] =
+            await Promise.all([
+                fetch(`${base}/data/leagues/league_prospects_official.json`),
+                fetch(`${base}/data/player-stats/skaters-20252026.json`),
+                fetch(`${base}/data/player-stats/goalies-20252026.json`),
+                fetch(`${base}/data/player-stats/all-goalies.json`),
+            ])
 
         const officialLookup = new Map()
         const nhlLookup = new Map()
@@ -106,6 +109,23 @@ async function _loadDraftSeasonStats() {
 
         _officialSeasonStatsByName = officialLookup
         _nhlSeasonStatsById = nhlLookup
+
+        // Load unified goalie stats from all-goalies.json
+        if (unifiedGoaliesResponse.ok) {
+            const unifiedData = await unifiedGoaliesResponse.json()
+            const goalies = unifiedData?.goalies || []
+            for (const g of goalies) {
+                const key = _normalizeName(g.name)
+                _unifiedGoalieStats.set(key, {
+                    gp: g.gp || 0,
+                    savePct: g.savePct,
+                    gaa: g.gaa,
+                    shutouts: g.shutouts || 0,
+                    league: g.league || '',
+                    source: g.source || '',
+                })
+            }
+        }
     } catch (_error) {
         // Leave prospects without enrichment if league files are unavailable.
     }
@@ -133,6 +153,18 @@ function _normalizeSeasonEntry(entry) {
             null,
         headshotCrop: entry.headshotCrop || entry.headshot_crop || null,
     }
+}
+
+function _formatGoalieStat(value, decimals) {
+    if (value === null || value === undefined || value === 0) {
+        return 'Ei dataa'
+    }
+    return value.toFixed(decimals)
+}
+
+function _getUnifiedGoalieStats(playerName) {
+    const key = _normalizeName(playerName)
+    return _unifiedGoalieStats.get(key) || null
 }
 
 function _normalizeSeasonTeamKey(team) {
@@ -1044,6 +1076,7 @@ function _dedupeProspects(players) {
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {#each sortedGoalies as goalie, index (`${goalie.id}-${index}`)}
                                     {@const selectedSeason = _getSelectedSeasonEntry(goalie)}
+                                    {@const unifiedStats = _getUnifiedGoalieStats(goalie.name)}
                                     {@const headshotUrl = _getBestAvailableSeasonHeadshot(goalie)}
                                     {@const headshotSettings = _getProspectHeadshotSettings(goalie, selectedSeason?.league || goalie.league)}
                                     <div 
@@ -1145,19 +1178,19 @@ function _dedupeProspects(players) {
                                             <div class="grid grid-cols-4 gap-2 bg-emerald-50/50 rounded-lg p-3 text-center border border-emerald-100/50">
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
-                                                    <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
+                                                    <div class="font-mono font-bold text-slate-700">{unifiedStats?.gp || selectedSeason?.gp || 0}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SV%</div>
-                                                    <div class="font-mono font-bold text-emerald-600">{(selectedSeason?.savePct || 0).toFixed(3)}</div>
+                                                    <div class="font-mono font-bold text-emerald-600">{_formatGoalieStat(unifiedStats?.savePct ?? selectedSeason?.savePct, 3)}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GAA</div>
-                                                    <div class="font-mono font-bold text-amber-600">{(selectedSeason?.gaa || 0).toFixed(2)}</div>
+                                                    <div class="font-mono font-bold text-amber-600">{_formatGoalieStat(unifiedStats?.gaa ?? selectedSeason?.gaa, 2)}</div>
                                                 </div>
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SO</div>
-                                                    <div class="font-mono font-bold text-slate-900">{selectedSeason?.shutouts || 0}</div>
+                                                    <div class="font-mono font-bold text-slate-900">{unifiedStats?.shutouts ?? selectedSeason?.shutouts ?? 0}</div>
                                                 </div>
                                             </div>
                                         {/if}

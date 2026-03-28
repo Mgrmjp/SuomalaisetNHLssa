@@ -84,6 +84,70 @@ def _append_source(player_obj, source):
         sources.append(source)
 
 
+def validate_player_merge(
+    effective_id, name, normalized, candidates, by_name, **fields
+):
+    """Check for data integrity issues when merging player data from different sources."""
+    warnings = []
+
+    existing_id_for_name = by_name.get(normalized)
+    if existing_id_for_name and str(existing_id_for_name) != str(effective_id):
+        warnings.append(
+            f"NAME->ID COLLISION: '{name}' ({normalized}) already maps to {existing_id_for_name}, "
+            f"now receiving {effective_id}. Two different players may be conflated."
+        )
+
+    if effective_id in candidates:
+        existing = candidates[effective_id]
+
+        existing_name = existing.get("name")
+        if existing_name and normalize_person_name(existing_name) != normalized:
+            warnings.append(
+                f"ID->NAME CONFLICT: id {effective_id} has name '{existing_name}', "
+                f"now receiving '{name}'. Possible merge error."
+            )
+
+        if "birthDate" in fields and fields["birthDate"]:
+            existing_bd = existing.get("birthDate")
+            if existing_bd and existing_bd != fields["birthDate"]:
+                warnings.append(
+                    f"BIRTHDATE CONFLICT: id {effective_id} has birthdate '{existing_bd}', "
+                    f"now receiving '{fields['birthDate']}'"
+                )
+
+        if "position" in fields and fields["position"]:
+            existing_pos = existing.get("position")
+            if existing_pos and existing_pos != fields["position"]:
+                warnings.append(
+                    f"POSITION CONFLICT: id {effective_id} has position '{existing_pos}', "
+                    f"now receiving '{fields['position']}' for '{name}'"
+                )
+
+        birth_date = fields.get("birthDate") or existing.get("birthDate")
+        if birth_date:
+            try:
+                birth_year = int(str(birth_date)[:4])
+            except (ValueError, IndexError):
+                birth_year = None
+
+            if birth_year:
+                for src in existing.get("sources", []):
+                    if src.startswith("draft_picks:"):
+                        try:
+                            draft_year = int(src.split(":")[1])
+                            age_at_draft = draft_year - birth_year
+                            if age_at_draft < 17 or age_at_draft > 40:
+                                warnings.append(
+                                    f"IMPOSSIBLE DRAFT AGE: {name} born {birth_year}, "
+                                    f"drafted {draft_year} (age {age_at_draft})"
+                                )
+                        except (ValueError, IndexError):
+                            pass
+                        break
+
+    return warnings
+
+
 def upsert_candidate(candidates, by_name, player_id, name, **fields):
     """Insert or merge candidate player data by id/name."""
     normalized = normalize_person_name(name)
@@ -95,6 +159,12 @@ def upsert_candidate(candidates, by_name, player_id, name, **fields):
         effective_id = str(effective_id)
     if not effective_id:
         return None
+
+    warnings = validate_player_merge(
+        effective_id, name, normalized, candidates, by_name, **fields
+    )
+    for w in warnings:
+        print(f"  WARNING: {w}")
 
     if effective_id not in candidates:
         candidates[effective_id] = {"id": effective_id, "name": name}
@@ -123,7 +193,10 @@ def dedupe_final_players(players):
         if player_id is not None:
             player["id"] = str(player_id)
 
-        key = str(player.get("id") or "") or f"{normalize_person_name(player.get('name'))}:{player.get('birthDate') or ''}"
+        key = (
+            str(player.get("id") or "")
+            or f"{normalize_person_name(player.get('name'))}:{player.get('birthDate') or ''}"
+        )
         existing = deduped.get(key)
         if not existing:
             deduped[key] = player
@@ -219,14 +292,17 @@ def search_player_id(name, birth_date=None):
                 full = row.get("name")
                 if full:
                     return normalize_name(full)
-                return normalize_name(f"{row.get('firstName', '')} {row.get('lastName', '')}")
+                return normalize_name(
+                    f"{row.get('firstName', '')} {row.get('lastName', '')}"
+                )
 
             exact_name = [row for row in data if row_name(row) == target_name]
             pool = exact_name or data
 
             if birth_date:
                 birth_match = [
-                    row for row in pool
+                    row
+                    for row in pool
                     if str(row.get("birthDate", "")).startswith(str(birth_date))
                 ]
                 if birth_match:
@@ -249,7 +325,9 @@ def ingest_eliteprospects(candidates, by_name):
         return 0
 
     # Keep this configurable because EP endpoint/version may vary by account.
-    endpoint = os.getenv("ELITEPROSPECTS_PLAYERS_URL", "https://api.eliteprospects.com/v1/players")
+    endpoint = os.getenv(
+        "ELITEPROSPECTS_PLAYERS_URL", "https://api.eliteprospects.com/v1/players"
+    )
     params = {
         "nationality": os.getenv("ELITEPROSPECTS_NATIONALITY", "FIN"),
         "limit": int(os.getenv("ELITEPROSPECTS_LIMIT", "500")),
@@ -313,6 +391,7 @@ def ingest_external_file(candidates, by_name):
 
     try:
         import json
+
         rows = json.loads(EXTERNAL_PROSPECTS_FILE.read_text(encoding="utf-8"))
     except Exception as e:
         print(f"Failed to parse {EXTERNAL_PROSPECTS_FILE}: {e}")
@@ -328,7 +407,11 @@ def ingest_external_file(candidates, by_name):
         if not full_name:
             continue
         birth_date = row.get("birthDate")
-        nhl_id = row.get("id") or row.get("nhlPlayerId") or search_player_id(full_name, birth_date)
+        nhl_id = (
+            row.get("id")
+            or row.get("nhlPlayerId")
+            or search_player_id(full_name, birth_date)
+        )
         if not nhl_id:
             continue
 
@@ -393,6 +476,7 @@ def ingest_league_prospects_files(candidates, by_name):
                 continue
 
             before = len(candidates)
+            league_position = row.get("position")
             result_id = upsert_candidate(
                 candidates,
                 by_name,
@@ -400,10 +484,24 @@ def ingest_league_prospects_files(candidates, by_name):
                 full_name,
                 currentTeam=row.get("team"),
                 league=row.get("league"),
-                headshot=row.get("headshot_url") or row.get("headshotUrl") or row.get("headshot") or row.get("image"),
+                headshot=row.get("headshot_url")
+                or row.get("headshotUrl")
+                or row.get("headshot")
+                or row.get("image"),
                 headshotCrop=row.get("headshot_crop") or row.get("headshotCrop"),
                 source=f"league_file:{source_file.stem}",
             )
+            if (
+                result_id
+                and league_position
+                and candidates[result_id].get("position") != league_position
+            ):
+                old_pos = candidates[result_id].get("position")
+                candidates[result_id]["position"] = league_position
+                if old_pos:
+                    print(
+                        f"  Position override: {full_name} {old_pos} -> {league_position}"
+                    )
 
             if result_id and len(candidates) > before:
                 added += 1
@@ -421,7 +519,8 @@ def ingest_the_sports_db(candidates, by_name):
     """
     key = os.getenv("THE_SPORTS_DB_KEY", "123").strip()
     leagues = [
-        league.strip() for league in os.getenv(
+        league.strip()
+        for league in os.getenv(
             "THE_SPORTS_DB_LEAGUES",
             "NHL,Liiga,SHL,AHL,OHL,WHL,QMJHL,NCAA Hockey",
         ).split(",")
@@ -585,7 +684,9 @@ def main():
             for player in prospects_data.get(category, []):
                 if player.get("birthCountry") == "FIN":
                     player_id = player.get("id")
-                    full_name = get_name(player.get("firstName"), player.get("lastName"))
+                    full_name = get_name(
+                        player.get("firstName"), player.get("lastName")
+                    )
 
                     upsert_candidate(
                         finnish_prospects,
@@ -610,7 +711,9 @@ def main():
     draft_start_year = max(2005, current_year - 10)
     draft_years = range(draft_start_year, current_year + 1)
 
-    print(f"\nScanning Draft History ({draft_years[0]}-{draft_years[-1]}) for missing prospects...")
+    print(
+        f"\nScanning Draft History ({draft_years[0]}-{draft_years[-1]}) for missing prospects..."
+    )
 
     for year in draft_years:
         print(f"Checking Draft {year}...", end=" ")
@@ -671,7 +774,9 @@ def main():
                 if not full_name:
                     continue
 
-                pid = player.get("playerId") or search_player_id(full_name, player.get("birthDate"))
+                pid = player.get("playerId") or search_player_id(
+                    full_name, player.get("birthDate")
+                )
                 if not pid:
                     continue
 
@@ -711,7 +816,18 @@ def main():
             p_data.setdefault("nhlRights", "N/A")
             p_data.setdefault("league", "Unknown")
             p_data.setdefault("currentTeam", "Unknown")
-            p_data.setdefault("stats", {"gp": 0, "goals": 0, "assists": 0, "points": 0, "savePct": 0.0, "gaa": 0.0, "shutouts": 0})
+            p_data.setdefault(
+                "stats",
+                {
+                    "gp": 0,
+                    "goals": 0,
+                    "assists": 0,
+                    "points": 0,
+                    "savePct": 0.0,
+                    "gaa": 0.0,
+                    "shutouts": 0,
+                },
+            )
             final_list.append(p_data)
             continue
 

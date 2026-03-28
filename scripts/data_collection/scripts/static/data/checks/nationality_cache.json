@@ -1,309 +1,4 @@
 {
-  "matej_stransky_global": {
-    "player_name": "Matej Stransky",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "search_verification",
-    "nationality": "CZE"
-  },
-  "erik_brannstrom_global": {
-    "player_name": "Erik Brännström",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "search_verification",
-    "nationality": "SWE"
-  },
-  "nicolas_mattinen_global": {
-    "player_name": "Nicolas Mattinen",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "search_verification",
-    "nationality": "CAN"
-  },
-  "nicolas_krammer_global": {
-    "player_name": "Nicolas Krämmer",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "GER"
-  },
-  "lukas_kalble_global": {
-    "player_name": "Lukas Kälble",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "GER"
-  },
-  "cody_haiskanen_global": {
-    "player_name": "Cody Haiskanen",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "USA"
-  },
-  "hakon_hanelt_global": {
-    "player_name": "Håkon Hänelt",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "GER"
-  },
-  "tommy_pasanen_global": {
-    "player_name": "Tommy Pasanen",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "GER"
-  },
-  "jesper_peltonen_global": {
-    "player_name": "Jesper Peltonen",
-    "status": "confirmed",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "search_verification",
-    "nationality": "FIN"
-  },
-  "aleksi_peltonen_global": {
-    "player_name": "Aleksi Peltonen",
-    "status": "confirmed",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "search_verification",
-    "nationality": "FIN"
-  },
-  "atte_tolvanen_global": {
-    "player_name": "Atte Tolvanen",
-    "status": "confirmed",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "FIN"
-  },
-  "markus_nenonen_global": {
-    "player_name": "Markus Nenonen",
-    "status": "confirmed",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "FIN"
-  },
-  "ken_jager_global": {
-    "player_name": "Ken Jäger",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "SUI"
-  },
-  "elvis_schlapfer_global": {
-    "player_name": "Elvis Schläpfer",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "SUI"
-  },
-  "reto_schappi_global": {
-    "player_name": "Reto Schäppi",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:00",
-    "method": "manual_check",
-    "nationality": "SUI"
-  },
-  "nicolas_mattinen_del": {
-    "player_name": "Nicolas Mattinen",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "nicolas_krammer_del": {
-    "player_name": "Nicolas Krämmer",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "lukas_kalble_del": {
-    "player_name": "Lukas Kälble",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "cody_haiskanen_del": {
-    "player_name": "Cody Haiskanen",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "hakon_hanelt_del": {
-    "player_name": "Håkon Hänelt",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tommy_pasanen_del": {
-    "player_name": "Tommy Pasanen",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "timo_ruckdaschel_del": {
-    "player_name": "Timo Ruckdäschel",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "gianluca_bauml_del": {
-    "player_name": "Gianluca Bäuml",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "bartholomaus_oswald_del": {
-    "player_name": "Bartholomäus Oswald",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "karl_gartner_del": {
-    "player_name": "Karl Gärtner",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "nick_mahler_del": {
-    "player_name": "Nick Mähler",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "robin_nico_antenen_nl": {
-    "player_name": "Robin Nico Antenen",
-    "league": "NL",
-    "team": "EV Zug",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "santiago_naf_nl": {
-    "player_name": "Santiago Näf",
-    "league": "NL",
-    "team": "EV Zug",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "reto_schappi_nl": {
-    "player_name": "Reto Schäppi",
-    "league": "NL",
-    "team": "EHC Kloten",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jesper_peltonen_nl": {
-    "player_name": "Jesper Peltonen",
-    "league": "NL",
-    "team": "HC Lugano",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "aleksi_peltonen_nl": {
-    "player_name": "Aleksi Peltonen",
-    "league": "NL",
-    "team": "HC Lugano",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "aris_hafliger_nl": {
-    "player_name": "Aris Häfliger",
-    "league": "NL",
-    "team": "HC Ambri-Piotta",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "simon_bar_nl": {
-    "player_name": "Simon Bär",
-    "league": "NL",
-    "team": "SCL Tigers",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jeremie_bartschi_nl": {
-    "player_name": "Jérémie Bärtschi",
-    "league": "NL",
-    "team": "EHC Biel-Bienne",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ken_jager_nl": {
-    "player_name": "Ken Jäger",
-    "league": "NL",
-    "team": "Lausanne HC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "elvis_schlapfer_nl": {
-    "player_name": "Elvis Schläpfer",
-    "league": "NL",
-    "team": "HC Ajoie",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "markus_nenonen_extraliga": {
-    "player_name": "Markus Nenonen",
-    "league": "Extraliga",
-    "team": "HC Škoda Plzeň",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "lukas_bar_icehl": {
-    "player_name": "Lukas Bär",
-    "league": "ICEHL",
-    "team": "HCI",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "erik_kirchschlager_icehl": {
-    "player_name": "Erik Kirchschläger",
-    "league": "ICEHL",
-    "team": "VIC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "atte_tolvanen_icehl": {
-    "player_name": "Atte Tolvanen",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "evan_barratt_del": {
     "player_name": "Evan Barratt",
     "league": "DEL",
@@ -344,6 +39,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "taro_hirose_del": {
+    "player_name": "Taro Hirose",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "gregor_macleod_del": {
     "player_name": "Gregor MacLeod",
     "league": "DEL",
@@ -352,8 +55,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "taro_hirose_del": {
-    "player_name": "Taro Hirose",
+  "nicolas_mattinen_del": {
+    "player_name": "Nicolas Mattinen",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -384,22 +87,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "donald_d.j._busdeker_del": {
-    "player_name": "Donald D.J. Busdeker",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "daniel_fischbuch_del": {
-    "player_name": "Daniel Fischbuch",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "frederik_tiffels_del": {
     "player_name": "Frederik Tiffels",
     "league": "DEL",
@@ -410,6 +97,22 @@
   },
   "kenny_agostino_del": {
     "player_name": "Kenny Agostino",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "donald_d.j._busdeker_del": {
+    "player_name": "Donald D.J. Busdeker",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "daniel_fischbuch_del": {
+    "player_name": "Daniel Fischbuch",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -432,12 +135,20 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "leonhard_pfoderl_del": {
-    "player_name": "Leonhard Pföderl",
+  "valtteri_kemilainen_del": {
+    "player_name": "Valtteri Kemiläinen",
     "league": "DEL",
     "team": "",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:25.712293",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "tyler_gaudet_del": {
+    "player_name": "Tyler Gaudet",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
     "method": "heuristic_discovery"
   },
   "colin_ugbekile_del": {
@@ -450,14 +161,6 @@
   },
   "marcel_brandt_del": {
     "player_name": "Marcel Brandt",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "valtteri_kemilainen_del": {
-    "player_name": "Valtteri Kemiläinen",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -480,56 +183,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "zachary_solow_del": {
-    "player_name": "Zachary Solow",
+  "leonhard_pfoderl_del": {
+    "player_name": "Leonhard Pföderl",
     "league": "DEL",
     "team": "",
-    "status": "pending",
-    "verified_at": null,
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:41.030747",
     "method": "heuristic_discovery"
   },
   "nate_schnarr_del": {
     "player_name": "Nate Schnarr",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "matthias_plachta_del": {
-    "player_name": "Matthias Plachta",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tyler_gaudet_del": {
-    "player_name": "Tyler Gaudet",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alexandre_grenier_del": {
-    "player_name": "Alexandre Grenier",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tyler_madden_del": {
-    "player_name": "Tyler Madden",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "spencer_machacek_del": {
-    "player_name": "Spencer Machacek",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -544,8 +207,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "myles_powell_del": {
-    "player_name": "Myles Powell",
+  "alexandre_grenier_del": {
+    "player_name": "Alexandre Grenier",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -560,216 +223,40 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "owen_headrick_del": {
-    "player_name": "Owen Headrick",
+  "spencer_machacek_del": {
+    "player_name": "Spencer Machacek",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "ty_ronning_del": {
-    "player_name": "Ty Ronning",
+  "zachary_solow_del": {
+    "player_name": "Zachary Solow",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "oliwer_kaski_del": {
-    "player_name": "Oliwer Kaski",
+  "matthias_plachta_del": {
+    "player_name": "Matthias Plachta",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "kyle_platzer_del": {
-    "player_name": "Kyle Platzer",
+  "tyler_madden_del": {
+    "player_name": "Tyler Madden",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "justin_schutz_del": {
-    "player_name": "Justin Schütz",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "adam_brooks_del": {
-    "player_name": "Adam Brooks",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ziga_jeglic_del": {
-    "player_name": "Ziga Jeglic",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "peter_abbandonato_del": {
-    "player_name": "Peter Abbandonato",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ryan_murphy_del": {
-    "player_name": "Ryan Murphy",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "riley_sheen_del": {
-    "player_name": "Riley Sheen",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "linus_froberg_del": {
-    "player_name": "Linus Fröberg",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "akito_hirose_del": {
-    "player_name": "Akito Hirose",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "christian_thomas_del": {
-    "player_name": "Christian Thomas",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "brett_murray_del": {
-    "player_name": "Brett Murray",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "eric_cornel_del": {
-    "player_name": "Eric Cornel",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alexander_karachun_del": {
-    "player_name": "Alexander Karachun",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "cameron_brace_del": {
-    "player_name": "Cameron Brace",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "elis_hede_del": {
-    "player_name": "Elis Hede",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "maximilian_kammerer_del": {
-    "player_name": "Maximilian Kammerer",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "abbott_girduckis_del": {
-    "player_name": "Abbott Girduckis",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "stefan_loibl_del": {
-    "player_name": "Stefan Loibl",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "kristian_reichel_del": {
-    "player_name": "Kristian Reichel",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "austen_keating_del": {
-    "player_name": "Austen Keating",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "daniel_schmolz_del": {
-    "player_name": "Daniel Schmölz",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "andreas_eder_del": {
-    "player_name": "Andreas Eder",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "robert_lynch_del": {
-    "player_name": "Robert Lynch",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "daniel_pietta_del": {
-    "player_name": "Daniel Pietta",
+  "myles_powell_del": {
+    "player_name": "Myles Powell",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -784,8 +271,192 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "adam_brooks_del": {
+    "player_name": "Adam Brooks",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "owen_headrick_del": {
+    "player_name": "Owen Headrick",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "oliwer_kaski_del": {
+    "player_name": "Oliwer Kaski",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ryan_murphy_del": {
+    "player_name": "Ryan Murphy",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "akito_hirose_del": {
+    "player_name": "Akito Hirose",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ty_ronning_del": {
+    "player_name": "Ty Ronning",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "justin_schutz_del": {
+    "player_name": "Justin Schütz",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kyle_platzer_del": {
+    "player_name": "Kyle Platzer",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "eric_cornel_del": {
+    "player_name": "Eric Cornel",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ziga_jeglic_del": {
+    "player_name": "Ziga Jeglic",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "linus_froberg_del": {
+    "player_name": "Linus Fröberg",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "riley_sheen_del": {
+    "player_name": "Riley Sheen",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "alexander_karachun_del": {
+    "player_name": "Alexander Karachun",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "christian_thomas_del": {
+    "player_name": "Christian Thomas",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "cameron_brace_del": {
+    "player_name": "Cameron Brace",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "peter_abbandonato_del": {
+    "player_name": "Peter Abbandonato",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "elis_hede_del": {
+    "player_name": "Elis Hede",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "andreas_eder_del": {
+    "player_name": "Andreas Eder",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "abbott_girduckis_del": {
+    "player_name": "Abbott Girduckis",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "miha_verlic_del": {
     "player_name": "Miha Verlic",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "brett_murray_del": {
+    "player_name": "Brett Murray",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "maximilian_kammerer_del": {
+    "player_name": "Maximilian Kammerer",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "daniel_schmolz_del": {
+    "player_name": "Daniel Schmölz",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "daniel_pietta_del": {
+    "player_name": "Daniel Pietta",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -800,16 +471,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "julian_napravnik_del": {
-    "player_name": "Julian Napravnik",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "leon_gawanke_del": {
-    "player_name": "Leon Gawanke",
+  "stefan_loibl_del": {
+    "player_name": "Stefan Loibl",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -824,24 +487,24 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "cole_maier_del": {
-    "player_name": "Cole Maier",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tyson_spink_del": {
-    "player_name": "Tyson Spink",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "jeremy_mckenna_del": {
     "player_name": "Jeremy McKenna",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kristian_reichel_del": {
+    "player_name": "Kristian Reichel",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "robert_lynch_del": {
+    "player_name": "Robert Lynch",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -856,16 +519,56 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "jan_urbas_del": {
-    "player_name": "Jan Urbas",
+  "tyson_spink_del": {
+    "player_name": "Tyson Spink",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "tanner_kero_del": {
-    "player_name": "Tanner Kero",
+  "austen_keating_del": {
+    "player_name": "Austen Keating",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "julian_napravnik_del": {
+    "player_name": "Julian Napravnik",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "tyler_spezia_del": {
+    "player_name": "Tyler Spezia",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "riley_damiani_del": {
+    "player_name": "Riley Damiani",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "cole_maier_del": {
+    "player_name": "Cole Maier",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "yannick_veilleux_del": {
+    "player_name": "Yannick Veilleux",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -874,6 +577,14 @@
   },
   "daniel_o'regan_del": {
     "player_name": "Daniel O'Regan",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "tylor_spink_del": {
+    "player_name": "Tylor Spink",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -896,16 +607,32 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "tyler_spezia_del": {
-    "player_name": "Tyler Spezia",
+  "leon_gawanke_del": {
+    "player_name": "Leon Gawanke",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "tylor_spink_del": {
-    "player_name": "Tylor Spink",
+  "justin_feser_del": {
+    "player_name": "Justin Feser",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jan_urbas_del": {
+    "player_name": "Jan Urbas",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "tanner_kero_del": {
+    "player_name": "Tanner Kero",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -914,30 +641,6 @@
   },
   "marcel_noebels_del": {
     "player_name": "Marcel Noebels",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "riley_damiani_del": {
-    "player_name": "Riley Damiani",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "justin_scott_del": {
-    "player_name": "Justin Scott",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "yannick_veilleux_del": {
-    "player_name": "Yannick Veilleux",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -960,152 +663,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "anthony_louis_del": {
-    "player_name": "Anthony Louis",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "veit_oswald_del": {
-    "player_name": "Veit Oswald",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "dane_fox_del": {
-    "player_name": "Dane Fox",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "bennet_roßmy_del": {
-    "player_name": "Bennet Roßmy",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "charlie_gerard_del": {
-    "player_name": "Charlie Gerard",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "nicolas_beaudin_del": {
-    "player_name": "Nicolas Beaudin",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "leon_huttl_del": {
-    "player_name": "Leon Hüttl",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "colt__adam_conrad_del": {
-    "player_name": "Colt  Adam Conrad",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "daniel_pfaffengut_del": {
-    "player_name": "Daniel Pfaffengut",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tim_fleischer_del": {
-    "player_name": "Tim Fleischer",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "juhani_tyrvainen_del": {
-    "player_name": "Juhani Tyrväinen",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "kyle_mayhew_del": {
-    "player_name": "Kyle Mayhew",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ville_pokka_del": {
-    "player_name": "Ville Pokka",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "greg_meireles_del": {
-    "player_name": "Greg Meireles",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "christopher_desousa_del": {
     "player_name": "Christopher DeSousa",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "brady_ferguson_del": {
-    "player_name": "Brady Ferguson",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "justin_feser_del": {
-    "player_name": "Justin Feser",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jacob_hayhurst_del": {
-    "player_name": "Jacob Hayhurst",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "trevor_parkes_del": {
-    "player_name": "Trevor Parkes",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1120,24 +679,120 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "charlie_gerard_del": {
+    "player_name": "Charlie Gerard",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "tim_fleischer_del": {
+    "player_name": "Tim Fleischer",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "leon_huttl_del": {
+    "player_name": "Leon Hüttl",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "greg_meireles_del": {
+    "player_name": "Greg Meireles",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "justin_scott_del": {
+    "player_name": "Justin Scott",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "anthony_louis_del": {
+    "player_name": "Anthony Louis",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "dane_fox_del": {
+    "player_name": "Dane Fox",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "trevor_parkes_del": {
+    "player_name": "Trevor Parkes",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "colt__adam_conrad_del": {
+    "player_name": "Colt  Adam Conrad",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "juhani_tyrvainen_del": {
+    "player_name": "Juhani Tyrväinen",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "nicolas_beaudin_del": {
+    "player_name": "Nicolas Beaudin",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "veit_oswald_del": {
+    "player_name": "Veit Oswald",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "bennet_roßmy_del": {
+    "player_name": "Bennet Roßmy",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "daniel_pfaffengut_del": {
+    "player_name": "Daniel Pfaffengut",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "jordan_szwarz_del": {
     "player_name": "Jordan Szwarz",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tomas_andres_del": {
-    "player_name": "Tomáš Andres",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "eric_mik_del": {
-    "player_name": "Eric Mik",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1160,16 +815,24 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "kris_bennett_del": {
-    "player_name": "Kris Bennett",
+  "tyler_boland_del": {
+    "player_name": "Tyler Boland",
+    "league": "DEL",
+    "team": "",
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:41.120646",
+    "method": "heuristic_discovery"
+  },
+  "jimmy_lambert_del": {
+    "player_name": "Jimmy Lambert",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "christian_wejse_del": {
-    "player_name": "Christian Wejse",
+  "julian_chrobot_del": {
+    "player_name": "Julian Chrobot",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1192,8 +855,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "julian_chrobot_del": {
-    "player_name": "Julian Chrobot",
+  "kyle_mayhew_del": {
+    "player_name": "Kyle Mayhew",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ville_pokka_del": {
+    "player_name": "Ville Pokka",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1208,6 +879,22 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "tomas_andres_del": {
+    "player_name": "Tomáš Andres",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kris_bennett_del": {
+    "player_name": "Kris Bennett",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "markus_eisenschmid_del": {
     "player_name": "Markus Eisenschmid",
     "league": "DEL",
@@ -1216,72 +903,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "ryan_macinnis_del": {
-    "player_name": "Ryan MacInnis",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jimmy_lambert_del": {
-    "player_name": "Jimmy Lambert",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tyler_boland_del": {
-    "player_name": "Tyler Boland",
-    "league": "DEL",
-    "team": "",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:25.803462",
-    "method": "heuristic_discovery"
-  },
-  "christopher_wilkie_del": {
-    "player_name": "Christopher Wilkie",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "thomas_heigl_del": {
-    "player_name": "Thomas Heigl",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "michael_joyaux_del": {
-    "player_name": "Michael Joyaux",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alex_green_del": {
-    "player_name": "Alex Green",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "kyle_wood_del": {
-    "player_name": "Kyle Wood",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "veli-matti_vittasmaki_del": {
-    "player_name": "Veli-Matti Vittasmäki",
+  "christian_wejse_del": {
+    "player_name": "Christian Wejse",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1296,8 +919,88 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "gabriel_fontaine_del": {
-    "player_name": "Gabriel Fontaine",
+  "brady_ferguson_del": {
+    "player_name": "Brady Ferguson",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "thomas_heigl_del": {
+    "player_name": "Thomas Heigl",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jacob_hayhurst_del": {
+    "player_name": "Jacob Hayhurst",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "eric_mik_del": {
+    "player_name": "Eric Mik",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ryan_macinnis_del": {
+    "player_name": "Ryan MacInnis",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "matthew_wedman_del": {
+    "player_name": "Matthew Wedman",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "carter_rowney_del": {
+    "player_name": "Carter Rowney",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "veli-matti_vittasmaki_del": {
+    "player_name": "Veli-Matti Vittasmäki",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "matthew_abt_del": {
+    "player_name": "Matthew Abt",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "phil_hungerecker_del": {
+    "player_name": "Phil Hungerecker",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "christopher_wilkie_del": {
+    "player_name": "Christopher Wilkie",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1312,8 +1015,32 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "carter_rowney_del": {
-    "player_name": "Carter Rowney",
+  "alex_green_del": {
+    "player_name": "Alex Green",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "michael_joyaux_del": {
+    "player_name": "Michael Joyaux",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ty_glover_del": {
+    "player_name": "Ty Glover",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kyle_wood_del": {
+    "player_name": "Kyle Wood",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1336,112 +1063,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "matthew_abt_del": {
-    "player_name": "Matthew Abt",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ty_glover_del": {
-    "player_name": "Ty Glover",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "mitchell_reinke_del": {
-    "player_name": "Mitchell Reinke",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "phil_hungerecker_del": {
-    "player_name": "Phil Hungerecker",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "matthew_wedman_del": {
-    "player_name": "Matthew Wedman",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "morgan_ellis_del": {
-    "player_name": "Morgan Ellis",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "sam_ruopp_del": {
-    "player_name": "Sam Ruopp",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "joseph_cramarossa_del": {
-    "player_name": "Joseph Cramarossa",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "luke_esposito_del": {
-    "player_name": "Luke Esposito",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "emil_johansson_del": {
-    "player_name": "Emil Johansson",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "thomas_larkin_del": {
-    "player_name": "Thomas Larkin",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "filip_varejcka_del": {
-    "player_name": "Filip Varejcka",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "eirik_salsten_del": {
-    "player_name": "Eirik Salsten",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "parker_tuomie_del": {
-    "player_name": "Parker Tuomie",
+  "gabriel_fontaine_del": {
+    "player_name": "Gabriel Fontaine",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1456,24 +1079,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "zachary_james_leslie_del": {
-    "player_name": "Zachary James Leslie",
+  "nicolas_krammer_del": {
+    "player_name": "Nicolas Krämmer",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "fabio_pfohl_del": {
-    "player_name": "Fabio Pfohl",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "rourke_chartier_del": {
-    "player_name": "Rourke Chartier",
+  "eirik_salsten_del": {
+    "player_name": "Eirik Salsten",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1488,8 +1103,40 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "blaine_byron_del": {
-    "player_name": "Blaine Byron",
+  "zachary_james_leslie_del": {
+    "player_name": "Zachary James Leslie",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "joseph_cramarossa_del": {
+    "player_name": "Joseph Cramarossa",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "phillip_bruggisser_del": {
+    "player_name": "Phillip Bruggisser",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "mitchell_reinke_del": {
+    "player_name": "Mitchell Reinke",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "emil_johansson_del": {
+    "player_name": "Emil Johansson",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1504,16 +1151,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "lean_bergmann_del": {
-    "player_name": "Lean Bergmann",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "benjamin_marshall_del": {
-    "player_name": "Benjamin Marshall",
+  "filip_varejcka_del": {
+    "player_name": "Filip Varejcka",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1528,8 +1167,96 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "jakob_lilja_del": {
-    "player_name": "Jakob Lilja",
+  "parker_tuomie_del": {
+    "player_name": "Parker Tuomie",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "fabio_pfohl_del": {
+    "player_name": "Fabio Pfohl",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "sam_ruopp_del": {
+    "player_name": "Sam Ruopp",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "morgan_ellis_del": {
+    "player_name": "Morgan Ellis",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "luke_esposito_del": {
+    "player_name": "Luke Esposito",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "thomas_larkin_del": {
+    "player_name": "Thomas Larkin",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "lukas_kalble_del": {
+    "player_name": "Lukas Kälble",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "matt_choupani_del": {
+    "player_name": "Matt Choupani",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "rourke_chartier_del": {
+    "player_name": "Rourke Chartier",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "julian_melchiori_del": {
+    "player_name": "Julian Melchiori",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "benjamin_marshall_del": {
+    "player_name": "Benjamin Marshall",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "blaine_byron_del": {
+    "player_name": "Blaine Byron",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1538,6 +1265,38 @@
   },
   "luis_schinko_del": {
     "player_name": "Luis Schinko",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "alec_mccrea_del": {
+    "player_name": "Alec McCrea",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "alex_trivellato_del": {
+    "player_name": "Alex Trivellato",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "lean_bergmann_del": {
+    "player_name": "Lean Bergmann",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jakob_lilja_del": {
+    "player_name": "Jakob Lilja",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1560,40 +1319,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "julian_melchiori_del": {
-    "player_name": "Julian Melchiori",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "zach_senyshyn_del": {
     "player_name": "Zach Senyshyn",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "wade_allison_del": {
-    "player_name": "Wade Allison",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "phillip_bruggisser_del": {
-    "player_name": "Phillip Bruggisser",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alex_trivellato_del": {
-    "player_name": "Alex Trivellato",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1608,6 +1335,22 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "wade_allison_del": {
+    "player_name": "Wade Allison",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "lester_lancaster_del": {
+    "player_name": "Lester Lancaster",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "sebastian_uvira_del": {
     "player_name": "Sebastian Uvira",
     "league": "DEL",
@@ -1616,24 +1359,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "josh_melnick_del": {
-    "player_name": "Josh Melnick",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "boaz_bassen_del": {
-    "player_name": "Boaz Bassen",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alec_mccrea_del": {
-    "player_name": "Alec McCrea",
+  "cody_haiskanen_del": {
+    "player_name": "Cody Haiskanen",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1648,8 +1375,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "andrew_yogan_del": {
-    "player_name": "Andrew Yogan",
+  "dan_renouf_del": {
+    "player_name": "Dan Renouf",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1672,16 +1399,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "matt_choupani_del": {
-    "player_name": "Matt Choupani",
+  "nino_kinder_del": {
+    "player_name": "Nino Kinder",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "lester_lancaster_del": {
-    "player_name": "Lester Lancaster",
+  "josh_melnick_del": {
+    "player_name": "Josh Melnick",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1696,8 +1423,56 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "boaz_bassen_del": {
+    "player_name": "Boaz Bassen",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "andrew_yogan_del": {
+    "player_name": "Andrew Yogan",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "dennis_lobach_del": {
+    "player_name": "Dennis Lobach",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "fabio_wagner_del": {
+    "player_name": "Fabio Wagner",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "johannes_krauß_del": {
     "player_name": "Johannes Krauß",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "nathan_burns_del": {
+    "player_name": "Nathan Burns",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "tim_brunnhuber_del": {
+    "player_name": "Tim Brunnhuber",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1720,14 +1495,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "dan_renouf_del": {
-    "player_name": "Dan Renouf",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "jakob_weber_del": {
     "player_name": "Jakob Weber",
     "league": "DEL",
@@ -1736,16 +1503,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "ryan_button_del": {
-    "player_name": "Ryan Button",
+  "stephan_daschner_del": {
+    "player_name": "Stephan Daschner",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "dennis_lobach_del": {
-    "player_name": "Dennis Lobach",
+  "ryan_button_del": {
+    "player_name": "Ryan Button",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1768,6 +1535,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "ross_mauermann_del": {
+    "player_name": "Ross Mauermann",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "mirko_hofflin_del": {
     "player_name": "Mirko Höfflin",
     "league": "DEL",
@@ -1784,8 +1559,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "fabio_wagner_del": {
-    "player_name": "Fabio Wagner",
+  "kevin_niedenz_del": {
+    "player_name": "Kevin Niedenz",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "marcus_weber_del": {
+    "player_name": "Marcus Weber",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1800,16 +1583,24 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "tim_brunnhuber_del": {
-    "player_name": "Tim Brunnhuber",
+  "taro_jentzsch_del": {
+    "player_name": "Taro Jentzsch",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "nino_kinder_del": {
-    "player_name": "Nino Kinder",
+  "moritz_muller_del": {
+    "player_name": "Moritz Müller",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "henrik_tornqvist_del": {
+    "player_name": "Henrik Törnqvist",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1832,16 +1623,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "kevin_niedenz_del": {
-    "player_name": "Kevin Niedenz",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "taro_jentzsch_del": {
-    "player_name": "Taro Jentzsch",
+  "william_graber_del": {
+    "player_name": "William Graber",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -1856,12 +1639,12 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "nathan_burns_del": {
-    "player_name": "Nathan Burns",
+  "max_gortz_del": {
+    "player_name": "Max Görtz",
     "league": "DEL",
     "team": "",
-    "status": "pending",
-    "verified_at": null,
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:41.288322",
     "method": "heuristic_discovery"
   },
   "matias_lassen_del": {
@@ -1872,52 +1655,76 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "moritz_muller_del": {
-    "player_name": "Moritz Müller",
+  "gemel_smith_del": {
+    "player_name": "Gemel Smith",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "stephan_daschner_del": {
-    "player_name": "Stephan Daschner",
+  "markus_schweiger_del": {
+    "player_name": "Markus Schweiger",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "henrik_tornqvist_del": {
-    "player_name": "Henrik Törnqvist",
+  "rayan_bettahar_del": {
+    "player_name": "Rayan Bettahar",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "ross_mauermann_del": {
-    "player_name": "Ross Mauermann",
+  "manuel_wiederer_del": {
+    "player_name": "Manuel Wiederer",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "marcus_weber_del": {
-    "player_name": "Marcus Weber",
+  "ryan_mckiernan_del": {
+    "player_name": "Ryan McKiernan",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "max_gortz_del": {
-    "player_name": "Max Görtz",
+  "michael_connolly_del": {
+    "player_name": "Michael Connolly",
     "league": "DEL",
     "team": "",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:25.923385",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "eric_hordler_del": {
+    "player_name": "Eric Hördler",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "eric_jonathan_uba_del": {
+    "player_name": "Eric Jonathan Uba",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "philip_rosa-preto_del": {
+    "player_name": "Philip Rosa-Preto",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
     "method": "heuristic_discovery"
   },
   "david_suvanto_del": {
@@ -1952,54 +1759,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "c.j._suess_del": {
-    "player_name": "C.J. Suess",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "rayan_bettahar_del": {
-    "player_name": "Rayan Bettahar",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "manuel_wiederer_del": {
-    "player_name": "Manuel Wiederer",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ryan_mckiernan_del": {
-    "player_name": "Ryan McKiernan",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "eric_hordler_del": {
-    "player_name": "Eric Hördler",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "gemel_smith_del": {
-    "player_name": "Gemel Smith",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "brendan_o_donnell_del": {
     "player_name": "Brendan O´Donnell",
     "league": "DEL",
@@ -2008,32 +1767,24 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "markus_schweiger_del": {
-    "player_name": "Markus Schweiger",
+  "c.j._suess_del": {
+    "player_name": "C.J. Suess",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "maximilian_kastner_del": {
-    "player_name": "Maximilian Kastner",
+  "roman_kechter_del": {
+    "player_name": "Roman Kechter",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "philipp_krening_del": {
-    "player_name": "Philipp Krening",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jakob_ustorf_del": {
-    "player_name": "Jakob Ustorf",
+  "tommy_pasanen_del": {
+    "player_name": "Tommy Pasanen",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2048,6 +1799,70 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "nicholas_b._jensen_del": {
+    "player_name": "Nicholas B. Jensen",
+    "league": "DEL",
+    "team": "",
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:41.323651",
+    "method": "heuristic_discovery"
+  },
+  "maximilian_kastner_del": {
+    "player_name": "Maximilian Kastner",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "daniel_wirt_del": {
+    "player_name": "Daniel Wirt",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "philipp_krening_del": {
+    "player_name": "Philipp Krening",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kai_wissmann_del": {
+    "player_name": "Kai Wissmann",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jakob_ustorf_del": {
+    "player_name": "Jakob Ustorf",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "fabian_herrmann_del": {
+    "player_name": "Fabian Herrmann",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "sinan_akdag_del": {
+    "player_name": "Sinan Akdag",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "jason_bast_del": {
     "player_name": "Jason Bast",
     "league": "DEL",
@@ -2056,8 +1871,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "eric_jonathan_uba_del": {
-    "player_name": "Eric Jonathan Uba",
+  "hakon_hanelt_del": {
+    "player_name": "Håkon Hänelt",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2088,6 +1903,22 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "christian_hanke_del": {
+    "player_name": "Christian Hanke",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "thomas_jordan_trevelyan_del": {
+    "player_name": "Thomas Jordan Trevelyan",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "korbinian_geibel_del": {
     "player_name": "Korbinian Geibel",
     "league": "DEL",
@@ -2096,16 +1927,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "roman_kechter_del": {
-    "player_name": "Roman Kechter",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "kai_wissmann_del": {
-    "player_name": "Kai Wissmann",
+  "c.j._smith_del": {
+    "player_name": "C.J. Smith",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2128,32 +1951,40 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "philip_rosa-preto_del": {
-    "player_name": "Philip Rosa-Preto",
+  "eugen_alanov_del": {
+    "player_name": "Eugen Alanov",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "nicholas_b._jensen_del": {
-    "player_name": "Nicholas B. Jensen",
-    "league": "DEL",
-    "team": "",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:25.973427",
-    "method": "heuristic_discovery"
-  },
-  "daniel_wirt_del": {
-    "player_name": "Daniel Wirt",
+  "adam_smith_del": {
+    "player_name": "Adam Smith",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "fabian_herrmann_del": {
-    "player_name": "Fabian Herrmann",
+  "ricardo_hendreschke_del": {
+    "player_name": "Ricardo Hendreschke",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "yannick_proske_del": {
+    "player_name": "Yannick Proske",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jakin_smallwood_del": {
+    "player_name": "Jakin Smallwood",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2170,14 +2001,6 @@
   },
   "jean-sebastien_dea_del": {
     "player_name": "Jean-Sébastien Dea",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "michael_connolly_del": {
-    "player_name": "Michael Connolly",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2208,8 +2031,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "adam_smith_del": {
-    "player_name": "Adam Smith",
+  "noah_dunham_del": {
+    "player_name": "Noah Dunham",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2248,14 +2071,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "jakin_smallwood_del": {
-    "player_name": "Jakin Smallwood",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "josef_eham_del": {
     "player_name": "Josef Eham",
     "league": "DEL",
@@ -2264,40 +2079,40 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "ricardo_hendreschke_del": {
-    "player_name": "Ricardo Hendreschke",
+  "timo_ruckdaschel_del": {
+    "player_name": "Timo Ruckdäschel",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "yannick_proske_del": {
-    "player_name": "Yannick Proske",
+  "timo_bakos_del": {
+    "player_name": "Timo Bakos",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "christian_hanke_del": {
-    "player_name": "Christian Hanke",
+  "julius_ramoser_del": {
+    "player_name": "Julius Ramoser",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "william_graber_del": {
-    "player_name": "William Graber",
+  "fabio_kose_del": {
+    "player_name": "Fabio Kose",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "sinan_akdag_del": {
-    "player_name": "Sinan Akdag",
+  "chris_jandric_del": {
+    "player_name": "Chris Jandric",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2320,8 +2135,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "lua_niehus_del": {
-    "player_name": "Lua Niehus",
+  "johannes_huß_del": {
+    "player_name": "Johannes Huß",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2336,24 +2151,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "noah_dunham_del": {
-    "player_name": "Noah Dunham",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "eugen_alanov_del": {
-    "player_name": "Eugen Alanov",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "thomas_jordan_trevelyan_del": {
-    "player_name": "Thomas Jordan Trevelyan",
+  "lua_niehus_del": {
+    "player_name": "Lua Niehus",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2384,14 +2183,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "julius_ramoser_del": {
-    "player_name": "Julius Ramoser",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "oliver_granz_del": {
     "player_name": "Oliver Granz",
     "league": "DEL",
@@ -2400,24 +2191,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "chris_jandric_del": {
-    "player_name": "Chris Jandric",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "timo_bakos_del": {
-    "player_name": "Timo Bakos",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "fabio_kose_del": {
-    "player_name": "Fabio Kose",
+  "moritz_wirth_del": {
+    "player_name": "Moritz Wirth",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2440,8 +2215,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "johannes_huß_del": {
-    "player_name": "Johannes Huß",
+  "maxim_rausch_del": {
+    "player_name": "Maxim Rausch",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2472,6 +2247,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "simon_seidl_del": {
+    "player_name": "Simon Seidl",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "linus_brandl_del": {
     "player_name": "Linus Brandl",
     "league": "DEL",
@@ -2490,6 +2273,22 @@
   },
   "hayden_shaw_del": {
     "player_name": "Hayden Shaw",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "phillip_sinn_del": {
+    "player_name": "Phillip Sinn",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "matthias_pischoff_del": {
+    "player_name": "Matthias Pischoff",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2520,16 +2319,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "niklas_hubner_del": {
-    "player_name": "Niklas Hübner",
+  "markus_niemelainen_del": {
+    "player_name": "Markus Niemeläinen",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "bruno_riedl_del": {
-    "player_name": "Bruno Riedl",
+  "niklas_hubner_del": {
+    "player_name": "Niklas Hübner",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2544,16 +2343,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "brett_brochu_del": {
-    "player_name": "Brett Brochu",
+  "bruno_riedl_del": {
+    "player_name": "Bruno Riedl",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "bjorn_krupp_del": {
-    "player_name": "Björn Krupp",
+  "brett_brochu_del": {
+    "player_name": "Brett Brochu",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2568,8 +2367,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "maxim_rausch_del": {
-    "player_name": "Maxim Rausch",
+  "bjorn_krupp_del": {
+    "player_name": "Björn Krupp",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2592,8 +2391,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "c.j._smith_del": {
-    "player_name": "C.J. Smith",
+  "david_farrance_del": {
+    "player_name": "David Farrance",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2602,14 +2401,6 @@
   },
   "sven_ziegler_del": {
     "player_name": "Sven Ziegler",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "simon_seidl_del": {
-    "player_name": "Simon Seidl",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2632,6 +2423,22 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "connor_korte_del": {
+    "player_name": "Connor Korte",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "simon_karlsson_del": {
+    "player_name": "Simon Karlsson",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "luca_hauf_del": {
     "player_name": "Luca Hauf",
     "league": "DEL",
@@ -2642,6 +2449,14 @@
   },
   "dustin_strahlmeier_del": {
     "player_name": "Dustin Strahlmeier",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "markus_nutivaara_del": {
+    "player_name": "Markus Nutivaara",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2664,8 +2479,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "markus_niemelainen_del": {
-    "player_name": "Markus Niemeläinen",
+  "tomas_sykora_del": {
+    "player_name": "Tomas Sykora",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2688,6 +2503,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "leon_hungerecker_del": {
+    "player_name": "Leon Hungerecker",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "peter_spornberger_del": {
     "player_name": "Peter Spornberger",
     "league": "DEL",
@@ -2698,14 +2521,6 @@
   },
   "peyton_jones_del": {
     "player_name": "Peyton Jones",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "leon_hungerecker_del": {
-    "player_name": "Leon Hungerecker",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2736,14 +2551,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "phillip_sinn_del": {
-    "player_name": "Phillip Sinn",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "jakub_borzecki_del": {
     "player_name": "Jakub Borzecki",
     "league": "DEL",
@@ -2768,14 +2575,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "david_farrance_del": {
-    "player_name": "David Farrance",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "samir_kharboutli_del": {
     "player_name": "Samir Kharboutli",
     "league": "DEL",
@@ -2792,8 +2591,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "markus_nutivaara_del": {
-    "player_name": "Markus Nutivaara",
+  "alberts_smits_del": {
+    "player_name": "Alberts Smits",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2824,14 +2623,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "florian_bugl_del": {
-    "player_name": "Florian Bugl",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "rio_kaiser_del": {
     "player_name": "Rio Kaiser",
     "league": "DEL",
@@ -2848,8 +2639,24 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "florian_bugl_del": {
+    "player_name": "Florian Bugl",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "vadim_schreiner_del": {
     "player_name": "Vadim Schreiner",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "cody_brenner_del": {
+    "player_name": "Cody Brenner",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2864,16 +2671,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "tomas_sykora_del": {
-    "player_name": "Tomas Sykora",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "moritz_wirth_del": {
-    "player_name": "Moritz Wirth",
+  "sten_fischer_del": {
+    "player_name": "Sten Fischer",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2888,14 +2687,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "sten_fischer_del": {
-    "player_name": "Sten Fischer",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "julius_hudacek_del": {
     "player_name": "Julius Hudacek",
     "league": "DEL",
@@ -2904,24 +2695,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "connor_korte_del": {
-    "player_name": "Connor Korte",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "niklas_postel_del": {
     "player_name": "Niklas Postel",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "simon_karlsson_del": {
-    "player_name": "Simon Karlsson",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -2962,14 +2737,6 @@
   },
   "daniel_geiger_del": {
     "player_name": "Daniel Geiger",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "matthias_pischoff_del": {
-    "player_name": "Matthias Pischoff",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -3144,6 +2911,22 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "gianluca_bauml_del": {
+    "player_name": "Gianluca Bäuml",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "bartholomaus_oswald_del": {
+    "player_name": "Bartholomäus Oswald",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "lukas_simon_jung_del": {
     "player_name": "Lukas Simon Jung",
     "league": "DEL",
@@ -3232,6 +3015,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "karl_gartner_del": {
+    "player_name": "Karl Gärtner",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "til_raab_del": {
     "player_name": "Til Raab",
     "league": "DEL",
@@ -3264,32 +3055,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "christopher_gibson_del": {
-    "player_name": "Christopher Gibson",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alberts_smits_del": {
-    "player_name": "Alberts Smits",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "ivan_komirist_del": {
     "player_name": "Ivan Komirist",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "william_worge_kreu_del": {
-    "player_name": "William Worge Kreü",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -3304,6 +3071,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "christopher_gibson_del": {
+    "player_name": "Christopher Gibson",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "luca_munzenberger_del": {
     "player_name": "Luca Münzenberger",
     "league": "DEL",
@@ -3312,16 +3087,24 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "luca_tosto_del": {
-    "player_name": "Luca Tosto",
+  "nick_mahler_del": {
+    "player_name": "Nick Mähler",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "liron_alec_pellizzari_del": {
-    "player_name": "Liron Alec Pellizzari",
+  "william_worge_kreu_del": {
+    "player_name": "William Worge Kreü",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "luca_tosto_del": {
+    "player_name": "Luca Tosto",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -3368,6 +3151,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "liron_alec_pellizzari_del": {
+    "player_name": "Liron Alec Pellizzari",
+    "league": "DEL",
+    "team": "",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "simon_wolf_del": {
     "player_name": "Simon Wolf",
     "league": "DEL",
@@ -3400,16 +3191,16 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "kristers_gudlevskis_del": {
-    "player_name": "Kristers Gudlevskis",
+  "michael_bitzer_del": {
+    "player_name": "Michael Bitzer",
     "league": "DEL",
     "team": "",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "michael_bitzer_del": {
-    "player_name": "Michael Bitzer",
+  "manuel_alberg_del": {
+    "player_name": "Manuel Alberg",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -3424,8 +3215,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "manuel_alberg_del": {
-    "player_name": "Manuel Alberg",
+  "kristers_gudlevskis_del": {
+    "player_name": "Kristers Gudlevskis",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -3466,14 +3257,6 @@
   },
   "mathias_niederberger_del": {
     "player_name": "Mathias Niederberger",
-    "league": "DEL",
-    "team": "",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "cody_brenner_del": {
-    "player_name": "Cody Brenner",
     "league": "DEL",
     "team": "",
     "status": "pending",
@@ -4288,6 +4071,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "robin_nico_antenen_nl": {
+    "player_name": "Robin Nico Antenen",
+    "league": "NL",
+    "team": "EV Zug",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "loris_wey_nl": {
     "player_name": "Loris Wey",
     "league": "NL",
@@ -4400,6 +4191,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "santiago_naf_nl": {
+    "player_name": "Santiago Näf",
+    "league": "NL",
+    "team": "EV Zug",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "livio_truog_nl": {
     "player_name": "Livio Truog",
     "league": "NL",
@@ -4426,6 +4225,14 @@
   },
   "santo_simmchen_nl": {
     "player_name": "Santo Simmchen",
+    "league": "NL",
+    "team": "EV Zug",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jens_nater_nl": {
+    "player_name": "Jens Nater",
     "league": "NL",
     "team": "EV Zug",
     "status": "pending",
@@ -4554,6 +4361,14 @@
   },
   "mischa_ramel_nl": {
     "player_name": "Mischa Ramel",
+    "league": "NL",
+    "team": "EHC Kloten",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "reto_schappi_nl": {
+    "player_name": "Reto Schäppi",
     "league": "NL",
     "team": "EHC Kloten",
     "status": "pending",
@@ -4744,6 +4559,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "jesper_peltonen_nl": {
+    "player_name": "Jesper Peltonen",
+    "league": "NL",
+    "team": "HC Lugano",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "santeri_alatalo_nl": {
     "player_name": "Santeri Alatalo",
     "league": "NL",
@@ -4818,6 +4641,14 @@
   },
   "marco_zanetti_nl": {
     "player_name": "Marco Zanetti",
+    "league": "NL",
+    "team": "HC Lugano",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "aleksi_peltonen_nl": {
+    "player_name": "Aleksi Peltonen",
     "league": "NL",
     "team": "HC Lugano",
     "status": "pending",
@@ -4915,7 +4746,7 @@
   "cole_cormier_nl": {
     "player_name": "Cole Cormier",
     "league": "NL",
-    "team": "HC Ajoie",
+    "team": "HC Lugano",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -5136,6 +4967,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "matej_stransky_nl": {
+    "player_name": "Matej Stransky",
+    "league": "NL",
+    "team": "HC Davos",
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:44.058224",
+    "method": "heuristic_discovery"
+  },
   "rasmus_asplund_nl": {
     "player_name": "Rasmus Asplund",
     "league": "NL",
@@ -5149,7 +4988,7 @@
     "league": "NL",
     "team": "HC Davos",
     "status": "rejected",
-    "verified_at": "2026-03-08T14:40:27.392761",
+    "verified_at": "2026-03-28T13:15:44.077814",
     "method": "heuristic_discovery"
   },
   "simon_ryfors_nl": {
@@ -5176,6 +5015,22 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "ludvig_claesson_nl": {
+    "player_name": "Ludvig Claesson",
+    "league": "NL",
+    "team": "HC Davos",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "roope_taponen_nl": {
+    "player_name": "Roope Taponen",
+    "league": "NL",
+    "team": "HC Davos",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "philip_wuthrich_nl": {
     "player_name": "Philip Wüthrich",
     "league": "NL",
@@ -5194,6 +5049,14 @@
   },
   "gilles_senn_nl": {
     "player_name": "Gilles Senn",
+    "league": "NL",
+    "team": "HC Ambri-Piotta",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "aris_hafliger_nl": {
+    "player_name": "Aris Häfliger",
     "league": "NL",
     "team": "HC Ambri-Piotta",
     "status": "pending",
@@ -5731,7 +5594,7 @@
   "florian_schenk_nl": {
     "player_name": "Florian Schenk",
     "league": "NL",
-    "team": "Lausanne HC",
+    "team": "SC Bern",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -6008,6 +5871,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "simon_bar_nl": {
+    "player_name": "Simon Bär",
+    "league": "NL",
+    "team": "SCL Tigers",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "sean_malone_nl": {
     "player_name": "Sean Malone",
     "league": "NL",
@@ -6176,6 +6047,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "jeremie_bartschi_nl": {
+    "player_name": "Jérémie Bärtschi",
+    "league": "NL",
+    "team": "EHC Biel-Bienne",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "leo_braillard_nl": {
     "player_name": "Leo Braillard",
     "league": "NL",
@@ -6282,6 +6161,14 @@
   },
   "livio_christen_nl": {
     "player_name": "Livio Christen",
+    "league": "NL",
+    "team": "EHC Biel-Bienne",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "cedric_aeschbach_nl": {
+    "player_name": "Cédric Aeschbach",
     "league": "NL",
     "team": "EHC Biel-Bienne",
     "status": "pending",
@@ -6586,6 +6473,38 @@
   },
   "ty_rattie_nl": {
     "player_name": "Ty Rattie",
+    "league": "NL",
+    "team": "Fribourg-Gottéron",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "juuso_arola_nl": {
+    "player_name": "Juuso Arola",
+    "league": "NL",
+    "team": "Fribourg-Gottéron",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "alain_bircher_nl": {
+    "player_name": "Alain Bircher",
+    "league": "NL",
+    "team": "Fribourg-Gottéron",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "alessandro_villa_nl": {
+    "player_name": "Alessandro Villa",
+    "league": "NL",
+    "team": "Fribourg-Gottéron",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "dominik_binias_nl": {
+    "player_name": "Dominik Binias",
     "league": "NL",
     "team": "Fribourg-Gottéron",
     "status": "pending",
@@ -6944,6 +6863,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "erik_brannstrom_nl": {
+    "player_name": "Erik Brännström",
+    "league": "NL",
+    "team": "Lausanne HC",
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:46.304101",
+    "method": "heuristic_discovery"
+  },
   "dominik_kahun_nl": {
     "player_name": "Dominik Kahun",
     "league": "NL",
@@ -6962,6 +6889,14 @@
   },
   "stefan_ruegsegger_nl": {
     "player_name": "Stefan Rüegsegger",
+    "league": "NL",
+    "team": "Lausanne HC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ken_jager_nl": {
+    "player_name": "Ken Jäger",
     "league": "NL",
     "team": "Lausanne HC",
     "status": "pending",
@@ -7296,6 +7231,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "elvis_schlapfer_nl": {
+    "player_name": "Elvis Schläpfer",
+    "league": "NL",
+    "team": "HC Ajoie",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "lilian_garessus_nl": {
     "player_name": "Lilian Garessus",
     "league": "NL",
@@ -7368,14 +7311,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "cedric_aeschbach_nl": {
-    "player_name": "Cédric Aeschbach",
-    "league": "NL",
-    "team": "HC Ajoie",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "david_brodecky_nl": {
     "player_name": "David Brodecky",
     "league": "NL",
@@ -7386,6 +7321,14 @@
   },
   "tarmo_reunanen_nl": {
     "player_name": "Tarmo Reunanen",
+    "league": "NL",
+    "team": "HC Ajoie",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jakob_stukel_nl": {
+    "player_name": "Jakob Stukel",
     "league": "NL",
     "team": "HC Ajoie",
     "status": "pending",
@@ -7413,7 +7356,7 @@
     "league": "Extraliga",
     "team": "HC Sparta Praha",
     "status": "rejected",
-    "verified_at": "2026-03-08T14:40:29.278209",
+    "verified_at": "2026-03-28T13:15:47.547106",
     "method": "heuristic_discovery"
   },
   "alex_tamasi_extraliga": {
@@ -7468,6 +7411,14 @@
     "player_name": "Phil Pietroniro",
     "league": "Extraliga",
     "team": "Rytíři Kladno",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "markus_nenonen_extraliga": {
+    "player_name": "Markus Nenonen",
+    "league": "Extraliga",
+    "team": "HC Škoda Plzeň",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -7629,29 +7580,13 @@
     "league": "ICEHL",
     "team": "OLL",
     "status": "rejected",
-    "verified_at": "2026-03-08T14:40:29.924086",
+    "verified_at": "2026-03-28T13:15:48.350379",
     "method": "heuristic_discovery"
   },
   "mathias_from_icehl": {
     "player_name": "Mathias From",
     "league": "ICEHL",
     "team": "KAC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "terrence_james_brennan_icehl": {
-    "player_name": "Terrence James Brennan",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "michael_raffl_icehl": {
-    "player_name": "Michael Raffl",
-    "league": "ICEHL",
-    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -7664,8 +7599,40 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "michael_raffl_icehl": {
+    "player_name": "Michael Raffl",
+    "league": "ICEHL",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "terrence_james_brennan_icehl": {
+    "player_name": "Terrence James Brennan",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "cole_schneider_icehl": {
     "player_name": "Cole Schneider",
+    "league": "ICEHL",
+    "team": "HCB",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "nicholas_bailen_icehl": {
+    "player_name": "Nicholas Bailen",
+    "league": "ICEHL",
+    "team": "G99",
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:48.454349",
+    "method": "heuristic_discovery"
+  },
+  "brad_mcclure_icehl": {
+    "player_name": "Brad McClure",
     "league": "ICEHL",
     "team": "HCB",
     "status": "pending",
@@ -7688,24 +7655,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "nicholas_bailen_icehl": {
-    "player_name": "Nicholas Bailen",
-    "league": "ICEHL",
-    "team": "G99",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:29.969038",
-    "method": "heuristic_discovery"
-  },
   "brett_pollock_icehl": {
     "player_name": "Brett Pollock",
-    "league": "ICEHL",
-    "team": "HCB",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "brad_mcclure_icehl": {
-    "player_name": "Brad McClure",
     "league": "ICEHL",
     "team": "HCB",
     "status": "pending",
@@ -7720,10 +7671,26 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "henry_bowlby_icehl": {
+    "player_name": "Henry Bowlby",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "linden_vey_icehl": {
     "player_name": "Linden Vey",
     "league": "ICEHL",
     "team": "VIC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "travis_st._denis_icehl": {
+    "player_name": "Travis St. Denis",
+    "league": "ICEHL",
+    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -7744,26 +7711,50 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "travis_st._denis_icehl": {
-    "player_name": "Travis St. Denis",
+  "matt_bradley_icehl": {
+    "player_name": "Matt Bradley",
     "league": "ICEHL",
-    "team": "RBS",
+    "team": "HCB",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "henry_bowlby_icehl": {
-    "player_name": "Henry Bowlby",
+  "nicholas_eric_petersen_icehl": {
+    "player_name": "Nicholas Eric Petersen",
     "league": "ICEHL",
-    "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
+    "team": "KAC",
+    "status": "rejected",
+    "verified_at": "2026-03-28T13:15:48.601860",
     "method": "heuristic_discovery"
   },
   "tyler_coulter_icehl": {
     "player_name": "Tyler Coulter",
     "league": "ICEHL",
     "team": "FTC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kevin_hancock_icehl": {
+    "player_name": "Kevin Hancock",
+    "league": "ICEHL",
+    "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jan_mursak_icehl": {
+    "player_name": "Jan Mursak",
+    "league": "ICEHL",
+    "team": "KAC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kevin_roy_icehl": {
+    "player_name": "Kevin Roy",
+    "league": "ICEHL",
+    "team": "G99",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -7784,38 +7775,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "shane_gersich_icehl": {
-    "player_name": "Shane Gersich",
-    "league": "ICEHL",
-    "team": "HCB",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "brian_lebler_icehl": {
-    "player_name": "Brian Lebler",
-    "league": "ICEHL",
-    "team": "BWL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "kevin_hancock_icehl": {
-    "player_name": "Kevin Hancock",
-    "league": "ICEHL",
-    "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "matt_bradley_icehl": {
-    "player_name": "Matt Bradley",
-    "league": "ICEHL",
-    "team": "HCB",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "josh_currie_icehl": {
     "player_name": "Josh Currie",
     "league": "ICEHL",
@@ -7832,16 +7791,40 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "kevin_roy_icehl": {
-    "player_name": "Kevin Roy",
+  "zach_boychuk_icehl": {
+    "player_name": "Zach Boychuk",
     "league": "ICEHL",
-    "team": "G99",
+    "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "dustin_gazley_icehl": {
-    "player_name": "Dustin Gazley",
+  "shane_gersich_icehl": {
+    "player_name": "Shane Gersich",
+    "league": "ICEHL",
+    "team": "HCB",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "brian_lebler_icehl": {
+    "player_name": "Brian Lebler",
+    "league": "ICEHL",
+    "team": "BWL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "marcel_mahkovec_icehl": {
+    "player_name": "Marcel Mahkovec",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "max_gildon_icehl": {
+    "player_name": "Max Gildon",
     "league": "ICEHL",
     "team": "HCB",
     "status": "pending",
@@ -7856,16 +7839,24 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "jan_mursak_icehl": {
-    "player_name": "Jan Mursak",
+  "simeon_schwinger_icehl": {
+    "player_name": "Simeon Schwinger",
     "league": "ICEHL",
     "team": "KAC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "max_gildon_icehl": {
-    "player_name": "Max Gildon",
+  "marly_quince_icehl": {
+    "player_name": "Marly Quince",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "dustin_gazley_icehl": {
+    "player_name": "Dustin Gazley",
     "league": "ICEHL",
     "team": "HCB",
     "status": "pending",
@@ -7880,48 +7871,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "zach_boychuk_icehl": {
-    "player_name": "Zach Boychuk",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "marly_quince_icehl": {
-    "player_name": "Marly Quince",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "marcel_mahkovec_icehl": {
-    "player_name": "Marcel Mahkovec",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "nicholas_eric_petersen_icehl": {
-    "player_name": "Nicholas Eric Petersen",
-    "league": "ICEHL",
-    "team": "KAC",
-    "status": "rejected",
-    "verified_at": "2026-03-08T14:40:30.130612",
-    "method": "heuristic_discovery"
-  },
   "troy_wayne_bourke_icehl": {
     "player_name": "Troy Wayne Bourke",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "benjamin_nissner_icehl": {
-    "player_name": "Benjamin Nissner",
     "league": "ICEHL",
     "team": "RBS",
     "status": "pending",
@@ -7936,10 +7887,42 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "simeon_schwinger_icehl": {
-    "player_name": "Simeon Schwinger",
+  "tommy_purdeller_icehl": {
+    "player_name": "Tommy Purdeller",
     "league": "ICEHL",
-    "team": "KAC",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "janos_hari_icehl": {
+    "player_name": "Janos Hari",
+    "league": "ICEHL",
+    "team": "AVS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "benjamin_nissner_icehl": {
+    "player_name": "Benjamin Nissner",
+    "league": "ICEHL",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "alex_petan_icehl": {
+    "player_name": "Alex Petan",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "paul_huber_icehl": {
+    "player_name": "Paul Huber",
+    "league": "ICEHL",
+    "team": "G99",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -7968,74 +7951,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "joel_messner_icehl": {
+    "player_name": "Joel Messner",
+    "league": "ICEHL",
+    "team": "AVS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "alexander_joseph_ierullo_icehl": {
     "player_name": "Alexander Joseph Ierullo",
     "league": "ICEHL",
     "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "tommy_purdeller_icehl": {
-    "player_name": "Tommy Purdeller",
-    "league": "ICEHL",
-    "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "oskar_maier_icehl": {
-    "player_name": "Oskar Maier",
-    "league": "ICEHL",
-    "team": "PIV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alex_petan_icehl": {
-    "player_name": "Alex Petan",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "casey_dornbach_icehl": {
-    "player_name": "Casey Dornbach",
-    "league": "ICEHL",
-    "team": "PIV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "dennis_robertson_icehl": {
-    "player_name": "Dennis Robertson",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jussi_tammela_icehl": {
-    "player_name": "Jussi Tammela",
-    "league": "ICEHL",
-    "team": "FTC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "nick_hutchison_icehl": {
-    "player_name": "Nick Hutchison",
-    "league": "ICEHL",
-    "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "collin_adams_icehl": {
-    "player_name": "Collin Adams",
-    "league": "ICEHL",
-    "team": "PIV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8048,6 +7975,62 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "dennis_robertson_icehl": {
+    "player_name": "Dennis Robertson",
+    "league": "ICEHL",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "nick_hutchison_icehl": {
+    "player_name": "Nick Hutchison",
+    "league": "ICEHL",
+    "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "oskar_maier_icehl": {
+    "player_name": "Oskar Maier",
+    "league": "ICEHL",
+    "team": "PIV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "greg_di_tomaso_icehl": {
+    "player_name": "Greg Di Tomaso",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "casey_dornbach_icehl": {
+    "player_name": "Casey Dornbach",
+    "league": "ICEHL",
+    "team": "PIV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jussi_tammela_icehl": {
+    "player_name": "Jussi Tammela",
+    "league": "ICEHL",
+    "team": "FTC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "collin_adams_icehl": {
+    "player_name": "Collin Adams",
+    "league": "ICEHL",
+    "team": "PIV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "rasmus_bengtsson_icehl": {
     "player_name": "Rasmus Bengtsson",
     "league": "ICEHL",
@@ -8056,18 +8039,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "bine_masic_icehl": {
-    "player_name": "Bine Masic",
+  "dylan_macpherson_icehl": {
+    "player_name": "Dylan MacPherson",
     "league": "ICEHL",
-    "team": "OLL",
+    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "paul_huber_icehl": {
-    "player_name": "Paul Huber",
+  "bine_masic_icehl": {
+    "player_name": "Bine Masic",
     "league": "ICEHL",
-    "team": "G99",
+    "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8088,26 +8071,26 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "janos_hari_icehl": {
-    "player_name": "Janos Hari",
+  "connor_corcoran_icehl": {
+    "player_name": "Connor Corcoran",
     "league": "ICEHL",
-    "team": "AVS",
+    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "greg_di_tomaso_icehl": {
-    "player_name": "Greg Di Tomaso",
+  "mario_kempe_icehl": {
+    "player_name": "Mario Kempe",
     "league": "ICEHL",
-    "team": "HCP",
+    "team": "KAC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "joel_messner_icehl": {
-    "player_name": "Joel Messner",
+  "clemens_unterweger_icehl": {
+    "player_name": "Clemens Unterweger",
     "league": "ICEHL",
-    "team": "AVS",
+    "team": "KAC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8128,14 +8111,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "connor_corcoran_icehl": {
-    "player_name": "Connor Corcoran",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "cole_gallant_icehl": {
     "player_name": "Cole Gallant",
     "league": "ICEHL",
@@ -8144,26 +8119,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "manuel_ganahl_icehl": {
+    "player_name": "Manuel Ganahl",
+    "league": "ICEHL",
+    "team": "G99",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "ken_ograjensek_icehl": {
     "player_name": "Ken Ograjensek",
     "league": "ICEHL",
     "team": "BWL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "clemens_unterweger_icehl": {
-    "player_name": "Clemens Unterweger",
-    "league": "ICEHL",
-    "team": "KAC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "dylan_macpherson_icehl": {
-    "player_name": "Dylan MacPherson",
-    "league": "ICEHL",
-    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8184,38 +8151,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "gordon_green_icehl": {
-    "player_name": "Gordon Green",
-    "league": "ICEHL",
-    "team": "FTC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "mario_kempe_icehl": {
-    "player_name": "Mario Kempe",
-    "league": "ICEHL",
-    "team": "KAC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "manuel_ganahl_icehl": {
-    "player_name": "Manuel Ganahl",
-    "league": "ICEHL",
-    "team": "G99",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "aku_kestila_icehl": {
-    "player_name": "Aku Kestila",
-    "league": "ICEHL",
-    "team": "FTC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "austin_rueschhoff_icehl": {
     "player_name": "Austin Rueschhoff",
     "league": "ICEHL",
@@ -8224,10 +8159,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "mathew_wilkins_icehl": {
-    "player_name": "Mathew Wilkins",
+  "gordon_green_icehl": {
+    "player_name": "Gordon Green",
     "league": "ICEHL",
-    "team": "HCI",
+    "team": "FTC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8240,10 +8175,74 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "jonathon_blum_icehl": {
+    "player_name": "Jonathon Blum",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "aku_kestila_icehl": {
+    "player_name": "Aku Kestila",
+    "league": "ICEHL",
+    "team": "FTC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "csanad_erdely_icehl": {
+    "player_name": "Csanad Erdely",
+    "league": "ICEHL",
+    "team": "AVS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "mathew_wilkins_icehl": {
+    "player_name": "Mathew Wilkins",
+    "league": "ICEHL",
+    "team": "HCI",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "finn_van_ee_icehl": {
     "player_name": "Finn van Ee",
     "league": "ICEHL",
     "team": "KAC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "simon_bourque_icehl": {
+    "player_name": "Simon Bourque",
+    "league": "ICEHL",
+    "team": "VIC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "mats_mikael_frycklund_icehl": {
+    "player_name": "Mats Mikael Frycklund",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "thimo_nickl_icehl": {
+    "player_name": "Thimo Nickl",
+    "league": "ICEHL",
+    "team": "KAC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "trevor_cheek_icehl": {
+    "player_name": "Trevor Cheek",
+    "league": "ICEHL",
+    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8280,10 +8279,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "simon_bourque_icehl": {
-    "player_name": "Simon Bourque",
+  "jc_lipon_icehl": {
+    "player_name": "JC Lipon",
     "league": "ICEHL",
-    "team": "VIC",
+    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8296,50 +8295,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "jonathon_blum_icehl": {
-    "player_name": "Jonathon Blum",
-    "league": "ICEHL",
-    "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "patrick_kudla_icehl": {
     "player_name": "Patrick Kudla",
     "league": "ICEHL",
     "team": "HCI",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "steven_owre_icehl": {
-    "player_name": "Steven Owre",
-    "league": "ICEHL",
-    "team": "HCI",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "max_coatta_icehl": {
-    "player_name": "Max Coatta",
-    "league": "ICEHL",
-    "team": "HCI",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jc_lipon_icehl": {
-    "player_name": "JC Lipon",
-    "league": "ICEHL",
-    "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "mats_mikael_frycklund_icehl": {
-    "player_name": "Mats Mikael Frycklund",
-    "league": "ICEHL",
-    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8352,98 +8311,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "guus_van_nes_icehl": {
-    "player_name": "Guus van Nes",
+  "steven_owre_icehl": {
+    "player_name": "Steven Owre",
     "league": "ICEHL",
-    "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "csanad_erdely_icehl": {
-    "player_name": "Csanad Erdely",
-    "league": "ICEHL",
-    "team": "AVS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "michael_schiechl_icehl": {
-    "player_name": "Michael Schiechl",
-    "league": "ICEHL",
-    "team": "G99",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "thimo_nickl_icehl": {
-    "player_name": "Thimo Nickl",
-    "league": "ICEHL",
-    "team": "KAC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "louie_roehl_icehl": {
-    "player_name": "Louie Roehl",
-    "league": "ICEHL",
-    "team": "PIV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "florian_baltram_icehl": {
-    "player_name": "Florian Baltram",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "emilio_romig_icehl": {
-    "player_name": "Emilio Romig",
-    "league": "ICEHL",
-    "team": "BWL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ziga_pance_icehl": {
-    "player_name": "Ziga Pance",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "kevin_macierzynski_icehl": {
-    "player_name": "Kevin Macierzynski",
-    "league": "ICEHL",
-    "team": "PIV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "cristiano_digiacinto_icehl": {
-    "player_name": "Cristiano Digiacinto",
-    "league": "ICEHL",
-    "team": "HCB",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "thomas_raffl_icehl": {
-    "player_name": "Thomas Raffl",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jesper_jensen_aabo_icehl": {
-    "player_name": "Jesper Jensen Aabo",
-    "league": "ICEHL",
-    "team": "KAC",
+    "team": "HCI",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8456,18 +8327,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "logan_roe_icehl": {
-    "player_name": "Logan Roe",
+  "max_coatta_icehl": {
+    "player_name": "Max Coatta",
     "league": "ICEHL",
-    "team": "BWL",
+    "team": "HCI",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "philip_samuelsson_icehl": {
-    "player_name": "Philip Samuelsson",
+  "guus_van_nes_icehl": {
+    "player_name": "Guus van Nes",
     "league": "ICEHL",
-    "team": "HCB",
+    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8480,38 +8351,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "trevor_cheek_icehl": {
-    "player_name": "Trevor Cheek",
-    "league": "ICEHL",
-    "team": "AVS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "philipp_lindner_icehl": {
-    "player_name": "Philipp Lindner",
-    "league": "ICEHL",
-    "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "elias_jeronimo_wallenta_icehl": {
-    "player_name": "Elias Jeronimo Wallenta",
-    "league": "ICEHL",
-    "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "emmett_sproule_icehl": {
-    "player_name": "Emmett Sproule",
-    "league": "ICEHL",
-    "team": "HCI",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "ol_einar_engeland_andersen_icehl": {
     "player_name": "Ol Einar Engeland Andersen",
     "league": "ICEHL",
@@ -8520,8 +8359,40 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "evan_polei_icehl": {
-    "player_name": "Evan Polei",
+  "jesper_jensen_aabo_icehl": {
+    "player_name": "Jesper Jensen Aabo",
+    "league": "ICEHL",
+    "team": "KAC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "cristiano_digiacinto_icehl": {
+    "player_name": "Cristiano Digiacinto",
+    "league": "ICEHL",
+    "team": "HCB",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "michael_schiechl_icehl": {
+    "player_name": "Michael Schiechl",
+    "league": "ICEHL",
+    "team": "G99",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "louie_roehl_icehl": {
+    "player_name": "Louie Roehl",
+    "league": "ICEHL",
+    "team": "PIV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ziga_pance_icehl": {
+    "player_name": "Ziga Pance",
     "league": "ICEHL",
     "team": "OLL",
     "status": "pending",
@@ -8536,26 +8407,42 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "istvan_bartalis_icehl": {
-    "player_name": "Istvan Bartalis",
+  "florian_baltram_icehl": {
+    "player_name": "Florian Baltram",
     "league": "ICEHL",
-    "team": "AVS",
+    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "cole_hults_icehl": {
-    "player_name": "Cole Hults",
+  "thomas_raffl_icehl": {
+    "player_name": "Thomas Raffl",
     "league": "ICEHL",
-    "team": "VIC",
+    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "markus_lauridsen_icehl": {
-    "player_name": "Markus Lauridsen",
+  "emilio_romig_icehl": {
+    "player_name": "Emilio Romig",
     "league": "ICEHL",
-    "team": "HCP",
+    "team": "BWL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kevin_macierzynski_icehl": {
+    "player_name": "Kevin Macierzynski",
+    "league": "ICEHL",
+    "team": "PIV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "philipp_lindner_icehl": {
+    "player_name": "Philipp Lindner",
+    "league": "ICEHL",
+    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8568,18 +8455,74 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "anders_koch_icehl": {
-    "player_name": "Anders Koch",
+  "robert_sabolic_icehl": {
+    "player_name": "Robert Sabolic",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "logan_roe_icehl": {
+    "player_name": "Logan Roe",
+    "league": "ICEHL",
+    "team": "BWL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "markus_lauridsen_icehl": {
+    "player_name": "Markus Lauridsen",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "philip_samuelsson_icehl": {
+    "player_name": "Philip Samuelsson",
+    "league": "ICEHL",
+    "team": "HCB",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "evan_polei_icehl": {
+    "player_name": "Evan Polei",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "nick_swaney_icehl": {
+    "player_name": "Nick Swaney",
     "league": "ICEHL",
     "team": "G99",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "jeremy_gregoire_icehl": {
-    "player_name": "Jeremy Gregoire",
+  "elias_jeronimo_wallenta_icehl": {
+    "player_name": "Elias Jeronimo Wallenta",
     "league": "ICEHL",
-    "team": "VIC",
+    "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "alex_wall_icehl": {
+    "player_name": "Alex Wall",
+    "league": "ICEHL",
+    "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "emmett_sproule_icehl": {
+    "player_name": "Emmett Sproule",
+    "league": "ICEHL",
+    "team": "HCI",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8608,26 +8551,58 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "istvan_bartalis_icehl": {
+    "player_name": "Istvan Bartalis",
+    "league": "ICEHL",
+    "team": "AVS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "justin_richards_icehl": {
+    "player_name": "Justin Richards",
+    "league": "ICEHL",
+    "team": "AVS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "cole_hults_icehl": {
+    "player_name": "Cole Hults",
+    "league": "ICEHL",
+    "team": "VIC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "anders_koch_icehl": {
+    "player_name": "Anders Koch",
+    "league": "ICEHL",
+    "team": "G99",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "jeremy_gregoire_icehl": {
+    "player_name": "Jeremy Gregoire",
+    "league": "ICEHL",
+    "team": "VIC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "maximilian_rebernig_icehl": {
+    "player_name": "Maximilian Rebernig",
+    "league": "ICEHL",
+    "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "thomas_hundertpfund_icehl": {
     "player_name": "Thomas Hundertpfund",
     "league": "ICEHL",
     "team": "KAC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "robert_sabolic_icehl": {
-    "player_name": "Robert Sabolic",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alex_wall_icehl": {
-    "player_name": "Alex Wall",
-    "league": "ICEHL",
-    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8656,24 +8631,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "justin_richards_icehl": {
-    "player_name": "Justin Richards",
-    "league": "ICEHL",
-    "team": "AVS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "maximilian_rebernig_icehl": {
-    "player_name": "Maximilian Rebernig",
-    "league": "ICEHL",
-    "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "nick_swaney_icehl": {
-    "player_name": "Nick Swaney",
+  "kasper_kotkansalo_icehl": {
+    "player_name": "Kasper Kotkansalo",
     "league": "ICEHL",
     "team": "G99",
     "status": "pending",
@@ -8688,10 +8647,58 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "austin_michael_osmanski_icehl": {
+    "player_name": "Austin Michael Osmanski",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "joshua_teves_icehl": {
+    "player_name": "Joshua Teves",
+    "league": "ICEHL",
+    "team": "KAC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "marcel_witting_icehl": {
+    "player_name": "Marcel Witting",
+    "league": "ICEHL",
+    "team": "KAC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "devante_stephens_icehl": {
+    "player_name": "Devante Stephens",
+    "league": "ICEHL",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "jan_lattner_icehl": {
     "player_name": "Jan Lattner",
     "league": "ICEHL",
     "team": "HCI",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "luca_zanatta_icehl": {
+    "player_name": "Luca Zanatta",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "blaz_gregorc_icehl": {
+    "player_name": "Blaz Gregorc",
+    "league": "ICEHL",
+    "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8720,18 +8727,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "marcel_witting_icehl": {
-    "player_name": "Marcel Witting",
+  "rasmus_kulmala_icehl": {
+    "player_name": "Rasmus Kulmala",
     "league": "ICEHL",
-    "team": "HCI",
+    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "devante_stephens_icehl": {
-    "player_name": "Devante Stephens",
+  "alan_lobis_icehl": {
+    "player_name": "Alan Lobis",
     "league": "ICEHL",
-    "team": "RBS",
+    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8760,10 +8767,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "austin_michael_osmanski_icehl": {
-    "player_name": "Austin Michael Osmanski",
+  "david_maier_icehl": {
+    "player_name": "David Maier",
     "league": "ICEHL",
-    "team": "HCP",
+    "team": "KAC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8776,22 +8783,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "rasmus_kulmala_icehl": {
-    "player_name": "Rasmus Kulmala",
-    "league": "ICEHL",
-    "team": "AVS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "luca_zanatta_icehl": {
-    "player_name": "Luca Zanatta",
-    "league": "ICEHL",
-    "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "mark_katic_icehl": {
     "player_name": "Mark Katic",
     "league": "ICEHL",
@@ -8800,10 +8791,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "blaz_gregorc_icehl": {
-    "player_name": "Blaz Gregorc",
+  "donat_horvath_icehl": {
+    "player_name": "Donat Horvath",
     "league": "ICEHL",
-    "team": "OLL",
+    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8832,14 +8823,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "joshua_teves_icehl": {
-    "player_name": "Joshua Teves",
-    "league": "ICEHL",
-    "team": "KAC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "istvan_sofron_icehl": {
     "player_name": "Istvan Sofron",
     "league": "ICEHL",
@@ -8856,10 +8839,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "alan_lobis_icehl": {
-    "player_name": "Alan Lobis",
+  "tim_harnisch_icehl": {
+    "player_name": "Tim Harnisch",
     "league": "ICEHL",
-    "team": "HCP",
+    "team": "G99",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8880,10 +8863,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "donat_horvath_icehl": {
-    "player_name": "Donat Horvath",
+  "daniel_obersteiner_icehl": {
+    "player_name": "Daniel Obersteiner",
     "league": "ICEHL",
-    "team": "AVS",
+    "team": "KAC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "matthias_mantinger_icehl": {
+    "player_name": "Matthias Mantinger",
+    "league": "ICEHL",
+    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8912,14 +8903,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "tim_harnisch_icehl": {
-    "player_name": "Tim Harnisch",
-    "league": "ICEHL",
-    "team": "G99",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "niklas_andre_wurschl_icehl": {
     "player_name": "Niklas Andre Würschl",
     "league": "ICEHL",
@@ -8936,18 +8919,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "timothy_campbell_icehl": {
-    "player_name": "Timothy Campbell",
+  "miha_bericic_icehl": {
+    "player_name": "Miha Bericic",
     "league": "ICEHL",
-    "team": "AVS",
+    "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "matthias_mantinger_icehl": {
-    "player_name": "Matthias Mantinger",
+  "timothy_campbell_icehl": {
+    "player_name": "Timothy Campbell",
     "league": "ICEHL",
-    "team": "HCP",
+    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8960,18 +8943,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "miha_bericic_icehl": {
-    "player_name": "Miha Bericic",
+  "rok_kapel_icehl": {
+    "player_name": "Rok Kapel",
     "league": "ICEHL",
     "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "david_maier_icehl": {
-    "player_name": "David Maier",
+  "korbinian_holzer_icehl": {
+    "player_name": "Korbinian Holzer",
     "league": "ICEHL",
-    "team": "KAC",
+    "team": "G99",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -8984,18 +8967,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "cole_moberg_icehl": {
-    "player_name": "Cole Moberg",
+  "jason_seed_icehl": {
+    "player_name": "Jason Seed",
     "league": "ICEHL",
-    "team": "HCI",
+    "team": "HCB",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "daniel_obersteiner_icehl": {
-    "player_name": "Daniel Obersteiner",
+  "cole_moberg_icehl": {
+    "player_name": "Cole Moberg",
     "league": "ICEHL",
-    "team": "KAC",
+    "team": "HCI",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9064,22 +9047,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "kasper_kotkansalo_icehl": {
-    "player_name": "Kasper Kotkansalo",
-    "league": "ICEHL",
-    "team": "G99",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jason_seed_icehl": {
-    "player_name": "Jason Seed",
-    "league": "ICEHL",
-    "team": "HCB",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "adam_john_almquist_icehl": {
     "player_name": "Adam John Almquist",
     "league": "ICEHL",
@@ -9116,14 +9083,6 @@
     "player_name": "Jordan Murray",
     "league": "ICEHL",
     "team": "KAC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "rok_kapel_icehl": {
-    "player_name": "Rok Kapel",
-    "league": "ICEHL",
-    "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9180,6 +9139,14 @@
     "player_name": "Steven Strong",
     "league": "ICEHL",
     "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "nolan_moyle_icehl": {
+    "player_name": "Nolan Moyle",
+    "league": "ICEHL",
+    "team": "KAC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9248,10 +9215,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "korbinian_holzer_icehl": {
-    "player_name": "Korbinian Holzer",
+  "brett_budgell_icehl": {
+    "player_name": "Brett Budgell",
     "league": "ICEHL",
-    "team": "G99",
+    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9272,6 +9239,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "daniel_glira_icehl": {
+    "player_name": "Daniel Glira",
+    "league": "ICEHL",
+    "team": "HCP",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "nico_brunner_icehl": {
     "player_name": "Nico Brunner",
     "league": "ICEHL",
@@ -9288,10 +9263,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "nolan_moyle_icehl": {
-    "player_name": "Nolan Moyle",
+  "daniel_frank_icehl": {
+    "player_name": "Daniel Frank",
     "league": "ICEHL",
-    "team": "KAC",
+    "team": "HCB",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9320,6 +9295,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "joel_teasdale_icehl": {
+    "player_name": "Joël Teasdale",
+    "league": "ICEHL",
+    "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "pascal_brunner_icehl": {
     "player_name": "Pascal Brunner",
     "league": "ICEHL",
@@ -9328,18 +9311,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "brett_budgell_icehl": {
-    "player_name": "Brett Budgell",
-    "league": "ICEHL",
-    "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "paavo_tyni_icehl": {
     "player_name": "Paavo Tyni",
     "league": "ICEHL",
     "team": "FTC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "akos_mihaly_icehl": {
+    "player_name": "Akos Mihaly",
+    "league": "ICEHL",
+    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9360,10 +9343,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "daniel_glira_icehl": {
-    "player_name": "Daniel Glira",
+  "lukas_bar_icehl": {
+    "player_name": "Lukas Bär",
     "league": "ICEHL",
-    "team": "HCP",
+    "team": "HCI",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9392,18 +9375,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "daniel_frank_icehl": {
-    "player_name": "Daniel Frank",
+  "kevin_michael_conley_icehl": {
+    "player_name": "Kevin Michael Conley",
     "league": "ICEHL",
-    "team": "HCB",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "joel_teasdale_icehl": {
-    "player_name": "Joël Teasdale",
-    "league": "ICEHL",
-    "team": "VSV",
+    "team": "G99",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9416,6 +9391,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "matteo_vittorio_gennaro_icehl": {
+    "player_name": "Matteo Vittorio Gennaro",
+    "league": "ICEHL",
+    "team": "HCB",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "balazs_varga_icehl": {
     "player_name": "Balazs Varga",
     "league": "ICEHL",
@@ -9424,10 +9407,34 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "andrew_macwilliam_icehl": {
+    "player_name": "Andrew MacWilliam",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "greg_moro_icehl": {
     "player_name": "Greg Moro",
     "league": "ICEHL",
     "team": "BWL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "luca_auer_icehl": {
+    "player_name": "Luca Auer",
+    "league": "ICEHL",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "raphael_andergassen_icehl": {
+    "player_name": "Raphael Andergassen",
+    "league": "ICEHL",
+    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9472,10 +9479,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "matteo_vittorio_gennaro_icehl": {
-    "player_name": "Matteo Vittorio Gennaro",
+  "lenz_moosbrugger_icehl": {
+    "player_name": "Lenz Moosbrugger",
     "league": "ICEHL",
-    "team": "HCB",
+    "team": "G99",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9500,22 +9507,6 @@
     "player_name": "Maximilian Theirich",
     "league": "ICEHL",
     "team": "VIC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "luca_auer_icehl": {
-    "player_name": "Luca Auer",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "raphael_andergassen_icehl": {
-    "player_name": "Raphael Andergassen",
-    "league": "ICEHL",
-    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9552,26 +9543,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "lukas_schreier_icehl": {
-    "player_name": "Lukas Schreier",
-    "league": "ICEHL",
-    "team": "RBS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "lenz_moosbrugger_icehl": {
-    "player_name": "Lenz Moosbrugger",
-    "league": "ICEHL",
-    "team": "G99",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "aron_summer_icehl": {
     "player_name": "Aron Summer",
     "league": "ICEHL",
     "team": "PIV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "lukas_schreier_icehl": {
+    "player_name": "Lukas Schreier",
+    "league": "ICEHL",
+    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9600,22 +9583,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "andrew_macwilliam_icehl": {
-    "player_name": "Andrew MacWilliam",
-    "league": "ICEHL",
-    "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ivan_deluca_icehl": {
-    "player_name": "Ivan Deluca",
-    "league": "ICEHL",
-    "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "ivan_korecky_icehl": {
     "player_name": "Ivan Korecky",
     "league": "ICEHL",
@@ -9628,6 +9595,14 @@
     "player_name": "Lukas Hörl",
     "league": "ICEHL",
     "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "ivan_deluca_icehl": {
+    "player_name": "Ivan Deluca",
+    "league": "ICEHL",
+    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9648,14 +9623,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "akos_mihaly_icehl": {
-    "player_name": "Akos Mihaly",
-    "league": "ICEHL",
-    "team": "AVS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "julian_metzler_icehl": {
     "player_name": "Julian Metzler",
     "league": "ICEHL",
@@ -9664,10 +9631,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "nikolaus_kraus_icehl": {
-    "player_name": "Nikolaus Kraus",
+  "balint_magosi_icehl": {
+    "player_name": "Balint Magosi",
     "league": "ICEHL",
-    "team": "RBS",
+    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9684,6 +9651,14 @@
     "player_name": "Dávid Molnár",
     "league": "ICEHL",
     "team": "FTC",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "nikolaus_kraus_icehl": {
+    "player_name": "Nikolaus Kraus",
+    "league": "ICEHL",
+    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9712,8 +9687,8 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "kevin_michael_conley_icehl": {
-    "player_name": "Kevin Michael Conley",
+  "jakob_lippitsch_icehl": {
+    "player_name": "Jakob Lippitsch",
     "league": "ICEHL",
     "team": "G99",
     "status": "pending",
@@ -9728,18 +9703,26 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "brett_ritchie_icehl": {
-    "player_name": "Brett Ritchie",
+  "reid_mcneill_icehl": {
+    "player_name": "Reid McNeill",
     "league": "ICEHL",
-    "team": "VSV",
+    "team": "BWL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "balint_magosi_icehl": {
-    "player_name": "Balint Magosi",
+  "cole_krygier_icehl": {
+    "player_name": "Cole Krygier",
     "league": "ICEHL",
-    "team": "AVS",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "brett_ritchie_icehl": {
+    "player_name": "Brett Ritchie",
+    "league": "ICEHL",
+    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -9808,6 +9791,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "roland_kiss_icehl": {
+    "player_name": "Roland Kiss",
+    "league": "ICEHL",
+    "team": "AVS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "paul_stapelfeldt_icehl": {
     "player_name": "Paul Stapelfeldt",
     "league": "ICEHL",
@@ -9864,14 +9855,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "jakob_lippitsch_icehl": {
-    "player_name": "Jakob Lippitsch",
-    "league": "ICEHL",
-    "team": "G99",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "lukas_zach-kiesling_icehl": {
     "player_name": "Lukas Zach-Kiesling",
     "league": "ICEHL",
@@ -9920,26 +9903,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "roland_kiss_icehl": {
-    "player_name": "Roland Kiss",
-    "league": "ICEHL",
-    "team": "AVS",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "lorenz_lindner_icehl": {
     "player_name": "Lorenz Lindner",
     "league": "ICEHL",
     "team": "VIC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "cole_krygier_icehl": {
-    "player_name": "Cole Krygier",
-    "league": "ICEHL",
-    "team": "RBS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10008,6 +9975,14 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "maximilian_kirchebner_icehl": {
+    "player_name": "Maximilian Kirchebner",
+    "league": "ICEHL",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "csongor_ambrus_icehl": {
     "player_name": "Csongor Ambrus",
     "league": "ICEHL",
@@ -10024,10 +9999,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "maximilian_kirchebner_icehl": {
-    "player_name": "Maximilian Kirchebner",
+  "rozle_bohinc_icehl": {
+    "player_name": "Rozle Bohinc",
     "league": "ICEHL",
-    "team": "RBS",
+    "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10036,14 +10011,6 @@
     "player_name": "Julian Raspotnig",
     "league": "ICEHL",
     "team": "VSV",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "rozle_bohinc_icehl": {
-    "player_name": "Rozle Bohinc",
-    "league": "ICEHL",
-    "team": "OLL",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10116,6 +10083,14 @@
     "player_name": "Lorenz Klingler",
     "league": "ICEHL",
     "team": "HCI",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "erik_kirchschlager_icehl": {
+    "player_name": "Erik Kirchschläger",
+    "league": "ICEHL",
+    "team": "VIC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10384,18 +10359,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "sebastian_wraneschitz_icehl": {
-    "player_name": "Sebastian Wraneschitz",
-    "league": "ICEHL",
-    "team": "VIC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "maxime_lagace_icehl": {
     "player_name": "Maxime Lagacé",
     "league": "ICEHL",
     "team": "G99",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "sebastian_wraneschitz_icehl": {
+    "player_name": "Sebastian Wraneschitz",
+    "league": "ICEHL",
+    "team": "VIC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10416,10 +10391,10 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "joe_cannata_icehl": {
-    "player_name": "Joe Cannata",
+  "edward_robert_nito_pasquale_icehl": {
+    "player_name": "Edward Robert Nito Pasquale",
     "league": "ICEHL",
-    "team": "VSV",
+    "team": "HCP",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10432,22 +10407,6 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "edward_robert_nito_pasquale_icehl": {
-    "player_name": "Edward Robert Nito Pasquale",
-    "league": "ICEHL",
-    "team": "HCP",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "kristof_nagy_icehl": {
-    "player_name": "Kristóf Nagy",
-    "league": "ICEHL",
-    "team": "FTC",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
   "rasmus_reijola_icehl": {
     "player_name": "Rasmus Reijola",
     "league": "ICEHL",
@@ -10456,10 +10415,26 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "dominik_horvath_icehl": {
-    "player_name": "Dominik Horvath",
+  "joe_cannata_icehl": {
+    "player_name": "Joe Cannata",
     "league": "ICEHL",
-    "team": "AVS",
+    "team": "VSV",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "atte_tolvanen_icehl": {
+    "player_name": "Atte Tolvanen",
+    "league": "ICEHL",
+    "team": "RBS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "kristof_nagy_icehl": {
+    "player_name": "Kristóf Nagy",
+    "league": "ICEHL",
+    "team": "FTC",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10536,6 +10511,22 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
+  "dustin_tokarski_icehl": {
+    "player_name": "Dustin Tokarski",
+    "league": "ICEHL",
+    "team": "OLL",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
+  "levente_hegedus_icehl": {
+    "player_name": "Levente Hegedüs",
+    "league": "ICEHL",
+    "team": "AVS",
+    "status": "pending",
+    "verified_at": null,
+    "method": "heuristic_discovery"
+  },
   "gianluca_vallini_icehl": {
     "player_name": "Gianluca Vallini",
     "league": "ICEHL",
@@ -10544,18 +10535,18 @@
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "rene_swette_icehl": {
-    "player_name": "Rene Swette",
+  "dominik_horvath_icehl": {
+    "player_name": "Dominik Horvath",
     "league": "ICEHL",
-    "team": "VSV",
+    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
   },
-  "dustin_tokarski_icehl": {
-    "player_name": "Dustin Tokarski",
+  "rene_swette_icehl": {
+    "player_name": "Rene Swette",
     "league": "ICEHL",
-    "team": "OLL",
+    "team": "VSV",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"
@@ -10604,86 +10595,6 @@
     "player_name": "Gal Hebar",
     "league": "ICEHL",
     "team": "OLL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jens_nater_nl": {
-    "player_name": "Jens Nater",
-    "league": "NL",
-    "team": "EV Zug",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "ludvig_claesson_nl": {
-    "player_name": "Ludvig Claesson",
-    "league": "NL",
-    "team": "HC Davos",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "roope_taponen_nl": {
-    "player_name": "Roope Taponen",
-    "league": "NL",
-    "team": "HC Davos",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "juuso_arola_nl": {
-    "player_name": "Juuso Arola",
-    "league": "NL",
-    "team": "Fribourg-Gottéron",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "reid_mcneill_icehl": {
-    "player_name": "Reid McNeill",
-    "league": "ICEHL",
-    "team": "BWL",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alain_bircher_nl": {
-    "player_name": "Alain Bircher",
-    "league": "NL",
-    "team": "Fribourg-Gottéron",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "alessandro_villa_nl": {
-    "player_name": "Alessandro Villa",
-    "league": "NL",
-    "team": "Fribourg-Gottéron",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "dominik_binias_nl": {
-    "player_name": "Dominik Binias",
-    "league": "NL",
-    "team": "Fribourg-Gottéron",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "jakob_stukel_nl": {
-    "player_name": "Jakob Stukel",
-    "league": "NL",
-    "team": "HC Ajoie",
-    "status": "pending",
-    "verified_at": null,
-    "method": "heuristic_discovery"
-  },
-  "levente_hegedus_icehl": {
-    "player_name": "Levente Hegedüs",
-    "league": "ICEHL",
-    "team": "AVS",
     "status": "pending",
     "verified_at": null,
     "method": "heuristic_discovery"

@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-03-15T11:44:47.423Z",
+  "generated_at": "2026-03-28T13:33:44.774Z",
   "season": "2025-2026",
   "data_source": "puppeteer-advanced",
   "scraper_version": "4.0",
   "leagues": {
     "mestis": {
-      "count": 194,
+      "count": 200,
       "url": "https://www.mestis.fi/tilastot/pelaajat",
       "type": "european"
     }
@@ -15,209 +15,404 @@
       "name": "Koponen, Elias",
       "team": "IPK",
       "position": "H",
-      "games": "6",
-      "goals": "5",
-      "assists": "9",
-      "points": "14",
+      "games": "11",
+      "goals": "6",
+      "assists": "14",
+      "points": "20",
       "image": "https://www.mestis.fi/media/players/Elias_Koponen_22.png.600x750_q85_box-0%2C59%2C533%2C725.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Pitkänen, Kristo*",
       "team": "K-Vantaa",
       "position": "H",
-      "games": "6",
-      "goals": "4",
-      "assists": "9",
-      "points": "13",
+      "games": "9",
+      "goals": "5",
+      "assists": "10",
+      "points": "15",
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Kristo_Pitk%C3%A4nen-2434-20250829.png.600x750_q85_box-13%2C43%2C619%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Nordgren, Niklas",
       "team": "K-Vantaa",
       "position": "H",
-      "games": "6",
+      "games": "9",
       "goals": "4",
-      "assists": "6",
-      "points": "10",
+      "assists": "11",
+      "points": "15",
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Niklas_Nordgren-2386-20250829.png.600x750_q85_box-21%2C21%2C640%2C795.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Karppinen, Atte",
-      "team": "IPK",
-      "position": "H",
-      "games": "6",
-      "goals": "3",
-      "assists": "7",
-      "points": "10",
-      "image": "https://www.mestis.fi/media/players/Atte_Karppinen_44.png.600x750_q85_box-37%2C257%2C1675%2C2307.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Henriksson, Jere",
-      "team": "Jokerit",
-      "position": "H",
-      "games": "7",
-      "goals": "4",
-      "assists": "5",
-      "points": "9",
-      "image": "https://www.mestis.fi/media/players/74-henriksson-jere.png.600x750_q85_box-45%2C45%2C587%2C723.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Lausniemi, Arttu",
-      "team": "IPK",
-      "position": "H",
-      "games": "4",
-      "goals": "4",
-      "assists": "4",
-      "points": "8",
-      "image": "https://www.mestis.fi/media/players/Arttu_Lausniemi_27_X2pZrLa.png.600x750_q85_box-27%2C284%2C1675%2C2346.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Saarelainen, Miro-Pekka",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "6",
-      "goals": "3",
-      "assists": "5",
-      "points": "8",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Miro-Pekka_Saarelainen-2206-20250829.png.600x750_q85_box-40%2C48%2C616%2C768.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Valtola, Kalle",
-      "team": "IPK",
-      "position": "P",
-      "games": "6",
-      "goals": "4",
-      "assists": "3",
-      "points": "7",
-      "image": "https://www.mestis.fi/media/players/Kalle_Valtola_66.png.600x750_q85_box-0%2C335%2C4781%2C6311.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Gustafsson, Ron",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "6",
-      "goals": "3",
-      "assists": "4",
-      "points": "7",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Ron_Gustafsson-2279-20250829.png.600x750_q85_box-3%2C16%2C630%2C800.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Forslund, Alexander",
       "team": "Jokerit",
       "position": "H",
-      "games": "7",
-      "goals": "2",
-      "assists": "5",
-      "points": "7",
+      "games": "10",
+      "goals": "3",
+      "assists": "11",
+      "points": "14",
       "image": "https://www.mestis.fi/media/players/22-forslund-alexander.png.600x750_q85_box-16%2C45%2C620%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Tenhovuori, Niclas",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "6",
-      "goals": "2",
-      "assists": "5",
-      "points": "7",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Niclas_Tenhovuori-2373-20250829.png.600x750_q85_box-21%2C40%2C629%2C800.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Pakaslahti, Aleksi",
-      "team": "K-Vantaa",
-      "position": "P",
-      "games": "6",
-      "goals": "1",
-      "assists": "6",
-      "points": "7",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Aleksi_Pakaslahti-2519-20250829.png.600x750_q85_box-0%2C0%2C640%2C800.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
-    },
-    {
-      "name": "Viirret, Valtteri",
+      "name": "Karppinen, Atte",
       "team": "IPK",
-      "position": "P",
-      "games": "6",
-      "goals": "1",
-      "assists": "6",
-      "points": "7",
-      "image": "https://www.mestis.fi/media/players/Valtteri_Viirret_49_eXXt0bj.png.600x750_q85_box-27%2C56%2C533%2C689.png",
+      "position": "H",
+      "games": "11",
+      "goals": "5",
+      "assists": "8",
+      "points": "13",
+      "image": "https://www.mestis.fi/media/players/Atte_Karppinen_44.png.600x750_q85_box-37%2C257%2C1675%2C2307.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.969Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Lausniemi, Arttu",
+      "team": "IPK",
+      "position": "H",
+      "games": "9",
+      "goals": "6",
+      "assists": "6",
+      "points": "12",
+      "image": "https://www.mestis.fi/media/players/Arttu_Lausniemi_27_X2pZrLa.png.600x750_q85_box-27%2C284%2C1675%2C2346.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Ring, Leo",
       "team": "IPK",
       "position": "H",
-      "games": "6",
+      "games": "11",
       "goals": "1",
-      "assists": "6",
-      "points": "7",
+      "assists": "11",
+      "points": "12",
       "image": "https://www.mestis.fi/media/players/Leo_Ring_20_jLVYaJ5.png.600x750_q85_box-0%2C201%2C2362%2C3153.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Kangasniemi, Okko",
-      "team": "Jokerit",
+      "name": "Saarelainen, Miro-Pekka",
+      "team": "K-Vantaa",
       "position": "H",
-      "games": "7",
-      "goals": "3",
-      "assists": "3",
-      "points": "6",
-      "image": "https://www.mestis.fi/media/players/26-kangasniemi-okko.png.600x750_q85_box-8%2C11%2C639%2C800.png",
+      "games": "9",
+      "goals": "6",
+      "assists": "5",
+      "points": "11",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Miro-Pekka_Saarelainen-2206-20250829.png.600x750_q85_box-40%2C48%2C616%2C768.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Henriksson, Jere",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "10",
+      "goals": "5",
+      "assists": "6",
+      "points": "11",
+      "image": "https://www.mestis.fi/media/players/74-henriksson-jere.png.600x750_q85_box-45%2C45%2C587%2C723.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Viirret, Valtteri",
+      "team": "IPK",
+      "position": "P",
+      "games": "11",
+      "goals": "1",
+      "assists": "9",
+      "points": "10",
+      "image": "https://www.mestis.fi/media/players/Valtteri_Viirret_49_eXXt0bj.png.600x750_q85_box-27%2C56%2C533%2C689.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vartiainen, Tuomas",
       "team": "IPK",
       "position": "H",
-      "games": "5",
-      "goals": "3",
+      "games": "10",
+      "goals": "6",
       "assists": "3",
-      "points": "6",
+      "points": "9",
       "image": "https://www.mestis.fi/media/players/Tuomas_Vartiainen_17.png.600x750_q85_box-0%2C43%2C533%2C709.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Rönkkönen, Jimi",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "6",
+      "goals": "4",
+      "assists": "5",
+      "points": "9",
+      "image": "https://www.mestis.fi/media/players/91_Jimi_R%C3%B6nkk%C3%B6nen.png.600x750_q85_box-0%2C0%2C467%2C583.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Mustonen, Aleksi",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "10",
+      "goals": "4",
+      "assists": "5",
+      "points": "9",
+      "image": "https://www.mestis.fi/media/players/92-mustonen-aleksi.png.600x750_q85_box-19%2C37%2C595%2C757.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Pakaslahti, Aleksi",
+      "team": "K-Vantaa",
+      "position": "P",
+      "games": "9",
+      "goals": "1",
+      "assists": "8",
+      "points": "9",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Aleksi_Pakaslahti-2519-20250829.png.600x750_q85_box-0%2C0%2C640%2C800.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Heinonen, Simo",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "8",
+      "goals": "5",
+      "assists": "3",
+      "points": "8",
+      "image": "https://www.mestis.fi/media/players/71-simo-heinonen.png.600x750_q85_box-45%2C69%2C474%2C606.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Gustafsson, Ron",
+      "team": "K-Vantaa",
+      "position": "H",
+      "games": "9",
+      "goals": "4",
+      "assists": "4",
+      "points": "8",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Ron_Gustafsson-2279-20250829.png.600x750_q85_box-3%2C16%2C630%2C800.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Dvorak, Adam",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "12",
+      "goals": "4",
+      "assists": "4",
+      "points": "8",
+      "image": "https://www.mestis.fi/media/players/Adam_Dvo%C5%99%C3%A1k.png.600x750_q85_box-15%2C180%2C3008%2C3922.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Valtola, Kalle",
+      "team": "IPK",
+      "position": "P",
+      "games": "10",
+      "goals": "4",
+      "assists": "4",
+      "points": "8",
+      "image": "https://www.mestis.fi/media/players/Kalle_Valtola_66.png.600x750_q85_box-0%2C335%2C4781%2C6311.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Turunen, Roope",
+      "team": "K-Vantaa",
+      "position": "H",
+      "games": "7",
+      "goals": "3",
+      "assists": "5",
+      "points": "8",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Roope_Turunen-2402-20250829.png.600x750_q85_box-27%2C51%2C624%2C797.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Tenhovuori, Niclas",
+      "team": "K-Vantaa",
+      "position": "H",
+      "games": "9",
+      "goals": "2",
+      "assists": "6",
+      "points": "8",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Niclas_Tenhovuori-2373-20250829.png.600x750_q85_box-21%2C40%2C629%2C800.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Tiihonen, Lenni*",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "11",
+      "goals": "1",
+      "assists": "7",
+      "points": "8",
+      "image": "https://www.mestis.fi/media/players/Lenni_Tiihonen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Haaparanta, Mikko",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "11",
+      "goals": "4",
+      "assists": "3",
+      "points": "7",
+      "image": "https://www.mestis.fi/media/players/Mikko_Haaparanta.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Lankinen, Joona",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "12",
+      "goals": "3",
+      "assists": "4",
+      "points": "7",
+      "image": "https://www.mestis.fi/media/players/Joona_Lankinen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Paasovaara, Eetu",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "12",
+      "goals": "3",
+      "assists": "4",
+      "points": "7",
+      "image": "https://www.mestis.fi/media/players/Eetu_Paasovaara.png.600x750_q85_box-0%2C59%2C533%2C725.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Kangasniemi, Okko",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "10",
+      "goals": "3",
+      "assists": "4",
+      "points": "7",
+      "image": "https://www.mestis.fi/media/players/26-kangasniemi-okko.png.600x750_q85_box-8%2C11%2C639%2C800.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Viskari, Jesse",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "11",
+      "goals": "3",
+      "assists": "4",
+      "points": "7",
+      "image": "https://www.mestis.fi/media/players/Jesse_Viskari_tAhFdxy.png.600x750_q85_box-0%2C51%2C533%2C717.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Suhonen, Pekka",
+      "team": "IPK",
+      "position": "H",
+      "games": "11",
+      "goals": "4",
+      "assists": "2",
+      "points": "6",
+      "image": "https://www.mestis.fi/media/players/Pekka_Suhonen_7_9z5wTyJ.png.600x750_q85_box-0%2C64%2C497%2C685.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Oden, Markus",
+      "team": "IPK",
+      "position": "H",
+      "games": "11",
+      "goals": "4",
+      "assists": "2",
+      "points": "6",
+      "image": "https://www.mestis.fi/media/players/Markus_Oden_50_n501c4j.png.600x750_q85_box-0%2C24%2C534%2C691.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Lemberg, Leevi",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "11",
+      "goals": "3",
+      "assists": "3",
+      "points": "6",
+      "image": "https://www.mestis.fi/media/players/Leevi_Lemberg.png.600x750_q85_box-0%2C147%2C450%2C710.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Rantakari, Otso",
+      "team": "Jokerit",
+      "position": "P",
+      "games": "10",
+      "goals": "2",
+      "assists": "4",
+      "points": "6",
+      "image": "https://www.mestis.fi/media/players/2-otso-rantakari.png.600x750_q85_box-48%2C64%2C502%2C632.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Sinkkonen, Aleksi",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "12",
+      "goals": "2",
+      "assists": "4",
+      "points": "6",
+      "image": "https://www.mestis.fi/media/players/Aleksi_Sinkkonen_FBzetqu.png.600x750_q85_box-150%2C30%2C2846%2C3399.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Suni, Oliver",
@@ -230,59 +425,59 @@
       "image": "https://www.mestis.fi/media/players/40-suni-oliver_lHSnRXx.png.600x750_q85_box-45%2C37%2C579%2C704.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Haaparanta, Mikko",
+      "name": "Kiukas, Peetu",
       "team": "Ketterä",
-      "position": "H",
-      "games": "7",
-      "goals": "4",
-      "assists": "1",
-      "points": "5",
-      "image": "https://www.mestis.fi/media/players/Mikko_Haaparanta.png.600x750_q85_box-0%2C43%2C533%2C709.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Rantakari, Otso",
-      "team": "Jokerit",
       "position": "P",
-      "games": "7",
-      "goals": "2",
-      "assists": "3",
-      "points": "5",
-      "image": "https://www.mestis.fi/media/players/2-otso-rantakari.png.600x750_q85_box-48%2C64%2C502%2C632.png",
+      "games": "11",
+      "goals": "1",
+      "assists": "5",
+      "points": "6",
+      "image": "https://www.mestis.fi/media/players/Peetu_Kiukas.png.600x750_q85_box-0%2C21%2C533%2C688.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Mustonen, Aleksi",
-      "team": "Jokerit",
-      "position": "H",
-      "games": "7",
-      "goals": "2",
-      "assists": "3",
-      "points": "5",
-      "image": "https://www.mestis.fi/media/players/92-mustonen-aleksi.png.600x750_q85_box-19%2C37%2C595%2C757.png",
+      "name": "Rannisto, Jasper",
+      "team": "Ketterä",
+      "position": "P",
+      "games": "12",
+      "goals": "0",
+      "assists": "6",
+      "points": "6",
+      "image": "https://www.mestis.fi/media/players/Jasper_Rannisto.png.600x750_q85_box-0%2C271%2C3008%2C4031.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Turunen, Roope",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "4",
-      "goals": "2",
-      "assists": "3",
+      "name": "Laukkanen, Robin",
+      "team": "Ketterä",
+      "position": "P",
+      "games": "9",
+      "goals": "3",
+      "assists": "2",
       "points": "5",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Roope_Turunen-2402-20250829.png.600x750_q85_box-27%2C51%2C624%2C797.png",
+      "image": "https://www.mestis.fi/media/players/Robin_Laukkanen.png.600x750_q85_box-0%2C32%2C533%2C699.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Curri, Rrahim",
+      "team": "IPK",
+      "position": "H",
+      "games": "11",
+      "goals": "3",
+      "assists": "2",
+      "points": "5",
+      "image": "https://www.mestis.fi/media/players/Rrahim_Curri_67.png.600x750_q85_box-0%2C53%2C533%2C720.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vuorela, Jesse",
@@ -295,7 +490,7 @@
       "image": "https://www.mestis.fi/media/players/vuorela-jesse.png.600x750_q85_box-12%2C0%2C2890%2C3593.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Samitis, Kristians",
@@ -308,46 +503,59 @@
       "image": "https://www.mestis.fi/media/players/Kristians-Samitis.png.600x750_q85_box-21%2C0%2C624%2C753.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Viskari, Jesse",
-      "team": "Ketterä",
+      "name": "Kallio, Bruno*",
+      "team": "Jokerit",
       "position": "H",
-      "games": "7",
+      "games": "10",
       "goals": "1",
       "assists": "4",
       "points": "5",
-      "image": "https://www.mestis.fi/media/players/Jesse_Viskari_tAhFdxy.png.600x750_q85_box-0%2C51%2C533%2C717.png",
+      "image": "https://www.mestis.fi/media/players/29-kallio-bruno.png.600x750_q85_box-32%2C40%2C638%2C797.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Leskinen, Ville",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "10",
+      "goals": "0",
+      "assists": "5",
+      "points": "5",
+      "image": "https://www.mestis.fi/media/players/25-ville-leskinen.png.600x750_q85_box-93%2C187%2C2333%2C2987.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Menna, Mikael",
       "team": "K-Vantaa",
       "position": "H",
-      "games": "5",
+      "games": "7",
       "goals": "0",
       "assists": "5",
       "points": "5",
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Mikael_Menna-2330-20250829.png.600x750_q85_box-40%2C51%2C639%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Curri, Rrahim",
-      "team": "IPK",
+      "name": "Lehtinen, Joona",
+      "team": "Ketterä",
       "position": "H",
-      "games": "6",
+      "games": "12",
       "goals": "3",
       "assists": "1",
       "points": "4",
-      "image": "https://www.mestis.fi/media/players/Rrahim_Curri_67.png.600x750_q85_box-0%2C53%2C533%2C720.png",
+      "image": "https://www.mestis.fi/media/players/Joona_Lehtinen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Laakso, Aatu",
@@ -360,7 +568,7 @@
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Aatu_Laakso-2357-20250829.png.600x750_q85_box-0%2C11%2C631%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Kaarela, Elias",
@@ -373,20 +581,20 @@
       "image": "https://www.mestis.fi/media/players/Kaarela_Elias_15.png.600x750_q85_box-0%2C11%2C598%2C757.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Suhonen, Pekka",
+      "name": "Suomalainen, Santeri",
       "team": "IPK",
       "position": "H",
-      "games": "6",
+      "games": "11",
       "goals": "2",
       "assists": "2",
       "points": "4",
-      "image": "https://www.mestis.fi/media/players/Pekka_Suhonen_7_9z5wTyJ.png.600x750_q85_box-0%2C64%2C497%2C685.png",
+      "image": "https://www.mestis.fi/media/players/Santeri_Suomalainen_21_ufJhWJL.png.600x750_q85_box-0%2C32%2C531%2C696.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Niemi, Eero",
@@ -399,46 +607,20 @@
       "image": "https://www.mestis.fi/media/players/Niemi_Eero_39_KWt8ydp.png.600x750_q85_box-19%2C13%2C644%2C795.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Dvorak, Adam",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "7",
-      "goals": "2",
-      "assists": "2",
-      "points": "4",
-      "image": "https://www.mestis.fi/media/players/Adam_Dvo%C5%99%C3%A1k.png.600x750_q85_box-15%2C180%2C3008%2C3922.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Laukkanen, Robin",
-      "team": "Ketterä",
+      "name": "Ulander, Elias",
+      "team": "K-Vantaa",
       "position": "P",
-      "games": "6",
+      "games": "8",
       "goals": "2",
       "assists": "2",
       "points": "4",
-      "image": "https://www.mestis.fi/media/players/Robin_Laukkanen.png.600x750_q85_box-0%2C32%2C533%2C699.png",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Elias_Ulander-2252-20250829.png.600x750_q85_box-48%2C24%2C622%2C741.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Sinkkonen, Aleksi",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "7",
-      "goals": "2",
-      "assists": "2",
-      "points": "4",
-      "image": "https://www.mestis.fi/media/players/Aleksi_Sinkkonen_FBzetqu.png.600x750_q85_box-150%2C30%2C2846%2C3399.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Taskula, Jani",
@@ -451,7 +633,46 @@
       "image": "https://www.mestis.fi/media/players/TASKULA-JANI.png.600x750_q85_box-0%2C3%2C524%2C659.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Liuksiala, Jesse",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "2",
+      "goals": "1",
+      "assists": "3",
+      "points": "4",
+      "image": "https://www.mestis.fi/media/players/14-liuksiala-jesse_m19g7lY.png.600x750_q85_box-24%2C27%2C609%2C757.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Nalli, Miro",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "10",
+      "goals": "1",
+      "assists": "3",
+      "points": "4",
+      "image": "https://www.mestis.fi/media/players/19-miro-nalli.png.600x750_q85_box-0%2C280%2C2221%2C3057.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Koskela, Santeri",
+      "team": "IPK",
+      "position": "H",
+      "games": "11",
+      "goals": "1",
+      "assists": "3",
+      "points": "4",
+      "image": "https://www.mestis.fi/media/players/Santeri_Koskela_33.png.600x750_q85_box-0%2C40%2C533%2C707.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Boucher, Evan",
@@ -464,20 +685,7 @@
       "image": "https://www.mestis.fi/media/players/Boucher_Evan_71_vkDqHa9.png.600x750_q85_box-0%2C16%2C574%2C733.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Paasovaara, Eetu",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "7",
-      "goals": "1",
-      "assists": "3",
-      "points": "4",
-      "image": "https://www.mestis.fi/media/players/Eetu_Paasovaara.png.600x750_q85_box-0%2C59%2C533%2C725.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Karnaranta, Valtteri",
@@ -490,7 +698,7 @@
       "image": "https://www.mestis.fi/media/players/karnaranta-valtteri.png.600x750_q85_box-48%2C0%2C655%2C760.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Markkula, Samu",
@@ -503,20 +711,20 @@
       "image": "https://www.mestis.fi/media/players/markkula-samu.png.600x750_q85_box-11%2C3%2C610%2C753.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Leskinen, Ville",
-      "team": "Jokerit",
-      "position": "H",
+      "name": "Pietilä, Noel",
+      "team": "Ketterä",
+      "position": "P",
       "games": "7",
       "goals": "0",
       "assists": "4",
       "points": "4",
-      "image": "https://www.mestis.fi/media/players/25-ville-leskinen.png.600x750_q85_box-93%2C187%2C2333%2C2987.png",
+      "image": "https://www.mestis.fi/media/players/11_Noel_Pietil%C3%A4.png.600x750_q85_box-0%2C0%2C467%2C583.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Siira, Leevi",
@@ -529,7 +737,33 @@
       "image": "https://www.mestis.fi/media/players/Siira_Leevi_18_oZaPH9t.png.600x750_q85_box-0%2C5%2C591%2C745.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Forsblom, Saku",
+      "team": "Jokerit",
+      "position": "P",
+      "games": "10",
+      "goals": "3",
+      "assists": "0",
+      "points": "3",
+      "image": "https://www.mestis.fi/media/players/47-forsblom-saku_UyhZIIA.png.600x750_q85_box-45%2C21%2C581%2C691.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Heinänen, Kasperi",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "10",
+      "goals": "2",
+      "assists": "1",
+      "points": "3",
+      "image": "https://www.mestis.fi/media/players/Kasperi_Hein%C3%A4nen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Nissinen, Tuomas",
@@ -542,20 +776,7 @@
       "image": "https://www.mestis.fi/media/players/Tuomas_nissinen.png.600x750_q85_box-0%2C0%2C564%2C707.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Ulander, Elias",
-      "team": "K-Vantaa",
-      "position": "P",
-      "games": "6",
-      "goals": "2",
-      "assists": "1",
-      "points": "3",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Elias_Ulander-2252-20250829.png.600x750_q85_box-48%2C24%2C622%2C741.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Välilä, Emil*",
@@ -568,7 +789,7 @@
       "image": "https://www.mestis.fi/media/players/valila-emil.png.600x750_q85_box-98%2C0%2C2706%2C3266.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Mikkola, Maks",
@@ -581,7 +802,7 @@
       "image": "https://www.mestis.fi/media/players/Mikkola_Maks_91.png.600x750_q85_box-0%2C8%2C585%2C738.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Ruusunen, Rasmus",
@@ -594,11 +815,11 @@
       "image": "https://www.mestis.fi/media/players/Ruusunen_Rasmus_87.png.600x750_q85_box-0%2C16%2C627%2C799.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Meriläinen, Niklas",
-      "team": "JoKP",
+      "team": "Hermes",
       "position": "H",
       "games": "5",
       "goals": "2",
@@ -607,20 +828,33 @@
       "image": "https://www.mestis.fi/media/players/Niklas_merilainen.png.600x750_q85_box-54%2C0%2C1003%2C1187.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Heinonen, Simo",
-      "team": "Jokerit",
-      "position": "H",
-      "games": "5",
+      "name": "Koskela, Valtteri",
+      "team": "IPK",
+      "position": "P",
+      "games": "11",
       "goals": "1",
       "assists": "2",
       "points": "3",
-      "image": "https://www.mestis.fi/media/players/71-simo-heinonen.png.600x750_q85_box-45%2C69%2C474%2C606.png",
+      "image": "https://www.mestis.fi/media/players/Valtteri_Koskela_4_JRV8POm.png.600x750_q85_box-0%2C260%2C2362%2C3212.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Junkkari, Jimi*",
+      "team": "IPK",
+      "position": "P",
+      "games": "10",
+      "goals": "1",
+      "assists": "2",
+      "points": "3",
+      "image": "https://www.mestis.fi/media/players/Jimi_Junkkari_2.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Trakht, Daniil*",
@@ -633,20 +867,7 @@
       "image": "https://www.mestis.fi/media/players/trakht-daniil.png.600x750_q85_box-29%2C0%2C582%2C691.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Lemberg, Leevi",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "7",
-      "goals": "1",
-      "assists": "2",
-      "points": "3",
-      "image": "https://www.mestis.fi/media/players/Leevi_Lemberg.png.600x750_q85_box-0%2C147%2C450%2C710.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Hämeenaho, Veikka",
@@ -659,7 +880,20 @@
       "image": "https://www.mestis.fi/media/players/hameenaho-veikka.png.600x750_q85_box-0%2C12%2C2557%2C3207.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Vesaaja, Julius",
+      "team": "IPK",
+      "position": "H",
+      "games": "11",
+      "goals": "1",
+      "assists": "2",
+      "points": "3",
+      "image": "https://www.mestis.fi/media/players/Julius_Vesaaja_9_x98GLfK.png.600x750_q85_box-0%2C372%2C4957%2C6568.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Liiri, Niko",
@@ -672,7 +906,7 @@
       "image": "https://www.mestis.fi/media/players/LIIRI-NIKO.png.600x750_q85_box-16%2C0%2C537%2C651.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Virolainen, Joni",
@@ -685,7 +919,7 @@
       "image": "https://www.mestis.fi/media/players/joni_virolainen.png.600x750_q85_box-0%2C3%2C569%2C713.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Janhonen, Julius",
@@ -698,7 +932,20 @@
       "image": "https://www.mestis.fi/media/players/JANHONEN-JULIUS.png.600x750_q85_box-0%2C0%2C539%2C673.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Tuomola, Riku",
+      "team": "Jokerit",
+      "position": "P",
+      "games": "10",
+      "goals": "0",
+      "assists": "3",
+      "points": "3",
+      "image": "https://www.mestis.fi/media/players/52-tuomola-riku_OBvJnyA.png.600x750_q85_box-43%2C8%2C593%2C696.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Lempiäinen, Joonatan",
@@ -711,7 +958,20 @@
       "image": "https://www.mestis.fi/media/players/Joonatan_Lempi%C3%A4inen.png.600x750_q85_box-0%2C168%2C450%2C731.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Henritius, Teemu",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "8",
+      "goals": "0",
+      "assists": "3",
+      "points": "3",
+      "image": "https://www.mestis.fi/media/players/16-henritius-teemu_hY1IqaG.png.600x750_q85_box-27%2C53%2C622%2C797.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Virtanen, Eemeli",
@@ -724,7 +984,7 @@
       "image": "https://www.mestis.fi/media/players/Virtanen_Eemeli_28_MdkTsBt.png.600x750_q85_box-0%2C5%2C565%2C712.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Reini, Roope",
@@ -737,7 +997,7 @@
       "image": "https://www.mestis.fi/media/players/reini-roope.png.600x750_q85_box-0%2C12%2C2839%2C3559.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vähätalo, Julius",
@@ -750,7 +1010,7 @@
       "image": "https://www.mestis.fi/media/players/julius_vahatalo.png.600x750_q85_box-35%2C35%2C528%2C651.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Kokkola, Tatu",
@@ -763,46 +1023,46 @@
       "image": "https://www.mestis.fi/media/players/KOKKOLA-TATU.png.600x750_q85_box-21%2C0%2C585%2C703.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Tolppola, Venni",
       "team": "K-Vantaa",
       "position": "H",
-      "games": "6",
+      "games": "9",
       "goals": "0",
       "assists": "3",
       "points": "3",
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa_Venni_Tolppola.png.600x750_q85_box-40%2C0%2C2767%2C3417.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Suomalainen, Santeri",
-      "team": "IPK",
-      "position": "H",
-      "games": "6",
-      "goals": "2",
-      "assists": "0",
-      "points": "2",
-      "image": "https://www.mestis.fi/media/players/Santeri_Suomalainen_21_ufJhWJL.png.600x750_q85_box-0%2C32%2C531%2C696.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Forsblom, Saku",
-      "team": "Jokerit",
+      "name": "Hellman, Verneri",
+      "team": "K-Vantaa",
       "position": "P",
-      "games": "7",
+      "games": "9",
       "goals": "2",
       "assists": "0",
       "points": "2",
-      "image": "https://www.mestis.fi/media/players/47-forsblom-saku_UyhZIIA.png.600x750_q85_box-45%2C21%2C581%2C691.png",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Verneri_Hellman-2305-20250829.png.600x750_q85_box-43%2C59%2C636%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Vainikainen, Ville",
+      "team": "Jokerit",
+      "position": "H",
+      "games": "10",
+      "goals": "2",
+      "assists": "0",
+      "points": "2",
+      "image": "https://www.mestis.fi/media/players/80-vainikainen-ville_t8aYYca.png.600x750_q85_box-0%2C0%2C640%2C800.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Lohisalo, Joonas",
@@ -815,7 +1075,7 @@
       "image": "https://www.mestis.fi/media/players/LOHISALO-JOONAS.png.600x750_q85_box-46%2C0%2C1941%2C2366.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Virta, Santeri",
@@ -828,59 +1088,72 @@
       "image": "https://www.mestis.fi/media/players/virta-santeri.png.600x750_q85_box-0%2C24%2C2839%2C3578.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Lankinen, Joona",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "7",
+      "name": "Tuhkanen, Oliver",
+      "team": "Jokerit",
+      "position": "P",
+      "games": "10",
       "goals": "1",
       "assists": "1",
       "points": "2",
-      "image": "https://www.mestis.fi/media/players/Joona_Lankinen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "image": "https://www.mestis.fi/media/players/73-tuhkanen-oliver.png.600x750_q85_box-8%2C37%2C618%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Elorinne, Aleksi",
       "team": "Jokerit",
       "position": "P",
-      "games": "7",
+      "games": "10",
       "goals": "1",
       "assists": "1",
       "points": "2",
       "image": "https://www.mestis.fi/media/players/53-elorinne-aleksi.png.600x750_q85_box-53%2C32%2C561%2C667.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Kallio, Bruno*",
-      "team": "Jokerit",
-      "position": "H",
-      "games": "7",
+      "name": "Salmela, Santeri",
+      "team": "Ketterä",
+      "position": "P",
+      "games": "12",
       "goals": "1",
       "assists": "1",
       "points": "2",
-      "image": "https://www.mestis.fi/media/players/29-kallio-bruno.png.600x750_q85_box-32%2C40%2C638%2C797.png",
+      "image": "https://www.mestis.fi/media/players/Santeri_Salmela.png.600x750_q85_box-0%2C56%2C533%2C723.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Oden, Markus",
-      "team": "IPK",
+      "name": "Iso-Kuortti, Perttu",
+      "team": "K-Vantaa",
       "position": "H",
-      "games": "6",
+      "games": "8",
       "goals": "1",
       "assists": "1",
       "points": "2",
-      "image": "https://www.mestis.fi/media/players/Markus_Oden_50_n501c4j.png.600x750_q85_box-0%2C24%2C534%2C691.png",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Perttu_Iso-Kuortti-2344-20250829.png.600x750_q85_box-16%2C19%2C640%2C799.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Hallikas, Juho",
+      "team": "Ketterä",
+      "position": "P",
+      "games": "5",
+      "goals": "1",
+      "assists": "1",
+      "points": "2",
+      "image": "https://www.mestis.fi/media/players/Juho_Hallikas.png.600x750_q85_box-0%2C286%2C3008%2C4046.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Järvelä, Juho",
@@ -893,7 +1166,20 @@
       "image": "https://www.mestis.fi/media/players/J%C3%A4rvel%C3%A4_Juho_93.png.600x750_q85_box-0%2C0%2C553%2C690.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Haakana, Santeri",
+      "team": "IPK",
+      "position": "P",
+      "games": "11",
+      "goals": "1",
+      "assists": "1",
+      "points": "2",
+      "image": "https://www.mestis.fi/media/players/Santeri_Haakana_65.png.600x750_q85_box-8%2C29%2C533%2C686.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Pennanen, Akseli",
@@ -906,20 +1192,7 @@
       "image": "https://www.mestis.fi/media/players/pennanen-akseli.png.600x750_q85_box-0%2C0%2C638%2C797.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Maansaari, Olli",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "6",
-      "goals": "1",
-      "assists": "1",
-      "points": "2",
-      "image": "https://www.mestis.fi/media/players/Olli_Maansaari_20.png.600x750_q85_box-14%2C2%2C560%2C685.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Rautiainen, Juha",
@@ -932,111 +1205,72 @@
       "image": "https://www.mestis.fi/media/players/juha_rautiainen.png.600x750_q85_box-37%2C5%2C571%2C672.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Tuomola, Riku",
-      "team": "Jokerit",
-      "position": "P",
-      "games": "7",
-      "goals": "0",
-      "assists": "2",
-      "points": "2",
-      "image": "https://www.mestis.fi/media/players/52-tuomola-riku_OBvJnyA.png.600x750_q85_box-43%2C8%2C593%2C696.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Hattunen, Miska",
-      "team": "IPK",
-      "position": "H",
-      "games": "6",
-      "goals": "0",
-      "assists": "2",
-      "points": "2",
-      "image": "https://www.mestis.fi/media/players/Miska_Hattunen_26_vTl8aTs.png.600x750_q85_box-0%2C67%2C518%2C715.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Kuhta, Veeti",
+      "name": "Maansaari, Olli",
       "team": "K-Vantaa",
       "position": "H",
-      "games": "6",
-      "goals": "0",
-      "assists": "2",
+      "games": "9",
+      "goals": "1",
+      "assists": "1",
       "points": "2",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Veeti_Kuhta-2235-20250829.png.600x750_q85_box-24%2C35%2C624%2C785.png",
+      "image": "https://www.mestis.fi/media/players/Olli_Maansaari_20.png.600x750_q85_box-14%2C2%2C560%2C685.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Nalli, Miro",
-      "team": "Jokerit",
-      "position": "H",
-      "games": "7",
-      "goals": "0",
-      "assists": "2",
-      "points": "2",
-      "image": "https://www.mestis.fi/media/players/19-miro-nalli.png.600x750_q85_box-0%2C280%2C2221%2C3057.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Lahtinen, Oskari",
       "team": "IPK",
       "position": "P",
-      "games": "3",
+      "games": "5",
       "goals": "0",
       "assists": "2",
       "points": "2",
       "image": "https://www.mestis.fi/media/players/Oskari_Lahtinen_55.png.600x750_q85_box-0%2C48%2C529%2C709.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Koskela, Santeri",
-      "team": "IPK",
+      "name": "Kuhta, Veeti",
+      "team": "K-Vantaa",
       "position": "H",
-      "games": "6",
+      "games": "9",
       "goals": "0",
       "assists": "2",
       "points": "2",
-      "image": "https://www.mestis.fi/media/players/Santeri_Koskela_33.png.600x750_q85_box-0%2C40%2C533%2C707.png",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Veeti_Kuhta-2235-20250829.png.600x750_q85_box-24%2C35%2C624%2C785.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Hattunen, Miska",
+      "team": "IPK",
+      "position": "H",
+      "games": "11",
+      "goals": "0",
+      "assists": "2",
+      "points": "2",
+      "image": "https://www.mestis.fi/media/players/Miska_Hattunen_26_vTl8aTs.png.600x750_q85_box-0%2C67%2C518%2C715.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Niemeläinen, Anton",
       "team": "K-Vantaa",
       "position": "P",
-      "games": "6",
+      "games": "9",
       "goals": "0",
       "assists": "2",
       "points": "2",
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Anton_Niemel%C3%A4inen-2291-20250829.png.600x750_q85_box-21%2C56%2C533%2C696.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Kiukas, Peetu",
-      "team": "Ketterä",
-      "position": "P",
-      "games": "7",
-      "goals": "0",
-      "assists": "2",
-      "points": "2",
-      "image": "https://www.mestis.fi/media/players/Peetu_Kiukas.png.600x750_q85_box-0%2C21%2C533%2C688.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Alanko, Tomi",
@@ -1049,98 +1283,46 @@
       "image": "https://www.mestis.fi/media/players/Alanko_Tomi_21_v92jbJ4.png.600x750_q85_box-16%2C13%2C608%2C755.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Heinänen, Kasperi",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "6",
-      "goals": "1",
-      "assists": "0",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Kasperi_Hein%C3%A4nen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Hellman, Verneri",
-      "team": "K-Vantaa",
-      "position": "P",
-      "games": "6",
-      "goals": "1",
-      "assists": "0",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Verneri_Hellman-2305-20250829.png.600x750_q85_box-43%2C59%2C636%2C800.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Lahnaviik, Rasmus",
-      "team": "Jokerit",
-      "position": "H",
-      "games": "7",
-      "goals": "1",
-      "assists": "0",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/20-lahnaviik-rasmus_0royQqQ.png.600x750_q85_box-5%2C0%2C637%2C790.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Haakana, Santeri",
-      "team": "IPK",
-      "position": "P",
-      "games": "6",
-      "goals": "1",
-      "assists": "0",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Santeri_Haakana_65.png.600x750_q85_box-8%2C29%2C533%2C686.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Tamminen, Joona",
       "team": "Ketterä",
       "position": "P",
-      "games": "6",
+      "games": "10",
       "goals": "1",
       "assists": "0",
       "points": "1",
       "image": "https://www.mestis.fi/media/players/Joona_Tamminen.png.600x750_q85_box-0%2C24%2C533%2C691.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Vainikainen, Ville",
+      "name": "Lahnaviik, Rasmus",
       "team": "Jokerit",
       "position": "H",
-      "games": "7",
+      "games": "10",
       "goals": "1",
       "assists": "0",
       "points": "1",
-      "image": "https://www.mestis.fi/media/players/80-vainikainen-ville_t8aYYca.png.600x750_q85_box-0%2C0%2C640%2C800.png",
+      "image": "https://www.mestis.fi/media/players/20-lahnaviik-rasmus_0royQqQ.png.600x750_q85_box-5%2C0%2C637%2C790.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Lehtinen, Joona",
+      "name": "Palo, Tomi",
       "team": "Ketterä",
       "position": "H",
-      "games": "7",
+      "games": "2",
       "goals": "1",
       "assists": "0",
       "points": "1",
-      "image": "https://www.mestis.fi/media/players/Joona_Lehtinen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "image": "https://www.mestis.fi/media/players/Tomi_Palo.png.600x750_q85_box-0%2C59%2C533%2C725.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Suvanto, Niilo",
@@ -1153,20 +1335,7 @@
       "image": "https://www.mestis.fi/media/players/SUVANTO-NIILO.png.600x750_q85_box-19%2C0%2C534%2C643.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Iso-Kuortti, Perttu",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "5",
-      "goals": "1",
-      "assists": "0",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Perttu_Iso-Kuortti-2344-20250829.png.600x750_q85_box-16%2C19%2C640%2C799.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vuorinen, Rasmus*",
@@ -1179,11 +1348,11 @@
       "image": "https://www.mestis.fi/media/players/rasmus_vuorinen.png.600x750_q85_box-21%2C0%2C572%2C688.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Lauri, Onni",
-      "team": "JoKP",
+      "team": "Hermes",
       "position": "P",
       "games": "5",
       "goals": "1",
@@ -1192,7 +1361,7 @@
       "image": "https://www.mestis.fi/media/players/Onni_Lauri.png.600x750_q85_box-19%2C32%2C570%2C720.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vallius, Sakke",
@@ -1205,20 +1374,7 @@
       "image": "https://www.mestis.fi/media/players/VALLIUS-SAKKE.png.600x750_q85_box-0%2C0%2C585%2C730.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Vesaaja, Julius",
-      "team": "IPK",
-      "position": "H",
-      "games": "6",
-      "goals": "1",
-      "assists": "0",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Julius_Vesaaja_9_x98GLfK.png.600x750_q85_box-0%2C372%2C4957%2C6568.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Kenttämaa, Aleksi",
@@ -1231,20 +1387,7 @@
       "image": "https://www.mestis.fi/media/players/Kentt%C3%A4maa_Aleksi_55.png.600x750_q85_box-8%2C0%2C585%2C720.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Fagerström, Juuso",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "6",
-      "goals": "1",
-      "assists": "0",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Juuso_Fagerstr%C3%B6n-2487-20250829.png.600x750_q85_box-0%2C0%2C640%2C800.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Takala, Eemeli",
@@ -1257,98 +1400,46 @@
       "image": "https://www.mestis.fi/media/players/Eemeli_Takala_wc5PQgv.png.600x750_q85_box-0%2C56%2C1077%2C1406.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Koskela, Valtteri",
-      "team": "IPK",
-      "position": "P",
-      "games": "6",
-      "goals": "0",
-      "assists": "1",
+      "name": "Fagerström, Juuso",
+      "team": "K-Vantaa",
+      "position": "H",
+      "games": "9",
+      "goals": "1",
+      "assists": "0",
       "points": "1",
-      "image": "https://www.mestis.fi/media/players/Valtteri_Koskela_4_JRV8POm.png.600x750_q85_box-0%2C260%2C2362%2C3212.png",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Juuso_Fagerstr%C3%B6n-2487-20250829.png.600x750_q85_box-0%2C0%2C640%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Tuhkanen, Oliver",
-      "team": "Jokerit",
-      "position": "P",
-      "games": "7",
-      "goals": "0",
-      "assists": "1",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/73-tuhkanen-oliver.png.600x750_q85_box-8%2C37%2C618%2C800.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Junkkari, Jimi*",
-      "team": "IPK",
-      "position": "P",
-      "games": "6",
-      "goals": "0",
-      "assists": "1",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Jimi_Junkkari_2.png.600x750_q85_box-0%2C43%2C533%2C709.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Salmela, Santeri",
-      "team": "Ketterä",
-      "position": "P",
-      "games": "7",
-      "goals": "0",
-      "assists": "1",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Santeri_Salmela.png.600x750_q85_box-0%2C56%2C533%2C723.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Rannisto, Jasper",
-      "team": "Ketterä",
-      "position": "P",
-      "games": "7",
-      "goals": "0",
-      "assists": "1",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Jasper_Rannisto.png.600x750_q85_box-0%2C271%2C3008%2C4031.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Mikkonen, Oskari",
       "team": "IPK",
       "position": "P",
-      "games": "6",
+      "games": "7",
       "goals": "0",
       "assists": "1",
       "points": "1",
       "image": "https://www.mestis.fi/media/players/Oskari_Mikkonen_12_8JS32cT.png.600x750_q85_box-8%2C51%2C496%2C661.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Pietilä, Noel",
+      "name": "Käkränen, Jami*",
       "team": "Ketterä",
       "position": "P",
-      "games": "3",
+      "games": "9",
       "goals": "0",
       "assists": "1",
       "points": "1",
-      "image": "https://www.mestis.fi/media/players/11_Noel_Pietil%C3%A4.png.600x750_q85_box-0%2C0%2C467%2C583.png",
+      "image": "https://www.mestis.fi/media/players/Jami_K%C3%A4kr%C3%A4nen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Wehmas, Jeremi",
@@ -1361,20 +1452,33 @@
       "image": "https://www.mestis.fi/media/players/WEHMAS-JEREMI.png.600x750_q85_box-11%2C0%2C587%2C720.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Karvinen, Otto",
       "team": "Jokerit",
       "position": "H",
-      "games": "4",
+      "games": "5",
       "goals": "0",
       "assists": "1",
       "points": "1",
       "image": "https://www.mestis.fi/media/players/21-karvinen-otto_hxwMSGS.png.600x750_q85_box-27%2C56%2C622%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Liukkonen, Mikko*",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "4",
+      "goals": "0",
+      "assists": "1",
+      "points": "1",
+      "image": "https://www.mestis.fi/media/players/Mikko_Liukkonen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Ahopelto, Juho",
@@ -1387,20 +1491,20 @@
       "image": "https://www.mestis.fi/media/players/AHOPELTO-JUHO.png.600x750_q85_box-35%2C0%2C624%2C737.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Parviainen, Oskari",
       "team": "IPK",
       "position": "MV",
-      "games": "6",
+      "games": "11",
       "goals": "0",
       "assists": "1",
       "points": "1",
       "image": "https://www.mestis.fi/media/players/Oskari_Parviainen_70.png.600x750_q85_box-0%2C201%2C2296%2C3071.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Hahl, Veikka",
@@ -1413,7 +1517,7 @@
       "image": "https://www.mestis.fi/media/players/veikka_hahl.png.600x750_q85_box-0%2C0%2C1080%2C1350.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Haikonen, Antti",
@@ -1426,7 +1530,7 @@
       "image": "https://www.mestis.fi/media/players/HAIKONEN-ANTTI.png.600x750_q85_box-18%2C0%2C1872%2C2319.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Rannikko, Onni*",
@@ -1439,33 +1543,7 @@
       "image": "https://www.mestis.fi/media/players/rannikko-onni.png.600x750_q85_box-27%2C0%2C618%2C741.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Henritius, Teemu",
-      "team": "Jokerit",
-      "position": "H",
-      "games": "5",
-      "goals": "0",
-      "assists": "1",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/16-henritius-teemu_hY1IqaG.png.600x750_q85_box-27%2C53%2C622%2C797.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Kähkönen, Josi",
-      "team": "IPK",
-      "position": "P",
-      "games": "6",
-      "goals": "0",
-      "assists": "1",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Josi_Kahkonen_59.png.600x750_q85_box-0%2C347%2C4333%2C5763.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Tervo, Eetu*",
@@ -1478,7 +1556,7 @@
       "image": "https://www.mestis.fi/media/players/tervo-eetu.png.600x750_q85_box-0%2C0%2C571%2C713.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Brygger, Jonne",
@@ -1491,7 +1569,7 @@
       "image": "https://www.mestis.fi/media/players/BRYGGER-JONNE.png.600x750_q85_box-40%2C0%2C590%2C687.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Tukiainen, Jirko*",
@@ -1504,20 +1582,7 @@
       "image": "https://www.mestis.fi/media/players/tukiainen-jirko.png.600x750_q85_box-73%2C0%2C2729%2C3326.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Nyman, Nooa*",
-      "team": "K-Vantaa",
-      "position": "P",
-      "games": "4",
-      "goals": "0",
-      "assists": "1",
-      "points": "1",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Nooa_Nyman-2264-20250829.png.600x750_q85_box-29%2C37%2C639%2C800.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Sevänen, Roni",
@@ -1530,7 +1595,20 @@
       "image": "https://www.mestis.fi/media/players/SEVANEN-RONI_JOKP.png.600x750_q85_box-0%2C32%2C448%2C592.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Nyman, Nooa*",
+      "team": "K-Vantaa",
+      "position": "P",
+      "games": "7",
+      "goals": "0",
+      "assists": "1",
+      "points": "1",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Nooa_Nyman-2264-20250829.png.600x750_q85_box-29%2C37%2C639%2C800.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Mönkkönen, Mika*",
@@ -1543,7 +1621,7 @@
       "image": "https://www.mestis.fi/media/players/mika_monkkonen.png.600x750_q85_box-0%2C27%2C564%2C733.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Grönblom, Tom",
@@ -1556,7 +1634,7 @@
       "image": "https://www.mestis.fi/media/players/Tom_Gronblom.png.600x750_q85_box-79%2C39%2C1728%2C2102.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Örn, Tuomas",
@@ -1569,20 +1647,20 @@
       "image": "https://www.mestis.fi/media/players/%C3%96rn_Tuomas_19_hwYIM5z.png.600x750_q85_box-24%2C3%2C595%2C716.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Tiihonen, Lenni*",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "6",
+      "name": "Kähkönen, Josi",
+      "team": "IPK",
+      "position": "P",
+      "games": "9",
       "goals": "0",
       "assists": "1",
       "points": "1",
-      "image": "https://www.mestis.fi/media/players/Lenni_Tiihonen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "image": "https://www.mestis.fi/media/players/Josi_Kahkonen_59.png.600x750_q85_box-0%2C347%2C4333%2C5763.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Niinistö, Joel*",
@@ -1595,7 +1673,20 @@
       "image": "https://www.mestis.fi/media/players/Joel_Niinisto.png.600x750_q85_box-0%2C16%2C573%2C733.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Rikkilä, Hugo",
+      "team": "K-Vantaa",
+      "position": "P",
+      "games": "5",
+      "goals": "0",
+      "assists": "1",
+      "points": "1",
+      "image": "https://www.mestis.fi/media/players/71-rikkila-hugo.png.600x750_q85_box-29%2C5%2C597%2C715.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Heinonen, Otto",
@@ -1608,7 +1699,7 @@
       "image": "https://www.mestis.fi/media/players/Otto_Heinonen_vyxv1Kp.png.600x750_q85_box-35%2C0%2C1080%2C1309.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Haataja, Valtteri",
@@ -1621,46 +1712,33 @@
       "image": "https://www.mestis.fi/media/players/Haataja_Valtteri_78_bPHiZMS.png.600x750_q85_box-0%2C11%2C611%2C774.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Käkränen, Jami*",
-      "team": "Ketterä",
-      "position": "P",
-      "games": "6",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/Jami_K%C3%A4kr%C3%A4nen.png.600x750_q85_box-0%2C43%2C533%2C709.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Manninen, Oskari",
-      "team": "Jokerit",
-      "position": "P",
-      "games": "7",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/41-manninen-oskari.png.600x750_q85_box-27%2C37%2C605%2C761.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Niemi, Aleksi",
       "team": "Ketterä",
       "position": "P",
-      "games": "7",
+      "games": "10",
       "goals": "0",
       "assists": "0",
       "points": "0",
       "image": "https://www.mestis.fi/media/players/Aleksi_Niemi.png.600x750_q85_box-0%2C48%2C533%2C715.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Manninen, Oskari",
+      "team": "Jokerit",
+      "position": "P",
+      "games": "10",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/media/players/41-manninen-oskari.png.600x750_q85_box-27%2C37%2C605%2C761.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Virtanen, Jami",
@@ -1673,7 +1751,7 @@
       "image": "https://www.mestis.fi/media/players/77-virtanen-jami.png.600x750_q85_box-40%2C40%2C582%2C717.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Cederberg, Elliot",
@@ -1686,7 +1764,7 @@
       "image": "https://www.mestis.fi/media/players/elliot_cederberg.png.600x750_q85_box-0%2C40%2C1080%2C1392.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Arkko, Verneri",
@@ -1699,7 +1777,7 @@
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa_Verneri_Arkko_20260219.png.600x750_q85_box-0%2C0%2C536%2C670.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Ulvila, Akseli",
@@ -1712,20 +1790,33 @@
       "image": "https://www.mestis.fi/media/players/akseli_ulvila.png.600x750_q85_box-24%2C24%2C574%2C712.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Ruotsi, Jesse",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "7",
+      "name": "Tumanovs, Miks",
+      "team": "Jokerit",
+      "position": "P",
+      "games": "10",
       "goals": "0",
       "assists": "0",
       "points": "0",
-      "image": "https://www.mestis.fi/media/players/Jesse_Ruotsi.png.600x750_q85_box-0%2C192%2C450%2C755.png",
+      "image": "https://www.mestis.fi/media/players/12-tumanovs-miks.png.600x750_q85_box-70%2C187%2C2310%2C2987.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "#\n  \n\n            \n  \n    \n  \n  Kettunen, Nico",
+      "team": "IPK",
+      "position": "P",
+      "games": "1",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/static/liiga/common/img/unknown-player-transparent-600x600.v1bec7489.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Korhonen, Joona",
@@ -1738,7 +1829,20 @@
       "image": "https://www.mestis.fi/media/players/korhonen-joona.png.600x750_q85_box-43%2C0%2C593%2C687.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "#\n  \n\n            \n  \n    \n  \n  Kuuluvainen, Juho",
+      "team": "Ketterä",
+      "position": "MV",
+      "games": "1",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/static/liiga/common/img/unknown-player-transparent-600x600.v1bec7489.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Nummelin, Rene*",
@@ -1751,46 +1855,7 @@
       "image": "https://www.mestis.fi/media/players/nummelin-rene0.5x.png.600x750_q85_box-65%2C0%2C1572%2C1883.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Oja, Simo",
-      "team": "Ketterä",
-      "position": "MV",
-      "games": "1",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/static/liiga/common/img/unknown-player-transparent-600x600.v1bec7489.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Palo, Tomi",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "1",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/Tomi_Palo.png.600x750_q85_box-0%2C59%2C533%2C725.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Rönkkönen, Jimi",
-      "team": "Ketterä",
-      "position": "H",
-      "games": "1",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/91_Jimi_R%C3%B6nkk%C3%B6nen.png.600x750_q85_box-0%2C0%2C467%2C583.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Smith, Jake",
@@ -1803,7 +1868,7 @@
       "image": "https://www.mestis.fi/media/players/SMITH-JAKE_JOKP.png.600x750_q85_box-0%2C37%2C499%2C661.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Turppa, Tuomas",
@@ -1816,7 +1881,20 @@
       "image": "https://www.mestis.fi/media/players/Turppa_Tuomas_90.png.600x750_q85_box-0%2C13%2C604%2C767.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Joenpolvi, Lauri",
+      "team": "K-Vantaa",
+      "position": "MV",
+      "games": "2",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/static/liiga/common/img/unknown-player-transparent-600x600.v1bec7489.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Mäenpää, Kasper",
@@ -1829,20 +1907,7 @@
       "image": "https://www.mestis.fi/media/players/M%C3%84ENP%C3%84%C3%84-KASPER.png.600x750_q85_box-8%2C0%2C550%2C677.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Tiusanen, Eetu",
-      "team": "K-Vantaa",
-      "position": "H",
-      "games": "2",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa_Eetu_Tiusanen_002_20251017.png.600x750_q85_box-27%2C0%2C2610%2C3233.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Alapuranen, Oskari*",
@@ -1855,7 +1920,7 @@
       "image": "https://www.mestis.fi/media/players/alapuranen-oskari.png.600x750_q85_box-0%2C0%2C580%2C727.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Viitala, Jasper",
@@ -1868,7 +1933,7 @@
       "image": "https://www.mestis.fi/media/players/VIITALA-JASPER.png.600x750_q85_box-0%2C0%2C523%2C653.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Helomaa, Juuso",
@@ -1881,7 +1946,7 @@
       "image": "https://www.mestis.fi/media/players/helomaa-juuso.png.600x750_q85_box-19%2C0%2C658%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Mäkelä, Alex",
@@ -1894,11 +1959,24 @@
       "image": "https://www.mestis.fi/media/players/alex_makela.png.600x750_q85_box-0%2C32%2C571%2C745.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Oja, Simo",
+      "team": "Ketterä",
+      "position": "MV",
+      "games": "5",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/static/liiga/common/img/unknown-player-transparent-600x600.v1bec7489.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Risikko, Henri",
-      "team": "Jokerit",
+      "team": "Hermes",
       "position": "MV",
       "games": "5",
       "goals": "0",
@@ -1907,7 +1985,7 @@
       "image": "https://www.mestis.fi/media/players/henri_risikko.png.600x750_q85_box-33%2C21%2C983%2C1208.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Selin, Lukas",
@@ -1920,20 +1998,7 @@
       "image": "https://www.mestis.fi/media/players/selin-lukas0.5x.png.600x750_q85_box-124%2C0%2C1514%2C1735.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Auvinen, Severi",
-      "team": "K-Vantaa",
-      "position": "MV",
-      "games": "6",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa_Severi_Auvinen_20251101.png.600x750_q85_box-0%2C13%2C2890%2C3630.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Huunonen, Romi",
@@ -1946,7 +2011,7 @@
       "image": "https://www.mestis.fi/media/players/Huunonen_Romi_40_elaS9sk.png.600x750_q85_box-64%2C0%2C704%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Hyypiä, Eetu",
@@ -1959,7 +2024,7 @@
       "image": "https://www.mestis.fi/media/players/Hyypi%C3%A4_Eetu_1_FidU6qa.png.600x750_q85_box-32%2C0%2C671%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Kaskisuo, Kasimir",
@@ -1972,72 +2037,72 @@
       "image": "https://www.mestis.fi/media/players/KASKISUO-KASIMIR_JOKP.png.600x750_q85_box-0%2C43%2C550%2C729.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
-      "name": "Rovio, Topias*",
-      "team": "IPK",
+      "name": "Auvinen, Severi",
+      "team": "K-Vantaa",
       "position": "MV",
-      "games": "6",
+      "games": "7",
       "goals": "0",
       "assists": "0",
       "points": "0",
-      "image": "https://www.mestis.fi/media/players/Topias_Rovio_35.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa_Severi_Auvinen_20251101.png.600x750_q85_box-0%2C13%2C2890%2C3630.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Varis, Kalle",
       "team": "K-Vantaa",
       "position": "MV",
-      "games": "6",
+      "games": "9",
       "goals": "0",
       "assists": "0",
       "points": "0",
       "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Kalle_Varis-2556-20250829.png.600x750_q85_box-32%2C40%2C640%2C800.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Anttila, Eetu",
       "team": "Jokerit",
       "position": "MV",
-      "games": "7",
+      "games": "10",
       "goals": "0",
       "assists": "0",
       "points": "0",
       "image": "https://www.mestis.fi/media/players/32-eetu-anttila.png.600x750_q85_box-85%2C24%2C557%2C614.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Rovio, Topias*",
+      "team": "IPK",
+      "position": "MV",
+      "games": "11",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/media/players/Topias_Rovio_35.png.600x750_q85_box-0%2C43%2C533%2C709.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Tanninen, Väinö*",
       "team": "Ketterä",
       "position": "MV",
-      "games": "7",
+      "games": "12",
       "goals": "0",
       "assists": "0",
       "points": "0",
       "image": "https://www.mestis.fi/media/players/V%C3%A4in%C3%B6_Tanninen.png.600x750_q85_box-105%2C120%2C3008%2C3749.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Hallikas, Juho",
-      "team": "Ketterä",
-      "position": "P",
-      "games": "1",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/Juho_Hallikas.png.600x750_q85_box-0%2C286%2C3008%2C4046.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Kusy, Denis",
@@ -2050,7 +2115,20 @@
       "image": "https://www.mestis.fi/media/players/KUSY-DENIS_JOKP.png.600x750_q85_box-0%2C37%2C461%2C614.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Tiusanen, Eetu",
+      "team": "K-Vantaa",
+      "position": "H",
+      "games": "4",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa_Eetu_Tiusanen_002_20251017.png.600x750_q85_box-27%2C0%2C2610%2C3233.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Puotiniemi, Ville*",
@@ -2063,11 +2141,11 @@
       "image": "https://www.mestis.fi/media/players/Puotiniemi.png.600x750_q85_box-0%2C3%2C600%2C753.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vinni, Eemil",
-      "team": "JoKP",
+      "team": "Ketterä",
       "position": "MV",
       "games": "6",
       "goals": "0",
@@ -2076,20 +2154,20 @@
       "image": "https://www.mestis.fi/media/players/Eemil_Vinni.png.600x750_q85_box-0%2C152%2C445%2C709.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vehviläinen, Veini",
       "team": "Jokerit",
       "position": "MV",
-      "games": "7",
+      "games": "10",
       "goals": "0",
       "assists": "0",
       "points": "0",
       "image": "https://www.mestis.fi/media/players/30-vehvilainen-veini.png.600x750_q85_box-33%2C125%2C1933%2C2500.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Antikainen, Aatu*",
@@ -2102,20 +2180,7 @@
       "image": "https://www.mestis.fi/media/players/Antikainen_Aatu_5.png.600x750_q85_box-0%2C0%2C575%2C720.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Tumanovs, Miks",
-      "team": "Jokerit",
-      "position": "P",
-      "games": "7",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/12-tumanovs-miks.png.600x750_q85_box-70%2C187%2C2310%2C2987.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Matikainen, Kalle",
@@ -2128,7 +2193,7 @@
       "image": "https://www.mestis.fi/media/players/MATIKAINEN-KALLE.png.600x750_q85_box-0%2C0%2C536%2C670.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Väre, Severi",
@@ -2141,7 +2206,20 @@
       "image": "https://www.mestis.fi/media/players/vare-severi.png.600x750_q85_box-0%2C12%2C2726%2C3413.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Ruotsi, Jesse",
+      "team": "Ketterä",
+      "position": "H",
+      "games": "11",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/media/players/Jesse_Ruotsi.png.600x750_q85_box-0%2C192%2C450%2C755.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Farkas, Oliver",
@@ -2154,7 +2232,7 @@
       "image": "https://www.mestis.fi/media/players/Oliver_Farkas.png.600x750_q85_box-0%2C131%2C450%2C694.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Huumo, Veeti*",
@@ -2167,7 +2245,7 @@
       "image": "https://www.mestis.fi/media/players/huumo-veeti.png.600x750_q85_box-11%2C0%2C617%2C757.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Ohtonen, Jere",
@@ -2180,7 +2258,7 @@
       "image": "https://www.mestis.fi/media/players/jere_ohtonen.png.600x750_q85_box-0%2C20%2C1080%2C1368.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Korsumäki, Arttu",
@@ -2193,7 +2271,7 @@
       "image": "https://www.mestis.fi/media/players/Korsum%C3%A4ki_Arttu_82_2sVUWLM.png.600x750_q85_box-0%2C0%2C587%2C733.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Välilä, Elis*",
@@ -2206,7 +2284,7 @@
       "image": "https://www.mestis.fi/media/players/valila-elis.png.600x750_q85_box-0%2C0%2C565%2C707.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Tapio, Mikael",
@@ -2219,7 +2297,7 @@
       "image": "https://www.mestis.fi/media/players/mikael_tapio.png.600x750_q85_box-0%2C0%2C587%2C733.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Eloranta, Eevert",
@@ -2232,7 +2310,7 @@
       "image": "https://www.mestis.fi/media/players/eloranta-eevert.png.600x750_q85_box-0%2C0%2C590%2C737.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Heinonen, Juho",
@@ -2245,33 +2323,7 @@
       "image": "https://www.mestis.fi/media/players/Heinonen_Juho_23.png.600x750_q85_box-0%2C0%2C603%2C753.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Kettunen, Elias*",
-      "team": "K-Vantaa",
-      "position": "P",
-      "games": "6",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Elias_Kettunen-2417-20250829.png.600x750_q85_box-11%2C37%2C619%2C797.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
-    },
-    {
-      "name": "Rikkilä, Hugo",
-      "team": "Jokerit",
-      "position": "P",
-      "games": "2",
-      "goals": "0",
-      "assists": "0",
-      "points": "0",
-      "image": "https://www.mestis.fi/media/players/71-rikkila-hugo.png.600x750_q85_box-29%2C5%2C597%2C715.png",
-      "league": "Mestis",
-      "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Dommers, Valdis",
@@ -2284,7 +2336,20 @@
       "image": "https://www.mestis.fi/media/players/valdis_dommers.png.600x750_q85_box-0%2C8%2C574%2C725.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Toivainen, Rasmus",
+      "team": "IPK",
+      "position": "H",
+      "games": "3",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/media/players/Rasmus_Toivainen_19_tluJUjC.png.600x750_q85_box-0%2C75%2C467%2C658.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Hartikainen, Santeri",
@@ -2297,7 +2362,7 @@
       "image": "https://www.mestis.fi/media/players/HARTIKAINEN-SANTERI_JOKP.png.600x750_q85_box-0%2C37%2C488%2C647.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Puikkonen, Topi*",
@@ -2310,7 +2375,7 @@
       "image": "https://www.mestis.fi/media/players/Topi_puikkonen.png.600x750_q85_box-0%2C21%2C553%2C711.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Airo, Joni",
@@ -2323,7 +2388,20 @@
       "image": "https://www.mestis.fi/media/players/Joni_airo.png.600x750_q85_box-0%2C29%2C571%2C743.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
+    },
+    {
+      "name": "Kettunen, Elias*",
+      "team": "K-Vantaa",
+      "position": "P",
+      "games": "9",
+      "goals": "0",
+      "assists": "0",
+      "points": "0",
+      "image": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Elias_Kettunen-2417-20250829.png.600x750_q85_box-11%2C37%2C619%2C797.png",
+      "league": "Mestis",
+      "source": "puppeteer-advanced",
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Kurbaka, Viktors",
@@ -2336,7 +2414,7 @@
       "image": "https://www.mestis.fi/media/players/KURBAKA-VIKTORS_JOKP.png.600x750_q85_box-0%2C29%2C534%2C696.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Virtanen, Antti*",
@@ -2349,7 +2427,7 @@
       "image": "https://www.mestis.fi/media/players/VIRTANEN-ANTTI.png.600x750_q85_box-0%2C0%2C595%2C743.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vainio, Joona",
@@ -2362,7 +2440,7 @@
       "image": "https://www.mestis.fi/media/players/joona_vainio.png.600x750_q85_box-16%2C11%2C588%2C725.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Inhala, Justus*",
@@ -2375,7 +2453,7 @@
       "image": "https://www.mestis.fi/media/players/INHALA-JUSTUS.png.600x750_q85_box-0%2C5%2C587%2C739.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Mikkola, Niko",
@@ -2388,7 +2466,7 @@
       "image": "https://www.mestis.fi/media/players/MIKKOLA-NIKO.png.600x750_q85_box-0%2C0%2C548%2C687.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Lindroos, Valtteri",
@@ -2401,7 +2479,7 @@
       "image": "https://www.mestis.fi/media/players/Lindroos_Valtteri_9.png.600x750_q85_box-0%2C0%2C568%2C710.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Manninen, Jaako",
@@ -2414,7 +2492,7 @@
       "image": "https://www.mestis.fi/media/players/Manninen_Jaako_2_dGugG7P.png.600x750_q85_box-13%2C0%2C633%2C773.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vatanen, Samuli",
@@ -2427,7 +2505,7 @@
       "image": "https://www.mestis.fi/static/liiga/common/img/unknown-player-transparent-600x600.v1bec7489.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Savolainen, Valtteri",
@@ -2440,7 +2518,7 @@
       "image": "https://www.mestis.fi/media/players/Valtteri_Savolainen_U78g7Mx.png.600x750_q85_box-0%2C19%2C549%2C705.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Kulmala, Frans",
@@ -2453,7 +2531,7 @@
       "image": "https://www.mestis.fi/media/players/kulmala-frans.png.600x750_q85_box-0%2C0%2C601%2C750.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Lindholm, Ville*",
@@ -2466,7 +2544,7 @@
       "image": "https://www.mestis.fi/media/players/lindholm-ville.png.600x750_q85_box-49%2C0%2C2975%2C3652.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Vuori, Topi",
@@ -2479,7 +2557,7 @@
       "image": "https://www.mestis.fi/media/players/vuori-topi.png.600x750_q85_box-8%2C0%2C592%2C730.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Karppinen, Iiro*",
@@ -2492,7 +2570,7 @@
       "image": "https://www.mestis.fi/media/players/karppinen-iiro.png.600x750_q85_box-21%2C0%2C627%2C757.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Heino, Lauri",
@@ -2505,7 +2583,7 @@
       "image": "https://www.mestis.fi/media/players/HEINO-LAURI_JOKP.png.600x750_q85_box-0%2C43%2C471%2C633.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Sikorski, Anton",
@@ -2518,7 +2596,7 @@
       "image": "https://www.mestis.fi/media/players/Sikorski_Anton_77.png.600x750_q85_box-0%2C5%2C602%2C759.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     },
     {
       "name": "Grönlund, Niklas",
@@ -2531,10 +2609,10 @@
       "image": "https://www.mestis.fi/media/players/Gr%C3%B6nlund_Niklas_84.png.600x750_q85_box-24%2C3%2C595%2C716.png",
       "league": "Mestis",
       "source": "puppeteer-advanced",
-      "scraped_at": "2026-03-15T11:45:44.970Z"
+      "scraped_at": "2026-03-28T13:36:04.272Z"
     }
   ],
   "network_logs": [],
   "api_endpoints": [],
-  "total_players": 194
+  "total_players": 200
 }
