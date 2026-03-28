@@ -472,12 +472,135 @@ def _is_headshot_url_consistent(headshot_url, source_league):
     return True
 
 
+def _build_league_player_lookups():
+    """Build lookup tables mapping player IDs to names for each league file."""
+    import json
+
+    lookups = {}
+
+    for source_file in LEAGUE_PROSPECTS_FILES:
+        if not source_file.exists():
+            continue
+
+        try:
+            payload = json.loads(source_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+
+        rows = payload.get("players") if isinstance(payload, dict) else payload
+        if not isinstance(rows, list):
+            continue
+
+        file_lookup = {}
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+
+            player_id = row.get("player_id") or row.get("id")
+            name = row.get("name")
+            if player_id and name:
+                file_lookup[str(player_id)] = name
+                file_lookup[name.lower()] = name
+
+                numeric_id = str(player_id).split("_")[-1]
+                if numeric_id != str(player_id):
+                    file_lookup[numeric_id] = name
+
+        lookups[source_file.stem] = file_lookup
+
+    return lookups
+
+
+def _extract_league_id_from_headshot(headshot_url, source_file_stem):
+    """Extract the actual player ID from a headshot URL for validation."""
+    if not headshot_url:
+        return None
+
+    filename = (
+        headshot_url.replace("/prospect-headshots/", "")
+        .replace(".webp", "")
+        .replace(".jpg", "")
+        .replace(".png", "")
+    )
+
+    if source_file_stem == "league_prospects_official":
+        if filename.startswith("liiga-"):
+            return filename.replace("liiga-", ""), "liiga"
+    elif source_file_stem == "league_prospects_advanced":
+        if filename.startswith("mestis-"):
+            return filename.replace("mestis-", ""), "mestis"
+    elif source_file_stem == "league_prospects_na":
+        for prefix in ["ahl-", "ushl-", "ohl-", "whl-", "qmjhl-"]:
+            if filename.startswith(prefix):
+                return filename.replace(prefix, ""), prefix.rstrip("-")
+
+    return None, None
+
+
+def _names_are_compatible(name1, name2):
+    """Check if two names could be variations of the same person.
+
+    Returns True if names are similar enough to be the same person.
+    This catches cases like 'Robert' vs 'Bob', 'William' vs 'Bill', etc.
+    """
+    if not name1 or not name2:
+        return True
+
+    n1 = normalize_person_name(name1).lower()
+    n2 = normalize_person_name(name2).lower()
+
+    if n1 == n2:
+        return True
+
+    parts1 = n1.split()
+    parts2 = n2.split()
+
+    if len(parts1) >= 2 and len(parts2) >= 2:
+        first1, last1 = parts1[0], parts1[-1]
+        first2, last2 = parts2[0], parts2[-1]
+        if first1 == first2 and last1 == last2:
+            return True
+
+    first_match = parts1[0] == parts2[0] if parts1 and parts2 else False
+    last_match = parts1[-1] == parts2[-1] if parts1 and parts2 else False
+
+    return first_match and last_match
+
+
+def _validate_headshot_assignment(
+    headshot_url, target_name, source_file_stem, league_lookups
+):
+    """Validate that a headshot URL actually belongs to the target player.
+
+    This prevents assigning Otto Kivenmäki's headshot to Otto Salin.
+    """
+    if not headshot_url:
+        return True, None
+
+    extracted_id, league_type = _extract_league_id_from_headshot(
+        headshot_url, source_file_stem
+    )
+
+    if not extracted_id:
+        return True, None
+
+    lookup = league_lookups.get(source_file_stem, {})
+    source_name = lookup.get(extracted_id) or lookup.get(extracted_id.lower())
+
+    if source_name and not _names_are_compatible(source_name, target_name):
+        return False, f"headshot belongs to '{source_name}' not '{target_name}'"
+
+    return True, None
+
+
 def ingest_league_prospects_files(candidates, by_name):
     """Merge non-NHL league prospect photos and metadata from generated JSON files."""
     import json
 
     added = 0
     merged = 0
+
+    league_lookups = _build_league_player_lookups()
 
     for source_file in LEAGUE_PROSPECTS_FILES:
         if not source_file.exists():
@@ -546,6 +669,13 @@ def ingest_league_prospects_files(candidates, by_name):
                             f"  Skipping inconsistent headshot for {full_name}: {headshot_url} (player league: {existing_league}, source league: {source_league_from_row})"
                         )
                         headshot_for_merge = None
+                    else:
+                        is_valid, reason = _validate_headshot_assignment(
+                            headshot_url, full_name, source_file.stem, league_lookups
+                        )
+                        if not is_valid:
+                            print(f"  VALIDATION FAILED: {full_name} - {reason}")
+                            headshot_for_merge = None
 
             result_id = upsert_candidate(
                 candidates,
