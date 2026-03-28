@@ -1,64 +1,46 @@
 #!/bin/bash
 set -euo pipefail
 
-# Autoresearch shell for mestis-image-matching experiment
-# Measures image match rate for Mestis players
+# Autoresearch shell for headshot coverage optimization
+# Measures headshot coverage across all leagues
 
-# The script validates the image matching logic
-# Outputs METRIC lines for parsing
+python3 -c "
+import json
+import sys
 
-OUTPUT_FILE="${OUTPUT_FILE:-/tmp/mestis_test_results.json}"
+files = [
+    'static/data/leagues/league_prospects_official.json',
+]
 
-# Run a quick validation of the slug generation and name matching logic
-node -e "
-const fs = require('fs');
+total_players = 0
+total_with_headshot = 0
+league_stats = {}
 
-// Test name normalization and slug generation
-const normalizeMestisName = (value) => (value || '')
-    .replace(/\*/g, '')
-    .replace(/\s*,\s*/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
+for f in files:
+    try:
+        with open(f) as fp:
+            data = json.load(fp)
+            for p in data.get('players', []):
+                total_players += 1
+                league = p.get('league', 'Unknown')
+                if league not in league_stats:
+                    league_stats[league] = {'total': 0, 'with_headshot': 0}
+                league_stats[league]['total'] += 1
+                
+                if p.get('headshot_url'):
+                    total_with_headshot += 1
+                    league_stats[league]['with_headshot'] += 1
+    except Exception as e:
+        print(f'Error reading {f}: {e}', file=sys.stderr)
 
-const toMestisSlug = (value) => normalizeMestisName(value)
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
+coverage = (total_with_headshot / total_players * 100) if total_players > 0 else 0
 
-// Test cases - known Finnish surnames
-const testNames = [
-    'Mikko Rantanen',
-    'Patrik Laine', 
-    'Sebastian Aho',
-    'Roope Hintz',
-    'Aleksander Barkov',
-    'Mikael Granlund',
-    'Erik Karlsson',  // Swedish - should not match Finnish
-    'Kimi Räikkönen',  // With special char
-    'Joonas Donskoi',
-    'Mikko Rantanen',  // Duplicate
-];
+print(f'METRIC headshot_coverage_rate={coverage:.2f}')
+print(f'METRIC total_players={total_players}')
+print(f'METRIC players_with_headshot={total_with_headshot}')
 
-let slugSuccess = 0;
-let slugFail = 0;
-
-for (const name of testNames) {
-    const slug = toMestisSlug(name);
-    if (slug && slug.length > 2) {
-        slugSuccess++;
-        console.log('OK: ' + name + ' -> ' + slug);
-    } else {
-        slugFail++;
-        console.log('FAIL: ' + name + ' -> [' + slug + ']');
-    }
-}
-
-console.log('');
-console.log('METRIC slug_success_rate=' + (slugSuccess / testNames.length * 100).toFixed(2));
-console.log('METRIC slug_success_count=' + slugSuccess);
-console.log('METRIC slug_fail_count=' + slugFail);
-" 2>&1
+for league in sorted(league_stats.keys()):
+    stats = league_stats[league]
+    rate = (stats['with_headshot'] / stats['total'] * 100) if stats['total'] > 0 else 0
+    print(f'METRIC league_coverage_{league}={rate:.2f}')
+"

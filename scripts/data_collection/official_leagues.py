@@ -870,7 +870,15 @@ class OfficialLeagueCollector:
         try:
             adapter = DELAdapter()
             players = adapter.get_all_players(season)
-            return [p.to_dict() for p in players]
+            result = []
+            for p in players:
+                p_dict = p.to_dict()
+                if not p_dict.get("headshot_url") and p_dict.get("profile_url"):
+                    p_dict["headshot_url"] = self._fetch_profile_photo(
+                        p_dict["profile_url"], p_dict["name"]
+                    )
+                result.append(p_dict)
+            return result
         except Exception as e:
             print(f"  DEL error: {e}")
             return []
