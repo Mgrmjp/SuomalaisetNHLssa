@@ -53,3 +53,13 @@
 - **Result**: Validation correctly catches Otto Salin trying to use Otto Kivenmäki's headshot (Invalid!)
 - **Insight**: Now when pipeline runs, wrong headshots will be rejected BEFORE assignment, not after
 - **Next**: Rebuild finnish_prospects.json with the fixed pipeline to re-fetch correct headshots
+
+### Run 6: Fix Player Data Merge (Juuso Välimäki wrong age)
+- **Timestamp**: 2026-03-28 17:55
+- **What changed**: 
+  1. Added _has_league_file_source() - checks if source includes league_file:
+  2. Added _validate_player_data_consistency() - detects impossible ages (draft 2017 but born 2008 = age 9!)
+  3. Modified dedupe_final_players() to prefer league_file sources over other sources for stats/birthDate
+- **Result**: Validation correctly detects "impossible_age: draft_year=2017, birth_year=2008, age=9"
+- **Insight**: Root cause was that draft_picks/wikidata sources were overriding correct league-direct data. League sources should always take priority for stats since they come directly from the league.
+- **Next**: Rebuild finnish_prospects.json with the fixed pipeline
