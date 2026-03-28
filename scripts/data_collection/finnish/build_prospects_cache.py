@@ -184,6 +184,44 @@ def upsert_candidate(candidates, by_name, player_id, name, **fields):
     return effective_id
 
 
+def _has_league_file_source(sources):
+    """Check if sources include a league_file source."""
+    if not sources:
+        return False
+    return any(s.startswith("league_file:") for s in sources)
+
+
+def _validate_player_data_consistency(player):
+    """Check if player data is internally consistent.
+
+    Returns list of validation issues found.
+    """
+    issues = []
+
+    birth_date = player.get("birthDate")
+    draft_year = None
+    for source in player.get("sources") or []:
+        if source.startswith("draft_picks:"):
+            try:
+                draft_year = int(source.split(":")[1])
+            except (ValueError, IndexError):
+                pass
+            break
+
+    if birth_date and draft_year:
+        try:
+            birth_year = int(birth_date.split("-")[0])
+            age_at_draft = draft_year - birth_year
+            if age_at_draft < 17 or age_at_draft > 40:
+                issues.append(
+                    f"impossible_age: draft_year={draft_year}, birth_year={birth_year}, age={age_at_draft}"
+                )
+        except (ValueError, IndexError):
+            pass
+
+    return issues
+
+
 def dedupe_final_players(players):
     """Collapse duplicate final player rows caused by mixed int/string ids."""
     deduped = {}
@@ -205,7 +243,19 @@ def dedupe_final_players(players):
         existing_sources = existing.get("sources") or []
         current_sources = player.get("sources") or []
 
-        if len(current_sources) > len(existing_sources):
+        existing_has_league = _has_league_file_source(existing_sources)
+        current_has_league = _has_league_file_source(current_sources)
+
+        if existing_has_league and not current_has_league:
+            keep_existing = True
+        elif current_has_league and not existing_has_league:
+            keep_existing = False
+        elif len(current_sources) > len(existing_sources):
+            keep_existing = False
+        else:
+            keep_existing = True
+
+        if not keep_existing:
             deduped[key] = player
             existing = deduped[key]
 
@@ -219,6 +269,19 @@ def dedupe_final_players(players):
             existing["headshot"] = player["headshot"]
         if not existing.get("headshotCrop") and player.get("headshotCrop"):
             existing["headshotCrop"] = player["headshotCrop"]
+
+        if not existing.get("stats") and player.get("stats"):
+            existing["stats"] = player["stats"]
+
+        if current_has_league and not existing_has_league:
+            existing["stats"] = player.get("stats")
+            existing["birthDate"] = player.get("birthDate")
+
+        existing_issues = _validate_player_data_consistency(existing)
+        if existing_issues:
+            print(
+                f"  WARNING: Data consistency issues for {existing.get('name')} (ID: {existing.get('id')}): {existing_issues}"
+            )
 
     return list(deduped.values())
 
