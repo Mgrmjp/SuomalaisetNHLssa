@@ -1111,12 +1111,21 @@ def enrich_league_files_with_birthdates():
             .replace("\u0328", "")
         )
 
+    def parse_name(name):
+        """Parse name that could be 'FirstName LastName' or 'LastName, FirstName'."""
+        name = name.replace("*", "").strip()
+        if "," in name:
+            parts = name.split(",")
+            if len(parts) == 2:
+                return normalize_name(parts[1].strip() + " " + parts[0].strip())
+        return normalize_name(name)
+
     name_to_birthdate = {}
     for p in finnish_prospects:
         name = p.get("name", "")
         bd = p.get("birthDate")
         if name and bd:
-            name_to_birthdate[normalize_name(name)] = bd
+            name_to_birthdate[parse_name(name)] = bd
 
     league_files = [
         "league_prospects_official.json",
@@ -1143,7 +1152,7 @@ def enrich_league_files_with_birthdates():
                 if player.get("birth_date"):
                     continue
                 name = player.get("name", "")
-                normalized = normalize_name(name)
+                normalized = parse_name(name)
                 if normalized in name_to_birthdate:
                     player["birth_date"] = name_to_birthdate[normalized]
                     enriched_count += 1
