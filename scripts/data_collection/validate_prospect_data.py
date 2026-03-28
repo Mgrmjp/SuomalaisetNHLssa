@@ -148,19 +148,27 @@ def parse_date(date_str):
     if not date_str:
         return None
     try:
-        parts = date_str.split("-")
-        if len(parts) != 3:
+        if "-" in date_str:
+            parts = date_str.split("-")
+            if len(parts) != 3:
+                return None
+            year, month, day = int(parts[0]), int(parts[1]), int(parts[2])
+        elif "/" in date_str:
+            parts = date_str.split("/")
+            if len(parts) != 3:
+                return None
+            month, day, year = int(parts[0]), int(parts[1]), int(parts[2])
+        else:
             return None
-        year, month, day = int(parts[0]), int(parts[1]), int(parts[2])
         return date(year, month, day)
     except (ValueError, IndexError):
         return None
 
 
 def validate_birthdate_validity(player):
-    """Check if birthDate is valid: not future, valid date, age 15-50."""
+    """Check if birthDate is valid: not future, valid date, age 15-85."""
     issues = []
-    birth_date_str = player.get("birthDate")
+    birth_date_str = player.get("birthDate") or player.get("birth_date")
 
     if not birth_date_str:
         return True, None
@@ -191,7 +199,7 @@ def validate_draft_logic(player):
     issues = []
     sources = player.get("sources", [])
     draft_year = get_draft_year(sources)
-    birth_date_str = player.get("birthDate")
+    birth_date_str = player.get("birthDate") or player.get("birth_date")
 
     has_draft_source = any(s.startswith("draft_picks:") for s in sources)
 

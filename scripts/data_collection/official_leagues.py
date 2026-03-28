@@ -1072,6 +1072,95 @@ class OfficialLeagueCollector:
         return results
 
 
+def enrich_league_files_with_birthdates():
+    """Merge birthdates from finnish_prospects into league files."""
+    import unicodedata
+
+    finnish_prospects_path = (
+        Path(__file__).parent.parent.parent
+        / "static"
+        / "data"
+        / "finnish_prospects.json"
+    )
+    if not finnish_prospects_path.exists():
+        print("No finnish_prospects.json found, skipping birthdate enrichment")
+        return
+
+    try:
+        finnish_prospects = json.loads(
+            finnish_prospects_path.read_text(encoding="utf-8")
+        )
+    except Exception as e:
+        print(f"Failed to read finnish_prospects.json: {e}")
+        return
+
+    def normalize_name(name):
+        if not name:
+            return ""
+        return (
+            unicodedata.normalize("NFD", name.strip())
+            .lower()
+            .replace("\u0300", "")
+            .replace("\u0301", "")
+            .replace("\u0302", "")
+            .replace("\u0303", "")
+            .replace("\u0308", "")
+            .replace("\u030a", "")
+            .replace("\u030c", "")
+            .replace("\u0327", "")
+            .replace("\u0328", "")
+        )
+
+    name_to_birthdate = {}
+    for p in finnish_prospects:
+        name = p.get("name", "")
+        bd = p.get("birthDate")
+        if name and bd:
+            name_to_birthdate[normalize_name(name)] = bd
+
+    league_files = [
+        "league_prospects_official.json",
+        "league_prospects_advanced.json",
+        "league_prospects_na.json",
+    ]
+
+    output_dir = Path(__file__).parent.parent.parent / "static" / "data" / "leagues"
+    enriched_count = 0
+
+    for filename in league_files:
+        filepath = output_dir / filename
+        if not filepath.exists():
+            continue
+
+        try:
+            data = json.loads(filepath.read_text(encoding="utf-8"))
+            players = data.get("players", []) if isinstance(data, dict) else data
+            if not isinstance(players, list):
+                continue
+
+            file_changed = False
+            for player in players:
+                if player.get("birth_date"):
+                    continue
+                name = player.get("name", "")
+                normalized = normalize_name(name)
+                if normalized in name_to_birthdate:
+                    player["birth_date"] = name_to_birthdate[normalized]
+                    enriched_count += 1
+                    file_changed = True
+
+            if file_changed:
+                filepath.write_text(
+                    json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
+                )
+                print(f"  Enriched {filename} with {enriched_count} birthdates")
+        except Exception as e:
+            print(f"Failed to enrich {filename}: {e}")
+
+    if enriched_count > 0:
+        print(f"\n✓ Enriched {enriched_count} player records with birthdates")
+
+
 def save_data(data: Dict, filename: str = "league_prospects_official.json"):
     """Save scraped data to JSON."""
     output_dir = Path(__file__).parent.parent.parent / "static" / "data" / "leagues"
@@ -1124,6 +1213,10 @@ def main():
 
     # Save data
     save_data(results)
+
+    # Enrich league files with birthdates from finnish_prospects
+    print("\nEnriching league files with birthdates...")
+    enrich_league_files_with_birthdates()
 
     return results
 
