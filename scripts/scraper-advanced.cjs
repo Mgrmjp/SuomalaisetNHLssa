@@ -919,6 +919,53 @@ async function extractMestisPlayerImages(browser, players, mainPage) {
                             timeout: 15000
                         }).catch(() => null);
 
+                        // Validate that this page is for the correct player
+                        const pagePlayerName = await playerPage.evaluate(() => {
+                            // Try multiple selectors for player name on profile page
+                            const selectors = [
+                                '.player-name',
+                                '.player-card .name',
+                                '.player-hero .name',
+                                '.player-profile .name',
+                                'h1.player-name',
+                                'h1[class*="player"]',
+                                '[class*="playerName"]',
+                                '[data-player-name]'
+                            ];
+                            for (const selector of selectors) {
+                                const el = document.querySelector(selector);
+                                if (el) {
+                                    return el.textContent?.trim() || null;
+                                }
+                            }
+                            // Fallback: look for name in title or header
+                            const title = document.title || '';
+                            const match = title.match(/([A-ZÅÄÖ][a-zäöåéè]+ [A-ZÅÄÖ][a-zäöåéè]+)/);
+                            return match ? match[1] : null;
+                        });
+
+                        // Check if page player name matches target player (allow partial match)
+                        const targetNormalized = normalizeMestisName(player.name);
+                        const pageNormalized = pagePlayerName ? normalizeMestisName(pagePlayerName) : '';
+                        
+                        // Extract surname and firstname separately for better matching
+                        const targetParts = targetNormalized.split(' ');
+                        const pageParts = pageNormalized.split(' ');
+                        
+                        // Check if there's significant overlap (at least surname matches)
+                        const surnameMatch = targetParts[0] && pageParts[0] && targetParts[0] === pageParts[0];
+                        const firstnameMatch = targetParts[1] && pageParts[1] && targetParts[1] === pageParts[1];
+                        
+                        // Require both surname AND a partial firstname match to be confident
+                        const isCorrectPlayer = surnameMatch && 
+                            (firstnameMatch || (targetParts[1] && pageParts[1] && 
+                             (targetParts[1].startsWith(pageParts[1]) || pageParts[1].startsWith(targetParts[1]))));
+
+                        if (!isCorrectPlayer && pagePlayerName) {
+                            console.log(`    Skipping - wrong player (found "${pagePlayerName}", wanted "${player.name}")`);
+                            continue;
+                        }
+
                         const imageUrl = await playerPage.evaluate(() => {
                             const selectors = [
                                 '.player-image-wrapper img',
@@ -960,7 +1007,7 @@ async function extractMestisPlayerImages(browser, players, mainPage) {
                             playerWithImage.image = imageUrl;
                         }
 
-                        console.log(`    Image found for ${player.name}`);
+                        console.log(`    Image found for ${player.name} (validated: ${pagePlayerName})`);
                         break;
                     }
 

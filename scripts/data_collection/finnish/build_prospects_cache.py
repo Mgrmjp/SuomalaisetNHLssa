@@ -84,6 +84,70 @@ def _append_source(player_obj, source):
         sources.append(source)
 
 
+def validate_player_merge(
+    effective_id, name, normalized, candidates, by_name, **fields
+):
+    """Check for data integrity issues when merging player data from different sources."""
+    warnings = []
+
+    existing_id_for_name = by_name.get(normalized)
+    if existing_id_for_name and str(existing_id_for_name) != str(effective_id):
+        warnings.append(
+            f"NAME->ID COLLISION: '{name}' ({normalized}) already maps to {existing_id_for_name}, "
+            f"now receiving {effective_id}. Two different players may be conflated."
+        )
+
+    if effective_id in candidates:
+        existing = candidates[effective_id]
+
+        existing_name = existing.get("name")
+        if existing_name and normalize_person_name(existing_name) != normalized:
+            warnings.append(
+                f"ID->NAME CONFLICT: id {effective_id} has name '{existing_name}', "
+                f"now receiving '{name}'. Possible merge error."
+            )
+
+        if "birthDate" in fields and fields["birthDate"]:
+            existing_bd = existing.get("birthDate")
+            if existing_bd and existing_bd != fields["birthDate"]:
+                warnings.append(
+                    f"BIRTHDATE CONFLICT: id {effective_id} has birthdate '{existing_bd}', "
+                    f"now receiving '{fields['birthDate']}'"
+                )
+
+        if "position" in fields and fields["position"]:
+            existing_pos = existing.get("position")
+            if existing_pos and existing_pos != fields["position"]:
+                warnings.append(
+                    f"POSITION CONFLICT: id {effective_id} has position '{existing_pos}', "
+                    f"now receiving '{fields['position']}' for '{name}'"
+                )
+
+        birth_date = fields.get("birthDate") or existing.get("birthDate")
+        if birth_date:
+            try:
+                birth_year = int(str(birth_date)[:4])
+            except (ValueError, IndexError):
+                birth_year = None
+
+            if birth_year:
+                for src in existing.get("sources", []):
+                    if src.startswith("draft_picks:"):
+                        try:
+                            draft_year = int(src.split(":")[1])
+                            age_at_draft = draft_year - birth_year
+                            if age_at_draft < 17 or age_at_draft > 40:
+                                warnings.append(
+                                    f"IMPOSSIBLE DRAFT AGE: {name} born {birth_year}, "
+                                    f"drafted {draft_year} (age {age_at_draft})"
+                                )
+                        except (ValueError, IndexError):
+                            pass
+                        break
+
+    return warnings
+
+
 def upsert_candidate(candidates, by_name, player_id, name, **fields):
     """Insert or merge candidate player data by id/name."""
     normalized = normalize_person_name(name)
@@ -95,6 +159,12 @@ def upsert_candidate(candidates, by_name, player_id, name, **fields):
         effective_id = str(effective_id)
     if not effective_id:
         return None
+
+    warnings = validate_player_merge(
+        effective_id, name, normalized, candidates, by_name, **fields
+    )
+    for w in warnings:
+        print(f"  WARNING: {w}")
 
     if effective_id not in candidates:
         candidates[effective_id] = {"id": effective_id, "name": name}
@@ -114,6 +184,44 @@ def upsert_candidate(candidates, by_name, player_id, name, **fields):
     return effective_id
 
 
+def _has_league_file_source(sources):
+    """Check if sources include a league_file source."""
+    if not sources:
+        return False
+    return any(s.startswith("league_file:") for s in sources)
+
+
+def _validate_player_data_consistency(player):
+    """Check if player data is internally consistent.
+
+    Returns list of validation issues found.
+    """
+    issues = []
+
+    birth_date = player.get("birthDate")
+    draft_year = None
+    for source in player.get("sources") or []:
+        if source.startswith("draft_picks:"):
+            try:
+                draft_year = int(source.split(":")[1])
+            except (ValueError, IndexError):
+                pass
+            break
+
+    if birth_date and draft_year:
+        try:
+            birth_year = int(birth_date.split("-")[0])
+            age_at_draft = draft_year - birth_year
+            if age_at_draft < 17 or age_at_draft > 40:
+                issues.append(
+                    f"impossible_age: draft_year={draft_year}, birth_year={birth_year}, age={age_at_draft}"
+                )
+        except (ValueError, IndexError):
+            pass
+
+    return issues
+
+
 def dedupe_final_players(players):
     """Collapse duplicate final player rows caused by mixed int/string ids."""
     deduped = {}
@@ -123,7 +231,10 @@ def dedupe_final_players(players):
         if player_id is not None:
             player["id"] = str(player_id)
 
-        key = str(player.get("id") or "") or f"{normalize_person_name(player.get('name'))}:{player.get('birthDate') or ''}"
+        key = (
+            str(player.get("id") or "")
+            or f"{normalize_person_name(player.get('name'))}:{player.get('birthDate') or ''}"
+        )
         existing = deduped.get(key)
         if not existing:
             deduped[key] = player
@@ -132,7 +243,19 @@ def dedupe_final_players(players):
         existing_sources = existing.get("sources") or []
         current_sources = player.get("sources") or []
 
-        if len(current_sources) > len(existing_sources):
+        existing_has_league = _has_league_file_source(existing_sources)
+        current_has_league = _has_league_file_source(current_sources)
+
+        if existing_has_league and not current_has_league:
+            keep_existing = True
+        elif current_has_league and not existing_has_league:
+            keep_existing = False
+        elif len(current_sources) > len(existing_sources):
+            keep_existing = False
+        else:
+            keep_existing = True
+
+        if not keep_existing:
             deduped[key] = player
             existing = deduped[key]
 
@@ -146,6 +269,19 @@ def dedupe_final_players(players):
             existing["headshot"] = player["headshot"]
         if not existing.get("headshotCrop") and player.get("headshotCrop"):
             existing["headshotCrop"] = player["headshotCrop"]
+
+        if not existing.get("stats") and player.get("stats"):
+            existing["stats"] = player["stats"]
+
+        if current_has_league and not existing_has_league:
+            existing["stats"] = player.get("stats")
+            existing["birthDate"] = player.get("birthDate")
+
+        existing_issues = _validate_player_data_consistency(existing)
+        if existing_issues:
+            print(
+                f"  WARNING: Data consistency issues for {existing.get('name')} (ID: {existing.get('id')}): {existing_issues}"
+            )
 
     return list(deduped.values())
 
@@ -219,14 +355,17 @@ def search_player_id(name, birth_date=None):
                 full = row.get("name")
                 if full:
                     return normalize_name(full)
-                return normalize_name(f"{row.get('firstName', '')} {row.get('lastName', '')}")
+                return normalize_name(
+                    f"{row.get('firstName', '')} {row.get('lastName', '')}"
+                )
 
             exact_name = [row for row in data if row_name(row) == target_name]
             pool = exact_name or data
 
             if birth_date:
                 birth_match = [
-                    row for row in pool
+                    row
+                    for row in pool
                     if str(row.get("birthDate", "")).startswith(str(birth_date))
                 ]
                 if birth_match:
@@ -249,7 +388,9 @@ def ingest_eliteprospects(candidates, by_name):
         return 0
 
     # Keep this configurable because EP endpoint/version may vary by account.
-    endpoint = os.getenv("ELITEPROSPECTS_PLAYERS_URL", "https://api.eliteprospects.com/v1/players")
+    endpoint = os.getenv(
+        "ELITEPROSPECTS_PLAYERS_URL", "https://api.eliteprospects.com/v1/players"
+    )
     params = {
         "nationality": os.getenv("ELITEPROSPECTS_NATIONALITY", "FIN"),
         "limit": int(os.getenv("ELITEPROSPECTS_LIMIT", "500")),
@@ -313,6 +454,7 @@ def ingest_external_file(candidates, by_name):
 
     try:
         import json
+
         rows = json.loads(EXTERNAL_PROSPECTS_FILE.read_text(encoding="utf-8"))
     except Exception as e:
         print(f"Failed to parse {EXTERNAL_PROSPECTS_FILE}: {e}")
@@ -328,7 +470,11 @@ def ingest_external_file(candidates, by_name):
         if not full_name:
             continue
         birth_date = row.get("birthDate")
-        nhl_id = row.get("id") or row.get("nhlPlayerId") or search_player_id(full_name, birth_date)
+        nhl_id = (
+            row.get("id")
+            or row.get("nhlPlayerId")
+            or search_player_id(full_name, birth_date)
+        )
         if not nhl_id:
             continue
 
@@ -351,12 +497,173 @@ def ingest_external_file(candidates, by_name):
     return added
 
 
+def _is_headshot_url_consistent(headshot_url, source_league):
+    """Validate that a headshot URL's league prefix matches the source league."""
+    if not headshot_url or not isinstance(headshot_url, str):
+        return True
+
+    league_prefixes = {
+        "liiga": "Liiga",
+        "ahl": "AHL",
+        "shl": "SHL",
+        "mestis": "Mestis",
+        "whl": "WHL",
+        "ohl": "OHL",
+        "qmjhl": "QMJHL",
+        "ushl": "USHL",
+        "nhl": "NHL",
+        "echl": "ECHL",
+        "khl": "KHL",
+        "nl": "NL",
+        "del": "DEL",
+        "czech": "Czech",
+        "icehl": "ICEHL",
+    }
+
+    filename = (
+        headshot_url.replace("/prospect-headshots/", "")
+        .replace(".webp", "")
+        .replace(".jpg", "")
+        .replace(".png", "")
+        .lower()
+    )
+
+    for prefix, league in league_prefixes.items():
+        if filename.startswith(prefix + "-") or filename.startswith(prefix + "_"):
+            return league == source_league
+
+    return True
+
+
+def _build_league_player_lookups():
+    """Build lookup tables mapping player IDs to names for each league file."""
+    import json
+
+    lookups = {}
+
+    for source_file in LEAGUE_PROSPECTS_FILES:
+        if not source_file.exists():
+            continue
+
+        try:
+            payload = json.loads(source_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+
+        rows = payload.get("players") if isinstance(payload, dict) else payload
+        if not isinstance(rows, list):
+            continue
+
+        file_lookup = {}
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+
+            player_id = row.get("player_id") or row.get("id")
+            name = row.get("name")
+            if player_id and name:
+                file_lookup[str(player_id)] = name
+                file_lookup[name.lower()] = name
+
+                numeric_id = str(player_id).split("_")[-1]
+                if numeric_id != str(player_id):
+                    file_lookup[numeric_id] = name
+
+        lookups[source_file.stem] = file_lookup
+
+    return lookups
+
+
+def _extract_league_id_from_headshot(headshot_url, source_file_stem):
+    """Extract the actual player ID from a headshot URL for validation."""
+    if not headshot_url:
+        return None
+
+    filename = (
+        headshot_url.replace("/prospect-headshots/", "")
+        .replace(".webp", "")
+        .replace(".jpg", "")
+        .replace(".png", "")
+    )
+
+    if source_file_stem == "league_prospects_official":
+        if filename.startswith("liiga-"):
+            return filename.replace("liiga-", ""), "liiga"
+    elif source_file_stem == "league_prospects_advanced":
+        if filename.startswith("mestis-"):
+            return filename.replace("mestis-", ""), "mestis"
+    elif source_file_stem == "league_prospects_na":
+        for prefix in ["ahl-", "ushl-", "ohl-", "whl-", "qmjhl-"]:
+            if filename.startswith(prefix):
+                return filename.replace(prefix, ""), prefix.rstrip("-")
+
+    return None, None
+
+
+def _names_are_compatible(name1, name2):
+    """Check if two names could be variations of the same person.
+
+    Returns True if names are similar enough to be the same person.
+    This catches cases like 'Robert' vs 'Bob', 'William' vs 'Bill', etc.
+    """
+    if not name1 or not name2:
+        return True
+
+    n1 = normalize_person_name(name1).lower()
+    n2 = normalize_person_name(name2).lower()
+
+    if n1 == n2:
+        return True
+
+    parts1 = n1.split()
+    parts2 = n2.split()
+
+    if len(parts1) >= 2 and len(parts2) >= 2:
+        first1, last1 = parts1[0], parts1[-1]
+        first2, last2 = parts2[0], parts2[-1]
+        if first1 == first2 and last1 == last2:
+            return True
+
+    first_match = parts1[0] == parts2[0] if parts1 and parts2 else False
+    last_match = parts1[-1] == parts2[-1] if parts1 and parts2 else False
+
+    return first_match and last_match
+
+
+def _validate_headshot_assignment(
+    headshot_url, target_name, source_file_stem, league_lookups
+):
+    """Validate that a headshot URL actually belongs to the target player.
+
+    This prevents assigning Otto Kivenmäki's headshot to Otto Salin.
+    """
+    if not headshot_url:
+        return True, None
+
+    extracted_id, league_type = _extract_league_id_from_headshot(
+        headshot_url, source_file_stem
+    )
+
+    if not extracted_id:
+        return True, None
+
+    lookup = league_lookups.get(source_file_stem, {})
+    source_name = lookup.get(extracted_id) or lookup.get(extracted_id.lower())
+
+    if source_name and not _names_are_compatible(source_name, target_name):
+        return False, f"headshot belongs to '{source_name}' not '{target_name}'"
+
+    return True, None
+
+
 def ingest_league_prospects_files(candidates, by_name):
     """Merge non-NHL league prospect photos and metadata from generated JSON files."""
     import json
 
     added = 0
     merged = 0
+
+    league_lookups = _build_league_player_lookups()
 
     for source_file in LEAGUE_PROSPECTS_FILES:
         if not source_file.exists():
@@ -372,6 +679,16 @@ def ingest_league_prospects_files(candidates, by_name):
         rows = payload.get("players") if isinstance(payload, dict) else payload
         if not isinstance(rows, list):
             continue
+
+        source_league = (
+            source_file.stem.replace("league_prospects_", "").replace("_", " ").title()
+        )
+        if source_league == "Official":
+            source_league = "Unknown"
+        elif source_league == "Na":
+            source_league = "NA"
+        elif source_league == "Advanced":
+            source_league = "Mestis"
 
         for row in rows:
             if not isinstance(row, dict):
@@ -393,17 +710,58 @@ def ingest_league_prospects_files(candidates, by_name):
                 continue
 
             before = len(candidates)
+            league_position = row.get("position")
+            source_league_from_row = row.get("league") or source_league
+
+            headshot_url = (
+                row.get("headshot_url")
+                or row.get("headshotUrl")
+                or row.get("headshot")
+                or row.get("image")
+            )
+
+            headshot_for_merge = headshot_url
+            if headshot_url and candidate_id in candidates:
+                existing = candidates[candidate_id]
+                existing_league = existing.get("league", "")
+                if existing_league and existing_league != source_league_from_row:
+                    if not _is_headshot_url_consistent(
+                        headshot_url, source_league_from_row
+                    ):
+                        print(
+                            f"  Skipping inconsistent headshot for {full_name}: {headshot_url} (player league: {existing_league}, source league: {source_league_from_row})"
+                        )
+                        headshot_for_merge = None
+                    else:
+                        is_valid, reason = _validate_headshot_assignment(
+                            headshot_url, full_name, source_file.stem, league_lookups
+                        )
+                        if not is_valid:
+                            print(f"  VALIDATION FAILED: {full_name} - {reason}")
+                            headshot_for_merge = None
+
             result_id = upsert_candidate(
                 candidates,
                 by_name,
                 candidate_id,
                 full_name,
                 currentTeam=row.get("team"),
-                league=row.get("league"),
-                headshot=row.get("headshot_url") or row.get("headshotUrl") or row.get("headshot") or row.get("image"),
+                league=source_league_from_row,
+                headshot=headshot_for_merge,
                 headshotCrop=row.get("headshot_crop") or row.get("headshotCrop"),
                 source=f"league_file:{source_file.stem}",
             )
+            if (
+                result_id
+                and league_position
+                and candidates[result_id].get("position") != league_position
+            ):
+                old_pos = candidates[result_id].get("position")
+                candidates[result_id]["position"] = league_position
+                if old_pos:
+                    print(
+                        f"  Position override: {full_name} {old_pos} -> {league_position}"
+                    )
 
             if result_id and len(candidates) > before:
                 added += 1
@@ -421,7 +779,8 @@ def ingest_the_sports_db(candidates, by_name):
     """
     key = os.getenv("THE_SPORTS_DB_KEY", "123").strip()
     leagues = [
-        league.strip() for league in os.getenv(
+        league.strip()
+        for league in os.getenv(
             "THE_SPORTS_DB_LEAGUES",
             "NHL,Liiga,SHL,AHL,OHL,WHL,QMJHL,NCAA Hockey",
         ).split(",")
@@ -585,7 +944,9 @@ def main():
             for player in prospects_data.get(category, []):
                 if player.get("birthCountry") == "FIN":
                     player_id = player.get("id")
-                    full_name = get_name(player.get("firstName"), player.get("lastName"))
+                    full_name = get_name(
+                        player.get("firstName"), player.get("lastName")
+                    )
 
                     upsert_candidate(
                         finnish_prospects,
@@ -610,7 +971,9 @@ def main():
     draft_start_year = max(2005, current_year - 10)
     draft_years = range(draft_start_year, current_year + 1)
 
-    print(f"\nScanning Draft History ({draft_years[0]}-{draft_years[-1]}) for missing prospects...")
+    print(
+        f"\nScanning Draft History ({draft_years[0]}-{draft_years[-1]}) for missing prospects..."
+    )
 
     for year in draft_years:
         print(f"Checking Draft {year}...", end=" ")
@@ -671,7 +1034,9 @@ def main():
                 if not full_name:
                     continue
 
-                pid = player.get("playerId") or search_player_id(full_name, player.get("birthDate"))
+                pid = player.get("playerId") or search_player_id(
+                    full_name, player.get("birthDate")
+                )
                 if not pid:
                     continue
 
@@ -711,7 +1076,18 @@ def main():
             p_data.setdefault("nhlRights", "N/A")
             p_data.setdefault("league", "Unknown")
             p_data.setdefault("currentTeam", "Unknown")
-            p_data.setdefault("stats", {"gp": 0, "goals": 0, "assists": 0, "points": 0, "savePct": 0.0, "gaa": 0.0, "shutouts": 0})
+            p_data.setdefault(
+                "stats",
+                {
+                    "gp": 0,
+                    "goals": 0,
+                    "assists": 0,
+                    "points": 0,
+                    "savePct": 0.0,
+                    "gaa": 0.0,
+                    "shutouts": 0,
+                },
+            )
             final_list.append(p_data)
             continue
 
