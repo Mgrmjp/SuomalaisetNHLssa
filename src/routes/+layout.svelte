@@ -41,6 +41,10 @@ const _defaultDescription =
     <!-- Canonical URL -->
     <link rel="canonical" href="{_siteUrl}{$page.url.pathname}" />
 
+    <!-- Hreflang for international Finnish speakers (dynamic per page) -->
+    <link rel="alternate" hreflang="fi" href="{_siteUrl}{$page.url.pathname}" />
+    <link rel="alternate" hreflang="x-default" href="{_siteUrl}{$page.url.pathname}" />
+
     <link rel="icon" type="image/svg+xml" href={base + "/logo.svg"} />
 
     <!-- Note: Google Fonts loaded in app.html with async pattern -->
