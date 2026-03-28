@@ -434,6 +434,44 @@ def ingest_external_file(candidates, by_name):
     return added
 
 
+def _is_headshot_url_consistent(headshot_url, source_league):
+    """Validate that a headshot URL's league prefix matches the source league."""
+    if not headshot_url or not isinstance(headshot_url, str):
+        return True
+
+    league_prefixes = {
+        "liiga": "Liiga",
+        "ahl": "AHL",
+        "shl": "SHL",
+        "mestis": "Mestis",
+        "whl": "WHL",
+        "ohl": "OHL",
+        "qmjhl": "QMJHL",
+        "ushl": "USHL",
+        "nhl": "NHL",
+        "echl": "ECHL",
+        "khl": "KHL",
+        "nl": "NL",
+        "del": "DEL",
+        "czech": "Czech",
+        "icehl": "ICEHL",
+    }
+
+    filename = (
+        headshot_url.replace("/prospect-headshots/", "")
+        .replace(".webp", "")
+        .replace(".jpg", "")
+        .replace(".png", "")
+        .lower()
+    )
+
+    for prefix, league in league_prefixes.items():
+        if filename.startswith(prefix + "-") or filename.startswith(prefix + "_"):
+            return league == source_league
+
+    return True
+
+
 def ingest_league_prospects_files(candidates, by_name):
     """Merge non-NHL league prospect photos and metadata from generated JSON files."""
     import json
@@ -456,6 +494,16 @@ def ingest_league_prospects_files(candidates, by_name):
         if not isinstance(rows, list):
             continue
 
+        source_league = (
+            source_file.stem.replace("league_prospects_", "").replace("_", " ").title()
+        )
+        if source_league == "Official":
+            source_league = "Unknown"
+        elif source_league == "Na":
+            source_league = "NA"
+        elif source_league == "Advanced":
+            source_league = "Mestis"
+
         for row in rows:
             if not isinstance(row, dict):
                 continue
@@ -477,17 +525,36 @@ def ingest_league_prospects_files(candidates, by_name):
 
             before = len(candidates)
             league_position = row.get("position")
+            source_league_from_row = row.get("league") or source_league
+
+            headshot_url = (
+                row.get("headshot_url")
+                or row.get("headshotUrl")
+                or row.get("headshot")
+                or row.get("image")
+            )
+
+            headshot_for_merge = headshot_url
+            if headshot_url and candidate_id in candidates:
+                existing = candidates[candidate_id]
+                existing_league = existing.get("league", "")
+                if existing_league and existing_league != source_league_from_row:
+                    if not _is_headshot_url_consistent(
+                        headshot_url, source_league_from_row
+                    ):
+                        print(
+                            f"  Skipping inconsistent headshot for {full_name}: {headshot_url} (player league: {existing_league}, source league: {source_league_from_row})"
+                        )
+                        headshot_for_merge = None
+
             result_id = upsert_candidate(
                 candidates,
                 by_name,
                 candidate_id,
                 full_name,
                 currentTeam=row.get("team"),
-                league=row.get("league"),
-                headshot=row.get("headshot_url")
-                or row.get("headshotUrl")
-                or row.get("headshot")
-                or row.get("image"),
+                league=source_league_from_row,
+                headshot=headshot_for_merge,
                 headshotCrop=row.get("headshot_crop") or row.get("headshotCrop"),
                 source=f"league_file:{source_file.stem}",
             )
