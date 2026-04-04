@@ -7,12 +7,12 @@
       "awayTeam": "DET",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "PRE",
+      "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-04-04T16:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 1,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -229,6 +229,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-04-04T16:30:26.393150",
+  "generated_at": "2026-04-04T16:49:16.878391",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
