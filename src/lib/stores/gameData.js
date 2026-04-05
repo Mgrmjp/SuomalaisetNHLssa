@@ -395,7 +395,7 @@ export function cleanupIntervals() {
 
 // Core stores
 const selectedDateStore = writable('')
-const isLoadingStore = writable(undefined)
+const isLoadingStore = writable(false)
 const errorStore = writable(/** @type {string|null} */ (null))
 
 // Public readonly stores

@@ -63,26 +63,27 @@
     .player-card,
     .player-card__inner,
     .player-card__face {
-        min-height: 340px;
+        min-height: 420px;
     }
 
     .goalie-card,
     .goalie-card .player-card,
     .goalie-card .player-card__inner,
     .goalie-card .player-card__face {
-        min-height: 390px;
+        min-height: 460px;
     }
 
     .player-card__player-info {
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.75rem;
     }
 
     .player-card__stats {
-        margin-top: 1.25rem;
+        margin-top: 1.75rem;
     }
 
     .player-card__stats-grid {
-        row-gap: 1.25rem;
+        row-gap: 1.75rem;
+        padding: 1.5rem 2rem;
     }
 }
 
@@ -279,8 +280,9 @@
     background: rgba(15, 23, 42, 0.015);
     border: 1px solid rgba(148, 163, 184, 0.12);
     border-radius: 0.75rem;
-    padding: 0.65rem 0.9rem;
-    row-gap: 1rem;
+    padding: 1.25rem 1.75rem;
+    row-gap: 1.5rem;
+    column-gap: 2rem;
 }
 
 /* Fix modal overlay z-index issues */
@@ -373,6 +375,19 @@
 /* Grid layout classes for stats */
 .player-card__stats-grid--goalie-2 {
     grid-template-columns: repeat(2, 1fr);
+}
+
+/* Bigger stat values and labels */
+.player-card__stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.player-card__stat-label {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    letter-spacing: 0.05em;
 }
 
 .player-card__stats-grid--goalie-3 {

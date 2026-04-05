@@ -9,6 +9,7 @@ import MobileAdBanner from '$lib/components/ui/MobileAdBanner.svelte'
 import { displayDate, error, isLoading, players, setDate } from '$lib/stores/gameData.js'
 import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 import PlayerCard from './PlayerCard.svelte'
+import SkeletonPlayerCard from './SkeletonPlayerCard.svelte'
 
 let forwardsSwiper = null
 let defendersSwiper = null
@@ -214,12 +215,12 @@ const hasAnyPlayers = $derived(forwards.length + defenders.length + goalies.leng
 const mobileAdPosition = $derived(_mobileAdPosition)
 </script>
 
-{#if $isLoading}
+{#if $isLoading || (!$players || $players.length === 0)}
     <div class="py-8">
-        <div class="container mx-auto px-4">
-            <div class="text-center">
-                <LoadingSpinner message="Ladataan pelaajia..." />
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {#each [1,2,3,4,5,6,7,8] as _}
+                <SkeletonPlayerCard />
+            {/each}
         </div>
     </div>
 {:else if $error}
