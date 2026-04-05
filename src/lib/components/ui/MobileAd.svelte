@@ -1,25 +1,15 @@
 <script>
 import { onDestroy, onMount } from 'svelte'
+import { AD_SPOTS, getMobileAds, getRandomAdIndex, getNextAdIndex, setAdSpotIndex } from '$lib/stores/ads.js'
 
-const ads = [
-    {
-        href: 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1',
-        width: 320,
-        height: 320,
-    },
-    {
-        href: 'https://go.adt267.com/t/t?a=1538795916&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1538795916&as=2038972948&t=1&tk=1&i=1',
-        width: 300,
-        height: 250,
-    },
-]
-
-let currentAdIndex = 0
+const ads = getMobileAds()
+let currentAdIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, ads)
 let _isTransitioning = false
 let _isPaused = false
 let interval
+
+// Mark this spot as active
+setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
 
 function pauseAds() {
     _isPaused = true
@@ -33,7 +23,8 @@ function nextAd() {
     if (_isPaused) return
     _isTransitioning = true
     setTimeout(() => {
-        currentAdIndex = (currentAdIndex + 1) % ads.length
+        currentAdIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex, ads)
+        setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
         setTimeout(() => {
             _isTransitioning = false
         }, 500)
@@ -57,7 +48,7 @@ onDestroy(() => {
         on:mouseenter={pauseAds}
         on:mouseleave={resumeAds}
     >
-        {#each ads as ad, index (index)}
+        {#each ads as ad, index (ad.id)}
             <a
                 href={ad.href}
                 target="_blank"
@@ -89,8 +80,10 @@ onDestroy(() => {
 
     .ad-wrapper {
         position: relative;
-        min-width: 300px;
-        min-height: 250px;
+        width: 100%;
+        max-width: 320px;
+        aspect-ratio: 1;
+        overflow: hidden;
     }
 
     .mobile-ad-link {
@@ -115,8 +108,9 @@ onDestroy(() => {
     }
 
     .mobile-ad-img {
-        max-width: 100%;
-        height: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         border: 0;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

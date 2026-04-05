@@ -1,18 +1,67 @@
 <script>
-const _ad = {
-    href: 'https://to.bjornborg.com/t/t?a=1616919459&as=2038972948&t=2&tk=1',
-    src: 'https://track.adtraction.com/t/t?a=1616919459&as=2038972948&t=1&tk=1&i=1',
-    width: 300,
-    height: 250,
-    alt: 'Mainos',
+import { onDestroy, onMount } from 'svelte'
+import { AD_SPOTS, getMobileBannerAds, getRandomAdIndex, getNextAdIndex, setAdSpotIndex } from '$lib/stores/ads.js'
+
+const ads = getMobileBannerAds()
+let currentAdIndex = getRandomAdIndex(AD_SPOTS.MOBILE_BANNER, ads)
+let _isTransitioning = false
+let _isPaused = false
+let interval
+
+// Mark this spot as active
+setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, currentAdIndex)
+
+function pauseAds() {
+    _isPaused = true
 }
+
+function resumeAds() {
+    _isPaused = false
+}
+
+function nextAd() {
+    if (_isPaused) return
+    _isTransitioning = true
+    setTimeout(() => {
+        currentAdIndex = getNextAdIndex(AD_SPOTS.MOBILE_BANNER, currentAdIndex, ads)
+        setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, currentAdIndex)
+        setTimeout(() => {
+            _isTransitioning = false
+        }, 500)
+    }, 500)
+}
+
+onMount(() => {
+    setTimeout(() => {
+        interval = setInterval(nextAd, 20000)
+    }, 8000)
+})
+
+onDestroy(() => {
+    if (interval) clearInterval(interval)
+})
 </script>
 
 <div class="mobile-ad-banner">
-    <a href={_ad.href} target="_blank" rel="noopener noreferrer" class="ad-link">
-        <img src={_ad.src} width={_ad.width} height={_ad.height} alt={_ad.alt} class="ad-img" />
-    </a>
-    <span class="ad-disclaimer">Mainos</span>
+    <div 
+        class="ad-wrapper"
+        on:mouseenter={pauseAds}
+        on:mouseleave={resumeAds}
+    >
+        {#each ads as ad, index (ad.id)}
+            <a
+                href={ad.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ad-link"
+                class:active={index === currentAdIndex}
+                class:fade-out={index !== currentAdIndex || _isTransitioning}
+            >
+                <img src={ad.src} width={ad.width} height={ad.height} alt="Mainos" class="ad-img" />
+                <span class="ad-disclaimer">Mainos</span>
+            </a>
+        {/each}
+    </div>
 </div>
 
 <style>
@@ -25,15 +74,41 @@ const _ad = {
         position: relative;
     }
 
+    .ad-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 300px;
+        aspect-ratio: 1;
+        overflow: hidden;
+    }
+
     .ad-link {
+        position: absolute;
+        top: 0;
+        left: 0;
         display: block;
         border: none;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        pointer-events: none;
+        width: 100%;
+        height: 100%;
+    }
+
+    .ad-link.active {
+        position: relative;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .ad-link.fade-out {
+        opacity: 0;
     }
 
     .ad-img {
-        width: 300px;
-        height: 250px;
-        max-width: 100%;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         border: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
@@ -42,8 +117,8 @@ const _ad = {
 
     .ad-disclaimer {
         position: absolute;
-        top: 1rem;
-        right: calc(50% - 150px + 8px);
+        top: 8px;
+        right: 8px;
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
         font-size: 10px;
@@ -58,6 +133,12 @@ const _ad = {
     @media (min-width: 768px) {
         .mobile-ad-banner {
             display: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ad-link {
+            transition: none;
         }
     }
 </style>

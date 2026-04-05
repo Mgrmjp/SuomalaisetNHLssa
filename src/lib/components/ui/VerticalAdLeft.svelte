@@ -90,11 +90,47 @@ onDestroy(() => {
         transform: translateY(-50%);
         z-index: 40;
         display: none;
+        overflow: hidden;
+        max-height: 100vh;
+        max-height: 100dvh;
+    }
+
+    /* Hide on tablet */
+    @media (max-width: 1399px) {
+        .vertical-ad-container-left {
+            display: none !important;
+        }
     }
 
     @media (min-width: 1400px) {
         .vertical-ad-container-left {
             display: block;
+            position: fixed;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 160px;
+            height: 600px;
+            max-height: 100vh;
+            max-height: 100dvh;
+            overflow: hidden;
+        }
+
+        .ad-wrapper {
+            width: 160px;
+            height: 600px;
+        }
+
+        .ad-link {
+            position: absolute;
+            width: 160px;
+            height: 600px;
+        }
+
+        .ad-img {
+            width: 160px;
+            height: 600px;
+            object-fit: cover;
         }
     }
 
