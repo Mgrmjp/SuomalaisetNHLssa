@@ -129,7 +129,7 @@
       "game_id": 2025021224,
       "game_date": "2026-04-05",
       "game_status": "OFF",
-      "created_at": "2026-04-05T22:47:47.482303",
+      "created_at": "2026-04-05T23:01:49.924861",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
       "goals": 0,
       "assists": 1,
@@ -151,6 +151,21 @@
       "shifts": 29,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-04-05",
+          "opponent": "BOS",
+          "opponent_full": "Boston Bruins",
+          "team_score": 2,
+          "opponent_score": 1,
+          "result": "W",
+          "goals": 0,
+          "assists": 1,
+          "points": 1,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-04-03",
           "opponent": "NYI",
@@ -210,21 +225,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-03-28",
-          "opponent": "DET",
-          "opponent_full": "Detroit Red Wings",
-          "team_score": 5,
-          "opponent_score": 3,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -249,7 +249,7 @@
       "game_id": 2025021223,
       "game_date": "2026-04-05",
       "game_status": "OFF",
-      "created_at": "2026-04-05T22:47:38.511049",
+      "created_at": "2026-04-05T23:01:41.322358",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/FLA/8480185.png",
       "goals": 0,
       "assists": 0,
@@ -369,7 +369,7 @@
       "game_id": 2025021225,
       "game_date": "2026-04-05",
       "game_status": "OFF",
-      "created_at": "2026-04-05T22:48:17.388290",
+      "created_at": "2026-04-05T23:02:17.289397",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8480829.png",
       "goals": 0,
       "assists": 0,
@@ -489,7 +489,7 @@
       "game_id": 2025021224,
       "game_date": "2026-04-05",
       "game_status": "OFF",
-      "created_at": "2026-04-05T22:47:44.211739",
+      "created_at": "2026-04-05T23:01:46.656216",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
       "goals": 0,
       "assists": 0,
@@ -515,6 +515,21 @@
       "save_percentage": 0.935,
       "goals_against": 2,
       "recent_results": [
+        {
+          "date": "2026-04-05",
+          "opponent": "PHI",
+          "opponent_full": "Philadelphia Flyers",
+          "team_score": 1,
+          "opponent_score": 2,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": 2,
+          "save_percentage": 0.935,
+          "shots_against": 31,
+          "saves": 29
+        },
         {
           "date": "2026-03-31",
           "opponent": "DAL",
@@ -574,21 +589,6 @@
           "save_percentage": 0.875,
           "shots_against": 40,
           "saves": 35
-        },
-        {
-          "date": "2026-03-05",
-          "opponent": "NSH",
-          "opponent_full": "Nashville Predators",
-          "team_score": 3,
-          "opponent_score": 6,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": 5,
-          "save_percentage": 0.821,
-          "shots_against": 28,
-          "saves": 23
         }
       ]
     },
@@ -613,7 +613,7 @@
       "game_id": 2025021225,
       "game_date": "2026-04-05",
       "game_status": "OFF",
-      "created_at": "2026-04-05T22:48:20.683101",
+      "created_at": "2026-04-05T23:02:20.500628",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/OTT/8484321.png",
       "goals": 0,
       "assists": 0,
@@ -733,7 +733,7 @@
       "game_id": 2025021225,
       "game_date": "2026-04-05",
       "game_status": "OFF",
-      "created_at": "2026-04-05T22:48:14.266541",
+      "created_at": "2026-04-05T23:02:14.060033",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 0,
       "assists": 0,
@@ -834,6 +834,6 @@
     }
   ],
   "total_players": 6,
-  "generated_at": "2026-04-05T22:48:28.674300",
+  "generated_at": "2026-04-05T23:02:28.295674",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
