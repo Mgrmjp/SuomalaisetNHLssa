@@ -18,7 +18,7 @@ const _defaultDescription =
     <meta name="description" content={_defaultDescription} />
     <meta
         name="keywords"
-        content="NHL, suomalaiset pelaajat, jääkiekko, pisteet, maalit, syötöt, Leijonat"
+        content="suomi nhl, nhl suomi, suomalaiset nhl-pelaajat, NHL, suomalaiset pelaajat, jääkiekko, pisteet, maalit, syötöt, Leijonat, suomalaisten nhl"
     />
     <meta name="language" content="fi" />
 
@@ -57,6 +57,17 @@ const _defaultDescription =
         url: _siteUrl,
         description: _defaultDescription,
         inLanguage: "fi",
+    })}</script>`}
+
+    <!-- Sports Organization Schema -->
+    {@html `<script type="application/ld+json">${JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SportsOrganization",
+        name: "Suomalaiset NHL-pelaajat",
+        description: "Suomi NHL-pelaajien tilastot ja seuranta. Seuraa suomalaisten jääkiekkoilijoiden otteluita, pisteitä ja maaleja NHL-liigassa.",
+        url: _siteUrl,
+        sport: "Ice hockey",
+        category: "Professional NHL players from Finland",
     })}</script>`}
 
     <!-- Breadcrumb Schema -->

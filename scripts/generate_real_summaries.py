@@ -11,6 +11,19 @@ CONTENT_DIR = "content/articles"
 
 TAVILY_CACHE_FILE = "static/data/tavily_news_cache.json"
 
+# NHL team abbreviation to Finnish name mapping
+TEAM_NAMES_FI = {
+    "ANA": "Anaheim", "ARI": "Arizona", "BOS": "Boston", "BUF": "Buffalo",
+    "CGY": "Calgary", "CAR": "Carolina", "CHI": "Chicago", "COL": "Colorado",
+    "CBJ": "Columbus", "DAL": "Dallas", "DET": "Detroit", "EDM": "Edmonton",
+    "FLA": "Florida", "LAK": "Los Angeles", "MIN": "Minnesota", "MTL": "Montreal",
+    "NJD": "New Jersey", "NYI": "NY Islanders", "NYR": "NY Rangers",
+    "NSH": "Nashville", "OTT": "Ottawa", "PHI": "Philadelphia", "PIT": "Pittsburgh",
+    "SJS": "San Jose", "SEA": "Seattle", "STL": "St. Louis", "TBL": "Tampa Bay",
+    "TOR": "Toronto", "VAN": "Vancouver", "VGK": "Vegas", "WSH": "Washington",
+    "WPG": "Winnipeg", "UTA": "Utah", "NHL": "NHL",
+}
+
 
 def get_iso_week(date_str):
     dt = datetime.strptime(date_str, "%Y-%m-%d")
@@ -120,9 +133,9 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
         goals = top_stats["goals"]
         assists = top_stats["assists"]
 
-        title = f"{top_name} viikon tehokkain suomalainen"
+        title = f"{top_name} viikon paras pistemies"
         desc = (
-            f"{top_name} johti suomalaisrintamaa tehoilla {goals}+{assists}={points}."
+            f"{top_name} keräsi viikon parhaat tehopisteet lukemin {goals}+{assists}={points}."
         )
 
         # Check for multi-point games
@@ -130,13 +143,14 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
         big_games = [g for g in player_games if g.get("points", 0) >= 3]
         if big_games:
             g = big_games[0]
-            desc += f" Hän loisti erityisesti ottelussa {g.get('opponent', '???')} vastaan iskemällä tehot {g.get('goals')}+{g.get('assists')}."
+            opp = TEAM_NAMES_FI.get(g.get("opponent", "?"), g.get("opponent", "?"))
+            desc += f" Parhaassa ottelussa {opp}a vastaan syntyi tehot {g.get('goals')}+{g.get('assists')}."
 
         news_items.append(
             {
                 "title": title,
                 "description": desc,
-                "source": "NHL Tilastot",
+                "source": "NHL-tilastot",
                 "url": "https://www.nhl.com/stats/skaters",
             }
         )
@@ -153,19 +167,21 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
                     g.get("shots_against", 0) > 10
                 )
                 if is_shutout:
+                    opp = TEAM_NAMES_FI.get(g.get("opponent", "?"), g.get("opponent", "?"))
                     news_items.append(
                         {
-                            "title": f"Nollapeli: {name}",
-                            "description": f"{name} torjui kaikki {g.get('saves')} laukausta ottelussa {g.get('opponent', '?')} vastaan ja piti maalinsa puhtaana.",
-                            "source": "NHL Tilastot",
+                            "title": f"{name} torjui nollapelin",
+                            "description": f"{name} piti maalinsa puhtaana {opp}a vastaan. Torjuntoja kertyi {g.get('saves')}.",
+                            "source": "NHL-tilastot",
                         }
                     )
                 elif g.get("saves", 0) >= 40:
+                    opp = TEAM_NAMES_FI.get(g.get("opponent", "?"), g.get("opponent", "?"))
                     news_items.append(
                         {
-                            "title": f"Muuri: {name}",
-                            "description": f"{name} urakoi maalinsuulla ja pysäytti peräti {g.get('saves')} kiekkoa ottelussa {g.get('opponent', '?')} vastaan.",
-                            "source": "NHL Tilastot",
+                            "title": f"{name} venyi suurtorjuntaan",
+                            "description": f"{name} torjui peräti {g.get('saves')} kertaa {opp}a vastaan.",
+                            "source": "NHL-tilastot",
                         }
                     )
 
@@ -174,11 +190,12 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
         player_games = [g for g in games if g["name"] == name]
         for g in player_games:
             if g.get("goals", 0) >= 3:
+                opp = TEAM_NAMES_FI.get(g.get("opponent", "?"), g.get("opponent", "?"))
                 news_items.append(
                     {
                         "title": f"Hattutemppu: {name}",
-                        "description": f"{name} iski kolme maalia ottelussa {g.get('opponent', '?')} vastaan.",
-                        "source": "NHL Tilastot",
+                        "description": f"{name} teki kolme maalia {opp}a vastaan.",
+                        "source": "NHL-tilastot",
                     }
                 )
 
@@ -192,8 +209,8 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
         news_items.append(
             {
                 "title": "Tasainen viikko suomalaisittain",
-                "description": f"Viikolla {week} nähtiin tasaisia suorituksia, mutta ei yksittäisiä superonnistumisia.",
-                "source": "NHL Tilastot",
+                "description": f"Viikolla {week} nähtiin tasaisia esityksiä suomalaisilta, mutta ei yksittäisiä kohokohtia.",
+                "source": "NHL-tilastot",
             }
         )
 
@@ -246,36 +263,50 @@ def format_date_finnish(date_str):
     return f"{dt.day}. {months[dt.month - 1]} {dt.year}"
 
 
-def generate_creative_title(week, year, top_player_name):
-    """Generate a more engaging title for the article"""
-    # More creative, less formulaic templates
+def generate_creative_title(week, year, top_player_name, top_points, has_hat_trick=False, has_shutout=False):
+    """Generate an engaging title in natural Finnish sports journalism style"""
+    random.seed(f"{year}-{week}")
+
     if top_player_name == "Suomalaiset":
         templates = [
-            f"Suomalaisia NHL-tähtiä vauhdissa viikolla {week}",
-            f"NHL-viikko {week}: suomalaista voimaa",
-            f"Viikko {week}: suomalaispelaajat iskivät",
-            f"Leijonat maalittelevät viikolla {week}",
-            f"Suomalaisrondo NHL:ssä – viikko {week}",
+            f"Suomalaispelaajat NHL:ssä: viikon {week} yhteenveto",
+            f"NHL-viikko {week}: suomalaisten katsaus",
+            f"Viikko {week}: suomalaispelaajien kierros",
+            f"Suomalaisittain tasainen NHL-viikko {week}",
+            f"Leijona-pelaajat NHL:ssä – viikko {week}",
+        ]
+    elif has_hat_trick:
+        templates = [
+            f"{top_player_name} iski hattutempun – viikon {week} suomalaiskatsaus",
+            f"Hattutemppuviikko: {top_player_name} juhli NHL:ssä",
+            f"{top_player_name} kolmen maalin ilta – NHL-viikko {week}",
+        ]
+    elif top_points >= 5:
+        templates = [
+            f"{top_player_name} loisti tehopisteillä {top_points} – viikko {week}",
+            f"{top_player_name} repi {top_points} tehopistettä – NHL-viikko {week}",
+            f"{top_player_name} ylivoimainen ykkönen viikolla {week} – {top_points} pistettä",
+            f"Tehoviikko: {top_player_name} keräsi {top_points} pistettä",
+        ]
+    elif top_points >= 3:
+        templates = [
+            f"{top_player_name} viikon tehokkain suomalaisessa NHL:ssä",
+            f"{top_player_name} johti suomalaisia viikolla {week}",
+            f"Viikon {week} suomalainen: {top_player_name}",
+            f"{top_player_name} nousi viikon tehomieheksi",
+            f"{top_player_name} näytti osaamistaan viikolla {week}",
+            f"{top_player_name} paras suomalainen viikolla {week}",
+            f"Viikko {week}: {top_player_name} suomalaiskärjessä",
         ]
     else:
         templates = [
-            f"{top_player_name} sytytti suomalaiset viikolla {week}",
-            f"Leijonan kynnet: {top_player_name} iski viikolla {week}",
-            f"Suomalaisodottaja {top_player_name} rääväisi viikolla {week}",
-            f"{top_player_name} johti suomalaiset voittoon viikolla {week}",
-            f"NHL-viikko {week}: {top_player_name} ykkönen",
-            f"Viikon {week} suomalähti: {top_player_name}",
-            f"Suomalaisten tähti {top_player_name} loisti NHL:ssä",
-            f"{top_player_name} näytti tietä viikolla {week}",
-            f"Leijonat kulkevat – {top_player_name} edellä viikolla {week}",
-            f"Viikko {week}: {top_player_name} nostaa tasoa",
-            f"{top_player_name} takoi suomalaisille voitot viikolla {week}",
-            f"Suomalaisvoittoja – {top_player_name} kärjessä",
-            f"{top_player_name} hurjasteli viikolla {week}",
+            f"Viikko {week}: suomalaisten NHL-katsaus",
+            f"NHL-viikko {week}: suomalaispelaajat yhdessä",
+            f"Suomalaiset NHL:ssä – viikon {week} katsaus",
+            f"Viikon {week} suomalaiset NHL-jäillä",
+            f"{top_player_name} paras suomalainen viikolla {week}",
         ]
 
-    # Use week as seed to keep title stable for the same week across regenerations
-    random.seed(f"{year}-{week}")
     return random.choice(templates)
 
 
@@ -388,64 +419,96 @@ def generate_articles(all_games):
         # Build Markdown content
         md = []
 
-        # Opening paragraph
-        md.append(
-            f"Viikko {week} ({date_range}) oli jälleen aktiivinen suomalaispelaajille NHL:ssä. Yhteensä **{player_count} suomalaista** pääsi jäälle tällä viikolla. Suomalaiset iskivät **{total_goals} maalia** ja keräsivät yhteensä **{total_points} tehopistettä**."
-        )
+        # Opening paragraph - varied based on performance level
+        if total_points >= 25:
+            openings = [
+                f"Viikko {week} ({date_range}) oli tehokas suomalaisille NHL:ssä. Kaikkiaan **{player_count} suomalaista** pelasi, ja yhteispisteiksi tuli **{total_points} ({total_goals}+{total_assists})**.",
+                f"Suomalaisittain pistejuhlaa viikolla {week} ({date_range}): **{player_count} pelaajaa** keräsi yhteensä **{total_points} tehopistettä**, joista **{total_goals}** maaleja.",
+            ]
+        elif total_points >= 15:
+            openings = [
+                f"Viikolla {week} ({date_range}) nähtiin **{player_count} suomalaista** NHL-jäällä. Kokonaispisteiksi kirjattiin **{total_points} ({total_goals}+{total_assists})**.",
+                f"**{player_count} suomalaista** pelasi viikolla {week} ({date_range}). Yhteispisteet **{total_points}**, maaleja syntyi **{total_goals}**.",
+            ]
+        else:
+            openings = [
+                f"Viikko {week} ({date_range}) toi **{player_count} suomalaiselle** peliaikaa NHL:ssä. Maaleja kirjattiin **{total_goals}**, pisteitä yhteensä **{total_points}**.",
+                f"**{player_count} suomalaista** NHL-kaukaloissa viikolla {week} ({date_range}). Kokonaissaldoksi jäi **{total_points} tehopistettä** ja **{total_goals} maalia**.",
+            ]
+        random.seed(f"opening-{year}-{week}")
+        md.append(random.choice(openings))
         md.append("")
 
-        # News section
-        if weekly_news:
-            md.append("## Viikon uutiset")
-            md.append("")
-            for news in weekly_news:
-                md.append(f"### {news['title']}")
-                md.append(f"{news['description']}")
-                if "source" in news:
-                    if "url" in news:
-                        md.append(f"*Lähde: [{news['source']}]({news['url']})*")
-                    else:
-                        md.append(f"*Lähde: {news['source']}*")
-                md.append("")
-
-        # Top scorer highlight
+        # Top scorer highlight (replaces news section for the top player)
         if top_scorers:
             best = top_scorers[0]
             best_name = best[0]
             best_stats = best[1]
-            md.append(f"## Viikon tehokkain: {best_name}")
+            md.append(f"## Viikon paras pistemies: {best_name}")
             md.append("")
 
-            # Get best player's individual games
+            # Get best player's individual games with full team names
             best_games = [g for g in week_info["games"] if g["name"] == best_name]
             game_details = []
-            for g in best_games:
+            for g in sorted(best_games, key=lambda x: x.get("points", 0), reverse=True):
                 if g.get("points", 0) > 0:
+                    opp = TEAM_NAMES_FI.get(g.get("opponent", "?"), g.get("opponent", "?"))
                     game_details.append(
-                        f"{g['opponent']} ({g['goals']}+{g['assists']})"
+                        f"{opp} {g.get('game_date', '')}: {g['goals']}+{g['assists']}={g['points']}"
                     )
 
+            team_names = [TEAM_NAMES_FI.get(t, t) for t in best_stats["teams"]]
+            team_display = ", ".join(team_names)
             md.append(
-                f"**{best_name}** ({', '.join(best_stats['teams'])}) nousi viikon tehokkaimmaksi suomalaiseksi tehoilla **{best_stats['goals']}+{best_stats['assists']}={best_stats['points']}**. Hän pelasi {best_stats['games']} ottelua viikon aikana."
+                f"**{best_name}** ({team_display}) keräsi viikon suomalaispelaajista eniten tehopisteitä: **{best_stats['goals']}+{best_stats['assists']}={best_stats['points']}**."
             )
+            md.append(f"Pelejä viikon aikana: {best_stats['games']}.")
             if game_details:
-                md.append(f"- Ottelukohtaiset pisteet: {', '.join(game_details)}")
+                md.append("")
+                md.append("**Pistepelit:**")
+                for gd in game_details:
+                    md.append(f"- {gd}")
             md.append("")
 
-        # Notable performances (hat tricks, 4+ point games)
+        # News section (external + goalie/hat trick highlights, skip top scorer since it's covered above)
+        if weekly_news:
+            # Filter out the top-scorer news item since we have a dedicated section
+            filtered_news = []
+            top_name = top_scorers[0][0] if top_scorers else None
+            for news in weekly_news:
+                # Skip if it's the same top-scorer summary (we have dedicated section)
+                if top_name and news.get("title", "").startswith(f"{top_name} viikon paras"):
+                    continue
+                filtered_news.append(news)
+
+            if filtered_news:
+                md.append("## Viikon uutiset")
+                md.append("")
+                for news in filtered_news:
+                    md.append(f"### {news['title']}")
+                    md.append(f"{news['description']}")
+                    if "source" in news:
+                        if "url" in news:
+                            md.append(f"*Lähde: [{news['source']}]({news['url']})*")
+                        else:
+                            md.append(f"*Lähde: {news['source']}*")
+                    md.append("")
+
+        # Notable performances (hat tricks, 4+ point games, shutouts)
         notable_games = []
         for name, stats in players.items():
             player_daily = [g for g in week_info["games"] if g["name"] == name]
             for g in player_daily:
+                opp_short = TEAM_NAMES_FI.get(g.get("opponent", "?"), g.get("opponent", "?"))
                 if g["goals"] >= 3:
                     game_date = format_date_finnish(g["game_date"])
                     notable_games.append(
-                        f"- **{name}** iski hattutempun ({g['goals']} maalia) ottelussa {g['opponent_full']} vastaan ({game_date}). Ottelu päättyi {g['game_score']}."
+                        f"- **{name}** teki hattutempun ({g['goals']} maalia) ottelussa {opp_short}a vastaan ({game_date}). Loppulukemat {g['game_score']}."
                     )
                 elif g["points"] >= 4:
                     game_date = format_date_finnish(g["game_date"])
                     notable_games.append(
-                        f"- **{name}** keräsi neljä tehopistettä ({g['goals']}+{g['assists']}) ottelussa {g['opponent_full']} vastaan ({game_date})."
+                        f"- **{name}** kirjautti neljä tehopistettä ({g['goals']}+{g['assists']}) ottelussa {opp_short}a vastaan ({game_date})."
                     )
                 elif (
                     g.get("save_percentage", 0) == 1.0
@@ -454,7 +517,7 @@ def generate_articles(all_games):
                 ):
                     game_date = format_date_finnish(g["game_date"])
                     notable_games.append(
-                        f"- Maalivahti **{name}** pelasi nollapelin ({g['saves']} torjuntaa) ottelussa {g['opponent_full']} vastaan ({game_date})."
+                        f"- Maalivahti **{name}** torjui nollapelin ({g['saves']} torjuntaa) ottelussa {opp_short}a vastaan ({game_date})."
                     )
 
         if notable_games:
@@ -469,7 +532,8 @@ def generate_articles(all_games):
         md.append("| Sija | Pelaaja | Joukkue | Ottelut | Maalit | Syötöt | Pisteet |")
         md.append("|------|---------|---------|---------|--------|--------|---------|")
         for i, (name, stats) in enumerate(top_scorers, 1):
-            team = ", ".join(stats["teams"])
+            team_names = [TEAM_NAMES_FI.get(t, t) for t in stats["teams"]]
+            team = ", ".join(team_names)
             md.append(
                 f"| {i}. | {name} | {team} | {stats['games']} | {stats['goals']} | {stats['assists']} | **{stats['points']}** |"
             )
@@ -482,7 +546,8 @@ def generate_articles(all_games):
             top_d = sorted_defenders[:3]
             for name, stats in top_d:
                 if stats["points"] >= 1:
-                    team = ", ".join(stats["teams"])
+                    team_names = [TEAM_NAMES_FI.get(t, t) for t in stats["teams"]]
+                    team = ", ".join(team_names)
                     md.append(
                         f"- **{name}** ({team}): {stats['goals']}+{stats['assists']}={stats['points']} ({stats['games']} ottelua)"
                     )
@@ -505,10 +570,11 @@ def generate_articles(all_games):
             total_shots = sum(g.get("shots_against", 0) for g in g_daily)
             avg_sv = (total_saves / total_shots * 100) if total_shots > 0 else 0
 
+            team_names = [TEAM_NAMES_FI.get(t, t) for t in stats["teams"]]
             goalie_stats.append(
                 {
                     "name": name,
-                    "team": ", ".join(stats["teams"]),
+                    "team": ", ".join(team_names),
                     "starts": starts,
                     "wins": wins,
                     "saves": total_saves,
@@ -569,11 +635,26 @@ def generate_articles(all_games):
         content = "\n".join(md)
 
         date_str = week_start.strftime("%Y-%m-%d")
-        title = generate_creative_title(week, year, top_player_name)
+
+        # Detect hat tricks and shutouts for title generation
+        has_hat_trick = any(
+            g.get("goals", 0) >= 3
+            for g in week_info["games"]
+        )
+        has_shutout = any(
+            g.get("saves", 0) > 10
+            and g.get("shots_against", 0) == g.get("saves", 0)
+            and g.get("position") == "G"
+            for g in week_info["games"]
+        )
+
+        top_points = top_scorers[0][1]["points"] if top_scorers else 0
+        title = generate_creative_title(week, year, top_player_name, top_points, has_hat_trick, has_shutout)
+
         excerpt = f"{player_count} suomalaista pelasi, {total_goals} maalia, {total_points} pistettä."
         if top_scorers:
             excerpt = (
-                f"{top_scorers[0][0]} johti suomalaisrintamaa {top_scorers[0][1]['points']} pisteellä. "
+                f"{top_scorers[0][0]} keräsi {top_scorers[0][1]['points']} tehopistettä. "
                 + excerpt
             )
 

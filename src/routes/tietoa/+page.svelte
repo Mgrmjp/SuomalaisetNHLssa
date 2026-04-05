@@ -33,15 +33,15 @@ onMount(() => {
 </script>
 
 <svelte:head>
-    <title>Tietoa - Suomalaiset NHL-pelaajat</title>
+    <title>Tietoa - Suomi NHL | Suomalaiset NHL-pelaajat</title>
     <meta
         name="description"
-        content="Tietoa Suomalaiset NHL:ssä -sivustosta, tietolähteistä ja mainosilmoitus."
+        content="Tietoa Suomi NHL -sivustosta. Seuraa suomalaisten jääkiekkoilijoiden NHL-tilastoja, pistepörssiä ja otteluita päivittäin."
     />
-    <meta property="og:title" content="Tietoa - Suomalaiset NHL:ssä" />
+    <meta property="og:title" content="Tietoa - Suomi NHL | Suomalaiset NHL-pelaajat" />
     <meta
         property="og:description"
-        content="Tietoa Suomalaiset NHL:ssä -sivustosta, tietolähteistä ja mainosilmoitus."
+        content="Tietoa Suomi NHL -sivustosta. Seuraa suomalaisten jääkiekkoilijoiden NHL-tilastoja, pistepörssiä ja otteluita päivittäin."
     />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/tietoa" />
 
@@ -55,7 +55,15 @@ onMount(() => {
                 name: "Mistä saan tietoa suomalaisten NHL-pelaajien tilastoista?",
                 acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Suomalaiset NHL:ssä -sivusto seuraa päivittäin suomalaisten NHL-pelaajien ottelutilastoja, mukaan lukien maalit, syötöt, pisteet ja jääajat."
+                    text: "Suomi NHL -sivusto seuraa päivittäin suomalaisten NHL-pelaajien ottelutilastoja, mukaan lukien maalit, syötöt, pisteet ja jääajat. Kaikki tiedot päivittyvät automaattisesti NHL:n virallisista lähteistä."
+                }
+            },
+            {
+                "@type": "Question",
+                name: "Kuinka monta suomalaista pelaa NHL:ssä?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Suomi on yksi jääkiekon suurimmista NHL-maista. Tällä hetkellä NHL:ssä pelaa noin 30-35 suomalaista pelaajaa. Seuraa ajantasaisia tilastoja suomalaisetnhlssa.fi-sivustolta."
                 }
             },
             {
@@ -109,15 +117,16 @@ onMount(() => {
         </div>
 
         <!-- Main title -->
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Tietoa sivustosta</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Tietoa Suomi NHL -sivustosta</h1>
 
         <!-- About section -->
         <section class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 class="text-xl font-semibold text-gray-900 mb-3">Sivustosta</h2>
             <p class="text-gray-700 leading-relaxed">
-                Tämä sivusto seuraa suomalaisten NHL-pelaajien ottelutilastoja päivittäin. Voit
+                Suomi NHL -sivusto seuraa suomalaisten NHL-pelaajien ottelutilastoja päivittäin. Voit
                 valita minkä tahansa päivän ja nähdä kyseisenä iltana pelanneiden suomalaisten
-                pelaajien maalit, syötöt, pisteet ja jääajat.
+                pelaajien maalit, syötöt, pisteet ja jääajat. Sivusto tarjoaa ajantasaisen näkymän
+                siihen, miten suomalaiset jääkiekkoilijat menestyvät NHL-liigassa.
             </p>
         </section>
 
@@ -126,7 +135,8 @@ onMount(() => {
             <h2 class="text-xl font-semibold text-gray-900 mb-3">Tietolähteet</h2>
             <p class="text-gray-700 leading-relaxed">
                 Pelaajatiedot haetaan NHL:n virallisista lähteistä (NHL.com API). Sivusto päivittyy
-                automaattisesti kun uutta pelitietoa on saatavilla.
+                automaattisesti kun uutta pelitietoa on saatavilla. Kaikki suomalaisten NHL-tilastot
+                päivittyvät reaaliajassa otteluiden päätyttyä.
             </p>
         </section>
 

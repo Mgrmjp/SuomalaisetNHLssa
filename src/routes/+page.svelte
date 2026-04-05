@@ -64,7 +64,7 @@ const _dynamicTitleSuffix = $derived.by(
     () => selectedDateSummary?.summary || 'suomalaisten NHL-ottelut'
 )
 
-const SEO_KEYWORDS = 'Suomalaiset NHL-pelaajat, pistepörssi, live-tilastot'
+const SEO_KEYWORDS = 'suomi nhl, suomalaiset nhl-pelaajat, suomalaiset jääkiekkoilijat, nhl suomi, pistepörssi, live-tilastot, suomalaiset nhl:ssä'
 
 const _metaDescription = $derived.by(() => {
     const playerText =
@@ -99,12 +99,13 @@ onMount(() => {
 </script>
 
 <svelte:head>
-    <title>Suomalaiset NHL-pelaajat - {_dynamicTitleSuffix}</title>
+    <title>Suomi NHL - Suomalaiset NHL-pelaajat | {_dynamicTitleSuffix}</title>
     <meta name="description" content={_metaDescription} />
-    <meta property="og:title" content="Suomalaiset NHL-pelaajat - {_dynamicTitleSuffix}" />
+    <meta property="og:title" content="Suomi NHL - Suomalaiset NHL-pelaajat | {_dynamicTitleSuffix}" />
     <meta property="og:description" content={_metaDescription} />
     <meta name="keywords" content={SEO_KEYWORDS} />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 </svelte:head>
 
 <div class="w-full max-w-6xl mx-auto px-4 py-8 relative" style="z-index: 1; position: relative;">
@@ -313,6 +314,29 @@ onMount(() => {
         {#if !$currentBreak}
             <PlayerList />
         {/if}
+
+        <!-- SEO Content Section -->
+        <section class="mt-12 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                Suomi NHL – Suomalaiset jääkiekkoilijat NHL-liigassa
+            </h2>
+            <div class="space-y-4 text-gray-700 leading-relaxed">
+                <p>
+                    Suomi on yksi jääkiekon suurimmista NHL-maista. Tällä sivustolla voit seurata
+                    kaikkien suomalaisten NHL-pelaajien tilastoja ottelu kerrallaan. Sivusto näyttää
+                    suomalaisten pelaajien maalit, syötöt, pisteet ja jääajat reaaliajassa.
+                </p>
+                <p>
+                    NHL on maailman arvostetuin jääkiekkosarja, ja Suomi on kautta aikain tuottanut
+                    sarjaan kymmeniä huippupelaajia. Seuraa kuinka suomalaiset menestyvät NHL:ssä
+                    päivittäin – olipa kyseessä maalintekijät, syöttäjät tai maalivahdit.
+                </p>
+                <p>
+                    Sivusto päivittyy automaattisesti NHL:n virallisista lähteistä, joten saat
+                    aina ajantasaiset tiedot suomalaisten NHL-otteluista ja tilastoista.
+                </p>
+            </div>
+        </section>
     </div>
 
     <!-- Mobile Ad -->

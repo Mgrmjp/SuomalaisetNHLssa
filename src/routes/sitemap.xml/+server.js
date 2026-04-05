@@ -14,7 +14,26 @@ const staticPages = [
     { path: '/mestaruudet', priority: '0.8', changefreq: 'monthly' },
     { path: '/sarjataulukko', priority: '0.8', changefreq: 'daily' },
     { path: '/tietoa', priority: '0.5', changefreq: 'monthly' },
+    { path: '/lupaukset', priority: '0.7', changefreq: 'daily' },
+    { path: '/drafts', priority: '0.7', changefreq: 'weekly' },
+    { path: '/scouting', priority: '0.7', changefreq: 'weekly' },
 ]
+
+function getWeeklyReviewRoutes() {
+    try {
+        const articlesPath = join(process.cwd(), 'static/data/articles.json')
+        const articles = JSON.parse(readFileSync(articlesPath, 'utf-8'))
+
+        return articles.map((article) => ({
+            path: `/viikkokatsaus/${article.slug}`,
+            priority: '0.7',
+            changefreq: 'weekly',
+        }))
+    } catch (error) {
+        console.warn('Could not load articles for sitemap:', error)
+        return []
+    }
+}
 
 // Simple Finnish name correction (subset of correctFullName utility)
 function correctFullName(name) {
@@ -75,7 +94,8 @@ function getPlayerRoutes() {
 export async function GET() {
     const today = new Date().toISOString().split('T')[0]
     const playerRoutes = getPlayerRoutes()
-    const allPages = [...staticPages, ...playerRoutes]
+    const weeklyRoutes = getWeeklyReviewRoutes()
+    const allPages = [...staticPages, ...playerRoutes, ...weeklyRoutes]
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
