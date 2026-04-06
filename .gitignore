@@ -96,8 +96,13 @@ temp/
 
 # Python virtual env
 .venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.serena/cache/
 **/__pycache__/
 *.pyc
+prospects.log
 
 # Data collection and debug scripts
 scripts/check_na_finns.py
