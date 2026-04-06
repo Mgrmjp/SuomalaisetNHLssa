@@ -11,6 +11,7 @@ import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import {
     currentBreak,
     games,
+    isLoading,
     latestPrepopulatedDate,
     players,
     resetToDefault,
@@ -170,7 +171,21 @@ onMount(() => {
         <NavTabs />
 
         <!-- Hero Stats -->
-        {#if $players && $players.length > 0}
+        {#if $isLoading}
+            <div class="hero-stats-container py-6">
+                <div class="flex flex-wrap justify-center gap-8 hero-stats">
+                    {#each [1,2,3,4,5] as _}
+                        <div class="w-24 animate-pulse">
+                            <div class="flex justify-center mb-2">
+                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
+                            </div>
+                            <div class="h-7 bg-gray-200 rounded mb-1"></div>
+                            <div class="h-4 bg-gray-200 rounded w-16 mx-auto"></div>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        {:else if $players && $players.length > 0}
             <div class="hero-stats-container">
                 <!-- Desktop header -->
                 <div class="text-center mb-4 hero-summary-header hidden md:block">

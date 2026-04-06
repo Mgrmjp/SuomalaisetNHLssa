@@ -284,60 +284,26 @@ const _hasENG = $derived((player.empty_net_goals || 0) > 0)
 function getResultIndicator(result) {
     switch (result) {
         case 'W':
-            return {
-                bg: 'bg-green-100',
-                text: 'W',
-                label: 'Voitto',
-                textColor: 'text-green-700',
-                border: 'ring-green-300',
-            }
         case 'SOW':
-            return {
-                bg: 'bg-emerald-100',
-                text: 'SV',
-                label: 'Voitto VL',
-                textColor: 'text-emerald-700',
-                border: 'ring-emerald-300',
-            }
-        case 'L':
-            return {
-                bg: 'bg-red-100',
-                text: 'L',
-                label: 'Häviö',
-                textColor: 'text-red-700',
-                border: 'ring-red-300',
-            }
-        case 'SOL':
-            return {
-                bg: 'bg-rose-100',
-                text: 'SO',
-                label: 'Häviö VL',
-                textColor: 'text-rose-700',
-                border: 'ring-rose-300',
-            }
         case 'OTW':
             return {
-                bg: 'bg-amber-100',
-                text: 'JA',
-                label: 'Voitto JA',
-                textColor: 'text-amber-700',
-                border: 'ring-amber-300',
+                bg: 'bg-emerald-500',
+                text: 'V',
+                label: 'Voitto',
             }
+        case 'L':
+        case 'SOL':
         case 'OTL':
             return {
-                bg: 'bg-orange-100',
-                text: 'JA',
-                label: 'Häviö JA',
-                textColor: 'text-orange-700',
-                border: 'ring-orange-300',
+                bg: 'bg-red-500',
+                text: 'H',
+                label: 'Häviö',
             }
         default:
             return {
-                bg: 'bg-gray-100',
+                bg: 'bg-gray-400',
                 text: '?',
-                label: 'Ei tietoa',
-                textColor: 'text-gray-700',
-                border: 'ring-gray-300',
+                label: '',
             }
     }
 }
@@ -412,7 +378,7 @@ $effect(() => {
         <div class="player-card__inner">
             <!-- Front of Card -->
             <div
-                class="player-card__face player-card__face--front bg-white w-full overflow-hidden relative cursor-pointer rounded-xl shadow-sm transition-all duration-300 hover:shadow-md"
+                class="player-card__face player-card__face--front bg-white w-full overflow-hidden relative cursor-pointer rounded-xl transition-all duration-300 hover:shadow-lg"
                 style={`border: 1px solid rgba(226, 232, 240, 0.8); background: white;`}
                 onclick={_handleCardClick}
                 role="button"
@@ -427,15 +393,15 @@ $effect(() => {
                 ></div>
 
                 <div
-                    class="player-card__content relative bg-white h-full grid grid-rows-[auto,1fr,auto] overflow-visible p-5 md:p-6"
+                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-4 md:p-5"
                 >
                     <div class="player-card__logo-bg team-logo-bg select-none pointer-events-none">
                         <TeamLogo team={player.team || "NHL"} size="120" />
                     </div>
 
                     <!-- Top Left Player Info -->
-                    <div class="player-card__player-info relative z-10 mb-3">
-                        <div class="player-card__player-header mb-0.5">
+                    <div class="player-card__player-info relative z-10 mb-2">
+                        <div class="player-card__player-header">
                             <h3
                                 class="player-card__player-name text-lg font-bold text-gray-900 tracking-tight leading-tight"
                             >
@@ -443,20 +409,20 @@ $effect(() => {
                             </h3>
                         </div>
                         <div
-                            class="player-card__team-subtitle text-xs font-semibold text-gray-600 mb-1.5"
+                            class="player-card__team-subtitle text-sm text-gray-500 mb-1"
                         >
                             {_teamWithCity}
                         </div>
                         <div
-                            class="player-card__player-details text-[10px] font-bold text-gray-400 tracking-widest uppercase flex items-center gap-1.5"
+                            class="player-card__player-details text-xs text-gray-400 flex items-center gap-1"
                         >
                             <span>{player.position || player.positionCode || "N/A"}</span>
                             {#if player.jersey_number || player.jerseyNumber}
-                                <span class="text-gray-200">|</span>
+                                <span class="text-gray-300">·</span>
                                 <span>#{player.jersey_number || player.jerseyNumber}</span>
                             {/if}
                             {#if playerAge}
-                                <span class="text-gray-200">|</span>
+                                <span class="text-gray-300">·</span>
                                 <span>{playerAge}v</span>
                             {/if}
                         </div>
@@ -477,279 +443,138 @@ $effect(() => {
                     </div>
 
                     <!-- Spacer removed as we use relative layout now -->
-                    <div class="player-card__mid flex flex-col gap-3 md:gap-4">
+                    <div class="player-card__mid flex flex-col gap-2">
                         <!-- Game Stats -->
                         {#if isGoalie}
-                            <div class="player-card__stats w-full">
-                                <div
-                                    class={`player-card__stats-grid ${_goalieGridClass} grid gap-4 text-center justify-items-center w-fit mx-auto`}
-                                >
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--saves flex flex-col justify-center min-w-0 text-center"
-                                        title="Torjunnat"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.saves}
+                            <div class="player-card__stats w-full py-1">
+                                <!-- Main stat row: SV% -->
+                                {#if goalieSavePct !== null}
+                                    <div class="text-center mb-2 pb-2 border-b border-gray-100" title="torjuntaprosentti">
+                                        <div class="text-4xl font-bold text-gray-900 leading-none">
+                                            {goalieSavePct}%
                                         </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Torjunnat
+                                        <div class="text-xs text-gray-400 mt-1">
+                                            torjuntaprosentti
                                         </div>
+                                    </div>
+                                {/if}
+                                <!-- Secondary stats row -->
+                                <div class="flex justify-center items-start gap-4 text-center">
+                                    <div class="flex flex-col items-center px-2" title="torjunnat - tehdyt torjunnat">
+                                        <div class="text-xl font-bold text-gray-900 leading-tight">{player.saves}</div>
+                                        <div class="text-xs text-gray-400">torj</div>
                                     </div>
                                     {#if player.shots_against !== undefined}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--shots-against flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.shots_against}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                                title="Vastustajan laukaukset"
-                                            >
-                                                Vastust.
-                                            </div>
+                                        <div class="flex flex-col items-center px-2" title="vastustajan laukaukset kohti maalia">
+                                            <div class="text-xl font-bold text-gray-900 leading-tight">{player.shots_against}</div>
+                                            <div class="text-xs text-gray-400">lauk</div>
                                         </div>
                                     {/if}
-                                    <div
-                                        class="player-card__stat-item player-card__stat-item--goals-against flex flex-col justify-center min-w-0 text-center"
-                                        title="Päästetyt maalit"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.goals_against}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                        >
-                                            Päästetyt
-                                        </div>
+                                    <div class="flex flex-col items-center px-2" title="päästetyt maalit">
+                                        <div class="text-xl font-bold text-gray-900 leading-tight">{player.goals_against}</div>
+                                        <div class="text-xs text-gray-400">pm</div>
                                     </div>
-                                    {#if goalieSavePct !== null}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--save-pct flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {goalieSavePct}%
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                                title="Torjuntaprosentti"
-                                            >
-                                                Torj.%
-                                            </div>
-                                        </div>
-                                    {/if}
                                     {#if _hasENG}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1"
-                                            >
-                                                <span class="text-xs">🥅</span>
-                                                <span>{player.empty_net_goals}</span>
+                                        <div class="flex flex-col items-center px-2" title="tyhjään maaliin tehdyt maalit">
+                                            <div class="text-xl font-bold text-red-600 leading-tight flex items-center gap-0.5">
+                                                <span>🥅</span><span>{player.empty_net_goals}</span>
                                             </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-red-500 uppercase tracking-widest mt-1 truncate font-bold"
-                                            >
-                                                Tyhjä maali
-                                            </div>
+                                            <div class="text-xs text-red-400">tyhjä</div>
                                         </div>
                                     {/if}
                                 </div>
                             </div>
                         {:else if player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
-                            <div class="player-card__stats w-full">
-                                <!-- Main stats row -->
-                                <div
-                                    class={`player-card__stats-grid ${_skaterGridClass} grid gap-2 text-center justify-items-center w-fit mx-auto`}
-                                >
+                            <div class="player-card__stats w-full py-1">
+                                <!-- Main stat row: Points -->
+                                {#if player.points > 0}
+                                    <div class="text-center mb-2 pb-2 border-b border-gray-100" title="pisteet">
+                                        <div class="text-4xl font-bold text-gray-900 leading-none">
+                                            {player.points}
+                                        </div>
+                                        <div class="text-xs text-gray-400 mt-1">
+                                            {player.goals > 0 && player.assists > 0
+                                                ? `${player.goals}+${player.assists}`
+                                                : 'pistettä'}
+                                        </div>
+                                    </div>
+                                {/if}
+                                <!-- Secondary stats row -->
+                                <div class="flex justify-center items-start gap-4 text-center">
                                     {#if player.goals > 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--goals flex flex-col justify-center min-w-0 text-center relative"
-                                            title={_hasENG
-                                                ? `Sisältää ${player.empty_net_goals} tyhjään maaliin tehtyä maalia`
-                                                : undefined}
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate flex items-center justify-center gap-0.5"
-                                            >
+                                        <div class="flex flex-col items-center px-2" title="maalit">
+                                            <div class="text-xl font-bold text-gray-900 leading-tight flex items-center gap-0.5">
                                                 <span>{player.goals}</span>
                                                 {#if _hasENG}
-                                                    <span
-                                                        class="player-card__eng-indicator"
-                                                        title="Tyhjä maali">🥅</span
-                                                    >
+                                                    <span class="text-red-500 text-xs" title="tyhjään maaliin">🥅</span>
                                                 {/if}
                                             </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                                title="Maalit"
-                                            >
-                                                M
-                                            </div>
+                                            <div class="text-xs text-gray-400">maalit</div>
                                         </div>
                                     {/if}
                                     {#if player.assists > 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--assists flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.assists}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                                title="Syötöt"
-                                            >
-                                                S
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if player.points > 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--points flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-finnish-blue-900 truncate"
-                                            >
-                                                {player.points}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-finnish-blue-600 uppercase tracking-widest mt-1 truncate font-medium"
-                                                title="Pisteet"
-                                            >
-                                                P
-                                            </div>
+                                        <div class="flex flex-col items-center px-2" title="syötöt">
+                                            <div class="text-xl font-bold text-gray-900 leading-tight">{player.assists}</div>
+                                            <div class="text-xs text-gray-400">syötöt</div>
                                         </div>
                                     {/if}
                                     {#if !isGoalie && (player.plus_minus !== undefined || player.plusMinus !== undefined)}
                                         {@const pm = player.plus_minus ?? player.plusMinus}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--plus-minus flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
+                                        <div class="flex flex-col items-center px-2" title="plus-miinus">
+                                            <div class="text-xl font-bold {pm >= 0 ? 'text-green-600' : 'text-red-600'} leading-tight">
                                                 {pm > 0 ? "+" : ""}{pm}
                                             </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                                title="Plus-miinus tilasto"
-                                            >
-                                                +/-
-                                            </div>
+                                            <div class="text-xs text-gray-400">+/-</div>
                                         </div>
                                     {/if}
                                     {#if (player.penalty_minutes || 0) > 0 || (player.penaltyMinutes || 0) > 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--penalty-minutes flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
+                                        <div class="flex flex-col items-center px-2" title="rangaistusminuutit">
+                                            <div class="text-xl font-bold text-gray-900 leading-tight">
                                                 {player.penalty_minutes || player.penaltyMinutes}
                                             </div>
-                                            <div
-                                                class="player-card__stat-label text-[10px] text-gray-400 uppercase tracking-widest mt-1 truncate font-medium"
-                                                title="Rangaistusminuutit"
-                                            >
-                                                R.min
-                                            </div>
+                                            <div class="text-xs text-gray-400">jäähyt</div>
                                         </div>
                                     {/if}
                                 </div>
                             </div>
                         {/if}
-
-                        <!-- Simplified Game Info -->
-                        {#if isGoalie || player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
-                            <div
-                                class="player-card__game-info flex flex-col items-center justify-center gap-0.5"
-                            >
-                                <div class="text-[10px] tracking-wider font-medium text-gray-400">
-                                    {formatGameMatchup(player, gamesData)}
-                                </div>
-                                {#if _formattedScore}
-                                    <div class="text-xs font-bold text-gray-700">
-                                        {_formattedScore}
-                                    </div>
-                                {/if}
-                                {#if formatGameVenue(player)}
-                                    <div
-                                        class="text-[10px] tracking-wider font-medium text-gray-400 truncate max-w-[200px]"
-                                    >
-                                        {formatGameVenue(player)}
-                                    </div>
-                                {/if}
-                            </div>
-                        {/if}
                     </div>
-                    <div
-                        class="player-card__footer flex items-center justify-between pt-4 md:pt-5 border-t border-gray-100"
-                    >
-                        <!-- Enhanced Result Indicator - More subtle -->
-                        {#if _isLive}
-                            <div class="player-card__live-indicator flex items-center gap-1.5">
-                                <span
-                                    class="player-card__live-badge bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap"
-                                >
-                                    LIVE
-                                </span>
-                            </div>
-                        {:else if gameResult}
-                            <div class="player-card__result-status flex items-center gap-2">
-                                <div
-                                    class={`w-5 h-5 rounded-md ${_resultIndicator.bg} ${_resultIndicator.textColor} flex items-center justify-center text-[10px] font-bold shadow-sm`}
-                                    title={_resultIndicator.label}
-                                >
-                                    {_resultIndicator.text}
-                                </div>
-                                <span class="text-xs font-medium text-gray-500"
-                                    >{_resultIndicator.label}</span
-                                >
-                            </div>
-                        {:else}
-                            <!-- Spacer to keep layout consistent -->
-                            <div></div>
-                        {/if}
 
-                        <button
-                            class="player-card__details-button-inline group"
-                            onclick={_toggleComprehensiveDetails}
-                            onkeydown={(e) => e.key === "Enter" && _toggleComprehensiveDetails()}
-                            aria-label="Show comprehensive player details for {displayName}"
-                            title="Näytä kattavat tiedot"
-                        >
-                            <svg
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                class="text-gray-400 group-hover:text-white transition-colors duration-200"
-                            >
-                                <path
-                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                                />
-                            </svg>
-                        </button>
+                    <!-- Bottom -->
+                    <div class="mt-auto pt-2 border-t border-gray-100">
+                        <!-- Opponent row -->
+                        <div class="text-xs text-gray-500 mb-1">
+                            {formatGameMatchup(player, gamesData)}
+                        </div>
+                        <!-- Score + Result row -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-sm font-medium">{_formattedScore}</span>
+                                {#if _isLive}
+                                    <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">LIVE</span>
+                                {:else if gameResult}
+                                    <div class={`w-5 h-5 rounded-full ${_resultIndicator.bg} flex items-center justify-center text-white text-[10px] font-bold`}></div>
+                                {/if}
+                            </div>
+                            <button class="player-card__details-button-inline group" onclick={_toggleComprehensiveDetails}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-gray-400 group-hover:text-white">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- Venue row -->
+                        {#if formatGameVenue(player)}
+                            <div class="text-xs text-gray-400 mt-1">
+                                {formatGameVenue(player)}
+                            </div>
+                        {/if}
                     </div>
                 </div>
             </div>
 
-            <!-- Back of Card - Matching Refined Style -->
+            <!-- Back of Card -->
             <div
-                class="player-card__face player-card__face--back bg-white w-full overflow-hidden relative cursor-pointer rounded-xl shadow-sm"
+                class="player-card__face player-card__face--back bg-white w-full overflow-hidden relative cursor-pointer rounded-xl"
                 style={`border: 1px solid rgba(226, 232, 240, 0.8); background: white;`}
                 onclick={_handleCardClick}
                 role="button"
@@ -764,19 +589,26 @@ $effect(() => {
                 ></div>
 
                 <div
-                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-5 pt-4 md:p-6 md:pt-5"
+                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-4 md:p-5"
                 >
                     <!-- Top Left Player Info -->
-                    <div class="player-card__player-info relative z-10 mb-3">
-                        <div class="player-card__player-header mb-0.5">
+                    <div class="player-card__player-info relative z-10 mb-2">
+                        <div class="player-card__player-header">
                             <h3
                                 class="player-card__player-name text-lg font-bold text-gray-900 tracking-tight leading-tight"
                             >
                                 {displayName}
                             </h3>
                         </div>
-                        <div class="player-card__team-subtitle text-xs font-semibold text-gray-600">
+                        <div class="player-card__team-subtitle text-sm text-gray-500">
                             {_teamWithCity}
+                        </div>
+                        <div class="player-card__player-details text-xs text-gray-400 flex items-center gap-1">
+                            <span>{player.position || player.positionCode || "N/A"}</span>
+                            {#if player.jersey_number || player.jerseyNumber}
+                                <span class="text-gray-300">·</span>
+                                <span>#{player.jersey_number || player.jerseyNumber}</span>
+                            {/if}
                         </div>
                     </div>
 
@@ -784,9 +616,6 @@ $effect(() => {
                     <div class="player-card__team-logo absolute top-3 right-3 z-10 opacity-80">
                         <TeamLogo team={player.team || "NHL"} size="42" />
                     </div>
-
-                    <!-- Spacer removed -->
-                    <div class="mb-3 md:mb-4"></div>
 
                     <!-- Additional Stats and Time on Ice Wrapper -->
                     <div class="flex-grow p-4 pt-2 md:p-5 md:pt-3 flex flex-col">

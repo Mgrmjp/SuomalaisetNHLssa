@@ -216,9 +216,9 @@ const mobileAdPosition = $derived(_mobileAdPosition)
 </script>
 
 {#if $isLoading || (!$players || $players.length === 0)}
-    <div class="py-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {#each [1,2,3,4,5,6,7,8] as _}
+    <div class="py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7">
+            {#each [1,2,3,4,5,6] as _}
                 <SkeletonPlayerCard />
             {/each}
         </div>
