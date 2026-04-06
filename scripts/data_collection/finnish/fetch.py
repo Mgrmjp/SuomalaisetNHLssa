@@ -650,9 +650,20 @@ def should_skip_game(game_details: dict, normalized_state: str) -> tuple:
     if normalized_state == "CRIT":
         pd = game_details.get("periodDescriptor", {})
         period = pd.get("number", 3)
+        period_type = pd.get("periodType", "")
+        home_score = game_details.get("homeTeam", {}).get("score", 0)
+        away_score = game_details.get("awayTeam", {}).get("score", 0)
 
         if period <= 3:
             return True, f"CRIT state with period={period} (incomplete scores)"
+
+        # OT/SO games can remain in CRIT with tied scores while the outcome is unresolved
+        # or before the API has published the NHL-style final one-goal shootout score.
+        if home_score == away_score and (period > 3 or period_type == "SO"):
+            return True, (
+                f"CRIT tied extra-time game with unresolved score "
+                f"({away_score}-{home_score}, period={period}, type={period_type or 'N/A'})"
+            )
 
     return False, None
 

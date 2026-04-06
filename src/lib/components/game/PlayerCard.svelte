@@ -1,5 +1,6 @@
 <script>
 import { onMount } from 'svelte'
+import { fly, scale } from 'svelte/transition'
 import { base } from '$app/paths'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { games } from '$lib/stores/gameData.js'
@@ -12,6 +13,7 @@ import {
 import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
 import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/playerHeadshots.js'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
+import ComprehensivePlayerDetails from './ComprehensivePlayerDetails.svelte'
 import './PlayerCard.css'
 
 const { player } = $props()
@@ -84,32 +86,13 @@ let _photoLoading = $state(true)
 
 let showSeasonStats = $state(false)
 let showComprehensiveDetails = $state(false)
-let _isLogoHovered = $state(false)
 let isFlipped = $state(false)
-
-// Convert hex to rgba with opacity for subtle borders
-function _hexToRgba(hex, opacity = 0.7) {
-    if (!hex || !hex.startsWith('#')) return `rgba(0, 0, 0, ${opacity})`
-
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    if (!result) return `rgba(0, 0, 0, ${opacity})`
-
-    const r = parseInt(result[1], 16)
-    const g = parseInt(result[2], 16)
-    const b = parseInt(result[3], 16)
-
-    return `rgba(${r}, ${g}, ${b}, ${opacity})`
-}
-
-// Subtle border opacity
-function _hexToRgbaBorder(hex) {
-    return _hexToRgba(hex, 0.3)
-}
+let expanded = $state(false)
+let isPressed = $state(false)
 
 // Team names are now fetched from API and stored in team_full field
 function getTeamWithCity(teamAbbrev) {
     if (!teamAbbrev) return 'Unknown Team'
-    // Use team_full from API data if available, otherwise fallback to abbreviation
     const fullTeamName = player?.team_full || player?.opponent_full
     if (fullTeamName && fullTeamName !== teamAbbrev) {
         return fullTeamName
@@ -132,17 +115,18 @@ function _closeSeasonStats(event) {
 }
 
 function _toggleComprehensiveDetails(event) {
-    if (event) {
-        event.preventDefault()
-        event.stopPropagation()
+    event?.stopPropagation()
+    expanded = !expanded
+    if (expanded) {
+        showComprehensiveDetails = true
     }
-    showComprehensiveDetails = !showComprehensiveDetails
 }
 
 function _handleBackdropClick(event) {
     if (event.target === event.currentTarget) {
         showSeasonStats = false
         showComprehensiveDetails = false
+        expanded = false
     }
 }
 
@@ -151,21 +135,20 @@ function toggleFlip() {
 }
 
 function _handleCardClick(event) {
-    // Only flip if clicking on the card itself, not on buttons or interactive elements
     if (event.target.closest('button') || event.target.closest('a')) {
         return
     }
     toggleFlip()
 }
 
-const playerAge = $derived(
-    player.age ||
-        (player.birthDate
-            ? new Date().getFullYear() - new Date(player.birthDate).getFullYear()
-            : player.birth_date
-              ? new Date().getFullYear() - new Date(player.birth_date).getFullYear()
-              : null)
-)
+function _handlePressStart() {
+    isPressed = true
+}
+
+function _handlePressEnd() {
+    isPressed = false
+}
+
 const displayName = $derived(
     correctFullName(
         player.name?.default ||
@@ -177,24 +160,28 @@ const displayName = $derived(
 )
 const gamesData = $derived($games)
 const _isLive = $derived(isPlayerGameLive(player, gamesData))
-const _showResult = $derived(shouldShowGameResult(player, gamesData))
+const _game = $derived(gamesData?.findGameById?.(player?.game_id) || null)
 const gameResult = $derived(player.game_result || player.gameResult || null)
+const _showResult = $derived(shouldShowGameResult(player, gamesData) || Boolean(gameResult))
 const _teamWithCity = $derived(getTeamWithCity(player.team || 'NHL'))
-const _opponentWithCity = $derived(getTeamWithCity(player.opponent || 'NHL'))
-const _playerHeadshot = $derived(playerPhotoUrl)
 const _formattedScore = $derived(formatGameScore(player, gamesData))
+const _venue = $derived(formatGameVenue(player))
+const _matchup = $derived(formatGameMatchup(player, gamesData))
+const _playerInitials = $derived(
+    displayName
+        .split(' ')
+        .map((part) => part.charAt(0).toUpperCase())
+        .join('')
+        .slice(0, 2)
+)
 
 // Team color variables
 let _teamColorVars = $state({
-    '--team-primary-color': '#000000',
-    '--team-secondary-color': '#FFFFFF',
-    '--team-accent-color': '#000000',
+    '--team-primary-color': '#3b82f6',
+    '--team-secondary-color': '#60a5fa',
+    '--team-accent-color': '#2563eb',
 })
 
-// Animation control
-const _enableAnimatedBorders = true
-
-// Load team colors when component mounts or player changes
 onMount(async () => {
     if (player?.team) {
         try {
@@ -205,7 +192,6 @@ onMount(async () => {
     }
 })
 
-// Update colors when player changes
 $effect(() => {
     if (player?.team) {
         loadTeamColors()
@@ -221,134 +207,106 @@ async function loadTeamColors() {
         }
     }
 }
-const _playerInitials = $derived(
-    displayName
-        .split(' ')
-        .map((part) => part.charAt(0).toUpperCase())
-        .join('')
-        .slice(0, 2)
-)
 
-// Goalie helpers - declared first since they're used by stat counts
+// Goalie helpers
 const isGoalie = $derived(
     (player.position || '').toUpperCase() === 'G' ||
         (player.position || '').toUpperCase() === 'GOALIE'
 )
 const goalieSavePct = $derived(getSavePercentage(player))
-
-// Calculate number of stats for responsive grid (skaters)
-// Note: empty_net_goals are excluded from grid count - they get their own row
-const statCount = $derived(
-    [
-        player.goals > 0,
-        player.assists > 0,
-        player.points > 0,
-        !isGoalie && player.plus_minus !== undefined,
-        (player.penalty_minutes || 0) > 0,
-    ].filter(Boolean).length
-)
-
-const _skaterGridClass = $derived(
-    statCount === 1
-        ? 'player-card__stats-grid--single'
-        : statCount >= 5
-          ? 'player-card__stats-grid--skater-4' // Cap at 4 columns
-          : `player-card__stats-grid--skater-${statCount}`
-)
-
-// Goalie stats count
-const goalieStatCount = $derived(
-    [
-        player.saves !== undefined,
-        player.shots_against !== undefined,
-        player.goals_against !== undefined,
-        goalieSavePct !== null,
-        (player.empty_net_goals || 0) > 0,
-    ].filter(Boolean).length
-)
-
-const _goalieGridClass = $derived(
-    goalieStatCount === 1
-        ? 'player-card__stats-grid--single'
-        : goalieStatCount === 2
-          ? 'player-card__stats-grid--goalie-2'
-          : goalieStatCount === 3
-            ? 'player-card__stats-grid--goalie-3'
-            : 'player-card__stats-grid--goalie-4'
-)
-
-// Game result helpers
-const _resultIndicator = $derived(getResultIndicator(gameResult))
 const _hasENG = $derived((player.empty_net_goals || 0) > 0)
 
-function getResultIndicator(result) {
-    switch (result) {
-        case 'W':
-        case 'SOW':
-        case 'OTW':
-            return {
-                bg: 'bg-emerald-500',
-                text: 'V',
-                label: 'Voitto',
-            }
-        case 'L':
-        case 'SOL':
-        case 'OTL':
-            return {
-                bg: 'bg-red-500',
-                text: 'H',
-                label: 'Häviö',
-            }
-        default:
-            return {
-                bg: 'bg-gray-400',
-                text: '?',
-                label: '',
-            }
-    }
-}
+const _didWin = $derived(['W', 'OTW', 'SOW'].includes(gameResult))
+const _didLose = $derived(['L', 'OTL', 'SOL'].includes(gameResult))
+const _hasResolvedResult = $derived(_didWin || _didLose)
+const _hasUnresolvedTiedExtraTime = $derived.by(() => {
+    if (!_game) return false
+    const tied = _game.awayScore === _game.homeScore
+    const wentExtraTime = _game.isOT || _game.isSO
+    const unresolvedResult = !gameResult || gameResult === 'T'
+    return tied && wentExtraTime && unresolvedResult
+})
+const _gameExtraTimeLabel = $derived.by(() => {
+    if (!_game || _hasUnresolvedTiedExtraTime) return ''
+    if (_game.isSO) return 'VL'
+    if (_game.isOT) return 'JA'
+    return ''
+})
 
 function getSavePercentage(player) {
     const provided = player.save_percentage ?? player.savePercentage
-    // Use provided percentage if it's a positive number
     if (typeof provided === 'number' && provided > 0) {
-        // If it's already a percentage (like 0.857), convert to percentage format
-        // If it's a percentage value (like 85.7), keep it as is
         return Number(provided > 1 ? provided : (provided * 100).toFixed(1))
     }
-
     const saves = Number(player.saves ?? player.goalie_saves)
     const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst)
-
     if (Number.isFinite(saves) && Number.isFinite(shotsAgainst) && shotsAgainst > 0) {
-        // Calculate and return as percentage (e.g., 85.7)
         return Number(((saves / shotsAgainst) * 100).toFixed(1))
     }
-
     return null
 }
 
-// Action to portal element to body (for modals to escape parent transforms)
-function _portal(node) {
-    // Create a placeholder to take the element's place
+const _skaterStatLine = $derived.by(() => {
+    if (isGoalie) return ''
+    return `${player.goals || 0}+${player.assists || 0}`
+})
+
+// Derived stat values for the card
+const _primaryStat = $derived.by(() => {
+    if (isGoalie) {
+        return goalieSavePct !== null
+            ? { value: goalieSavePct, label: 'Torjunta%', unit: '%' }
+            : null
+    }
+    if (player.points > 0) {
+        return { value: player.points, label: 'Pisteet', unit: '' }
+    }
+    if ((player.plus_minus ?? 0) !== 0) {
+        return { value: player.plus_minus ?? player.plusMinus, label: '+/-', unit: '' }
+    }
+    if ((player.penalty_minutes || 0) > 0) {
+        return { value: player.penalty_minutes || player.penaltyMinutes, label: 'Rangaistusmin', unit: '' }
+    }
+    return null
+})
+
+// Ring progress: goalie SV% mapped 85-95 to 0-100%, skater points mapped 1-5
+const _ringProgress = $derived.by(() => {
+    if (!_primaryStat) return 0
+    if (isGoalie && goalieSavePct !== null) {
+        return Math.min(Math.max((goalieSavePct - 85) / 10, 0), 1)
+    }
+    // Skater points: 1-5 points mapped to 0-100%
+    return Math.min(Math.max((player.points - 0.5) / 4.5, 0), 1)
+})
+
+// Sub-label with breakdown
+const _statBreakdown = $derived.by(() => {
+    if (isGoalie) return `${player.saves}/${player.shots_against || player.shotsAgainst}`
+    if (player.points > 0 && player.goals > 0 && player.assists > 0) {
+        return `${player.goals} maalia + ${player.assists} syöttöä`
+    }
+    if (player.points > 0 && player.goals > 0) return `${player.goals} maalia`
+    if (player.points > 0 && player.assists > 0) return `${player.assists} syöttöä`
+    return ''
+})
+
+// Action to portal element to body
+function portal(node) {
     const placeholder = document.createElement('div')
     placeholder.className = 'portal-placeholder'
     placeholder.style.cssText = 'display: none;'
     node.parentNode.insertBefore(placeholder, node)
     node._portalPlaceholder = placeholder
-
-    // Move to body
     document.body.appendChild(node)
 
     return {
         update() {
-            // Keep it in body
             if (node.parentNode !== document.body) {
                 document.body.appendChild(node)
             }
         },
         destroy() {
-            // Remove from body and remove placeholder
             if (document.body.contains(node)) {
                 document.body.removeChild(node)
             }
@@ -359,7 +317,6 @@ function _portal(node) {
     }
 }
 
-// Prevent body scroll when modal is open
 $effect(() => {
     if (showSeasonStats) {
         document.body.style.overflow = 'hidden'
@@ -372,468 +329,329 @@ $effect(() => {
 })
 </script>
 
-<div class="player-card__container relative w-full h-full" class:goalie-card={isGoalie}>
+<div class="player-card__container relative w-full" class:goalie-card={isGoalie}>
     <!-- Player Card -->
     <div class="player-card" class:flipped={isFlipped}>
+        <!-- Spacer in normal flow to size container -->
+        <div class="player-card__spacer" aria-hidden="true"></div>
         <div class="player-card__inner">
             <!-- Front of Card -->
             <div
-                class="player-card__face player-card__face--front bg-white w-full overflow-hidden relative cursor-pointer rounded-xl transition-all duration-300 hover:shadow-lg"
-                style={`border: 1px solid rgba(226, 232, 240, 0.8); background: white;`}
+                class="card"
+                class:pressed={isPressed}
+                class:expanded
+                class:flipped={isFlipped}
+                style="--accent: {_teamColorVars['--team-primary-color']}"
                 onclick={_handleCardClick}
+                onpointerdown={_handlePressStart}
+                onpointerup={_handlePressEnd}
+                onpointerleave={_handlePressEnd}
                 role="button"
                 tabindex="0"
                 onkeydown={(e) => e.key === "Enter" && _handleCardClick(e)}
                 aria-label="Click to flip player card"
+                in:scale={{ duration: 220, start: 0.96 }}
             >
-                <!-- Clean single border with top accent stripe -->
-                <div
-                    class="absolute top-0 left-0 right-0 h-1.5"
-                    style={`background: var(--team-primary-color);`}
-                ></div>
+                <!-- Team color glow -->
+                <div class="card__glow" aria-hidden="true"></div>
 
-                <div
-                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-4 md:p-5"
-                >
-                    <div class="player-card__logo-bg team-logo-bg select-none pointer-events-none">
-                        <TeamLogo team={player.team || "NHL"} size="120" />
-                    </div>
+                <!-- Faint background logo watermark -->
+                <div class="card__watermark" aria-hidden="true">
+                    <TeamLogo team={player.team || "NHL"} size="120" />
+                </div>
 
-                    <!-- Top Left Player Info -->
-                    <div class="player-card__player-info relative z-10 mb-2">
-                        <div class="player-card__player-header">
-                            <h3
-                                class="player-card__player-name text-lg font-bold text-gray-900 tracking-tight leading-tight"
-                            >
-                                {displayName}
-                            </h3>
+                <!-- Top accent stripe -->
+                <div class="card__stripe" aria-hidden="true"></div>
+
+                <div class="card__content">
+                    <!-- Header: name + badges -->
+                    <div class="card__top">
+                        <div class="card__player-info">
+                            <h3 class="card__name">{displayName}</h3>
+                            <p class="card__team">
+                                {player.position || player.positionCode || "N/A"}
+                                {#if player.jersey_number || player.jerseyNumber}
+                                    <span class="card__dot">·</span>
+                                    <span>#{player.jersey_number || player.jerseyNumber}</span>
+                                {/if}
+                            </p>
                         </div>
-                        <div
-                            class="player-card__team-subtitle text-sm text-gray-500 mb-1"
-                        >
-                            {_teamWithCity}
-                        </div>
-                        <div
-                            class="player-card__player-details text-xs text-gray-400 flex items-center gap-1"
-                        >
-                            <span>{player.position || player.positionCode || "N/A"}</span>
-                            {#if player.jersey_number || player.jerseyNumber}
-                                <span class="text-gray-300">·</span>
-                                <span>#{player.jersey_number || player.jerseyNumber}</span>
-                            {/if}
-                            {#if playerAge}
-                                <span class="text-gray-300">·</span>
-                                <span>{playerAge}v</span>
-                            {/if}
+                        <div class="card__corner-logo">
+                            <TeamLogo team={player.team || "NHL"} size="36" />
                         </div>
                     </div>
 
-                    <!-- Top Right Team Logo - Simplified -->
-                    <div class="player-card__team-logo absolute top-3 right-3 z-10">
-                        <div
-                            class="player-card__team-logo-container relative team-logo-container"
-                            role="img"
-                            aria-label={`Team logo for ${player.team_full || player.team || "NHL"}`}
-                            title={player.team_full || player.team || "NHL"}
-                        >
-                            <div class="player-card__team-logo-inner relative z-10 drop-shadow-sm">
-                                <TeamLogo team={player.team || "NHL"} size="42" />
+                    <!-- Team row -->
+                    <div class="card__team-row">
+                        <span class="card__team-name-text">{_teamWithCity}</span>
+                    </div>
+
+                    {#if _venue}
+                        <div class="card__venue">{_venue}</div>
+                    {/if}
+
+                    <!-- Game summary -->
+                    <div
+                        class="card__gamebar"
+                        class:card__gamebar--live={_isLive}
+                        class:card__gamebar--win={_didWin}
+                        class:card__gamebar--loss={_didLose}
+                    >
+                        <div class="card__gamebar-main">
+                            <span class="card__gamebar-matchup">{_matchup}</span>
+                            {#if _isLive}
+                                <span class="card__gamebar-status card__gamebar-status--live">LIVE</span>
+                            {/if}
+                        </div>
+                        {#if _formattedScore}
+                            <div class="card__gamebar-score-wrap">
+                                {#if !_isLive && _hasResolvedResult}
+                                    <span
+                                        class="card__gamebar-result"
+                                        class:card__gamebar-result--win={_didWin}
+                                        class:card__gamebar-result--loss={_didLose}
+                                    >
+                                        {_didWin ? 'V' : _didLose ? 'H' : ''}
+                                    </span>
+                                {/if}
+                                <span class="card__gamebar-score">{_formattedScore}</span>
+                                {#if _gameExtraTimeLabel}
+                                    <span class="card__gamebar-extra-time">{_gameExtraTimeLabel}</span>
+                                {/if}
+                            </div>
+                        {/if}
+                    </div>
+
+                    <!-- Primary stat -->
+                    {#if !isGoalie && _primaryStat}
+                        <div class="card__hero card__hero--skater">
+                            <div class="card__hero-value-wrap">
+                                <span class="card__hero-value">{_primaryStat.value}</span>
+                                <span class="card__hero-unit">p</span>
+                            </div>
+                            <div class="card__hero-meta">
+                                <strong>{_skaterStatLine}</strong>
+                                {#if _statBreakdown}
+                                    <small>{_statBreakdown}</small>
+                                {/if}
                             </div>
                         </div>
-                    </div>
+                    {:else if _primaryStat}
+                        <div class="card__stat">
+                            <div class="card__ring" style="--accent: {_teamColorVars['--team-primary-color']}; --progress: {_ringProgress * 360}deg">
+                                <span>{_primaryStat.value}{_primaryStat.unit}</span>
+                            </div>
+                            <div class="card__stat-meta">
+                                <strong>{_primaryStat.label}</strong>
+                                {#if _statBreakdown}
+                                    <small>{_statBreakdown}</small>
+                                {/if}
+                            </div>
+                        </div>
+                    {:else}
+                        <div class="card__stat">
+                            <div class="card__ring card__ring--empty">
+                                <span>–</span>
+                            </div>
+                            <div class="card__stat-meta">
+                                <strong>Ei tilastoja</strong>
+                            </div>
+                        </div>
+                    {/if}
 
-                    <!-- Spacer removed as we use relative layout now -->
-                    <div class="player-card__mid flex flex-col gap-2">
-                        <!-- Game Stats -->
+                    <!-- Supporting stats row -->
+                    <div class="card__sub-stats">
                         {#if isGoalie}
-                            <div class="player-card__stats w-full py-1">
-                                <!-- Main stat row: SV% -->
-                                {#if goalieSavePct !== null}
-                                    <div class="text-center mb-2 pb-2 border-b border-gray-100" title="torjuntaprosentti">
-                                        <div class="text-4xl font-bold text-gray-900 leading-none">
-                                            {goalieSavePct}%
-                                        </div>
-                                        <div class="text-xs text-gray-400 mt-1">
-                                            torjuntaprosentti
-                                        </div>
-                                    </div>
-                                {/if}
-                                <!-- Secondary stats row -->
-                                <div class="flex justify-center items-start gap-4 text-center">
-                                    <div class="flex flex-col items-center px-2" title="torjunnat - tehdyt torjunnat">
-                                        <div class="text-xl font-bold text-gray-900 leading-tight">{player.saves}</div>
-                                        <div class="text-xs text-gray-400">torj</div>
-                                    </div>
-                                    {#if player.shots_against !== undefined}
-                                        <div class="flex flex-col items-center px-2" title="vastustajan laukaukset kohti maalia">
-                                            <div class="text-xl font-bold text-gray-900 leading-tight">{player.shots_against}</div>
-                                            <div class="text-xs text-gray-400">lauk</div>
-                                        </div>
-                                    {/if}
-                                    <div class="flex flex-col items-center px-2" title="päästetyt maalit">
-                                        <div class="text-xl font-bold text-gray-900 leading-tight">{player.goals_against}</div>
-                                        <div class="text-xs text-gray-400">pm</div>
-                                    </div>
-                                    {#if _hasENG}
-                                        <div class="flex flex-col items-center px-2" title="tyhjään maaliin tehdyt maalit">
-                                            <div class="text-xl font-bold text-red-600 leading-tight flex items-center gap-0.5">
-                                                <span>🥅</span><span>{player.empty_net_goals}</span>
-                                            </div>
-                                            <div class="text-xs text-red-400">tyhjä</div>
-                                        </div>
-                                    {/if}
-                                </div>
+                            <div class="card__sub-stat" title="Päästetyt maalit">
+                                <span
+                                    class="card__sub-stat-value"
+                                    style="color: {player.goals_against === 0 ? 'var(--accent)' : player.goals_against >= 4 ? '#ef4444' : undefined}"
+                                >{player.goals_against}</span>
+                                <span class="card__sub-stat-label">pääst.</span>
                             </div>
-                        {:else if player.goals > 0 || player.assists > 0 || player.points > 0 || (player.penalty_minutes || 0) > 0 || player.plus_minus !== undefined || (player.empty_net_goals || 0) > 0}
-                            <div class="player-card__stats w-full py-1">
-                                <!-- Main stat row: Points -->
-                                {#if player.points > 0}
-                                    <div class="text-center mb-2 pb-2 border-b border-gray-100" title="pisteet">
-                                        <div class="text-4xl font-bold text-gray-900 leading-none">
-                                            {player.points}
-                                        </div>
-                                        <div class="text-xs text-gray-400 mt-1">
-                                            {player.goals > 0 && player.assists > 0
-                                                ? `${player.goals}+${player.assists}`
-                                                : 'pistettä'}
-                                        </div>
-                                    </div>
-                                {/if}
-                                <!-- Secondary stats row -->
-                                <div class="flex justify-center items-start gap-4 text-center">
-                                    {#if player.goals > 0}
-                                        <div class="flex flex-col items-center px-2" title="maalit">
-                                            <div class="text-xl font-bold text-gray-900 leading-tight flex items-center gap-0.5">
-                                                <span>{player.goals}</span>
-                                                {#if _hasENG}
-                                                    <span class="text-red-500 text-xs" title="tyhjään maaliin">🥅</span>
-                                                {/if}
-                                            </div>
-                                            <div class="text-xs text-gray-400">maalit</div>
-                                        </div>
-                                    {/if}
-                                    {#if player.assists > 0}
-                                        <div class="flex flex-col items-center px-2" title="syötöt">
-                                            <div class="text-xl font-bold text-gray-900 leading-tight">{player.assists}</div>
-                                            <div class="text-xs text-gray-400">syötöt</div>
-                                        </div>
-                                    {/if}
-                                    {#if !isGoalie && (player.plus_minus !== undefined || player.plusMinus !== undefined)}
-                                        {@const pm = player.plus_minus ?? player.plusMinus}
-                                        <div class="flex flex-col items-center px-2" title="plus-miinus">
-                                            <div class="text-xl font-bold {pm >= 0 ? 'text-green-600' : 'text-red-600'} leading-tight">
-                                                {pm > 0 ? "+" : ""}{pm}
-                                            </div>
-                                            <div class="text-xs text-gray-400">+/-</div>
-                                        </div>
-                                    {/if}
-                                    {#if (player.penalty_minutes || 0) > 0 || (player.penaltyMinutes || 0) > 0}
-                                        <div class="flex flex-col items-center px-2" title="rangaistusminuutit">
-                                            <div class="text-xl font-bold text-gray-900 leading-tight">
-                                                {player.penalty_minutes || player.penaltyMinutes}
-                                            </div>
-                                            <div class="text-xs text-gray-400">jäähyt</div>
-                                        </div>
-                                    {/if}
+                            {#if _hasENG}
+                                <div class="card__sub-stat" title="Tyhjään maaliin">
+                                    <span class="card__sub-stat-value text-red-500">{player.empty_net_goals}</span>
+                                    <span class="card__sub-stat-label">tyhjä</span>
                                 </div>
-                            </div>
+                            {/if}
+                        {:else}
+                            {#if player.goals > 0}
+                                <div class="card__sub-stat" title="Maalit">
+                                    <span class="card__sub-stat-value">{player.goals}</span>
+                                    <span class="card__sub-stat-label">maalit</span>
+                                </div>
+                            {/if}
+                            {#if player.assists > 0}
+                                <div class="card__sub-stat" title="Syötöt">
+                                    <span class="card__sub-stat-value">{player.assists}</span>
+                                    <span class="card__sub-stat-label">syötöt</span>
+                                </div>
+                            {/if}
+                            {#if (player.plus_minus ?? 0) !== 0}
+                                <div class="card__sub-stat" title="Plus-miinus">
+                                    <span
+                                        class="card__sub-stat-value"
+                                        style="color: {(player.plus_minus ?? 0) >= 0 ? '#10b981' : '#ef4444'}"
+                                    >{(player.plus_minus ?? 0) > 0 ? '+' : ''}{player.plus_minus ?? player.plusMinus}</span>
+                                    <span class="card__sub-stat-label">+/-</span>
+                                </div>
+                            {/if}
+                            {#if (player.penalty_minutes || 0) > 0}
+                                <div class="card__sub-stat" title="Rangaistusminuutit">
+                                    <span class="card__sub-stat-value text-amber-600">{player.penalty_minutes || player.penaltyMinutes}</span>
+                                    <span class="card__sub-stat-label">jäähyt</span>
+                                </div>
+                            {/if}
                         {/if}
                     </div>
 
-                    <!-- Bottom -->
-                    <div class="mt-auto pt-2 border-t border-gray-100">
-                        <!-- Opponent row -->
-                        <div class="text-xs text-gray-500 mb-1">
-                            {formatGameMatchup(player, gamesData)}
-                        </div>
-                        <!-- Score + Result row -->
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-1.5">
-                                <span class="text-sm font-medium">{_formattedScore}</span>
-                                {#if _isLive}
-                                    <span class="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">LIVE</span>
-                                {:else if gameResult}
-                                    <div class={`w-5 h-5 rounded-full ${_resultIndicator.bg} flex items-center justify-center text-white text-[10px] font-bold`}></div>
-                                {/if}
+                    <!-- Expanded details -->
+                    {#if expanded}
+                        <div class="card__details" transition:fly={{ y: 8, duration: 180 }}>
+                            {#if _venue}
+                                <div class="card__detail-row">
+                                    <span class="card__detail-label">Paikka</span>
+                                    <span>{_venue}</span>
+                                </div>
+                            {/if}
+                            {#if player.time_on_ice}
+                                <div class="card__detail-row">
+                                    <span class="card__detail-label">Aika</span>
+                                    <span>{player.time_on_ice}</span>
+                                </div>
+                            {/if}
+                            {#if !isGoalie && player.shots !== undefined}
+                                <div class="card__detail-row">
+                                    <span class="card__detail-label">Laukaukset</span>
+                                    <span>{player.shots}</span>
+                                </div>
+                            {/if}
+                            <div class="card__detail-actions">
+                                <button
+                                    class="card__detail-btn"
+                                    onclick={(e) => { e.stopPropagation(); showComprehensiveDetails = true; }}
+                                >
+                                    Avaa kaikki tiedot
+                                </button>
                             </div>
-                            <button class="player-card__details-button-inline group" onclick={_toggleComprehensiveDetails}>
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="text-gray-400 group-hover:text-white">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                                </svg>
-                            </button>
                         </div>
-                        <!-- Venue row -->
-                        {#if formatGameVenue(player)}
-                            <div class="text-xs text-gray-400 mt-1">
-                                {formatGameVenue(player)}
-                            </div>
-                        {/if}
+                    {/if}
+
+                    <!-- Footer -->
+                    <div class="card__footer">
+                        <span class="card__footer-hint">Napauta kääntääksesi</span>
+                        <button
+                            class="card__footer-btn"
+                            onclick={(e) => { e.stopPropagation(); _toggleComprehensiveDetails(e); }}
+                            aria-label="Näytä tarkemmat tiedot"
+                        >
+                            Tiedot
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- Back of Card -->
             <div
-                class="player-card__face player-card__face--back bg-white w-full overflow-hidden relative cursor-pointer rounded-xl"
-                style={`border: 1px solid rgba(226, 232, 240, 0.8); background: white;`}
+                class="card card--back"
+                class:pressed={isPressed}
+                class:expanded
+                class:flipped={isFlipped}
+                style="--accent: {_teamColorVars['--team-primary-color']}"
                 onclick={_handleCardClick}
+                onpointerdown={_handlePressStart}
+                onpointerup={_handlePressEnd}
+                onpointerleave={_handlePressEnd}
                 role="button"
                 tabindex="0"
                 onkeydown={(e) => e.key === "Enter" && _handleCardClick(e)}
                 aria-label="Click to flip player card back"
             >
-                <!-- Clean single border with top accent stripe (back) -->
-                <div
-                    class="absolute top-0 left-0 right-0 h-1.5"
-                    style={`background: var(--team-primary-color); opacity: 0.7;`}
-                ></div>
+                <!-- Team color glow -->
+                <div class="card__glow" aria-hidden="true"></div>
 
-                <div
-                    class="player-card__content relative bg-white h-full flex flex-col overflow-visible p-4 md:p-5"
-                >
-                    <!-- Top Left Player Info -->
-                    <div class="player-card__player-info relative z-10 mb-2">
-                        <div class="player-card__player-header">
-                            <h3
-                                class="player-card__player-name text-lg font-bold text-gray-900 tracking-tight leading-tight"
-                            >
-                                {displayName}
-                            </h3>
-                        </div>
-                        <div class="player-card__team-subtitle text-sm text-gray-500">
-                            {_teamWithCity}
-                        </div>
-                        <div class="player-card__player-details text-xs text-gray-400 flex items-center gap-1">
-                            <span>{player.position || player.positionCode || "N/A"}</span>
-                            {#if player.jersey_number || player.jerseyNumber}
-                                <span class="text-gray-300">·</span>
-                                <span>#{player.jersey_number || player.jerseyNumber}</span>
-                            {/if}
+                <!-- Team logo watermark -->
+                <div class="card__watermark" aria-hidden="true">
+                    <TeamLogo team={player.team || "NHL"} size="100" />
+                </div>
+
+                <!-- Top accent stripe -->
+                <div class="card__stripe" aria-hidden="true"></div>
+
+                <div class="card__content">
+                    <!-- Header -->
+                    <div class="card__top">
+                        <div class="card__player-info">
+                            <h3 class="card__name">{displayName}</h3>
+                            <p class="card__team">{_teamWithCity}</p>
                         </div>
                     </div>
 
-                    <!-- Top Right Team Logo -->
-                    <div class="player-card__team-logo absolute top-3 right-3 z-10 opacity-80">
-                        <TeamLogo team={player.team || "NHL"} size="42" />
-                    </div>
-
-                    <!-- Additional Stats and Time on Ice Wrapper -->
-                    <div class="flex-grow p-4 pt-2 md:p-5 md:pt-3 flex flex-col">
-                        <!-- Additional Stats -->
-                        <div class="player-card__advanced-stats mb-2 w-full">
-                            <div
-                                class="player-card__advanced-stats-grid grid gap-y-4 gap-x-3 text-left w-full"
-                            >
-                                {#if isGoalie}
-                                    <div
-                                        class="player-card__stat-item flex flex-col justify-center min-w-0 text-center"
-                                        title="Torjunnat"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.saves}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                        >
-                                            Torjunnat
-                                        </div>
-                                    </div>
-                                    {#if player.shots_against !== undefined}
-                                        <div
-                                            class="player-card__stat-item flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.shots_against}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                                title="Vastustajan laukaukset kohti"
-                                            >
-                                                Laukaukset kohti
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    <div
-                                        class="player-card__stat-item flex flex-col justify-center min-w-0 text-center"
-                                        title="Päästetyt maalit"
-                                    >
-                                        <div
-                                            class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                        >
-                                            {player.goals_against}
-                                        </div>
-                                        <div
-                                            class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                        >
-                                            Päästetyt
-                                        </div>
-                                    </div>
-                                    {#if goalieSavePct !== null}
-                                        <div
-                                            class="player-card__stat-item flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {goalieSavePct}%
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                                title="Torjuntaprosentti"
-                                            >
-                                                Torjuntaprosentti
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if player.goals_against === 0 && player.saves > 0}
-                                        <div
-                                            class="player-card__stat-item flex flex-col justify-center min-w-0 text-center"
-                                            title="Maali pysynyt puhtaana koko ottelun ajan"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-green-600 truncate"
-                                            >
-                                                KYLLÄ
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-green-600 mt-1 truncate font-bold"
-                                            >
-                                                Nollapeli
-                                            </div>
-                                        </div>
-                                    {/if}
-                                {:else}
-                                    {#if player.shots !== undefined && player.shots >= 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--shots flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.shots}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                            >
-                                                Laukaukset
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if player.hits !== undefined && player.hits >= 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--hits flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.hits}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                            >
-                                                Taklaukset
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if player.blocked_shots !== undefined && player.blocked_shots >= 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--blocked-shots flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.blocked_shots}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                            >
-                                                Blokit
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if player.takeaways !== undefined && player.takeaways >= 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--takeaways flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.takeaways}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                            >
-                                                Riistot
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if player.giveaways !== undefined && player.giveaways >= 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--giveaways flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.giveaways}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                            >
-                                                Menetykset
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if (player.empty_net_goals || 0) > 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--empty-net-goals flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-red-600 truncate flex items-center justify-center gap-1"
-                                            >
-                                                🥅
-                                                <span>{player.empty_net_goals}</span>
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-red-600 mt-1 truncate"
-                                            >
-                                                Tyhjä maali
-                                            </div>
-                                        </div>
-                                    {/if}
-                                    {#if player.faceoff_wins !== undefined && player.faceoffs_taken !== undefined && player.faceoffs_taken > 0}
-                                        <div
-                                            class="player-card__stat-item player-card__stat-item--faceoffs flex flex-col justify-center min-w-0 text-center"
-                                        >
-                                            <div
-                                                class="player-card__stat-value text-sm font-bold text-gray-900 truncate"
-                                            >
-                                                {player.faceoff_wins}/{player.faceoffs_taken}
-                                            </div>
-                                            <div
-                                                class="player-card__stat-label text-xs text-gray-600 mt-1 truncate"
-                                            >
-                                                Aloitukset
-                                            </div>
-                                        </div>
-                                    {/if}
-                                {/if}
+                    <!-- Back card additional stats -->
+                    <div class="card__back-stats">
+                        {#if isGoalie}
+                            <div class="card__back-stat" title="Torjunnat">
+                                <div class="card__back-stat-value">{player.saves}</div>
+                                <div class="card__back-stat-label">Torjunnat</div>
                             </div>
-                        </div>
-
-                        <!-- Time on Ice -->
-                        {#if player.time_on_ice}
-                            <div class="player-card__time-on-ice text-center">
-                                <div
-                                    class="player-card__time-on-ice-text text-lg font-bold text-gray-900"
-                                >
-                                    Aika kentällä: <span class="player-card__time-on-ice-value"
-                                        >{player.time_on_ice}</span
-                                    >
+                            {#if player.shots_against !== undefined}
+                                <div class="card__back-stat" title="Laukaukset kohti">
+                                    <div class="card__back-stat-value">{player.shots_against}</div>
+                                    <div class="card__back-stat-label">Laukaukset</div>
                                 </div>
+                            {/if}
+                            <div class="card__back-stat" title="Päästetyt maalit">
+                                <div class="card__back-stat-value">{player.goals_against}</div>
+                                <div class="card__back-stat-label">Päästetyt</div>
+                            </div>
+                            {#if goalieSavePct !== null}
+                                <div class="card__back-stat" title="Torjuntaprosentti">
+                                    <div class="card__back-stat-value">{goalieSavePct}%</div>
+                                    <div class="card__back-stat-label">Torjunta%</div>
+                                </div>
+                            {/if}
+                        {:else}
+                            {#if player.shots !== undefined && player.shots >= 0}
+                                <div class="card__back-stat">
+                                    <div class="card__back-stat-value">{player.shots}</div>
+                                    <div class="card__back-stat-label">Laukaukset</div>
+                                </div>
+                            {/if}
+                            {#if player.hits !== undefined && player.hits >= 0}
+                                <div class="card__back-stat">
+                                    <div class="card__back-stat-value">{player.hits}</div>
+                                    <div class="card__back-stat-label">Taklaukset</div>
+                                </div>
+                            {/if}
+                            {#if player.blocked_shots !== undefined && player.blocked_shots >= 0}
+                                <div class="card__back-stat">
+                                    <div class="card__back-stat-value">{player.blocked_shots}</div>
+                                    <div class="card__back-stat-label">Blokit</div>
+                                </div>
+                            {/if}
+                            {#if player.takeaways !== undefined && player.takeaways >= 0}
+                                <div class="card__back-stat">
+                                    <div class="card__back-stat-value">{player.takeaways}</div>
+                                    <div class="card__back-stat-label">Riistot</div>
+                                </div>
+                            {/if}
+                            {#if player.giveaways !== undefined && player.giveaways >= 0}
+                                <div class="card__back-stat">
+                                    <div class="card__back-stat-value">{player.giveaways}</div>
+                                    <div class="card__back-stat-label">Menetykset</div>
+                                </div>
+                            {/if}
+                            {#if player.faceoff_wins !== undefined && player.faceoffs_taken !== undefined && player.faceoffs_taken > 0}
+                                <div class="card__back-stat">
+                                    <div class="card__back-stat-value">{player.faceoff_wins}/{player.faceoffs_taken}</div>
+                                    <div class="card__back-stat-label">Aloitukset</div>
+                                </div>
+                            {/if}
+                        {/if}
+                        {#if player.time_on_ice}
+                            <div class="card__time-on-ice">
+                                Aika kentällä: <strong>{player.time_on_ice}</strong>
                             </div>
                         {/if}
                     </div>
@@ -861,45 +679,28 @@ $effect(() => {
             aria-modal="true"
             aria-labelledby="season-stats-title"
         >
-            <!-- Header -->
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">
                 <div class="player-card__modal-avatar shrink-0">
                     {#if playerPhotoUrl && !_photoError}
                         <img
                             src={playerPhotoUrl || player.headshot_url}
                             alt={displayName}
-                            class={`player-card__modal-photo ${_photoLoading || _imageLoading ? "opacity-0 blur-sm" : "opacity-100 blur-0"}`}
-                            onload={() => {
-                                _photoLoading = false;
-                                _imageLoading = false;
-                            }}
-                            onerror={() => {
-                                _photoError = true;
-                                _photoLoading = false;
-                                _imageLoading = false;
-                            }}
+                            class="player-card__modal-photo"
+                            class:blurred={_photoLoading || _imageLoading}
+                            onload={() => { _photoLoading = false; _imageLoading = false; }}
+                            onerror={() => { _photoError = true; _photoLoading = false; _imageLoading = false; }}
                         />
                         {#if (_photoLoading || _imageLoading) && _lqipUrl}
-                            <img
-                                src={_lqipUrl}
-                                alt=""
-                                class="absolute inset-0 w-full h-full object-cover blur-md scale-110 -z-10"
-                            />
+                            <img src={_lqipUrl} alt="" class="player-card__modal-photo-lqip" />
                         {/if}
                     {:else if _lqipUrl}
-                        <img
-                            src={_lqipUrl}
-                            alt=""
-                            class="absolute inset-0 w-full h-full object-cover"
-                        />
+                        <img src={_lqipUrl} alt="" class="player-card__modal-photo-lqip" />
                     {:else}
                         <div class="player-card__modal-initials">{_playerInitials}</div>
                     {/if}
                 </div>
                 <div>
-                    <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">
-                        {displayName}
-                    </h3>
+                    <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">{displayName}</h3>
                     <div class="text-sm text-gray-500 flex items-center gap-2">
                         <span>{_teamWithCity}</span>
                         <span>•</span>
@@ -911,51 +712,24 @@ $effect(() => {
                     onclick={_closeSeasonStats}
                     aria-label="Sulje"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                        />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>
-
-            <!-- Content -->
             <div class="p-6">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <div class="text-2xl font-bold text-gray-900">
-                            {player.season_goals || 0}
-                        </div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
-                            Maalit
-                        </div>
+                        <div class="text-2xl font-bold text-gray-900">{player.season_goals || 0}</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Maalit</div>
                     </div>
                     <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <div class="text-2xl font-bold text-gray-900">
-                            {player.season_assists || 0}
-                        </div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
-                            Syötöt
-                        </div>
+                        <div class="text-2xl font-bold text-gray-900">{player.season_assists || 0}</div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Syötöt</div>
                     </div>
-                    <div
-                        class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100"
-                    >
-                        <div class="text-3xl font-bold text-finnish-blue-600">
-                            {player.season_points || 0}
-                        </div>
-                        <div
-                            class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium"
-                        >
-                            Pisteet yhteensä
-                        </div>
+                    <div class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100">
+                        <div class="text-3xl font-bold text-finnish-blue-600">{player.season_points || 0}</div>
+                        <div class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium">Pisteet yhteensä</div>
                     </div>
                 </div>
             </div>
@@ -966,7 +740,6 @@ $effect(() => {
 {#if showComprehensiveDetails}
     <ComprehensivePlayerDetails
         {player}
-        {gamesData}
         isOpen={showComprehensiveDetails}
         onclose={() => (showComprehensiveDetails = false)}
     />

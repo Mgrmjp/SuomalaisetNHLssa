@@ -337,15 +337,13 @@ onMount(() => {
             </h2>
             <div class="space-y-4 text-gray-700 leading-relaxed">
                 <p>
-                    Täältä löydät kaikki suomalaispelaajat NHL:ssä. Sivusto näyttää jokaisen pelin
-                    tilastot: maalit, syötöt, pisteet ja jääajat. Päivittyy pelien aikana.
+                    Seuraa kaikkia NHL:ssä pelaavia suomalaisia yhdestä paikasta. Sivusto näyttää ottelukohtaiset tilastot, kuten maalit, syötöt, pisteet ja peliajan. Tiedot päivittyvät myös pelien aikana.
                 </p>
                 <p>
-NHL:ssä pelaa aina suomalaisia. Miro Heiskanen, Sebastian Aho, Oliver Kapanen
-                    ja monet muut edustavat Suomea illasta toiseen.
+                    Mukana ovat Suomen NHL-pelaajat läpi kauden, kuten Miro Heiskanen, Sebastian Aho, Oliver Kapanen ja monet muut.
                 </p>
                 <p>
-                    Tilastot tulevat suoraan NHL:n virallisista lähteistä.
+                    Tilastot tulevat NHL:n virallisista lähteistä.
                 </p>
             </div>
         </section>

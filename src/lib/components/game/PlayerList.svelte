@@ -234,7 +234,7 @@ const mobileAdPosition = $derived(_mobileAdPosition)
     </div>
 {:else}
     <section id="scoringList" class="scoring-list py-12 bg-gray-50/50">
-        <div class="scoring-list__container container mx-auto px-4">
+        <div class="scoring-list__container w-full">
             {#if !hasAnyPlayers && $isLoading === false}
                 <div
                     class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -434,31 +434,14 @@ const mobileAdPosition = $derived(_mobileAdPosition)
             position: relative;
         }
 
-        /* Mobile swiper card slides - show 1.5 cards initially */
+        /* Mobile swiper card slides - keep a clear peek of the next card without squeezing content */
         .mobile-card-slide {
-            /* Width = (viewport - padding - gaps) / 1.5 */
-            /* padding: 1rem each side = 2rem, gaps: 0.5 * 12px = 6px */
-            width: calc((100vw - 2rem - 6px) / 1.5) !important;
+            width: min(18rem, calc(100vw - 4.5rem)) !important;
             flex-shrink: 0;
         }
 
-        /* Ensure cards in mobile have the right sizing */
-        .mobile-card-slide :global(.player-card) {
+        .mobile-card-slide :global(.player-card__spacer) {
             min-height: 280px;
-        }
-
-        .mobile-card-slide :global(.player-card__inner),
-        .mobile-card-slide :global(.player-card__face) {
-            min-height: 280px;
-        }
-
-        /* Reduce font sizes on mobile cards */
-        .mobile-card-slide :global(.player-card__player-name) {
-            font-size: 0.875rem;
-        }
-
-        .mobile-card-slide :global(.player-card__stats-grid) {
-            gap: 0.25rem;
         }
     }
 </style>

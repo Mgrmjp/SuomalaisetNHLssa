@@ -113,8 +113,8 @@ function handleBackdropClick(e) {
         tabindex="0"
         onkeydown={(e) => e.key === "Escape" && onclose?.()}
     >
-        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="p-6 md:p-7">
                 <!-- Header -->
                 <div class="flex items-start gap-4 mb-6">
                     {#if _playerPhotoUrl || _lqipUrl}
@@ -140,74 +140,74 @@ function handleBackdropClick(e) {
                 </div>
 
                 <!-- Game Stats -->
-                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                <div class="bg-gray-50 rounded-lg p-5 mb-4">
                     <h3 class="text-sm font-semibold text-gray-500 mb-3">Pelin tilastot</h3>
                     
                     {#if isGoalie}
                         <!-- Main stat: Save % -->
-                        <div class="text-center mb-3 pb-3 border-b border-gray-200" title="pisteet / torjuntaprosentti">
-                            <div class="text-4xl font-bold text-gray-900 leading-none">
+                        <div class="text-center mb-4 pb-4 border-b border-gray-200" title="pisteet / torjuntaprosentti">
+                            <div class="text-5xl font-bold text-gray-900 leading-none">
                                 {player.points || (_goalieSavePct || 0)}%
                             </div>
-                            <div class="text-xs text-gray-400 mt-1">
+                            <div class="text-sm text-gray-500 mt-1.5">
                                 {player.points ? 'pistettä' : `torjuntaprosentti`}
                             </div>
                         </div>
                         <!-- Secondary stats -->
-                        <div class="flex justify-center gap-4 text-center">
-                            <div class="px-3" title="torjunnat">
-                                <div class="text-xl font-bold text-gray-900">{player.saves || 0}</div>
-                                <div class="text-[10px] text-gray-400 mt-0.5">torj</div>
+                        <div class="flex justify-center gap-5 text-center flex-wrap">
+                            <div class="px-3 min-w-[4.5rem]" title="torjunnat">
+                                <div class="text-2xl font-bold text-gray-900">{player.saves || 0}</div>
+                                <div class="text-xs text-gray-500 mt-1">torjunnat</div>
                             </div>
                             {#if player.shots_against !== undefined}
-                                <div class="px-3" title="vastustajan laukaukset">
-                                    <div class="text-xl font-bold text-gray-900">{player.shots_against}</div>
-                                    <div class="text-[10px] text-gray-400 mt-0.5">lauk</div>
+                                <div class="px-3 min-w-[4.5rem]" title="vastustajan laukaukset">
+                                    <div class="text-2xl font-bold text-gray-900">{player.shots_against}</div>
+                                    <div class="text-xs text-gray-500 mt-1">laukaukset</div>
                                 </div>
                             {/if}
-                            <div class="px-3" title="päästetyt maalit">
-                                <div class="text-xl font-bold text-gray-900">{player.goals_against || 0}</div>
-                                <div class="text-[10px] text-gray-400 mt-0.5">pm</div>
+                            <div class="px-3 min-w-[4.5rem]" title="päästetyt maalit">
+                                <div class="text-2xl font-bold text-gray-900">{player.goals_against || 0}</div>
+                                <div class="text-xs text-gray-500 mt-1">päästetyt</div>
                             </div>
                             {#if player.time_on_ice}
-                                <div class="px-3" title="aika kentällä">
-                                    <div class="text-xl font-bold text-gray-900">{player.time_on_ice}</div>
-                                    <div class="text-[10px] text-gray-400 mt-0.5">toi</div>
+                                <div class="px-3 min-w-[4.5rem]" title="aika kentällä">
+                                    <div class="text-2xl font-bold text-gray-900">{player.time_on_ice}</div>
+                                    <div class="text-xs text-gray-500 mt-1">aika</div>
                                 </div>
                             {/if}
                         </div>
                     {:else}
                         <!-- Main stat: Points -->
-                        <div class="text-center mb-3 pb-3 border-b border-gray-200" title="pisteet">
-                            <div class="text-4xl font-bold text-gray-900 leading-none">
+                        <div class="text-center mb-4 pb-4 border-b border-gray-200" title="pisteet">
+                            <div class="text-5xl font-bold text-gray-900 leading-none">
                                 {player.points || 0}
                             </div>
-                            <div class="text-xs text-gray-400 mt-1">
+                            <div class="text-sm text-gray-500 mt-1.5">
                                 {player.goals > 0 || player.assists > 0
                                     ? `${player.goals || 0}+${player.assists || 0}`
                                     : 'pistettä'}
                             </div>
                         </div>
                         <!-- Secondary stats -->
-                        <div class="flex justify-center gap-4 text-center">
-                            <div class="px-3" title="maalit">
-                                <div class="text-xl font-bold text-gray-900">{player.goals || 0}</div>
-                                <div class="text-[10px] text-gray-400 mt-0.5">maalit</div>
+                        <div class="flex justify-center gap-5 text-center flex-wrap">
+                            <div class="px-3 min-w-[4.5rem]" title="maalit">
+                                <div class="text-2xl font-bold text-gray-900">{player.goals || 0}</div>
+                                <div class="text-xs text-gray-500 mt-1">maalit</div>
                             </div>
-                            <div class="px-3" title="syötöt">
-                                <div class="text-xl font-bold text-gray-900">{player.assists || 0}</div>
-                                <div class="text-[10px] text-gray-400 mt-0.5">syötöt</div>
+                            <div class="px-3 min-w-[4.5rem]" title="syötöt">
+                                <div class="text-2xl font-bold text-gray-900">{player.assists || 0}</div>
+                                <div class="text-xs text-gray-500 mt-1">syötöt</div>
                             </div>
-                            <div class="px-3" title="plus-miinus">
-                                <div class="text-xl font-bold {player.plus_minus >= 0 ? 'text-green-600' : 'text-red-600'}">
+                            <div class="px-3 min-w-[4.5rem]" title="plus-miinus">
+                                <div class="text-2xl font-bold {player.plus_minus >= 0 ? 'text-green-600' : 'text-red-600'}">
                                     {player.plus_minus > 0 ? '+' : ''}{player.plus_minus ?? 0}
                                 </div>
-                                <div class="text-[10px] text-gray-400 mt-0.5">+/-</div>
+                                <div class="text-xs text-gray-500 mt-1">plus/miinus</div>
                             </div>
                             {#if player.time_on_ice}
-                                <div class="px-3" title="aika kentällä">
-                                    <div class="text-xl font-bold text-gray-900">{player.time_on_ice}</div>
-                                    <div class="text-[10px] text-gray-400 mt-0.5">toi</div>
+                                <div class="px-3 min-w-[4.5rem]" title="aika kentällä">
+                                    <div class="text-2xl font-bold text-gray-900">{player.time_on_ice}</div>
+                                    <div class="text-xs text-gray-500 mt-1">aika</div>
                                 </div>
                             {/if}
                         </div>
@@ -216,36 +216,36 @@ function handleBackdropClick(e) {
 
                 <!-- Additional Stats -->
                 {#if !isGoalie && (player.shots || player.hits || player.blocked_shots || player.takeaways || player.giveaways)}
-                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                        <div class="flex justify-center gap-3 text-center">
+                    <div class="bg-gray-50 rounded-lg p-5 mb-4">
+                        <div class="flex justify-center gap-4 text-center flex-wrap">
                             {#if player.shots > 0}
-                                <div class="px-2" title="laukaukset">
-                                    <div class="text-lg font-bold text-gray-900">{player.shots}</div>
-                                    <div class="text-[10px] text-gray-400">lauk</div>
+                                <div class="px-3 min-w-[4rem]" title="laukaukset">
+                                    <div class="text-xl font-bold text-gray-900">{player.shots}</div>
+                                    <div class="text-xs text-gray-500 mt-1">laukaukset</div>
                                 </div>
                             {/if}
                             {#if player.hits > 0}
-                                <div class="px-2" title="taklaukset">
-                                    <div class="text-lg font-bold text-gray-900">{player.hits}</div>
-                                    <div class="text-[10px] text-gray-400">takl</div>
+                                <div class="px-3 min-w-[4rem]" title="taklaukset">
+                                    <div class="text-xl font-bold text-gray-900">{player.hits}</div>
+                                    <div class="text-xs text-gray-500 mt-1">taklaukset</div>
                                 </div>
                             {/if}
                             {#if player.blocked_shots > 0}
-                                <div class="px-2" title="blokatut laukaukset">
-                                    <div class="text-lg font-bold text-gray-900">{player.blocked_shots}</div>
-                                    <div class="text-[10px] text-gray-400">blok</div>
+                                <div class="px-3 min-w-[4rem]" title="blokatut laukaukset">
+                                    <div class="text-xl font-bold text-gray-900">{player.blocked_shots}</div>
+                                    <div class="text-xs text-gray-500 mt-1">blokit</div>
                                 </div>
                             {/if}
                             {#if player.takeaways > 0}
-                                <div class="px-2" title="riistot">
-                                    <div class="text-lg font-bold text-gray-900">{player.takeaways}</div>
-                                    <div class="text-[10px] text-gray-400">riisto</div>
+                                <div class="px-3 min-w-[4rem]" title="riistot">
+                                    <div class="text-xl font-bold text-gray-900">{player.takeaways}</div>
+                                    <div class="text-xs text-gray-500 mt-1">riistot</div>
                                 </div>
                             {/if}
                             {#if player.giveaways > 0}
-                                <div class="px-2" title="menetykset">
-                                    <div class="text-lg font-bold text-gray-900">{player.giveaways}</div>
-                                    <div class="text-[10px] text-gray-400">menet</div>
+                                <div class="px-3 min-w-[4rem]" title="menetykset">
+                                    <div class="text-xl font-bold text-gray-900">{player.giveaways}</div>
+                                    <div class="text-xs text-gray-500 mt-1">menetykset</div>
                                 </div>
                             {/if}
                         </div>
@@ -266,17 +266,17 @@ function handleBackdropClick(e) {
                             {#each player.recent_results.slice(0, 5) as game}
                                 {@const isWin = game.result === 'W' || game.result === 'OTW' || game.result === 'SOW'}
                                 {@const opponentCode = game.opponent?.toLowerCase()}
-                                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                    <div class="w-10 text-xs text-gray-500">{parseInt(game.date.split('-')[2])}.{parseInt(game.date.split('-')[1])}.</div>
-                                    <div class="w-8 text-center">
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 p-3 md:p-4 bg-gray-50 rounded-lg">
+                                    <div class="w-10 shrink-0 text-sm text-gray-500">{parseInt(game.date.split('-')[2])}.{parseInt(game.date.split('-')[1])}.</div>
+                                    <div class="w-8 shrink-0 text-center">
                                         <img src="/nhl-logos/{opponentCode}.svg" alt={game.opponent} class="w-6 h-6 mx-auto" onerror={(e) => e.target.style.display = 'none'} />
                                     </div>
-                                    <div class="flex-1 text-sm">{game.opponent_full || game.opponent}</div>
-                                    <div class="text-sm font-semibold {isWin ? 'text-green-600' : 'text-red-600'}">
+                                    <div class="min-w-0 flex-1 text-sm md:text-base text-gray-800">{game.opponent_full || game.opponent}</div>
+                                    <div class="text-sm md:text-base font-semibold {isWin ? 'text-green-600' : 'text-red-600'}">
                                         {game.team_score} - {game.opponent_score}
                                     </div>
-                                    <div class="w-4 h-4 rounded-full {isWin ? 'bg-green-500' : 'bg-red-500'}"></div>
-                                    <div class="flex gap-3 text-xs text-gray-500">
+                                    <div class="w-4 h-4 shrink-0 rounded-full {isWin ? 'bg-green-500' : 'bg-red-500'}"></div>
+                                    <div class="w-full md:w-auto flex flex-wrap gap-x-3 gap-y-1 text-sm text-gray-500 md:ml-auto">
                                         {#if !isGoalie}
                                             <span>M: {game.goals ?? 0}</span>
                                             <span>S: {game.assists ?? 0}</span>

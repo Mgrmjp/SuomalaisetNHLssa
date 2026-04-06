@@ -49,6 +49,24 @@ export function formatGameScore(player, gamesData = null) {
     if (gamesData?.findGameById && player.game_id) {
         const game = gamesData.findGameById(player.game_id)
         if (game && game.homeScore !== undefined && game.awayScore !== undefined) {
+            if (game.isSO && game.awayScore === game.homeScore) {
+                const result = (player?.game_result || player?.gameResult || '').trim().toUpperCase()
+                const playerTeam = player?.team
+                const opponentTeam = player?.opponent
+                let winningTeam = null
+
+                if (result === 'W') winningTeam = playerTeam
+                if (result === 'L') winningTeam = opponentTeam
+
+                if (winningTeam === game.awayTeam) {
+                    return `${game.awayScore + 1}-${game.homeScore}`
+                }
+
+                if (winningTeam === game.homeTeam) {
+                    return `${game.awayScore}-${game.homeScore + 1}`
+                }
+            }
+
             // Return scores in consistent "awayScore-homeScore" format
             return `${game.awayScore}-${game.homeScore}`
         }
@@ -69,6 +87,16 @@ export function formatGameScore(player, gamesData = null) {
                     // It's in wrong format, swap it
                     return `${game.awayScore}-${game.homeScore}`
                 }
+            }
+        }
+
+        if (Number.isFinite(firstScore) && Number.isFinite(secondScore) && firstScore === secondScore) {
+            const result = (player?.game_result || player?.gameResult || '').trim().toUpperCase()
+            if (result === 'W') {
+                return `${firstScore + 1}-${secondScore}`
+            }
+            if (result === 'L') {
+                return `${firstScore}-${secondScore + 1}`
             }
         }
     }

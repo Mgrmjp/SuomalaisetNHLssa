@@ -1,7 +1,15 @@
+/* ==============================
+   Player Card - Premium Sports UI
+   ============================== */
+
+/* Container & spacer */
 .player-card__container {
-    transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 300px;
-    height: 100%;
+    height: auto;
+}
+
+.goalie-card {
+    min-height: 320px;
 }
 
 .player-card {
@@ -9,328 +17,677 @@
     position: relative;
     width: 100%;
     min-height: 300px;
-    height: 100%;
-    overflow: visible;
+    height: auto;
     transform-style: preserve-3d;
-    transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.goalie-card .player-card {
+    min-height: 320px;
+}
+
+@media (min-width: 768px) {
+    .player-card__container { min-height: 310px; }
+    .player-card { min-height: 310px; }
+    .goalie-card,
+    .goalie-card .player-card { min-height: 330px; }
+}
+
+.player-card__spacer {
+    display: none;
 }
 
 .player-card__inner {
     position: relative;
     width: 100%;
-    height: 100%;
-    min-height: 300px;
-    text-align: left;
-    transition:
-        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-        min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: auto;
+    min-height: 0;
+    display: grid;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
-    will-change: transform;
 }
+
+.goalie-card .player-card__inner { min-height: 0; }
 
 .player-card.flipped .player-card__inner {
     transform: rotateY(180deg);
 }
 
-.player-card__face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    border-radius: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    will-change: transform;
-    overflow: hidden;
-    transition: min-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+.player-card__inner > .card {
+    grid-area: 1 / 1;
 }
 
-.player-card__face--back {
+/* ==============================
+   Card Surface
+   ============================== */
+.card {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 1.25rem 1.25rem 1rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 252, 0.94));
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow:
+        0 1px 3px rgba(15, 23, 42, 0.06),
+        0 8px 24px rgba(15, 23, 42, 0.06);
+    transition:
+        transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 180ms ease;
+    will-change: transform, box-shadow;
+    cursor: pointer;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.card:hover {
+    box-shadow:
+        0 4px 12px rgba(15, 23, 42, 0.08),
+        0 16px 40px rgba(15, 23, 42, 0.12);
+    border-color: color-mix(in srgb, var(--accent, #3b82f6) 30%, rgba(226, 232, 240, 0.8));
+}
+
+.card:active {
+    box-shadow:
+        0 1px 4px rgba(15, 23, 42, 0.06),
+        0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.card.pressed {
+    transition-duration: 60ms;
+}
+
+@media (max-width: 767px) {
+    .card {
+        padding: 1rem;
+        border-radius: 16px;
+    }
+}
+
+/* Card visibility for flip */
+.card--back {
+    position: relative;
     transform: rotateY(180deg);
 }
 
-.goalie-card,
-.goalie-card .player-card,
-.goalie-card .player-card__inner,
-.goalie-card .player-card__face {
-    min-height: 340px;
+.player-card:not(.flipped) .card--back {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
-@media (min-width: 768px) {
-    .player-card__container,
-    .player-card,
-    .player-card__inner,
-    .player-card__face {
-        min-height: 420px;
-    }
-
-    .goalie-card,
-    .goalie-card .player-card,
-    .goalie-card .player-card__inner,
-    .goalie-card .player-card__face {
-        min-height: 460px;
-    }
-
-    .player-card__player-info {
-        margin-bottom: 0.5rem;
-    }
-
-    .player-card__stats {
-        margin-top: 0.5rem;
-    }
-
-    .player-card__stats-grid {
-        row-gap: 1.75rem;
-        padding: 1.5rem 2rem;
-    }
+.player-card:not(.flipped) .card:not(.card--back) {
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
 }
 
-/* Modern gradient stylish buttons */
-.player-card__details-button-inline {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    width: 24px;
-    height: 24px;
+.player-card.flipped .card--back {
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+.player-card.flipped .card:not(.card--back) {
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* ==============================
+   Team Color Glow
+   ============================== */
+.card__glow {
+    position: absolute;
+    inset: auto -30% -40% auto;
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--accent, #3b82f6) 18%, transparent) 0%,
+        transparent 70%
+    );
+    pointer-events: none;
+    opacity: 0.7;
+    z-index: 0;
+}
+
+.card:hover .card__glow {
+    opacity: 1;
+}
+
+/* ==============================
+   Watermark
+   ============================== */
+.card__watermark {
+    position: absolute;
+    top: -30px;
+    right: -40px;
+    opacity: 0.03;
+    z-index: 0;
+    transform: scale(2) rotate(-15deg);
+    pointer-events: none;
+    filter: grayscale(1);
+}
+
+/* ==============================
+   Top accent stripe
+   ============================== */
+.card__stripe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        var(--accent, #3b82f6),
+        color-mix(in srgb, var(--accent, #3b82f6) 60%, white)
+    );
+    z-index: 2;
+}
+
+/* ==============================
+   Card Content
+   ============================== */
+.card__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* ==============================
+   Header: name + badges
+   ============================== */
+.card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.card__player-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.card__corner-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0.95;
+}
+
+.card__name {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card__team {
+    margin: 0.2rem 0 0;
+    font-size: 0.72rem;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.card__dot {
+    color: #d1d5db;
+}
+
+/* ==============================
+   Team row: logo + name
+   ============================== */
+.card__team-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    will-change: transform;
-    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
-    position: relative;
+    padding: 0.15rem 0 0;
+}
+
+.card__team-name-text {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #6b7280;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
 }
 
-/* Subtle shine effect */
-.player-card__details-button-inline::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
+.card__venue {
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: #94a3b8;
+    text-align: center;
 }
 
-.player-card__details-button-inline:hover::before {
-    left: 100%;
+@keyframes badge-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
-/* Hover state */
-.player-card__details-button-inline:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(99, 102, 241, 0.3);
+/* ==============================
+   Game bar
+   ============================== */
+.card__gamebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.58rem 0.7rem;
+    border-radius: 14px;
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.75);
 }
 
-/* Active state */
-.player-card__details-button-inline:active {
-    transform: translateY(0);
+.card__gamebar--win {
+    background: rgba(240, 253, 244, 0.84);
+    border-color: rgba(187, 247, 208, 0.8);
 }
 
-/* Icon styling and animation */
-.player-card__details-button-inline svg {
-    position: relative;
-    z-index: 2;
-    width: 14px;
-    height: 14px;
-    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+.card__gamebar-main {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
-.player-card__details-button-inline:hover svg {
-    transform: rotate(10deg) scale(1.1);
+.card__gamebar-matchup {
+    min-width: 0;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #475569;
+    font-variant-numeric: tabular-nums;
 }
 
-/* Focus state for accessibility */
-.player-card__details-button-inline:focus {
-    outline: none;
-    box-shadow:
-        0 2px 8px rgba(99, 102, 241, 0.25),
-        0 1px 2px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25),
-        0 0 0 3px rgba(99, 102, 241, 0.5);
-}
-
-/* Clean modern card content */
-.player-card__content {
-    background: white;
-    /* subtle texture if needed, but keeping it clean for now */
-}
-
-/* Noise texture for card content - DISABLED for performance
-.player-card__content::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.05;
-    z-index: 1;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    mix-blend-mode: overlay;
-    border-radius: inherit;
-}
-*/
-
-/* Removed complex background gradients for cleaner look */
-
-/* Removed complex border animations */
-
-.player-card__border-inner--back {
-    box-shadow:
-        0 1px 0 rgba(255, 255, 255, 0.82) inset,
-        0 0 0 1px rgba(199, 210, 254, 0.65);
-}
-
-.team-logo-bg {
-    position: absolute;
-    top: -50px;
-    right: -60px;
-    opacity: 0.04;
-    z-index: 0;
-    transform: scale(2.2) rotate(-15deg);
-    pointer-events: none;
-}
-
-/* Limit player name width to prevent overlap with logo */
-.player-card__player-info {
-    max-width: calc(100% - 60px);
-    margin-bottom: 0.5rem;
-}
-
-/* Handle long player names - allow 2 lines max */
-.player-card__player-name {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    line-height: 1.1;
-    max-height: 2.2em;
-}
-
-/* Team score value styling */
-.player-card__team-score {
+.card__gamebar-status {
+    padding: 0.24rem 0.55rem;
+    border-radius: 999px;
     border: 1px solid transparent;
-    background:
-        linear-gradient(white, white) padding-box,
-        linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5)) border-box;
-    border-radius: 0.5rem;
-    position: relative;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
 }
 
-.player-card__team-score::before {
-    content: "";
-    position: absolute;
-    inset: 1px;
-    border-radius: 0.375rem;
-    background: rgba(255, 255, 255, 0.5);
-    z-index: 0;
-}
-
-.player-card__team-score-value {
+.card__gamebar-status--live {
+    background: #ef4444;
+    border-color: #ef4444;
     color: white;
-    text-shadow:
-        -1px -1px 0 rgba(0, 0, 0, 0.8),
-        1px -1px 0 rgba(0, 0, 0, 0.8),
-        -1px 1px 0 rgba(0, 0, 0, 0.8),
-        1px 1px 0 rgba(0, 0, 0, 0.8),
-        0 1px 3px rgba(0, 0, 0, 0.5);
+    animation: badge-pulse 2s ease-in-out infinite;
 }
 
-/* Fix content overflow and ensure proper spacing */
-.player-card__face .player-card__content {
-    flex: 1;
-    min-height: 0;
-}
-
-.player-card__face .relative > * {
+.card__gamebar-score-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
     flex-shrink: 0;
 }
 
-/* Ensure stats grid doesn't overflow */
-.player-card__stats-grid,
-.player-card__advanced-stats-grid {
-    min-height: 0;
+.card__gamebar-result {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    padding: 0 0.28rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
-/* Proper spacing for stats section to prevent overlap with player info */
-.player-card__stats {
+.card__gamebar-result--win {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.22);
+    color: #047857;
+}
+
+.card__gamebar-result--loss {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.18);
+    color: #b91c1c;
+}
+
+.card__gamebar-score {
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #334155;
+    font-variant-numeric: tabular-nums;
+}
+
+.card__gamebar-extra-time {
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #94a3b8;
+}
+
+/* ==============================
+   Skater hero
+   ============================== */
+.card__hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding: 0.75rem 0 0.55rem;
+}
+
+.card__hero--skater {
+    align-items: center;
+}
+
+.card__hero-value-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.18rem;
+    color: var(--accent, #3b82f6);
+    flex-shrink: 0;
+}
+
+.card__hero-value {
+    font-size: 2.8rem;
+    line-height: 0.9;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+.card__hero-unit {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.card__hero-meta {
+    display: grid;
+    gap: 0.15rem;
+    min-width: 0;
+    justify-items: center;
+    text-align: center;
+}
+
+.card__hero-meta strong {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+}
+
+.card__hero-meta small {
+    font-size: 0.72rem;
+    color: #64748b;
+    line-height: 1.35;
+}
+
+/* ==============================
+   Primary Stat Ring
+   ============================== */
+.card__stat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding: 0.75rem 0 0.55rem;
+}
+
+.card__ring {
+    width: 84px;
+    height: 84px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background:
+        radial-gradient(closest-side, white 78%, transparent 79% 100%),
+        conic-gradient(
+            var(--accent, #3b82f6) 0deg var(--progress, 0deg),
+            rgba(0, 0, 0, 0.06) var(--progress, 0deg) 360deg
+        );
+    box-shadow:
+        0 0 0 8px color-mix(in srgb, var(--accent, #3b82f6) 8%, white),
+        0 0 20px color-mix(in srgb, var(--accent, #3b82f6) 15%, transparent);
+    transition: box-shadow 300ms ease;
+}
+
+.card:hover .card__ring {
+    box-shadow:
+        0 0 0 8px color-mix(in srgb, var(--accent, #3b82f6) 12%, white),
+        0 0 28px color-mix(in srgb, var(--accent, #3b82f6) 25%, transparent);
+}
+
+.card__ring span {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--accent, #3b82f6);
+    line-height: 1;
+}
+
+.card__ring--empty {
+    background: radial-gradient(closest-side, white 78%, transparent 79% 100%),
+        conic-gradient(#d1d5db 0deg 0deg, rgba(0, 0, 0, 0.06) 0deg 360deg);
+    box-shadow: 0 0 0 8px rgba(209, 213, 219, 0.15);
+}
+
+.card__ring--empty span {
+    color: #d1d5db;
+    font-size: 1.5rem;
+}
+
+/* ==============================
+   Stat meta text
+   ============================== */
+.card__stat-meta {
+    display: grid;
+    gap: 0.2rem;
+    min-width: 0;
+    justify-items: center;
+    text-align: center;
+}
+
+.card__stat-meta strong {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    letter-spacing: 0.01em;
+}
+
+.card__stat-meta small {
+    font-size: 0.72rem;
+    color: #9ca3af;
+    line-height: 1.35;
+}
+
+/* ==============================
+   Supporting stats row
+   ============================== */
+.card__sub-stats {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    row-gap: 0.55rem;
+    padding: 0.75rem 0 0.4rem;
+    border-top: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.card__sub-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    min-width: 3.1rem;
+}
+
+.card__sub-stat-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.2;
+}
+
+.card__sub-stat-label {
+    font-size: 0.6rem;
+    color: #9ca3af;
+    letter-spacing: 0.01em;
+}
+
+/* ==============================
+   Expanded details
+   ============================== */
+.card__details {
     margin-top: 0.5rem;
-    clear: both;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(229, 231, 235, 0.5);
+    display: grid;
+    gap: 0.35rem;
 }
 
-.player-card__mid {
-    min-height: 0;
-    align-self: center;
+.card__detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #4b5563;
 }
 
-.player-card__mid .player-card__stats {
-    margin-top: 0;
+.card__detail-label {
+    color: #9ca3af;
+    font-weight: 500;
 }
 
-/* When stats wrap to multiple rows, ensure proper row spacing */
-.player-card__stats-grid {
-    background: rgba(15, 23, 42, 0.015);
-    border: 1px solid rgba(148, 163, 184, 0.12);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    row-gap: 1rem;
-    column-gap: 1.5rem;
+.card__detail-actions {
+    margin-top: 0.25rem;
 }
 
-/* Fix modal overlay z-index issues */
-.fixed {
-    z-index: 50;
+.card__detail-btn {
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--accent, #3b82f6);
+    background: transparent;
+    color: var(--accent, #3b82f6);
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 150ms ease;
 }
 
-/* Ensure proper pointer events for card faces */
-.player-card:not(.flipped) .player-card__face--back {
-    pointer-events: none;
+.card__detail-btn:hover {
+    background: var(--accent, #3b82f6);
+    color: white;
 }
 
-.player-card.flipped .player-card__face--front {
-    pointer-events: none;
+/* ==============================
+   Footer strip
+   ============================== */
+.card__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.25rem;
 }
 
-.player-card:not(.flipped) .player-card__face--front {
-    pointer-events: auto;
+.card__footer-hint {
+    font-size: 0.6rem;
+    color: #cbd5e1;
 }
 
-.player-card.flipped .player-card__face--back {
-    pointer-events: auto;
+.card__footer-btn {
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    border: none;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 150ms ease;
 }
 
-/* Fix potential content clipping */
-.overflow-hidden {
-    overflow: hidden;
+.card__footer-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
 }
 
-/* Card click area hover effects */
-.player-card__face.cursor-pointer {
-    transition: box-shadow 0.2s ease;
+/* ==============================
+   Back card stats
+   ============================== */
+.card--back .card__content {
+    gap: 0.5rem;
 }
 
-.player-card__face.cursor-pointer:hover {
-    box-shadow: 0 8px 30px -5px rgba(0, 0, 0, 0.12);
+.card__back-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 0.5rem 0;
 }
 
-/* Modal avatar for season stats */
+.card__back-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.5rem;
+    border-radius: 12px;
+    background: rgba(243, 244, 246, 0.5);
+}
+
+.card__back-stat-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.card__back-stat-label {
+    font-size: 0.65rem;
+    color: #9ca3af;
+    letter-spacing: 0.01em;
+}
+
+.card__time-on-ice {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #6b7280;
+    padding: 0.5rem;
+    border-radius: 10px;
+    background: rgba(243, 244, 246, 0.5);
+}
+
+.card__time-on-ice strong {
+    color: #111827;
+}
+
+/* ==============================
+   Modal
+   ============================== */
 .player-card__modal-avatar {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
     border-radius: 9999px;
     background: linear-gradient(135deg, #e2e8f0, #f8fafc);
-    box-shadow:
-        0 6px 16px rgba(15, 23, 42, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(148, 163, 184, 0.4);
     display: flex;
     align-items: center;
@@ -339,113 +696,118 @@
     position: relative;
 }
 
-/* Noise texture for modal avatar */
-.player-card__modal-avatar::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.08;
-    z-index: 1;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    mix-blend-mode: overlay;
-    border-radius: inherit;
-}
-
 .player-card__modal-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: inherit;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.player-card__modal-photo.blurred {
+    opacity: 0;
+    filter: blur(4px);
+}
+
+.player-card__modal-photo-lqip {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(6px);
+    transform: scale(1.1);
+    z-index: -1;
 }
 
 .player-card__modal-initials {
-    font-weight: 700;
+    font-weight: 600;
     color: #0f172a;
-    font-size: 1.1rem;
+    font-size: 1rem;
     letter-spacing: 0.03em;
 }
 
-.player-card__modal-subtitle {
-    margin-top: 0.2rem;
-}
+/* ==============================
+   Mobile adjustments
+   ============================== */
+@media (max-width: 767px) {
+    .card {
+        padding: 1.05rem 1rem 0.95rem;
+        border-radius: 16px;
+    }
 
-/* Grid layout classes for stats */
-.player-card__stats-grid--goalie-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
+    .card__content {
+        gap: 0.75rem;
+    }
 
-/* Bigger stat values and labels */
-.player-card__stat-value {
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-}
+    .card__ring {
+        width: 72px;
+        height: 72px;
+    }
 
-.player-card__stat-label {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    letter-spacing: 0.05em;
-}
+    .card__ring span {
+        font-size: 1.1rem;
+    }
 
-.player-card__stats-grid--goalie-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
+    .card__name {
+        font-size: 0.95rem;
+    }
 
-.player-card__stats-grid--goalie-4 {
-    grid-template-columns: repeat(2, 1fr);
-}
+    .card__team-logo-vis {
+        width: 28px;
+        height: 28px;
+    }
 
-.player-card__stats-grid--skater-1 {
-    grid-template-columns: repeat(1, 1fr);
-}
+    .card__team-name-text {
+        font-size: 0.75rem;
+    }
 
-.player-card__stats-grid--skater-2 {
-    grid-template-columns: repeat(2, 1fr);
-}
+    .card__corner-logo {
+        width: 2.2rem;
+        height: 2.2rem;
+    }
 
-.player-card__stats-grid--skater-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
+    .card__gamebar {
+        align-items: flex-start;
+        padding: 0.6rem 0.68rem;
+    }
 
-.player-card__stats-grid--skater-4 {
-    grid-template-columns: repeat(4, 1fr);
-}
+    .card__gamebar-matchup {
+        font-size: 0.72rem;
+    }
 
-.player-card__stats-grid--skater-5 {
-    grid-template-columns: repeat(5, 1fr);
-}
+    .card__gamebar-score {
+        font-size: 0.86rem;
+    }
 
-.player-card__advanced-stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-}
+    .card__hero {
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+    }
 
-/* Center single stat when only one is present */
-.player-card__stats-grid--single {
-    grid-template-columns: repeat(1, 1fr);
-    justify-content: center;
-}
+    .card__hero-value {
+        font-size: 2.3rem;
+    }
 
-/* Image transition for LQIP */
-.player-card__modal-photo {
-    transition:
-        filter 0.3s ease,
-        opacity 0.3s ease;
-}
+    .card__hero-unit {
+        font-size: 0.82rem;
+    }
 
-/* Double border for team score logo background */
-.player-card__team-score-logo-bg--away,
-.player-card__team-score-logo-bg--home {
-    border: 3px double rgba(255, 255, 255, 0.6);
-    outline: 1px solid rgba(255, 255, 255, 0.3);
-    outline-offset: 2px;
-}
+    .card__hero-meta strong {
+        font-size: 0.88rem;
+    }
 
-/* Inline Empty Net Goal Indicator */
-.player-card__eng-indicator {
-    font-size: 0.75rem;
-    margin-left: 2px;
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
-    cursor: help;
+    .card__stat {
+        gap: 0.65rem;
+        padding-top: 0.5rem;
+    }
+
+    .card__sub-stats {
+        gap: 0.9rem;
+    }
+
+    .card__back-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
 }
