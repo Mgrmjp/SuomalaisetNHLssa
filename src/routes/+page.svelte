@@ -333,22 +333,19 @@ onMount(() => {
         <!-- SEO Content Section -->
         <section class="mt-12 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">
-                Suomi NHL – Suomalaiset jääkiekkoilijat NHL-liigassa
+                Suomi NHL
             </h2>
             <div class="space-y-4 text-gray-700 leading-relaxed">
                 <p>
-                    Suomi on yksi jääkiekon suurimmista NHL-maista. Tällä sivustolla voit seurata
-                    kaikkien suomalaisten NHL-pelaajien tilastoja ottelu kerrallaan. Sivusto näyttää
-                    suomalaisten pelaajien maalit, syötöt, pisteet ja jääajat reaaliajassa.
+                    Täältä löydät kaikki suomalaispelaajat NHL:ssä. Sivusto näyttää jokaisen pelin
+                    tilastot: maalit, syötöt, pisteet ja jääajat. Päivittyy pelien aikana.
                 </p>
                 <p>
-                    NHL on maailman arvostetuin jääkiekkosarja, ja Suomi on kautta aikain tuottanut
-                    sarjaan kymmeniä huippupelaajia. Seuraa kuinka suomalaiset menestyvät NHL:ssä
-                    päivittäin – olipa kyseessä maalintekijät, syöttäjät tai maalivahdit.
+NHL:ssä pelaa aina suomalaisia. Miro Heiskanen, Sebastian Aho, Oliver Kapanen
+                    ja monet muut edustavat Suomea illasta toiseen.
                 </p>
                 <p>
-                    Sivusto päivittyy automaattisesti NHL:n virallisista lähteistä, joten saat
-                    aina ajantasaiset tiedot suomalaisten NHL-otteluista ja tilastoista.
+                    Tilastot tulevat suoraan NHL:n virallisista lähteistä.
                 </p>
             </div>
         </section>
