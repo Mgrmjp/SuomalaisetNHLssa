@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-04-07T07:31:49.700180",
+  "updatedAt": "2026-04-08T07:32:26.550466",
   "sources": [
     {
       "name": "EliteProspects.com",
@@ -3608,27 +3608,6 @@
       "players": [
         {
           "rank": 15,
-          "name": "Oliver Suvanto",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2008-09-03",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'3\"",
-            "metrics": 190
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 209,
-            "metrics": 95
-          },
-          "playerId": "925061"
-        },
-        {
-          "rank": 16,
           "name": "Oscar Hemming",
           "firstName": null,
           "lastName": null,
@@ -3649,7 +3628,28 @@
           "playerId": "927671"
         },
         {
-          "rank": 20,
+          "rank": 16,
+          "name": "Oliver Suvanto",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-09-03",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "925061"
+        },
+        {
+          "rank": 19,
           "name": "Juho Piiparinen",
           "firstName": null,
           "lastName": null,
