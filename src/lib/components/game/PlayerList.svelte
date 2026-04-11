@@ -6,9 +6,10 @@ import { FreeMode, Mousewheel } from 'swiper/modules'
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import MobileAdBanner from '$lib/components/ui/MobileAdBanner.svelte'
-import { displayDate, error, isLoading, players, setDate } from '$lib/stores/gameData.js'
+import { currentBreak, displayDate, error, games, isLoading, players, setDate } from '$lib/stores/gameData.js'
 import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 import PlayerCard from './PlayerCard.svelte'
+import EmptyState from './EmptyState.svelte'
 import SkeletonPlayerCard from './SkeletonPlayerCard.svelte'
 
 let forwardsSwiper = null
@@ -211,11 +212,24 @@ const goalies = $derived(sortGoalies(filteredPlayers.filter((p) => isGoalie(p)))
 
 const hasAnyPlayers = $derived(forwards.length + defenders.length + goalies.length > 0)
 
+// Determine if there are no games today
+const hasNoGames = $derived(!$isLoading && (!$games || !$games.games || $games.games.length === 0))
+
+// Determine if we're in a break
+const isBreak = $derived($currentBreak !== null)
+
+// Determine which empty state to show
+const emptyStateVariant = $derived.by(() => {
+    if (isBreak) return 'break'
+    if (hasNoGames) return 'no-games'
+    return 'no-scorers'
+})
+
 // Use $derived for the mobile ad position
 const mobileAdPosition = $derived(_mobileAdPosition)
 </script>
 
-{#if $isLoading || (!$players || $players.length === 0)}
+{#if $isLoading}
     <div class="py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7">
             {#each [1,2,3,4,5,6] as _}
@@ -232,178 +246,116 @@ const mobileAdPosition = $derived(_mobileAdPosition)
             variant="error"
         />
     </div>
+{:else if !hasAnyPlayers}
+    <EmptyState variant={emptyStateVariant} />
 {:else}
     <section id="scoringList" class="scoring-list py-12 bg-gray-50/50">
         <div class="scoring-list__container w-full">
-            {#if !hasAnyPlayers && $isLoading === false}
-                <div
-                    class="scoring-list__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                >
-                    <div
-                        class="scoring-list__empty-state col-span-2 md:col-span-2 lg:col-span-2 lg:col-start-2 xl:col-span-2 xl:col-start-2 bg-white rounded-lg shadow-lg p-6 relative overflow-hidden min-h-[220px] flex items-center justify-center"
-                        style="border: 1px solid transparent; background: linear-gradient(white, white) padding-box, linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa) border-box;"
-                    >
-                        <!-- Subtle background pattern -->
+            <div class="scoring-list__sections space-y-10">
+                {#if forwards.length}
+                    <div class="scoring-list__section space-y-4">
                         <div
-                            class="scoring-list__empty-bg absolute inset-0 bg-gradient-to-br from-finnish-blue-50/30 to-transparent opacity-50"
-                        ></div>
-
-                        <!-- Content -->
-                        <div class="scoring-list__empty-content relative z-10 text-center">
-                            <div
-                                class="scoring-list__empty-icon w-16 h-16 bg-finnish-blue-100 rounded-lg flex items-center justify-center mb-4 mx-auto"
+                            class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                        >
+                            <h2
+                                class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                             >
-                                <svg
-                                    viewBox="-0.5 0 25 25"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-8 h-8"
-                                >
-                                    <path
-                                        d="M12 14.5C13.1046 14.5 14 13.6046 14 12.5C14 11.3954 13.1046 10.5 12 10.5C10.8954 10.5 10 11.3954 10 12.5C10 13.6046 10.8954 14.5 12 14.5Z"
-                                        stroke="#1e40af"
-                                        stroke-miterlimit="10"
-                                        fill="none"
-                                    ></path>
-                                    <path
-                                        d="M19.5 14.5C20.6046 14.5 21.5 13.6046 21.5 12.5C21.5 11.3954 20.6046 10.5 19.5 10.5C18.3954 10.5 17.5 11.3954 17.5 12.5C17.5 13.6046 18.3954 14.5 19.5 14.5Z"
-                                        stroke="#1e40af"
-                                        stroke-miterlimit="10"
-                                        fill="none"
-                                    ></path>
-                                    <path
-                                        d="M4.5 14.5C5.60457 14.5 6.5 13.6046 6.5 12.5C6.5 11.3954 5.60457 10.5 4.5 10.5C3.39543 10.5 2.5 11.3954 2.5 12.5C2.5 13.6046 3.39543 14.5 4.5 14.5Z"
-                                        stroke="#1e40af"
-                                        stroke-miterlimit="10"
-                                        fill="none"
-                                    ></path>
-                                </svg>
+                                Hyökkääjät
+                            </h2>
+                        </div>
+                        <!-- Desktop Grid -->
+                        <div
+                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
+                        >
+                            {#each forwards as player, index (`${player.playerId}-${index}`)}
+                                <PlayerCard {player} />
+                            {/each}
+                        </div>
+                        <!-- Mobile Swiper -->
+                        <div class="swiper swiper-forwards md:hidden">
+                            <div class="swiper-wrapper">
+                                {#each forwards as player, index (`${player.playerId}-${index}-mobile`)}
+                                    <div class="swiper-slide mobile-card-slide">
+                                        <PlayerCard {player} />
+                                    </div>
+                                {/each}
                             </div>
-                            <h3
-                                class="scoring-list__empty-title text-lg font-semibold text-gray-900 mb-2"
-                            >
-                                Ei suomalaista pisteidentekijää
-                            </h3>
-                            <p
-                                class="scoring-list__empty-text text-sm text-gray-600 leading-relaxed max-w-sm mx-auto"
-                            >
-                                Yhtään suomalaispelaajaa ei ole merkitty pisteille tai dataa ei ole
-                                vielä saatavilla päivälle
-                                <span
-                                    class="scoring-list__empty-date font-semibold text-finnish-blue-900"
-                                    >{$displayDate}</span
-                                >.
-                            </p>
                         </div>
                     </div>
-                </div>
-            {:else}
-                <div class="scoring-list__sections space-y-10">
-                    {#if forwards.length}
-                        <div class="scoring-list__section space-y-4">
-                            <div
-                                class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
-                            >
-                                <h2
-                                    class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
-                                >
-                                    Hyökkääjät
-                                </h2>
-                            </div>
-                            <!-- Desktop Grid -->
-                            <div
-                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
-                            >
-                                {#each forwards as player, index (`${player.playerId}-${index}`)}
-                                    <PlayerCard {player} />
-                                {/each}
-                            </div>
-                            <!-- Mobile Swiper -->
-                            <div class="swiper swiper-forwards md:hidden">
-                                <div class="swiper-wrapper">
-                                    {#each forwards as player, index (`${player.playerId}-${index}-mobile`)}
-                                        <div class="swiper-slide mobile-card-slide">
-                                            <PlayerCard {player} />
-                                        </div>
-                                    {/each}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="h-8 md:block hidden"></div>
-                        {#if mobileAdPosition === 0}
-                            <MobileAdBanner />
-                        {/if}
+                    <div class="h-8 md:block hidden"></div>
+                    {#if mobileAdPosition === 0}
+                        <MobileAdBanner />
                     {/if}
+                {/if}
 
-                    {#if defenders.length}
-                        <div class="scoring-list__section space-y-4">
-                            <div
-                                class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                {#if defenders.length}
+                    <div class="scoring-list__section space-y-4">
+                        <div
+                            class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                        >
+                            <h2
+                                class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                             >
-                                <h2
-                                    class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
-                                >
-                                    Puolustajat
-                                </h2>
-                            </div>
-                            <!-- Desktop Grid -->
-                            <div
-                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
-                            >
-                                {#each defenders as player, index (`${player.playerId}-${index}`)}
-                                    <PlayerCard {player} />
+                                Puolustajat
+                            </h2>
+                        </div>
+                        <!-- Desktop Grid -->
+                        <div
+                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
+                        >
+                            {#each defenders as player, index (`${player.playerId}-${index}`)}
+                                <PlayerCard {player} />
+                            {/each}
+                        </div>
+                        <!-- Mobile Swiper -->
+                        <div class="swiper swiper-defenders md:hidden">
+                            <div class="swiper-wrapper">
+                                {#each defenders as player, index (`${player.playerId}-${index}-mobile`)}
+                                    <div class="swiper-slide mobile-card-slide">
+                                        <PlayerCard {player} />
+                                    </div>
                                 {/each}
                             </div>
-                            <!-- Mobile Swiper -->
-                            <div class="swiper swiper-defenders md:hidden">
-                                <div class="swiper-wrapper">
-                                    {#each defenders as player, index (`${player.playerId}-${index}-mobile`)}
-                                        <div class="swiper-slide mobile-card-slide">
-                                            <PlayerCard {player} />
-                                        </div>
-                                    {/each}
-                                </div>
-                            </div>
                         </div>
-                        <div class="h-8 md:block hidden"></div>
-                        {#if mobileAdPosition === 1}
-                            <MobileAdBanner />
-                        {/if}
+                    </div>
+                    <div class="h-8 md:block hidden"></div>
+                    {#if mobileAdPosition === 1}
+                        <MobileAdBanner />
                     {/if}
+                {/if}
 
-                    {#if goalies.length}
-                        <div class="scoring-list__section space-y-4">
-                            <div
-                                class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                {#if goalies.length}
+                    <div class="scoring-list__section space-y-4">
+                        <div
+                            class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
+                        >
+                            <h2
+                                class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
                             >
-                                <h2
-                                    class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
-                                >
-                                    Maalivahdit
-                                </h2>
-                            </div>
-                            <!-- Desktop Grid -->
-                            <div
-                                class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
-                            >
-                                {#each goalies as player, index (`${player.playerId}-${index}`)}
-                                    <PlayerCard {player} />
+                                Maalivahdit
+                            </h2>
+                        </div>
+                        <!-- Desktop Grid -->
+                        <div
+                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
+                        >
+                            {#each goalies as player, index (`${player.playerId}-${index}`)}
+                                <PlayerCard {player} />
+                            {/each}
+                        </div>
+                        <!-- Mobile Swiper -->
+                        <div class="swiper swiper-goalies md:hidden">
+                            <div class="swiper-wrapper">
+                                {#each goalies as player, index (`${player.playerId}-${index}-mobile`)}
+                                    <div class="swiper-slide mobile-card-slide">
+                                        <PlayerCard {player} />
+                                    </div>
                                 {/each}
                             </div>
-                            <!-- Mobile Swiper -->
-                            <div class="swiper swiper-goalies md:hidden">
-                                <div class="swiper-wrapper">
-                                    {#each goalies as player, index (`${player.playerId}-${index}-mobile`)}
-                                        <div class="swiper-slide mobile-card-slide">
-                                            <PlayerCard {player} />
-                                        </div>
-                                    {/each}
-                                </div>
-                            </div>
                         </div>
-                    {/if}
-                </div>
-            {/if}
+                    </div>
+                {/if}
+            </div>
         </div>
     </section>
 {/if}

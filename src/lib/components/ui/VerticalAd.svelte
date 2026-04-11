@@ -73,14 +73,16 @@ onDestroy(() => {
                 class:active={index === currentAdIndex}
                 class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
-                <img
-                    src={ad.src}
-                    width={_width}
-                    height={_height}
-                    alt={ad.alt}
-                    class="ad-img"
-                />
-                <span class="ad-disclaimer">Mainos</span>
+                <div class="ad-content-wrapper">
+                    <img
+                        src={ad.src}
+                        width={_width}
+                        height={_height}
+                        alt={ad.alt}
+                        class="ad-img"
+                    />
+                    <span class="ad-disclaimer">Mainos</span>
+                </div>
             </a>
         {/each}
     </div>
@@ -148,11 +150,21 @@ onDestroy(() => {
         position: absolute;
         top: 0;
         left: 0;
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
         border: none;
         opacity: 0;
         transition: opacity 1s ease-in-out;
         pointer-events: none;
+    }
+
+    .ad-content-wrapper {
+        position: relative;
+        display: inline-block;
+        line-height: 0;
     }
 
     .ad-link.active {
@@ -176,16 +188,17 @@ onDestroy(() => {
     .ad-disclaimer {
         position: absolute;
         top: 8px;
-        right: 8px;
+        right: 0;
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
         font-size: 10px;
         font-weight: 600;
         padding: 3px 6px;
-        border-radius: 4px;
+        border-radius: 4px 0 0 4px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         pointer-events: none;
+        z-index: 1;
     }
 
     @media (prefers-reduced-motion: reduce) {
