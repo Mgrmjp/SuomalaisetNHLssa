@@ -35,6 +35,19 @@ jobs:
           pip install --upgrade pip
           pip install -r scripts/data_collection/requirements.txt
 
+      - name: Validate Finnish players cache
+        run: |
+          source .venv/bin/activate
+          # Run validation to check for missing Finnish players
+          # Exit code 2 means missing players found, 0 means all good
+          python scripts/data_collection/finnish/validate_finnish_players.py || VALIDATION_EXIT=$?
+          
+          # If validation found missing players (exit code 2), rebuild cache
+          if [ "${VALIDATION_EXIT:-0}" = "2" ]; then
+            echo "⚠️ Missing Finnish players detected, rebuilding cache..."
+            python scripts/data_collection/finnish/build_cache.py
+          fi
+
       - name: Fetch today's data
         run: |
           source .venv/bin/activate
@@ -50,7 +63,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add static/data/prepopulated/games/ static/data/players/finnish-roster.json
-          git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
+          git diff --cached --quiet || git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git push
 
       - name: Regenerate games manifest
