@@ -425,6 +425,30 @@
     "birthDate": "1995-10-02"
   },
   {
+    "id": "8477476",
+    "name": "Artturi Lehkonen",
+    "birthDate": "1995-07-04",
+    "position": "Wing",
+    "currentTeam": "Colorado Avalanche",
+    "sources": [
+      "thesportsdb"
+    ],
+    "league": "NHL",
+    "stats": {
+      "gp": 69,
+      "goals": 21,
+      "assists": 27,
+      "points": 48,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20252026,
+    "hasCurrentSeasonStats": true,
+    "nhlRights": "N/A",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png"
+  },
+  {
     "id": "8451362",
     "name": "Risto Siltanen",
     "birthDate": "1958-10-31",
@@ -447,30 +471,6 @@
     "nhlRights": "N/A",
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8451362.png",
     "position": "D"
-  },
-  {
-    "id": "8477476",
-    "name": "Artturi Lehkonen",
-    "birthDate": "1995-07-04",
-    "position": "Wing",
-    "currentTeam": "Colorado Avalanche",
-    "sources": [
-      "thesportsdb"
-    ],
-    "league": "NHL",
-    "stats": {
-      "gp": 68,
-      "goals": 20,
-      "assists": 27,
-      "points": 47,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20252026,
-    "hasCurrentSeasonStats": true,
-    "nhlRights": "N/A",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png"
   },
   {
     "id": "8479511",
@@ -645,30 +645,6 @@
     "lastSeason": 20252026,
     "hasCurrentSeasonStats": {},
     "birthDate": "2000-05-04"
-  },
-  {
-    "id": "8471350",
-    "name": "Pasi Salonen",
-    "birthDate": "1985-12-18",
-    "sources": [
-      "wikidata"
-    ],
-    "currentTeam": "Hull Pirates",
-    "league": "EPIHL",
-    "stats": {
-      "gp": 40,
-      "goals": 22,
-      "assists": 21,
-      "points": 43,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20152016,
-    "hasCurrentSeasonStats": {},
-    "nhlRights": "N/A",
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8471350.png",
-    "position": "L"
   },
   {
     "id": "8479501",
@@ -978,10 +954,10 @@
     "currentTeam": "Anaheim Ducks",
     "league": "NHL",
     "stats": {
-      "gp": 56,
+      "gp": 57,
       "goals": 19,
-      "assists": 18,
-      "points": 37,
+      "assists": 19,
+      "points": 38,
       "savePct": 0.0,
       "gaa": 0.0,
       "shutouts": 0
@@ -1180,9 +1156,10 @@
     "league": "Liiga",
     "headshot": "https://liiga-backend-prod.s3.eu-north-1.amazonaws.com/2026/651304385%3Atps/27023853.png",
     "sources": [
-      "league_file:league_prospects_official"
+      "league_file:league_prospects_official",
+      "league_file:league_prospects_advanced"
     ],
-    "position": "KH",
+    "position": "P",
     "stats": {
       "gp": 53,
       "goals": 20,
@@ -2033,7 +2010,7 @@
     "currentTeam": "Los Angeles Kings",
     "league": "NHL",
     "stats": {
-      "gp": 65,
+      "gp": 66,
       "goals": 13,
       "assists": 12,
       "points": 25,
@@ -2357,10 +2334,9 @@
     "league": "Liiga",
     "headshot": "https://liiga-backend-prod.s3.eu-north-1.amazonaws.com/2026/624554857%3Alukko/32194874.png",
     "sources": [
-      "league_file:league_prospects_official",
-      "league_file:league_prospects_advanced"
+      "league_file:league_prospects_official"
     ],
-    "position": "P",
+    "position": "KH",
     "stats": {
       "gp": 53,
       "goals": 10,
@@ -2728,8 +2704,8 @@
   },
   {
     "id": "8448746",
-    "name": "Antero Lehtonen",
-    "birthDate": "1954-04-12",
+    "name": "Antero Kivelä",
+    "birthDate": "1955-12-26",
     "sources": [
       "wikidata"
     ],
@@ -2974,8 +2950,8 @@
   },
   {
     "id": "8449924",
-    "name": "Teppo Kivelä",
-    "birthDate": "1967-10-08",
+    "name": "Teppo Numminen",
+    "birthDate": "1968-07-03",
     "sources": [
       "wikidata"
     ],
@@ -3314,7 +3290,7 @@
     "headshot": "https://www.mestis.fi/media/players/Antikainen_Aatu_5.png.600x750_q85_box-0%2C0%2C575%2C720.png",
     "position": "P",
     "stats": {
-      "gp": 64,
+      "gp": 65,
       "goals": 4,
       "assists": 10,
       "points": 14,
@@ -3424,8 +3400,8 @@
   },
   {
     "id": "8457250",
-    "name": "Petri Kokko",
-    "birthDate": "1975-02-01",
+    "name": "Petri Ylönen",
+    "birthDate": "1962-10-02",
     "sources": [
       "wikidata",
       "league_file:league_prospects_advanced"
@@ -3572,8 +3548,8 @@
   },
   {
     "id": "8455413",
-    "name": "Mika Oksa",
-    "birthDate": "1976-07-06",
+    "name": "Mika Lehtinen",
+    "birthDate": "1975-05-23",
     "sources": [
       "wikidata"
     ],
@@ -3720,8 +3696,8 @@
   },
   {
     "id": "8475198",
-    "name": "Joonas Nättinen",
-    "birthDate": "1991-01-03",
+    "name": "Joonas Järvinen",
+    "birthDate": "1989-01-05",
     "sources": [
       "wikidata",
       "league_file:league_prospects_official"
@@ -4366,10 +4342,10 @@
   },
   {
     "id": "8471471",
-    "name": "Anttila, Eetu",
+    "name": "Haikonen, Antti",
     "currentTeam": "Kärpät",
     "league": "Liiga",
-    "headshot": "https://www.mestis.fi/media/players/32-eetu-anttila.png.600x750_q85_box-85%2C24%2C557%2C614.png",
+    "headshot": "https://www.mestis.fi/media/players/HAIKONEN-ANTTI.png.600x750_q85_box-18%2C0%2C1872%2C2319.png",
     "sources": [
       "league_file:league_prospects_advanced"
     ],
@@ -4398,7 +4374,7 @@
     "currentTeam": "Carolina Hurricanes",
     "league": "NHL",
     "stats": {
-      "gp": 41,
+      "gp": 42,
       "goals": 2,
       "assists": 7,
       "points": 9,
@@ -4813,6 +4789,30 @@
     "birthDate": "1973-01-08"
   },
   {
+    "id": "8478564",
+    "name": "Joonas Kemppainen",
+    "birthDate": "1988-04-07",
+    "sources": [
+      "wikidata"
+    ],
+    "currentTeam": "Kärpät",
+    "league": "Liiga",
+    "stats": {
+      "gp": 12,
+      "goals": 4,
+      "assists": 3,
+      "points": 7,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20232024,
+    "hasCurrentSeasonStats": false,
+    "nhlRights": "N/A",
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8478564.png",
+    "position": "C"
+  },
+  {
     "id": "8475893",
     "name": "Joonas Rask",
     "birthDate": "1990-03-24",
@@ -4950,7 +4950,7 @@
     "headshot": "https://assets.leaguestat.com/ahl/240x240/9649.jpg",
     "position": "LW",
     "stats": {
-      "gp": 38,
+      "gp": 39,
       "goals": 2,
       "assists": 5,
       "points": 7,
@@ -4967,13 +4967,10 @@
     "name": "Antti-Jussi Miettinen",
     "birthDate": "1983-03-30",
     "sources": [
-      "wikidata",
-      "league_file:league_prospects_advanced"
+      "wikidata"
     ],
     "currentTeam": "Jokerit",
     "league": "Finland",
-    "headshot": "https://www.mestis.fi/media/players/HAIKONEN-ANTTI.png.600x750_q85_box-18%2C0%2C1872%2C2319.png",
-    "position": "H",
     "stats": {
       "gp": 32,
       "goals": 2,
@@ -4985,7 +4982,9 @@
     },
     "lastSeason": 20132014,
     "hasCurrentSeasonStats": false,
-    "nhlRights": "N/A"
+    "nhlRights": "N/A",
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8465034.png",
+    "position": "D"
   },
   {
     "id": "8483471",
@@ -5003,7 +5002,7 @@
     "currentTeam": "Winnipeg Jets",
     "league": "NHL",
     "stats": {
-      "gp": 23,
+      "gp": 24,
       "goals": 3,
       "assists": 3,
       "points": 6,
@@ -5090,18 +5089,14 @@
     "id": "8483497",
     "name": "Jani Nyman",
     "nhlRights": "SEA",
-    "position": "P",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/SEA/8483497.png",
-    "height": 188,
-    "weight": 96,
-    "birthDate": "2004-07-30",
     "sources": [
-      "team_prospects:SEA",
       "draft_picks:2022",
       "league_file:league_prospects_advanced"
     ],
     "currentTeam": "Seattle Kraken",
     "league": "NHL",
+    "headshot": "https://www.mestis.fi/media/players/Kiekko-Vantaa-Nooa_Nyman-2264-20250829.png.600x750_q85_box-29%2C37%2C639%2C800.png",
+    "position": "P",
     "stats": {
       "gp": 26,
       "goals": 4,
@@ -5112,7 +5107,8 @@
       "shutouts": 0
     },
     "lastSeason": 20252026,
-    "hasCurrentSeasonStats": true
+    "hasCurrentSeasonStats": true,
+    "birthDate": "2004-07-30"
   },
   {
     "id": "8485076",
@@ -5216,30 +5212,6 @@
     "hasCurrentSeasonStats": {},
     "nhlRights": "N/A",
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8486046.png"
-  },
-  {
-    "id": "8457753",
-    "name": "Rauli Virtanen",
-    "birthDate": "1939-01-04",
-    "sources": [
-      "wikidata"
-    ],
-    "currentTeam": "Vaxjo",
-    "league": "Sweden-4",
-    "stats": {
-      "gp": 5,
-      "goals": 0,
-      "assists": 6,
-      "points": 6,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20002001,
-    "hasCurrentSeasonStats": {},
-    "nhlRights": "N/A",
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8457753.png",
-    "position": "L"
   },
   {
     "id": "8480846",
@@ -5843,13 +5815,15 @@
   },
   {
     "id": "8473612",
-    "name": "Jan-Mikael Järvinen",
+    "name": "Jan-Mikael Juutilainen",
+    "birthDate": "1988-01-05",
+    "sources": [
+      "wikidata",
+      "league_file:league_prospects_official"
+    ],
     "currentTeam": "KooKoo",
     "league": "Liiga",
     "headshot": "https://liiga-backend-prod.s3.eu-north-1.amazonaws.com/2026/679171680%3A%C3%A4ss%C3%A4t/21848539.png",
-    "sources": [
-      "league_file:league_prospects_official"
-    ],
     "position": "KH",
     "stats": {
       "gp": 45,
@@ -5862,8 +5836,7 @@
     },
     "lastSeason": 20172018,
     "hasCurrentSeasonStats": {},
-    "nhlRights": "N/A",
-    "birthDate": "1988-01-05"
+    "nhlRights": "N/A"
   },
   {
     "id": "8474761",
@@ -5966,8 +5939,8 @@
   },
   {
     "id": "8457909",
-    "name": "Keijo Kivelä",
-    "birthDate": "1956-06-19",
+    "name": "Keijo Kuusela",
+    "birthDate": "1921-01-06",
     "sources": [
       "wikidata"
     ],
@@ -6510,8 +6483,8 @@
   },
   {
     "id": "8469638",
-    "name": "Jussi Makkonen",
-    "birthDate": "1985-04-24",
+    "name": "Jussi Jokinen",
+    "birthDate": "1983-04-01",
     "sources": [
       "wikidata",
       "league_file:league_prospects_official"
@@ -6684,30 +6657,6 @@
     "hasCurrentSeasonStats": {},
     "nhlRights": "N/A",
     "birthDate": "1996-05-23"
-  },
-  {
-    "id": "8477322",
-    "name": "Mustonen, Aleksi",
-    "currentTeam": "Tours",
-    "league": "France2",
-    "headshot": "https://www.mestis.fi/media/players/92-mustonen-aleksi.png.600x750_q85_box-19%2C37%2C595%2C757.png",
-    "sources": [
-      "league_file:league_prospects_advanced"
-    ],
-    "position": "P",
-    "stats": {
-      "gp": 12,
-      "goals": 0,
-      "assists": 3,
-      "points": 3,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20202021,
-    "hasCurrentSeasonStats": {},
-    "nhlRights": "N/A",
-    "birthDate": "1995-02-08"
   },
   {
     "id": "8482757",
@@ -7895,8 +7844,8 @@
   },
   {
     "id": "8468089",
-    "name": "Erkki Lehtonen",
-    "birthDate": "1957-01-09",
+    "name": "Erkki Laine",
+    "birthDate": "1957-09-13",
     "sources": [
       "wikidata"
     ],
@@ -7916,6 +7865,30 @@
     "nhlRights": "N/A",
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8468089.png",
     "position": "L"
+  },
+  {
+    "id": "8460666",
+    "name": "Grönblom, Tom",
+    "currentTeam": "Timra",
+    "league": "Sweden",
+    "headshot": "https://www.mestis.fi/media/players/Tom_Gronblom.png.600x750_q85_box-79%2C39%2C1728%2C2102.png",
+    "sources": [
+      "league_file:league_prospects_advanced"
+    ],
+    "position": "P",
+    "stats": {
+      "gp": 10,
+      "goals": 1,
+      "assists": 0,
+      "points": 1,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20032004,
+    "hasCurrentSeasonStats": {},
+    "nhlRights": "N/A",
+    "birthDate": "1976-02-29"
   },
   {
     "id": "8471974",
@@ -7940,6 +7913,30 @@
     "nhlRights": "N/A",
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8471974.png",
     "position": "D"
+  },
+  {
+    "id": "8462043",
+    "name": "Henritius, Teemu",
+    "currentTeam": "Blues",
+    "league": "Finland",
+    "headshot": "https://www.mestis.fi/media/players/16-henritius-teemu_hY1IqaG.png.600x750_q85_box-27%2C53%2C622%2C797.png",
+    "sources": [
+      "league_file:league_prospects_advanced"
+    ],
+    "position": "H",
+    "stats": {
+      "gp": 5,
+      "goals": 0,
+      "assists": 1,
+      "points": 1,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20052006,
+    "hasCurrentSeasonStats": {},
+    "nhlRights": "N/A",
+    "birthDate": "1977-03-01"
   },
   {
     "id": "8470225",
@@ -8003,7 +8000,7 @@
     "headshot": "https://assets.leaguestat.com/ahl/240x240/7017.jpg",
     "position": "C",
     "stats": {
-      "gp": 12,
+      "gp": 13,
       "goals": 0,
       "assists": 1,
       "points": 1,
@@ -8065,8 +8062,8 @@
   },
   {
     "id": "8468656",
-    "name": "Jukka Laamanen",
-    "birthDate": "1976-10-04",
+    "name": "Jukka Hentunen",
+    "birthDate": "1974-05-03",
     "sources": [
       "wikidata"
     ],
@@ -8113,8 +8110,8 @@
   },
   {
     "id": "8450176",
-    "name": "Kimmo Kapanen",
-    "birthDate": "1974-09-12",
+    "name": "Kimmo Koskenkorva",
+    "birthDate": "1978-06-21",
     "sources": [
       "wikidata"
     ],
@@ -8332,30 +8329,6 @@
     "birthDate": "1975-01-01"
   },
   {
-    "id": "8476874",
-    "name": "Olli Määttä",
-    "birthDate": "1994-08-22",
-    "sources": [
-      "wikidata"
-    ],
-    "currentTeam": "Utah Mammoth",
-    "league": "NHL",
-    "stats": {
-      "gp": 22,
-      "goals": 0,
-      "assists": 1,
-      "points": 1,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20252026,
-    "hasCurrentSeasonStats": true,
-    "nhlRights": "N/A",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20252026/CGY/8476874.png",
-    "position": "D"
-  },
-  {
     "id": "8479339",
     "name": "Patrik Laine",
     "nhlRights": "WPG",
@@ -8413,7 +8386,7 @@
     ],
     "currentTeam": "HPK",
     "league": "Liiga",
-    "headshot": "https://www.mestis.fi/media/players/52-tuomola-riku_OBvJnyA.png.600x750_q85_box-43%2C8%2C593%2C696.png",
+    "headshot": "https://www.mestis.fi/media/players/veikka_hahl.png.600x750_q85_box-0%2C0%2C1080%2C1350.png",
     "position": "H",
     "stats": {
       "gp": 12,
@@ -9127,10 +9100,9 @@
     "league": "SHL",
     "headshot": "https://www.shl.se/imageproxy/player_portrait_6e329659-4166-407f-b6fe-2905b33901f5Emil Larmi.png?type=portrait",
     "sources": [
-      "league_file:league_prospects_official",
-      "league_file:league_prospects_advanced"
+      "league_file:league_prospects_official"
     ],
-    "position": "H",
+    "position": "GK",
     "stats": {
       "gp": 37,
       "goals": 0,
@@ -9196,8 +9168,8 @@
   },
   {
     "id": "8448408",
-    "name": "Hannu Kamppuri",
-    "birthDate": "1957-07-01",
+    "name": "Hannu Järvenpää",
+    "birthDate": "1963-05-19",
     "sources": [
       "wikidata"
     ],
@@ -9729,6 +9701,33 @@
     "position": "G"
   },
   {
+    "id": "8478162",
+    "name": "Jouni Rinne",
+    "birthDate": "1956-03-12",
+    "sources": [
+      "wikidata",
+      "league_file:league_prospects_official",
+      "league_file:league_prospects_advanced",
+      "league_file:league_prospects_na"
+    ],
+    "currentTeam": "Gyergyói HK",
+    "league": "Erste Liga",
+    "position": "F, Fr",
+    "headshot": "https://liiga-backend-prod.s3.eu-north-1.amazonaws.com/2026/626537494%3Asport/34361236.png",
+    "stats": {
+      "gp": 9,
+      "goals": 0,
+      "assists": 0,
+      "points": 0,
+      "savePct": 0.935,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20252026,
+    "hasCurrentSeasonStats": {},
+    "nhlRights": "N/A"
+  },
+  {
     "id": "8484407",
     "name": "Juha Jatkola",
     "nhlRights": "NSH",
@@ -10063,11 +10062,11 @@
     ],
     "position": "H",
     "stats": {
-      "gp": 45,
+      "gp": 46,
       "goals": 0,
       "assists": 1,
       "points": 0,
-      "savePct": 0.875822,
+      "savePct": 0.8768,
       "gaa": 0.0,
       "shutouts": 0
     },
@@ -10737,32 +10736,6 @@
     "birthDate": "2006-04-25"
   },
   {
-    "id": "8478162",
-    "name": "Rasmus Baggström",
-    "currentTeam": "Gyergyói HK",
-    "league": "Erste Liga",
-    "sources": [
-      "league_file:league_prospects_official",
-      "league_file:league_prospects_advanced",
-      "league_file:league_prospects_na"
-    ],
-    "position": "F, Fr",
-    "headshot": "https://liiga-backend-prod.s3.eu-north-1.amazonaws.com/2026/626537494%3Asport/34361236.png",
-    "stats": {
-      "gp": 9,
-      "goals": 0,
-      "assists": 0,
-      "points": 0,
-      "savePct": 0.935,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20252026,
-    "hasCurrentSeasonStats": {},
-    "nhlRights": "N/A",
-    "birthDate": "1990-07-08"
-  },
-  {
     "id": "8482871",
     "name": "Rasmus Korhonen",
     "nhlRights": "ARI",
@@ -10816,10 +10789,13 @@
     "name": "Riku Helenius",
     "birthDate": "1988-03-01",
     "sources": [
-      "wikidata"
+      "wikidata",
+      "league_file:league_prospects_advanced"
     ],
     "currentTeam": "Dresdner Eislöwen",
     "league": "DEL2",
+    "headshot": "https://www.mestis.fi/media/players/52-tuomola-riku_OBvJnyA.png.600x750_q85_box-43%2C8%2C593%2C696.png",
+    "position": "P",
     "stats": {
       "gp": 34,
       "goals": 0,
@@ -10831,9 +10807,7 @@
     },
     "lastSeason": 20202021,
     "hasCurrentSeasonStats": false,
-    "nhlRights": "N/A",
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8473474.png",
-    "position": "G"
+    "nhlRights": "N/A"
   },
   {
     "id": "8482162",
@@ -11193,7 +11167,7 @@
     "currentTeam": "New Jersey Devils",
     "league": "NHL",
     "stats": {
-      "gp": 1,
+      "gp": 2,
       "goals": 0,
       "assists": 0,
       "points": 0,
@@ -11417,7 +11391,7 @@
     "currentTeam": "Winnipeg Jets",
     "league": "NHL",
     "stats": {
-      "gp": 3,
+      "gp": 4,
       "goals": 0,
       "assists": 0,
       "points": 0,
