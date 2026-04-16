@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "prebuild": "node scripts/prebuild/fetch-player-stats.cjs",
+        "prebuild": "node scripts/prebuild/fetch-player-stats.cjs && node scripts/prebuild/fetch-last-teams.cjs",
         "build": "npm run prebuild && vite build",
         "build:quick": "vite build",
         "dev": "vite dev",
