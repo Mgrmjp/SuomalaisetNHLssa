@@ -1,5 +1,6 @@
 <script>
 import { onMount } from 'svelte'
+import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
@@ -9,6 +10,7 @@ import teamMapping from '$lib/utils/teamMapping.js'
 // State
 let _players = []
 let _teamsMap = new Map()
+let _inactivePlayers = []
 let _loading = true
 let _error = null
 
@@ -54,14 +56,25 @@ async function loadFinnishRoster() {
                     jersey_number: p.sweaterNumber || p.jersey_number,
                     birth_date: p.birthDate || p.birth_date || null,
                     is_active: p.isActive !== false,
+                    games_played: p.gamesPlayed ?? null,
+                    lastTeam: p.lastTeam || null,
                 }
             })
         }
 
-        // Group players by team
+        // Group active players by team and move UNKNOWN/non-active into inactive list
         const teams = new Map()
+        const inactive = []
+
         for (const player of playerList) {
             const teamAbbr = player.team_abbrev || player.team || 'UNKNOWN'
+            const isInactive = !player.is_active || teamAbbr === 'UNKNOWN'
+
+            if (isInactive) {
+                inactive.push({ ...player, team_abbrev: teamAbbr })
+                continue
+            }
+
             if (!teams.has(teamAbbr)) {
                 teams.set(teamAbbr, [])
             }
@@ -78,6 +91,23 @@ async function loadFinnishRoster() {
         )
 
         _teamsMap = sortedTeams
+
+        const inactiveWithLastTeam = await Promise.all(
+            inactive.map((player) => {
+                if (
+                    player.team_abbrev &&
+                    player.team_abbrev !== 'UNKNOWN' &&
+                    player.team_abbrev !== ''
+                ) {
+                    return { ...player, last_team: player.team_abbrev }
+                }
+                return { ...player, last_team: player.lastTeam || null }
+            })
+        )
+
+        _inactivePlayers = inactiveWithLastTeam.sort(
+            (a, b) => (b.games_played ?? 0) - (a.games_played ?? 0)
+        )
         _players = playerList
     } catch (err) {
         console.error('Error loading Finnish roster:', err)
@@ -188,6 +218,36 @@ function _formatBirthDate(dateStr) {
                 </div>
             {/each}
         </div>
+
+        {#if _inactivePlayers.length > 0}
+            <div class="inactive-section mt-8">
+                <h3 class="text-xl font-bold text-gray-700 mb-4">Ei joukkueessa / Vanhat pelaajat</h3>
+                <div class="inactive-list">
+                    <div class="player-row inactive-header">
+                        <span class="player-number">#</span>
+                        <span class="player-name">Pelaaja</span>
+                        <span class="player-position">Pos</span>
+                        <span class="player-gp">GP</span>
+                        <span class="player-team">Viimeinen</span>
+                    </div>
+                    {#each _inactivePlayers as player}
+                        <div class="player-row inactive">
+                            <span class="player-number">{player.jersey_number ?? "-"}</span>
+                            <span class="player-name">{player.name}</span>
+                            <span class="player-position">{player.position || "-"}</span>
+                            <span class="player-gp">{player.games_played ?? "-"}</span>
+                            <span class="player-team">
+                                {#if player.last_team && player.last_team !== 'UNKNOWN'}
+                                    {teamMapping[player.last_team] || player.last_team}
+                                {:else}
+                                    Ei NHL:ssa
+                                {/if}
+                            </span>
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        {/if}
     {/if}
 </div>
 
@@ -315,6 +375,54 @@ function _formatBirthDate(dateStr) {
         white-space: nowrap;
     }
 
+    .inactive-section {
+        border-top: 2px solid #e5e7eb;
+        padding-top: 1.5rem;
+    }
+
+    .inactive-list {
+        background: #f9fafb;
+        border-radius: 0.75rem;
+        border: 1px solid #e5e7eb;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    }
+
+    .player-row.inactive-header {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        background: #f3f4f6;
+        border-bottom: 1px solid #e5e7eb;
+        grid-template-columns: 2.5rem 1fr 2rem 3rem 5rem;
+    }
+
+    .player-row.inactive {
+        background: #f9fafb;
+        grid-template-columns: 2.5rem 1fr 2rem 3rem 5rem;
+    }
+
+    .player-row.inactive:hover {
+        background: #f3f4f6;
+    }
+
+    .player-gp {
+        color: #6b7280;
+        font-size: 0.75rem;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .player-team {
+        color: #9ca3af;
+        font-size: 0.75rem;
+        text-align: right;
+        white-space: nowrap;
+    }
+
     /* Responsive adjustments */
     @media (max-width: 640px) {
         .teams-grid {
@@ -325,6 +433,10 @@ function _formatBirthDate(dateStr) {
             grid-template-columns: 2rem 1fr 1.5rem 4rem;
             gap: 0.25rem;
             padding: 0.5rem 0.75rem;
+        }
+
+        .player-row.inactive {
+            grid-template-columns: 2rem 1fr 1.5rem 2.5rem 4rem;
         }
 
         .team-header {
