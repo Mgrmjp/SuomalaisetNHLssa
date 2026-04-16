@@ -6,13 +6,13 @@
       "homeTeam": "UTA",
       "awayTeam": "STL",
       "homeScore": 0,
-      "awayScore": 0,
-      "gameState": "PRE",
+      "awayScore": 1,
+      "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-04-16T23:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 1,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -94,6 +94,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-04-16T23:31:43.892762",
+  "generated_at": "2026-04-16T23:55:03.873354",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
