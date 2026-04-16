@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-04-15T07:33:26.401292",
+  "updatedAt": "2026-04-16T07:33:12.268970",
   "sources": [
     {
       "name": "NHL Central Scouting",
@@ -3225,7 +3225,7 @@
           "playerId": "925061"
         },
         {
-          "rank": 21,
+          "rank": 23,
           "name": "Juho Piiparinen",
           "firstName": null,
           "lastName": null,
@@ -3904,7 +3904,7 @@
       "type": "independent",
       "players": [
         {
-          "rank": 15,
+          "rank": 14,
           "name": "Oscar Hemming",
           "firstName": null,
           "lastName": null,
@@ -3925,7 +3925,7 @@
           "playerId": "927671"
         },
         {
-          "rank": 16,
+          "rank": 15,
           "name": "Oliver Suvanto",
           "firstName": null,
           "lastName": null,
@@ -3967,7 +3967,7 @@
           "playerId": "925157"
         },
         {
-          "rank": 66,
+          "rank": 62,
           "name": "Vertti Svensk",
           "firstName": null,
           "lastName": null,
@@ -3988,7 +3988,7 @@
           "playerId": "872901"
         },
         {
-          "rank": 67,
+          "rank": 69,
           "name": "Samu Alalauri",
           "firstName": null,
           "lastName": null,
@@ -4009,7 +4009,7 @@
           "playerId": "959462"
         },
         {
-          "rank": 75,
+          "rank": 76,
           "name": "Vilho Vanhatalo",
           "firstName": null,
           "lastName": null,
@@ -4030,7 +4030,28 @@
           "playerId": "958289"
         },
         {
-          "rank": 84,
+          "rank": 78,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 177
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 174,
+            "metrics": 79
+          },
+          "playerId": "865769"
+        },
+        {
+          "rank": 86,
           "name": "Juuso Ainasto",
           "firstName": null,
           "lastName": null,
@@ -4051,7 +4072,7 @@
           "playerId": "925170"
         },
         {
-          "rank": 90,
+          "rank": 91,
           "name": "Luka Arkko",
           "firstName": null,
           "lastName": null,
@@ -4070,27 +4091,6 @@
             "metrics": 95
           },
           "playerId": "959469"
-        },
-        {
-          "rank": 92,
-          "name": "Matias Vanhanen",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2007-09-11",
-          "height": {
-            "__typename": "Height",
-            "imperial": "5'10\"",
-            "metrics": 177
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 174,
-            "metrics": 79
-          },
-          "playerId": "865769"
         },
         {
           "rank": null,
