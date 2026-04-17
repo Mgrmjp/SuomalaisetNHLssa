@@ -35,12 +35,22 @@ loadEnvFile(path.join(process.cwd(), '.env'))
 
 // Configuration
 const OUTPUT_DIR = path.join(process.cwd(), 'static/data/player-stats');
-const CURRENT_SEASON = '20252026'; // Will be calculated dynamically
+const SEASON_ID_ENV = process.env.NHL_SEASON_ID;
+const MAX_FETCH_RETRIES = Number(process.env.NHL_API_MAX_RETRIES ?? 8);
+const INITIAL_RETRY_DELAY_MS = Number(process.env.NHL_API_RETRY_DELAY_MS ?? 2000);
+const MAX_RETRY_DELAY_MS = Number(process.env.NHL_API_MAX_RETRY_DELAY_MS ?? 60000);
+const CACHE_FALLBACK_ENABLED = process.env.NHL_API_CACHE_FALLBACK !== 'false';
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /**
  * Calculate current NHL season ID
  */
 function getSeasonId() {
+    if (SEASON_ID_ENV) return SEASON_ID_ENV;
+
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
@@ -53,14 +63,58 @@ function getSeasonId() {
 }
 
 /**
- * Fetch data from NHL API
+ * Get path to cached data file if it exists
  */
-async function fetchNHLData(url) {
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+function getCachedDataPath(seasonId, type) {
+    return path.join(OUTPUT_DIR, `${type}-${seasonId}.json`);
+}
+
+/**
+ * Load cached data as fallback
+ */
+function loadCachedData(seasonId, type) {
+    if (!CACHE_FALLBACK_ENABLED) return null;
+
+    const cachePath = getCachedDataPath(seasonId, type);
+    if (!fs.existsSync(cachePath)) return null;
+
+    try {
+        const data = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
+        console.warn(`   📦 Using cached data from ${path.basename(cachePath)} (${data.length} ${type})`);
+        return data;
+    } catch {
+        return null;
     }
-    return response.json();
+}
+
+/**
+ * Fetch data from NHL API with retry & backoff
+ */
+async function fetchNHLData(url, attempt = 0) {
+    const response = await fetch(url);
+
+    if (response.ok) {
+        return response.json();
+    }
+
+    const isRetryable =
+        response.status === 429 ||
+        response.status === 408 ||
+        (response.status >= 500 && response.status < 600);
+
+    if (isRetryable && attempt < MAX_FETCH_RETRIES) {
+        const retryAfterHeader = response.headers.get('retry-after');
+        const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : NaN;
+        const backoffMs = Number.isFinite(retryAfterSeconds)
+            ? retryAfterSeconds * 1000
+            : Math.min(INITIAL_RETRY_DELAY_MS * Math.pow(2, attempt), MAX_RETRY_DELAY_MS);
+
+        console.warn(`   ⏳ NHL API rate limited (HTTP ${response.status}). Retrying in ${Math.round(backoffMs)} ms... (attempt ${attempt + 1}/${MAX_FETCH_RETRIES})`);
+        await delay(backoffMs);
+        return fetchNHLData(url, attempt + 1);
+    }
+
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
 }
 
 // Track if we've warned about OpenAI key
@@ -171,6 +225,20 @@ async function processPlayers(players, nameField) {
     return corrected;
 }
 
+async function fetchWithFallback(url, seasonId, dataType, nameField) {
+    try {
+        const data = await fetchNHLData(url);
+        return await processPlayers(data.data || [], nameField);
+    } catch (error) {
+        if (CACHE_FALLBACK_ENABLED) {
+            console.error(`   ❌ API failed: ${error.message}`);
+            console.warn(`   ↩️  Falling back to cached ${dataType} data...`);
+            return loadCachedData(seasonId, dataType);
+        }
+        throw error;
+    }
+}
+
 /**
  * Main function
  */
@@ -189,9 +257,7 @@ async function main() {
     console.log('\n📊 Fetching skaters...');
     const skaterUrl = `https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=500&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D2%20and%20seasonId%3D${seasonId}`;
 
-    const skatersData = await fetchNHLData(skaterUrl);
-    const correctedSkaters = await processPlayers(skatersData.data || [], 'skaterFullName');
-
+    const correctedSkaters = await fetchWithFallback(skaterUrl, seasonId, 'skaters', 'skaterFullName');
     console.log(`   ✅ ${correctedSkaters.length} skaters processed`);
 
     // Save skaters
@@ -203,9 +269,7 @@ async function main() {
     console.log('\n📊 Fetching goalies...');
     const goalieUrl = `https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22wins%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=100&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D2%20and%20seasonId%3D${seasonId}`;
 
-    const goaliesData = await fetchNHLData(goalieUrl);
-    const correctedGoalies = await processPlayers(goaliesData.data || [], 'goalieFullName');
-
+    const correctedGoalies = await fetchWithFallback(goalieUrl, seasonId, 'goalies', 'goalieFullName');
     console.log(`   ✅ ${correctedGoalies.length} goalies processed`);
 
     // Save goalies
