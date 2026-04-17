@@ -5,7 +5,7 @@ import Swiper from 'swiper'
 import { FreeMode, Mousewheel } from 'swiper/modules'
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
-import MobileAdBanner from '$lib/components/ui/MobileAdBanner.svelte'
+import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import { currentBreak, displayDate, error, games, isLoading, players, setDate } from '$lib/stores/gameData.js'
 import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 import PlayerCard from './PlayerCard.svelte'
@@ -83,13 +83,9 @@ function handleResize() {
     }
 }
 
-// Random ad position: 0 = after forwards, 1 = after defenders
-let _mobileAdPosition = $state(0)
+let isMobile = false
 
 onMount(() => {
-    // Randomly pick which row to show ad after (0 or 1)
-    _mobileAdPosition = Math.random() < 0.5 ? 0 : 1
-
     checkMobile()
     setTimeout(initSwipers, 100)
     window.addEventListener('resize', handleResize)
@@ -224,9 +220,6 @@ const emptyStateVariant = $derived.by(() => {
     if (hasNoGames) return 'no-games'
     return 'no-scorers'
 })
-
-// Use $derived for the mobile ad position
-const mobileAdPosition = $derived(_mobileAdPosition)
 </script>
 
 {#if $isLoading}
@@ -282,10 +275,6 @@ const mobileAdPosition = $derived(_mobileAdPosition)
                             </div>
                         </div>
                     </div>
-                    <div class="h-8 md:block hidden"></div>
-                    {#if mobileAdPosition === 0}
-                        <MobileAdBanner />
-                    {/if}
                 {/if}
 
                 {#if defenders.length}
@@ -318,10 +307,6 @@ const mobileAdPosition = $derived(_mobileAdPosition)
                             </div>
                         </div>
                     </div>
-                    <div class="h-8 md:block hidden"></div>
-                    {#if mobileAdPosition === 1}
-                        <MobileAdBanner />
-                    {/if}
                 {/if}
 
                 {#if goalies.length}
@@ -365,12 +350,11 @@ const mobileAdPosition = $derived(_mobileAdPosition)
     @media (max-width: 767px) {
         /* Essential Swiper styles - only applied on mobile */
         .swiper {
-            overflow: hidden;
+            overflow: visible;
             position: relative;
             margin-left: -1rem;
             margin-right: -1rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding: 0.5rem 1rem 1.5rem;
         }
 
         .swiper-wrapper {
@@ -386,14 +370,14 @@ const mobileAdPosition = $derived(_mobileAdPosition)
             position: relative;
         }
 
-        /* Mobile swiper card slides - keep a clear peek of the next card without squeezing content */
+        /* Mobile swiper card slides - narrower for more breathing room, taller spacer to prevent cutoff */
         .mobile-card-slide {
-            width: min(18rem, calc(100vw - 4.5rem)) !important;
+            width: min(17rem, calc(100vw - 6.5rem)) !important;
             flex-shrink: 0;
         }
 
         .mobile-card-slide :global(.player-card__spacer) {
-            min-height: 280px;
+            min-height: 320px;
         }
     }
 </style>

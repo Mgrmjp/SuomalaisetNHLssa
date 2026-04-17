@@ -4,8 +4,7 @@ import { get } from 'svelte/store'
 import { base } from '$app/paths'
 import DateControls from '$lib/components/game/DateControls.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
-import AdBanner from '$lib/components/ui/AdBanner.svelte'
-import MobileAd from '$lib/components/ui/MobileAd.svelte'
+import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import {
@@ -164,8 +163,8 @@ onMount(() => {
             <DateControls />
         </div>
 
-        <!-- Ad Banner -->
-        <AdBanner />
+        <!-- Ad Container (unified, zero layout shift) -->
+        <AdContainer />
 
         <!-- Navigation -->
         <NavTabs />
@@ -348,9 +347,6 @@ onMount(() => {
             </div>
         </section>
     </div>
-
-    <!-- Mobile Ad -->
-    <MobileAd />
 
     <!-- Footer link -->
     <footer class="text-center py-4 text-sm text-gray-500">
