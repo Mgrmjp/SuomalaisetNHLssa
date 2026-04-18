@@ -212,7 +212,7 @@ function getLogoSrc(ad) {
                         <span class="cta">Lisätietoja</span>
                     </div>
                 {:else}
-                    <img src={ad.src} width={ad.width} height={ad.height} alt={ad.alt || 'Mainos'} class="ad-img" />
+                    <img src={ad.src} alt={ad.alt || 'Mainos'} class="ad-img" />
                 {/if}
                 <span class="ad-disclaimer">Mainos</span>
             </a>
@@ -230,7 +230,7 @@ function getLogoSrc(ad) {
                 class:active={index === mobileIndex}
                 class:fade-out={index !== mobileIndex || mobileTransitioning}
             >
-                <img src={ad.src} width={ad.width} height={ad.height} alt="Mainos" class="ad-img ad-img--square" />
+                <img src={ad.src} alt="Mainos" class="ad-img ad-img--square" />
                 <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}
@@ -247,7 +247,7 @@ function getLogoSrc(ad) {
                 class:active={index === mobileBannerIndex}
                 class:fade-out={index !== mobileBannerIndex || mobileBannerTransitioning}
             >
-                <img src={ad.src} width={ad.width} height={ad.height} alt="Mainos" class="ad-img" />
+                <img src={ad.src} alt="Mainos" class="ad-img" />
                 <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}

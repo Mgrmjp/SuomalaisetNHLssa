@@ -78,8 +78,6 @@ onDestroy(() => {
                 <div class="ad-content-wrapper">
                     <img
                         src={ad.src}
-                        width={SLOT_WIDTH}
-                        height={SLOT_HEIGHT}
                         alt={ad.alt}
                         class="ad-img"
                     />
@@ -181,6 +179,7 @@ onDestroy(() => {
     .ad-img {
         width: 160px;
         height: 600px;
+        object-fit: cover;
         border: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: 8px;

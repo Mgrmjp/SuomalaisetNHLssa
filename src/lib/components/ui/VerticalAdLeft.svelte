@@ -75,7 +75,7 @@ onDestroy(() => {
                 class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
                 <div class="ad-content-wrapper">
-                    <img src={ad.src} width={SLOT_WIDTH} height={SLOT_HEIGHT} alt={ad.alt} class="ad-img" />
+                    <img src={ad.src} alt={ad.alt} class="ad-img" />
                     <span class="ad-disclaimer">Mainos</span>
                 </div>
             </a>
