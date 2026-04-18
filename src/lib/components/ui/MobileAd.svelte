@@ -18,11 +18,11 @@ let interval
 // Mark this spot as active
 setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
 
-function _pauseAds() {
+function pauseAds() {
     _isPaused = true
 }
 
-function _resumeAds() {
+function resumeAds() {
     _isPaused = false
 }
 

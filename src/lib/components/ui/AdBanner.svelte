@@ -9,23 +9,18 @@ import {
     setAdSpotIndex,
 } from '$lib/stores/ads.js'
 
-/** @type {Array<{id: string, href: string, isCustom?: string, src?: string, width?: number, height?: number, alt?: string}>} */
 const ads = getBannerAds()
-/** @type {number} */
 let currentAdIndex = getRandomAdIndex(AD_SPOTS.BANNER, ads)
-/** @type {boolean} */
 let _isTransitioning = false
-/** @type {boolean} */
 let _isPaused = false
-/** @type {ReturnType<typeof setInterval>|undefined} */
 let interval
 
 setAdSpotIndex(AD_SPOTS.BANNER, currentAdIndex)
 
-function _pauseAds() {
+function pauseAds() {
     _isPaused = true
 }
-function _resumeAds() {
+function resumeAds() {
     _isPaused = false
 }
 
@@ -53,7 +48,7 @@ onDestroy(() => {
 
 $: currentAd = ads[currentAdIndex]
 
-function _getLogoSrc(ad) {
+function getLogoSrc(ad) {
     const name = ad.isCustom === 'vattenfall-opiskelija' ? 'vattenfall' : ad.isCustom
     const ext = ad.isCustom === 'kvarn' ? 'webp' : 'svg'
     return `/${name}-logo.${ext}`

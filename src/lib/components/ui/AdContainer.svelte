@@ -19,7 +19,7 @@ import {
 /** @type {Ad[]} */
 const bannerAds = getBannerAds()
 let bannerIndex = getRandomAdIndex(AD_SPOTS.BANNER, bannerAds)
-let _bannerTransitioning = false
+let bannerTransitioning = false
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let bannerInterval
 
@@ -27,7 +27,7 @@ let bannerInterval
 /** @type {Ad[]} */
 const mobileAds = getMobileAds()
 let mobileIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, mobileAds)
-let _mobileTransitioning = false
+let mobileTransitioning = false
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let mobileInterval
 
@@ -35,7 +35,7 @@ let mobileInterval
 /** @type {Ad[]} */
 const mobileBannerAds = getMobileBannerAds()
 let mobileBannerIndex = getRandomAdIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerAds)
-let _mobileBannerTransitioning = false
+let mobileBannerTransitioning = false
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let mobileBannerInterval
 
@@ -58,12 +58,12 @@ function _resumeAds() {
 // --- Banner rotation ---
 function nextBanner() {
     if (isPaused) return
-    _bannerTransitioning = true
+    bannerTransitioning = true
     setTimeout(() => {
         bannerIndex = getNextAdIndex(AD_SPOTS.BANNER, bannerIndex, bannerAds)
         setAdSpotIndex(AD_SPOTS.BANNER, bannerIndex)
         setTimeout(() => {
-            _bannerTransitioning = false
+            bannerTransitioning = false
         }, 500)
     }, 500)
 }
@@ -71,12 +71,12 @@ function nextBanner() {
 // --- Mobile ad rotation ---
 function nextMobile() {
     if (isPaused) return
-    _mobileTransitioning = true
+    mobileTransitioning = true
     setTimeout(() => {
         mobileIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex, mobileAds)
         setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex)
         setTimeout(() => {
-            _mobileTransitioning = false
+            mobileTransitioning = false
         }, 500)
     }, 500)
 }
@@ -84,7 +84,7 @@ function nextMobile() {
 // --- Mobile banner rotation ---
 function nextMobileBanner() {
     if (isPaused) return
-    _mobileBannerTransitioning = true
+    mobileBannerTransitioning = true
     setTimeout(() => {
         mobileBannerIndex = getNextAdIndex(
             AD_SPOTS.MOBILE_BANNER,
@@ -93,7 +93,7 @@ function nextMobileBanner() {
         )
         setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex)
         setTimeout(() => {
-            _mobileBannerTransitioning = false
+            mobileBannerTransitioning = false
         }, 500)
     }, 500)
 }
@@ -113,12 +113,14 @@ onDestroy(() => {
     if (bannerInterval) clearInterval(bannerInterval)
     if (mobileInterval) clearInterval(mobileInterval)
     if (mobileBannerInterval) clearInterval(mobileBannerInterval)
-    window.removeEventListener('resize', checkMobile)
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', checkMobile)
+    }
 })
 
 // Logo helper for custom banners
 /** @param {Ad} ad */
-function _getLogoSrc(ad) {
+function getLogoSrc(ad) {
     const name = ad.isCustom === 'vattenfall-opiskelija' ? 'vattenfall' : ad.isCustom
     const ext = ad.isCustom === 'kvarn' ? 'webp' : 'svg'
     return `/${name}-logo.${ext}`

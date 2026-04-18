@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 const _currentYear = new Date().getFullYear()
 </script>
 

@@ -1,6 +1,8 @@
 <script>
 // @ts-nocheck
-const _scoutingReports = [
+import { base } from '$app/paths'
+
+const scoutingReports = [
     {
         slug: 'oliver-suvanto',
         name: 'Oliver Suvanto',
@@ -33,7 +35,7 @@ const _scoutingReports = [
     },
 ]
 
-const _draftRankings = [
+const draftRankings = [
     { rank: 3, name: 'Oliver Suvanto', position: 'C', team: 'Tappara' },
     { rank: 6, name: 'Juho Piiparinen', position: 'D', team: 'Tappara' },
     { rank: 14, name: 'Vilho Vanhatalo', position: 'RW', team: 'Tappara Jr.' },

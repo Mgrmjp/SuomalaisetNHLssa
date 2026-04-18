@@ -1,7 +1,8 @@
 <script>
 // @ts-nocheck
+import { base } from '$app/paths'
+
 /** @type {{ data: { slug: string, content: string } }} */
-// biome-ignore lint/correctness/noUnusedVariables: used in template
 const { data } = $props()
 </script>
 

@@ -1,10 +1,12 @@
 <script>
 // @ts-nocheck
+import { base } from '$app/paths'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
+
 /** @type {import('./$types').PageData} */
 export let data
 
 const { winners: _winners } = data
-// biome-ignore lint/correctness/noUnusedVariables: used in template
 const winners = _winners
 </script>
 

@@ -119,7 +119,7 @@
     },
     "overrides": [
         {
-            "includes": ["*.svelte"],
+            "includes": ["**/*.svelte"],
             "linter": {
                 "rules": {
                     "suspicious": {
@@ -127,10 +127,10 @@
                     },
                     "correctness": {
                         "noUnusedImports": "off",
-                        "noUnusedVariables": "error"
+                        "noUnusedVariables": "off"
                     },
                     "style": {
-                        "useConst": "error"
+                        "useConst": "off"
                     }
                 }
             }

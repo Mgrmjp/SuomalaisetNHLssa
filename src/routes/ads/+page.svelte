@@ -2,15 +2,11 @@
 // @ts-nocheck
 import { getBannerAds, getMobileAds, getMobileBannerAds } from '$lib/stores/ads.js'
 
-/** @type {Array<{id: string, href: string, isCustom?: string, src?: string, width?: number, height?: number, alt?: string}>} */
-const _bannerAds = getBannerAds()
-/** @type {Array<{id: string, href: string, src: string, width: number, height: number, alt?: string}>} */
-const _mobileAds = getMobileAds()
-/** @type {Array<{id: string, href: string, src: string, width: number, height: number, alt?: string}>} */
-const _mobileBannerAds = getMobileBannerAds()
+const bannerAds = getBannerAds()
+const mobileAds = getMobileAds()
+const mobileBannerAds = getMobileBannerAds()
 
-/** @param {string} id */
-function _getLogoSrc(id) {
+function getLogoSrc(id) {
     const name = id === 'vattenfall-opiskelija' ? 'vattenfall' : id
     const ext = id === 'kvarn' ? 'webp' : 'svg'
     return `/${name}-logo.${ext}`

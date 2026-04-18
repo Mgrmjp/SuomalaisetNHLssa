@@ -1,25 +1,27 @@
 <script>
 // @ts-nocheck
 import { onDestroy, onMount } from 'svelte'
-import { base } from '$app/paths'
-
-const _width = 160
-const _height = 600
 
 const ads = [
     {
-        href: 'https://go.adt291.com/t/t?a=2028121988&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=2028121988&as=2038972948&t=1&tk=1&i=1',
+        href: 'https://id.skruvat.fi/t/t?a=1483923855&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1483923855&as=2038972948&t=1&tk=1&i=1',
+        width: 160,
+        height: 600,
         alt: 'Mainos',
     },
     {
-        href: 'https://go.adt242.com/t/t?a=2050880477&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=2050880477&as=2038972948&t=1&tk=1&i=1',
+        href: 'https://to.bjornborg.com/t/t?a=1616919154&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1616919154&as=2038972948&t=1&tk=1&i=1',
+        width: 120,
+        height: 600,
         alt: 'Mainos',
     },
     {
-        href: 'https://at.valco.fi/t/t?a=2020376424&as=2038972948&t=2&tk=1',
-        src: `${base}/valco.jpg`,
+        href: 'https://go.adt242.com/t/t?a=1875158502&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1875158502&as=2038972948&t=1&tk=1&i=1',
+        width: 160,
+        height: 600,
         alt: 'Mainos',
     },
 ]
@@ -51,7 +53,7 @@ function nextAd() {
 onMount(() => {
     setTimeout(() => {
         interval = setInterval(nextAd, 20000)
-    }, 4000)
+    }, 12000)
 })
 
 onDestroy(() => {
@@ -59,7 +61,7 @@ onDestroy(() => {
 })
 </script>
 
-<div class="vertical-ad-container">
+<div class="vertical-ad-container-left">
     <div 
         class="ad-wrapper"
         on:mouseenter={pauseAds}
@@ -75,13 +77,7 @@ onDestroy(() => {
                 class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
                 <div class="ad-content-wrapper">
-                    <img
-                        src={ad.src}
-                        width={_width}
-                        height={_height}
-                        alt={ad.alt}
-                        class="ad-img"
-                    />
+                    <img src={ad.src} width={ad.width} height={ad.height} alt={ad.alt} class="ad-img" />
                     <span class="ad-disclaimer">Mainos</span>
                 </div>
             </a>
@@ -90,9 +86,9 @@ onDestroy(() => {
 </div>
 
 <style>
-    .vertical-ad-container {
+    .vertical-ad-container-left {
         position: fixed;
-        right: 1rem;
+        left: 1rem;
         top: 50%;
         transform: translateY(-50%);
         z-index: 40;
@@ -104,16 +100,16 @@ onDestroy(() => {
 
     /* Hide on tablet */
     @media (max-width: 1399px) {
-        .vertical-ad-container {
+        .vertical-ad-container-left {
             display: none !important;
         }
     }
 
     @media (min-width: 1400px) {
-        .vertical-ad-container {
+        .vertical-ad-container-left {
             display: block;
             position: fixed;
-            right: 1rem;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
             width: 160px;
@@ -151,11 +147,11 @@ onDestroy(() => {
         position: absolute;
         top: 0;
         left: 0;
+        width: 100%;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        height: 100%;
         border: none;
         opacity: 0;
         transition: opacity 1s ease-in-out;
@@ -178,8 +174,10 @@ onDestroy(() => {
     }
 
     .ad-img {
-        width: 160px;
-        height: 600px;
+        width: auto;
+        height: auto;
+        max-width: 160px;
+        max-height: 600px;
         border: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
@@ -189,13 +187,13 @@ onDestroy(() => {
     .ad-disclaimer {
         position: absolute;
         top: 8px;
-        right: 0;
+        left: 0;
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
         font-size: 10px;
         font-weight: 600;
         padding: 3px 6px;
-        border-radius: 4px 0 0 4px;
+        border-radius: 0 4px 4px 0;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         pointer-events: none;

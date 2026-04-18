@@ -31,7 +31,7 @@ $effect(() => {
             const leaderTeam = teams[0].team
             try {
                 _divisionLeaderColors = await getTeamColorVariables(leaderTeam)
-            } catch (_error) {
+            } catch (error) {
                 // Silently ignore color loading errors
             }
         }

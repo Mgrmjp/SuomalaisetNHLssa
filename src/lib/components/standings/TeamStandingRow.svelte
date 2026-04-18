@@ -35,7 +35,7 @@ $effect(async () => {
     if (team) {
         try {
             _teamColorVars = await getTeamColorVariables(team)
-        } catch (_error) {
+        } catch (error) {
             // Silently ignore color loading errors
         }
     }

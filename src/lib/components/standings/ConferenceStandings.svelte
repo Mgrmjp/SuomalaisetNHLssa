@@ -26,7 +26,7 @@ const wildCardData = $derived(hasData ? calculateWildCardTeams(allConferenceData
 const _wildCardTeams = $derived(wildCardData[conferenceName] || [])
 
 // Loading state
-const _isLoading = $derived(loading || !hasData)
+const isLoading = $derived(loading || !hasData)
 
 // Error state
 const _hasError = $derived(error !== null)

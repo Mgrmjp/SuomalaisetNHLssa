@@ -1,21 +1,30 @@
 <script>
 // @ts-nocheck
-
-import { setDate } from '$lib/stores/gameData.js'
-import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 import { onMount } from 'svelte'
+// Swiper - only import core, handle CSS in scoped styles
 import Swiper from 'swiper'
 import { FreeMode, Mousewheel } from 'swiper/modules'
+import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
+import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
+import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import {
+    currentBreak,
+    displayDate,
+    error,
+    games,
+    isLoading,
+    players,
+    setDate,
+} from '$lib/stores/gameData.js'
+import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
+import EmptyState from './EmptyState.svelte'
+import PlayerCard from './PlayerCard.svelte'
+import SkeletonPlayerCard from './SkeletonPlayerCard.svelte'
 
-/** @type {any} */
 let forwardsSwiper = null
-/** @type {any} */
 let defendersSwiper = null
-/** @type {any} */
 let goaliesSwiper = null
 let isMobile = false
-
-/** @typedef {Record<string, any> & { shots_against?: number, shotsAgainst?: number, saves?: number, goalie_saves?: number, goals_against?: number, goalsAgainst?: number, time_on_ice?: string, toi?: string, playerId?: number, game_id?: number, points?: number, goals?: number, plus_minus?: number, assists?: number }} PlayerData */
 
 function checkMobile() {
     isMobile = typeof window !== 'undefined' && window.innerWidth < 768
@@ -25,7 +34,7 @@ function initSwipers() {
     checkMobile()
     if (!isMobile) return
 
-    const swiperConfig = /** @type {any} */ ({
+    const swiperConfig = {
         modules: [FreeMode, Mousewheel],
         slidesPerView: 'auto',
         spaceBetween: 12,
@@ -40,20 +49,20 @@ function initSwipers() {
         },
         grabCursor: true,
         cssMode: false,
-    })
+    }
 
     const forwardsEl = document.querySelector('.swiper-forwards')
     const defendersEl = document.querySelector('.swiper-defenders')
     const goaliesEl = document.querySelector('.swiper-goalies')
 
     if (forwardsEl && !forwardsSwiper) {
-        forwardsSwiper = new Swiper(/** @type {HTMLElement} */ (forwardsEl), swiperConfig)
+        forwardsSwiper = new Swiper(forwardsEl, swiperConfig)
     }
     if (defendersEl && !defendersSwiper) {
-        defendersSwiper = new Swiper(/** @type {HTMLElement} */ (defendersEl), swiperConfig)
+        defendersSwiper = new Swiper(defendersEl, swiperConfig)
     }
     if (goaliesEl && !goaliesSwiper) {
-        goaliesSwiper = new Swiper(/** @type {HTMLElement} */ (goaliesEl), swiperConfig)
+        goaliesSwiper = new Swiper(goaliesEl, swiperConfig)
     }
 }
 
@@ -94,15 +103,15 @@ onMount(() => {
 })
 
 // Re-initialize swipers when players data changes
-globalThis.$effect(() => {
-    if (globalThis.$players && isMobile) {
+$effect(() => {
+    if ($players && isMobile) {
         destroySwipers()
         setTimeout(initSwipers, 100)
     }
 })
 
 function _handleRetry() {
-    const currentDate = new Date().toISOString().split('T')[0] || ''
+    const currentDate = new Date().toISOString().split('T')[0]
     setDate(currentDate)
 }
 
@@ -110,7 +119,7 @@ function _handleRetry() {
  * Check if a goalie actually played in the game
  * Goalie must have logged time, faced shots, made saves, or allowed goals
  *
- * @param {PlayerData} player - Player object
+ * @param {Object} player - Player object
  * @returns {boolean} True if goalie participated in the game
  */
 function goalieHasPlayed(player) {
@@ -123,7 +132,7 @@ function goalieHasPlayed(player) {
         shotsAgainst > 0 ||
         saves > 0 ||
         goalsAgainst > 0 ||
-        (toi !== '' && toi !== '00:00' && toi !== '0:00')
+        (toi && toi !== '00:00' && toi !== '0:00')
     )
 }
 
@@ -131,8 +140,8 @@ function goalieHasPlayed(player) {
  * Filter out invalid players that don't have required fields
  * This prevents duplicate key errors in the each blocks
  *
- * @param {PlayerData[]} players - Array of player objects
- * @returns {PlayerData[]} Filtered array of valid players
+ * @param {Object[]} players - Array of player objects
+ * @returns {Object[]} Filtered array of valid players
  */
 function getValidPlayers(players) {
     if (!Array.isArray(players)) return []
@@ -151,11 +160,11 @@ function getValidPlayers(players) {
  * - Goalies: must have actually played (faced shots, made saves, etc.)
  * - Skaters: must have recorded at least one point
  *
- * @param {PlayerData[]} players - Array of player objects
- * @returns {PlayerData[]} Filtered array of players
+ * @param {Object[]} players - Array of player objects
+ * @returns {Object[]} Filtered array of players
  */
-const filteredPlayers = globalThis.$derived(
-    getValidPlayers(globalThis.$players || []).filter((player) => {
+const filteredPlayers = $derived(
+    getValidPlayers($players || []).filter((player) => {
         if (isGoalie(player)) {
             return goalieHasPlayed(player)
         }
@@ -166,24 +175,23 @@ const filteredPlayers = globalThis.$derived(
 /**
  * Sort skaters by points (primary), then goals, plus/minus, and assists
  *
- * @param {PlayerData[]} list - Array of skater objects
- * @returns {PlayerData[]} Sorted array
+ * @param {Object[]} list - Array of skater objects
+ * @returns {Object[]} Sorted array
  */
 const sortSkatersByPoints = (list) =>
     [...list].sort(
         (a, b) =>
             (b.points || 0) - (a.points || 0) ||
             (b.goals || 0) - (a.goals || 0) ||
-            /** @type {number} */ (b.plus_minus ?? -Infinity) -
-                /** @type {number} */ (a.plus_minus ?? -Infinity) ||
+            (b.plus_minus ?? -Infinity) - (a.plus_minus ?? -Infinity) ||
             (b.assists || 0) - (a.assists || 0)
     )
 
 /**
  * Sort goalies by save percentage (best first)
  *
- * @param {PlayerData[]} list - Array of goalie objects
- * @returns {PlayerData[]} Sorted array
+ * @param {Object[]} list - Array of goalie objects
+ * @returns {Object[]} Sorted array
  */
 const sortGoalies = (list) =>
     [...list].sort((a, b) => {
@@ -194,38 +202,34 @@ const sortGoalies = (list) =>
         if (aPct === null) return 1
         if (bPct === null) return -1
 
-        return /** @type {number} */ (bPct) - /** @type {number} */ (aPct)
+        return bPct - aPct
     })
 
-const forwards = globalThis.$derived(
+const forwards = $derived(
     sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)))
 )
-const defenders = globalThis.$derived(
+const defenders = $derived(
     sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)))
 )
-const goalies = globalThis.$derived(sortGoalies(filteredPlayers.filter((p) => isGoalie(p))))
+const goalies = $derived(sortGoalies(filteredPlayers.filter((p) => isGoalie(p))))
 
-const _hasAnyPlayers = globalThis.$derived(forwards.length + defenders.length + goalies.length > 0)
+const hasAnyPlayers = $derived(forwards.length + defenders.length + goalies.length > 0)
 
 // Determine if there are no games today
-/** @type {any} */
-const gamesData = globalThis.$games
-const hasNoGames = globalThis.$derived(
-    !globalThis.$isLoading && (!gamesData || !gamesData.games || gamesData.games.length === 0)
-)
+const hasNoGames = $derived(!$isLoading && (!$games || !$games.games || $games.games.length === 0))
 
 // Determine if we're in a break
-const isBreak = globalThis.$derived(globalThis.$currentBreak !== null)
+const isBreak = $derived($currentBreak !== null)
 
 // Determine which empty state to show
-const _emptyStateVariant = globalThis.$derived.by(() => {
+const emptyStateVariant = $derived.by(() => {
     if (isBreak) return 'break'
     if (hasNoGames) return 'no-games'
     return 'no-scorers'
 })
 </script>
 
-{#if globalThis.$isLoading}
+{#if $isLoading}
     <div class="py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7">
             {#each [1,2,3,4,5,6] as _}
@@ -233,10 +237,10 @@ const _emptyStateVariant = globalThis.$derived.by(() => {
             {/each}
         </div>
     </div>
-{:else if globalThis.$error}
+{:else if $error}
     <div class="text-center py-8">
         <ErrorBoundary
-            error={globalThis.$error}
+            error={$error}
             retryAction="Yritä uudelleen"
             onRetry={handleRetry}
             variant="error"

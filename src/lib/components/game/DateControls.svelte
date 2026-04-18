@@ -1,12 +1,17 @@
 <script>
 // @ts-nocheck
-import { setDate, showCalendarView } from '$lib/stores/gameData.js'
+import {
+    availableDates,
+    currentDateReadOnly,
+    latestPrepopulatedDate,
+    selectedDate,
+    setDate,
+    showCalendarView,
+} from '$lib/stores/gameData.js'
+import MonthView from './MonthView.svelte'
 
-// Convert reactive statements to globalThis.$derived
-const currentDateValue = globalThis.$derived(
-    globalThis.$selectedDate ||
-        formatLocalDate(globalThis.$currentDateReadOnly)
-)
+// Convert reactive statements to $derived
+const currentDateValue = $derived($selectedDate || formatLocalDate($currentDateReadOnly))
 const todayIso = formatLocalDate(new Date())
 
 /** @param {string} a
@@ -17,24 +22,19 @@ function minDateString(a, b) {
     return aDate <= bDate ? a : b
 }
 
-const maxDate = globalThis.$derived(
-    globalThis.$latestPrepopulatedDate
-        ? minDateString(todayIso, globalThis.$latestPrepopulatedDate)
-        : todayIso
+const maxDate = $derived(
+    $latestPrepopulatedDate ? minDateString(todayIso, $latestPrepopulatedDate) : todayIso
 )
 
 // Check if at first or last available date
-const _isPrevDisabled = globalThis.$derived(
-    globalThis.$availableDates.length > 0 &&
-        currentDateValue === globalThis.$availableDates[0]
+const isPrevDisabled = $derived(
+    $availableDates.length > 0 && currentDateValue === $availableDates[0]
 )
-const _isNextDisabled = globalThis.$derived(
-    globalThis.$availableDates.length > 0 && currentDateValue === maxDate
-)
+const isNextDisabled = $derived($availableDates.length > 0 && currentDateValue === maxDate)
 
 function _goToPreviousDay() {
     const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
-    const availableDateObjects = globalThis.$availableDates.map((d) => new Date(`${d}T00:00:00`))
+    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
 
     // Find the previous available date
     const previousDates = availableDateObjects
@@ -48,7 +48,7 @@ function _goToPreviousDay() {
 
 function _goToToday() {
     const todayDateObj = new Date()
-    const availableDateObjects = globalThis.$availableDates.map((d) => new Date(`${d}T00:00:00`))
+    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
 
     // Find the closest available date to today (including today)
     const todayOrClosest = availableDateObjects
@@ -66,7 +66,7 @@ function _goToToday() {
 
 function _goToNextDay() {
     const currentDateObj = new Date(`${currentDateValue}T00:00:00`)
-    const availableDateObjects = globalThis.$availableDates.map((d) => new Date(`${d}T00:00:00`))
+    const availableDateObjects = $availableDates.map((d) => new Date(`${d}T00:00:00`))
 
     // Find the next available date
     const nextDates = availableDateObjects
@@ -218,7 +218,7 @@ function _toggleCalendar() {
             </button>
         </div>
 
-        {#if globalThis.$showCalendarView}
+        {#if $showCalendarView}
             <div
                 class="mt-4 animate-in fade-in slide-in-from-top-4 duration-300 flex justify-center"
             >

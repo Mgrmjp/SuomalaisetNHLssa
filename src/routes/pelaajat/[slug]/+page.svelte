@@ -1,22 +1,22 @@
 <script>
 // @ts-nocheck
-
+import { base } from '$app/paths'
+import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
+import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
 /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
 const { data } = $props()
 
-// biome-ignore lint/correctness/noUnusedVariables: used in template
-const { player, sameTeamPlayers, seasonId, slug: _slug } = data
-const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
+const { player, sameTeamPlayers, seasonId, slug } = data
+const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
 
 const playerName = player.skaterFullName || player.goalieFullName || 'Unknown Player'
-const _displayName = $derived(correctFullName(playerName))
+const displayName = $derived(correctFullName(playerName))
 const teamName = player.teamAbbrevs || 'NHL'
 const position = player.positionCode || 'N/A'
-const _isGoalie = position === 'G'
+const isGoalie = position === 'G'
 
-/** @param {string} abbrev */
 function getTeamFullName(abbrev) {
     const teamNames = {
         BOS: 'Boston Bruins',
@@ -55,7 +55,7 @@ function getTeamFullName(abbrev) {
     return teamNames[abbrev] || abbrev
 }
 
-/** @param {string} name */
+// Helper to convert name to URL-friendly slug
 function nameToSlug(name) {
     return name
         .toLowerCase()
@@ -66,15 +66,13 @@ function nameToSlug(name) {
         .replace(/[^a-z0-9-]/g, '')
 }
 
-const _teamFullName = $derived(getTeamFullName(teamName))
+const teamFullName = $derived(getTeamFullName(teamName))
 
-/** @param {any} p */
 function getPlayerName(p) {
     return correctFullName(p.skaterFullName || p.goalieFullName)
 }
 
-/** @param {any} p */
-function _getPlayerSlug(p) {
+function getPlayerSlug(p) {
     return nameToSlug(getPlayerName(p))
 }
 </script>

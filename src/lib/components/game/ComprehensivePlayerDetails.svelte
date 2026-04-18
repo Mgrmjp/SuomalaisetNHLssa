@@ -1,20 +1,17 @@
 <script>
 // @ts-nocheck
+import { base } from '$app/paths'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import { games } from '$lib/stores/gameData.js'
 import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
 
-// biome-ignore lint/correctness/noUnusedVariables: used in template
 const { player, isOpen = false, onclose } = $props()
 
-/** @type {string|null} */
 let _playerPhotoUrl = $state(null)
-/** @type {boolean} */
 let _photoError = $state(false)
-/** @type {boolean} */
 let _imageLoading = $state(true)
-/** @type {string|null} */
 let _lqipUrl = $state(null)
-/** @type {boolean} */
-const _imageLoaded = $state(false)
+let _imageLoaded = $state(false)
 
 function getLocalHeadshotUrl(playerId) {
     if (!playerId) return null
@@ -56,7 +53,7 @@ $effect(() => {
     }
 })
 
-function _portal(node) {
+function portal(node) {
     const placeholder = document.createElement('div')
     placeholder.className = 'portal-placeholder'
     placeholder.style.cssText = 'display: none;'
@@ -81,7 +78,7 @@ function _portal(node) {
 }
 
 const displayName = $derived(player.name?.default || player.name || 'Unknown Player')
-const gamesData = $derived(globalThis.$games)
+const gamesData = $derived($games)
 const _isLive = $derived(isPlayerGameLive(player, gamesData))
 const _playerInitials = $derived(
     displayName
@@ -90,7 +87,7 @@ const _playerInitials = $derived(
         .join('')
         .slice(0, 2)
 )
-const _isGoalie = $derived(
+const isGoalie = $derived(
     (player.position || '').toUpperCase() === 'G' ||
         (player.position || '').toUpperCase() === 'GOALIE'
 )
@@ -109,7 +106,7 @@ function getSavePercentage(player) {
     return null
 }
 
-function _handleBackdropClick(e) {
+function handleBackdropClick(e) {
     if (e.target === e.currentTarget) {
         onclose?.()
     }

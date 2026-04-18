@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
 import { base } from '$app/paths'
+import { page } from '$app/stores'
 
 // Navigation items
 const _navItems = [
@@ -31,7 +32,7 @@ const _navItems = [
     },
 ]
 
-const _currentPath = $derived(globalThis.$page.url.pathname)
+const currentPath = $derived($page.url.pathname)
 </script>
 
 <div class="nav-tabs-container flex md:justify-center mb-10 overflow-x-auto pr-4 py-2">

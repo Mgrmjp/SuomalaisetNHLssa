@@ -1,9 +1,11 @@
 <script>
 // @ts-nocheck
+import { displayDate } from '$lib/stores/gameData.js'
+
 /**
  * @type {{ variant?: 'no-games' | 'no-scorers' | 'break' }}
  */
-const { variant = 'no-scorers' } = $props()
+let { variant = 'no-scorers' } = $props()
 
 const messages = {
     'no-games': {
@@ -20,7 +22,7 @@ const messages = {
     },
 }
 
-const _currentMessage = $derived(messages[variant] || messages['no-scorers'])
+const currentMessage = $derived(messages[variant] || messages['no-scorers'])
 </script>
 
 <div class="empty-state-wrapper">
@@ -29,7 +31,7 @@ const _currentMessage = $derived(messages[variant] || messages['no-scorers'])
             <h3 class="empty-state-title">{currentMessage.title}</h3>
             <p class="empty-state-text">
                 {currentMessage.text}
-                <span class="empty-state-date">{globalThis.$displayDate}</span>.
+                <span class="empty-state-date">{$displayDate}</span>.
             </p>
         </div>
     </div>

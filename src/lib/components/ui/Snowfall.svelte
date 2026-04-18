@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 export const count = 20
 export const delayRange = 15
 export const minDuration = 8
