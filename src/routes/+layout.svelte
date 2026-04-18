@@ -2,6 +2,8 @@
 // @ts-nocheck
 import '../app.css'
 import { onMount } from 'svelte'
+import { base } from '$app/paths'
+import { page } from '$app/stores'
 import { initPlayerDetection } from '$lib/services/playerDetectionService.js'
 
 // biome-ignore lint/correctness/noUnusedVariables: used in template
@@ -42,11 +44,9 @@ onMount(() => {
     <meta name="twitter:image:alt" content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot" />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="{_siteUrl}{globalThis.$page.url.pathname}" />
-
-    <!-- Hreflang for international Finnish speakers (dynamic per page) -->
-    <link rel="alternate" hreflang="fi" href="{_siteUrl}{globalThis.$page.url.pathname}" />
-    <link rel="alternate" hreflang="x-default" href="{_siteUrl}{globalThis.$page.url.pathname}" />
+    <link rel="canonical" href="{_siteUrl}{$page.url.pathname}" />
+    <link rel="alternate" hreflang="fi" href="{_siteUrl}{$page.url.pathname}" />
+    <link rel="alternate" hreflang="x-default" href="{_siteUrl}{$page.url.pathname}" />
 
     <link rel="icon" type="image/svg+xml" href={base + "/logo.svg"} />
 
