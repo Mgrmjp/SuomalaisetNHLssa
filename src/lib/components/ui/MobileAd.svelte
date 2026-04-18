@@ -64,7 +64,7 @@ onDestroy(() => {
                 class:active={index === currentAdIndex}
                 class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
-                <img src={ad.src} width={ad.width} height={ad.height} alt="Mainos" class="mobile-ad-img" />
+                <img src={ad.src} alt="Mainos" class="mobile-ad-img" />
                 <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}
@@ -76,7 +76,7 @@ onDestroy(() => {
         width: 100%;
         display: flex;
         justify-content: center;
-        padding: 1rem 0;
+        padding: 0;
     }
 
     @media (min-width: 768px) {
@@ -87,9 +87,8 @@ onDestroy(() => {
 
     .ad-wrapper {
         position: relative;
-        width: 100%;
-        max-width: 320px;
-        aspect-ratio: 1;
+        width: 300px;
+        height: 250px;
         overflow: hidden;
     }
 
@@ -97,15 +96,18 @@ onDestroy(() => {
         position: absolute;
         top: 0;
         left: 0;
+        width: 300px;
+        height: 250px;
         display: block;
         border: none;
         opacity: 0;
         transition: opacity 1s ease-in-out;
         pointer-events: none;
+        overflow: hidden;
+        border-radius: 8px;
     }
 
     .mobile-ad-link.active {
-        position: relative;
         opacity: 1;
         pointer-events: auto;
     }
@@ -115,9 +117,9 @@ onDestroy(() => {
     }
 
     .mobile-ad-img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+        width: 300px;
+        height: 250px;
+        object-fit: cover;
         border: 0;
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

@@ -6,6 +6,7 @@ import { base } from '$app/paths'
 import DateControls from '$lib/components/game/DateControls.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
 import AdContainer from '$lib/components/ui/AdContainer.svelte'
+import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import {
@@ -165,11 +166,14 @@ onMount(() => {
             <DateControls />
         </div>
 
-        <!-- Ad Container (unified, zero layout shift) -->
-        <AdContainer />
+        <!-- Mobile ad under date controls (hidden on desktop) -->
+        <MobileAd />
 
         <!-- Navigation -->
         <NavTabs />
+
+        <!-- Ad Container (desktop banner, hidden on mobile) -->
+        <AdContainer />
 
         <!-- Hero Stats -->
         {#if $isLoading}
