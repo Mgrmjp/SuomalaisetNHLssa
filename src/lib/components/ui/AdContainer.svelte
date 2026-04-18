@@ -47,11 +47,11 @@ function checkMobile() {
     _isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 }
 
-function _pauseAds() {
+function pauseAds() {
     isPaused = true
 }
 
-function _resumeAds() {
+function resumeAds() {
     isPaused = false
 }
 
