@@ -60,7 +60,8 @@ async function fetchPlayerInfo(playerId, position) {
 
         if (seasonData?.data && seasonData.data.length > 0) {
             const sorted = seasonData.data.sort((a, b) => b.seasonId - a.seasonId)
-            lastTeam = sorted[0].teamAbbrevs
+            const teamAbbrevs = sorted[0].teamAbbrevs || ''
+            lastTeam = teamAbbrevs.split(',')[0].trim() || null
         }
     } catch (e) {
         // Fall through

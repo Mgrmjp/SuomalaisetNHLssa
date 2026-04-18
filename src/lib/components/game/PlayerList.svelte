@@ -6,7 +6,15 @@ import { FreeMode, Mousewheel } from 'swiper/modules'
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
-import { currentBreak, displayDate, error, games, isLoading, players, setDate } from '$lib/stores/gameData.js'
+import {
+    currentBreak,
+    displayDate,
+    error,
+    games,
+    isLoading,
+    players,
+    setDate,
+} from '$lib/stores/gameData.js'
 import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 import PlayerCard from './PlayerCard.svelte'
 import EmptyState from './EmptyState.svelte'
@@ -82,8 +90,6 @@ function handleResize() {
         }
     }
 }
-
-let isMobile = false
 
 onMount(() => {
     checkMobile()

@@ -10,6 +10,8 @@
         "preview": "vite preview",
         "test": "vitest run",
         "test:watch": "vitest",
+        "test:roster": "vitest run src/lib/tests/finnish-roster-integrity.test.js",
+        "test:sync": ".venv/bin/python3 scripts/data_collection/finnish/test_sync_roster.py",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "biome check .",
