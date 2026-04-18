@@ -348,15 +348,15 @@ function getLogoSrc(ad) {
         .ad-slot--mobile-square {
             display: flex;
             width: 100%;
-            /* Reserved: largest mobile ad is 320x320 */
-            min-height: 320px;
-            max-width: 320px;
+            /* Reserved: 300x250 IAB Medium Rectangle */
+            min-height: 250px;
+            max-width: 300px;
             padding: 0.75rem 0 0.5rem;
         }
 
         .ad-link--square {
-            width: 320px;
-            height: 320px;
+            width: 300px;
+            height: 250px;
         }
 
         .ad-img--square {
@@ -368,15 +368,15 @@ function getLogoSrc(ad) {
         .ad-slot--mobile-banner {
             display: flex;
             width: 100%;
-            /* Reserved: mobile banner height */
-            min-height: 100px;
+            /* Reserved: 300x250 IAB Medium Rectangle */
+            min-height: 250px;
             max-width: 300px;
             padding: 0.5rem 0 0.75rem;
         }
 
         .ad-link--mbanner {
             width: 300px;
-            height: 100px;
+            height: 250px;
         }
     }
 

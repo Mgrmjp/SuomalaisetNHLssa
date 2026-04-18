@@ -15,7 +15,11 @@ export const adSpotState = writable({
     [AD_SPOTS.MOBILE_BANNER]: 0,
 })
 
-// Banner ads - shared across banner spots
+// Standard IAB ad sizes:
+// Desktop banner: 728x90 (leaderboard) or 980x120 (full banner)
+// Mobile: 300x250 (medium rectangle)
+
+// Banner ads - shared across banner spots (728x90 or 980x120 only)
 const bannerAds = [
     {
         id: 'dna',
@@ -77,35 +81,28 @@ const bannerAds = [
     },
 ]
 
-// Mobile ads - shared across mobile spots
+// Mobile ads - 300x250 only (IAB Medium Rectangle)
 const mobileAds = [
     {
         id: 'dna-mobile',
         href: 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1',
-        width: 320,
-        height: 320,
+        width: 300,
+        height: 250,
     },
     {
         id: 'moi1',
         href: 'https://in.moi.fi/t/t?a=1551605636&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1551605636&as=2038972948&t=1&tk=1&i=1',
         width: 300,
-        height: 300,
+        height: 250,
     },
     {
         id: 'moi2',
         href: 'https://in.moi.fi/t/t?a=1551605634&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1551605634&as=2038972948&t=1&tk=1&i=1',
         width: 300,
-        height: 300,
-    },
-    {
-        id: 'moi3',
-        href: 'https://in.moi.fi/t/t?a=1727501623&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1727501623&as=2038972948&t=1&tk=1&i=1',
-        width: 300,
-        height: 280,
+        height: 250,
     },
     {
         id: 'adt228-mobile',
@@ -114,16 +111,9 @@ const mobileAds = [
         width: 300,
         height: 250,
     },
-    {
-        id: 'adt267-mobile',
-        href: 'https://go.adt267.com/t/t?a=1538795918&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1538795918&as=2038972948&t=1&tk=1&i=1',
-        width: 300,
-        height: 100,
-    },
 ]
 
-// Mobile banner ads
+// Mobile banner ads - 300x250 only
 const mobileBannerAds = [
     {
         id: 'bjornborg-mobile',
@@ -137,28 +127,14 @@ const mobileBannerAds = [
         href: 'https://in.moi.fi/t/t?a=1551605636&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1551605636&as=2038972948&t=1&tk=1&i=1',
         width: 300,
-        height: 300,
+        height: 250,
     },
     {
         id: 'moi5',
         href: 'https://in.moi.fi/t/t?a=1551605634&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1551605634&as=2038972948&t=1&tk=1&i=1',
         width: 300,
-        height: 300,
-    },
-    {
-        id: 'moi6',
-        href: 'https://in.moi.fi/t/t?a=1727501623&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1727501623&as=2038972948&t=1&tk=1&i=1',
-        width: 300,
-        height: 280,
-    },
-    {
-        id: 'adt267-mobile2',
-        href: 'https://go.adt267.com/t/t?a=1538795918&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1538795918&as=2038972948&t=1&tk=1&i=1',
-        width: 300,
-        height: 100,
+        height: 250,
     },
 ]
 
