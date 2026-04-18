@@ -396,13 +396,14 @@ function getLogoSrc(ad) {
         position: relative;
         display: flex;
         align-items: center;
-        gap: 1rem;
-        padding: 0 1.25rem;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0 1rem;
         border-radius: 6px;
         overflow: hidden;
         transition: transform 0.2s ease;
-        /* Fill container - no fixed dimensions */
-        height: 100%;
+        /* Fixed IAB standard height */
+        height: 90px;
         width: 100%;
         box-sizing: border-box;
     }
@@ -411,15 +412,16 @@ function getLogoSrc(ad) {
 
     .custom-banner:hover { transform: translateY(-2px); }
 
-    .logo { height: 56px; width: auto; max-height: 100%; object-fit: contain; }
+    .logo { height: 48px; width: auto; object-fit: contain; }
     .logo.on-dark { background: #fff; padding: 4px; border-radius: 4px; }
-    .content { font-size: 1.1rem; line-height: 1.4; flex: 1; min-width: 0; }
+    .content { font-size: 0.9rem; line-height: 1.2; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .cta {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         font-weight: 500;
-        padding: 0.4rem 0.75rem;
+        padding: 0.3rem 0.6rem;
         border-radius: 4px;
         white-space: nowrap;
+        flex-shrink: 0;
     }
 
     /* Firefly animation */
@@ -472,18 +474,19 @@ function getLogoSrc(ad) {
     .custom-banner.kodin1 { background: linear-gradient(135deg, #fff, #fce4ec); border: 2px solid #e9196c; }
     .custom-banner.kodin1 .cta { background: #e9196c; color: #fff; }
 
-    /* Responsive custom banners */
-    @media (max-width: 768px) {
+    /* Responsive custom banners - 300x250 IAB medium rectangle */
+    @media (max-width: 767px) {
         .custom-banner {
             flex-direction: column;
             text-align: center;
             justify-content: center;
             gap: 0.5rem;
-            padding: 0.75rem;
+            padding: 0.5rem;
+            height: 250px;
         }
-        .logo { height: 36px; }
-        .content { font-size: 0.85rem; }
-        .cta { width: 100%; text-align: center; }
+        .logo { height: 48px; }
+        .content { font-size: 0.85rem; white-space: normal; }
+        .cta { width: auto; text-align: center; }
         .firefly { display: none; }
     }
 </style>
