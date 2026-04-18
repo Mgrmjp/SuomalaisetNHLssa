@@ -283,6 +283,8 @@ function getLogoSrc(ad) {
         opacity: 0;
         transition: opacity 0.8s ease-in-out;
         pointer-events: none;
+        width: 100%;
+        height: 100%;
     }
 
     .ad-link.active {
@@ -324,11 +326,13 @@ function getLogoSrc(ad) {
        Only banner visible
        ===================== */
     .ad-slot--desktop {
+        display: flex;
+        justify-content: center;
         width: 100%;
         max-width: 980px;
-        /* Reserved height for desktop banner */
-        min-height: 120px;
-        padding: 1rem 0;
+        /* IAB standard: 728x90 or 980x120 */
+        height: 90px;
+        padding: 0;
     }
 
     .ad-slot--mobile-square,
