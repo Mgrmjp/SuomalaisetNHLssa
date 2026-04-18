@@ -1,13 +1,8 @@
 <script>
 // @ts-nocheck
 
-import { setDate } from 'globalThis.$lib/stores/gameData.js'
-import {
-    getSavePercentage,
-    hasPoints,
-    isDefense,
-    isGoalie,
-} from 'globalThis.$lib/utils/positionHelpers.js'
+import { setDate } from '$lib/stores/gameData.js'
+import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 import { onMount } from 'svelte'
 import Swiper from 'swiper'
 import { FreeMode, Mousewheel } from 'swiper/modules'
@@ -100,7 +95,7 @@ onMount(() => {
 
 // Re-initialize swipers when players data changes
 globalThis.$effect(() => {
-    if (globalThis.globalThis.globalThis.$players && isMobile) {
+    if (globalThis.$players && isMobile) {
         destroySwipers()
         setTimeout(initSwipers, 100)
     }
@@ -160,7 +155,7 @@ function getValidPlayers(players) {
  * @returns {PlayerData[]} Filtered array of players
  */
 const filteredPlayers = globalThis.$derived(
-    getValidPlayers(globalThis.globalThis.$players || []).filter((player) => {
+    getValidPlayers(globalThis.$players || []).filter((player) => {
         if (isGoalie(player)) {
             return goalieHasPlayed(player)
         }
@@ -214,7 +209,7 @@ const _hasAnyPlayers = globalThis.$derived(forwards.length + defenders.length + 
 
 // Determine if there are no games today
 /** @type {any} */
-const gamesData = globalThis.globalThis.$games
+const gamesData = globalThis.$games
 const hasNoGames = globalThis.$derived(
     !globalThis.$isLoading && (!gamesData || !gamesData.games || gamesData.games.length === 0)
 )

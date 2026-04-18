@@ -1,11 +1,11 @@
 <script>
 // @ts-nocheck
-import { setDate, showCalendarView } from 'globalThis.$lib/stores/gameData.js'
+import { setDate, showCalendarView } from '$lib/stores/gameData.js'
 
 // Convert reactive statements to globalThis.$derived
 const currentDateValue = globalThis.$derived(
-    globalThis.globalThis.$selectedDate ||
-        formatLocalDate(globalThis.globalThis.$currentDateReadOnly)
+    globalThis.$selectedDate ||
+        formatLocalDate(globalThis.$currentDateReadOnly)
 )
 const todayIso = formatLocalDate(new Date())
 
@@ -18,18 +18,18 @@ function minDateString(a, b) {
 }
 
 const maxDate = globalThis.$derived(
-    globalThis.globalThis.$latestPrepopulatedDate
-        ? minDateString(todayIso, globalThis.globalThis.$latestPrepopulatedDate)
+    globalThis.$latestPrepopulatedDate
+        ? minDateString(todayIso, globalThis.$latestPrepopulatedDate)
         : todayIso
 )
 
 // Check if at first or last available date
 const _isPrevDisabled = globalThis.$derived(
-    globalThis.globalThis.$availableDates.length > 0 &&
-        currentDateValue === globalThis.globalThis.$availableDates[0]
+    globalThis.$availableDates.length > 0 &&
+        currentDateValue === globalThis.$availableDates[0]
 )
 const _isNextDisabled = globalThis.$derived(
-    globalThis.globalThis.$availableDates.length > 0 && currentDateValue === maxDate
+    globalThis.$availableDates.length > 0 && currentDateValue === maxDate
 )
 
 function _goToPreviousDay() {

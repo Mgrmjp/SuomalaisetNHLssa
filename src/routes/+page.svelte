@@ -1,8 +1,8 @@
 <script>
 // @ts-nocheck
 
-import { latestPrepopulatedDate, setDate, yesterdayDate } from 'globalThis.$lib/stores/gameData.js'
-import { formatFinnishDateWithRelative } from 'globalThis.$lib/utils/dateUtils.js'
+import { latestPrepopulatedDate, setDate, yesterdayDate } from '$lib/stores/gameData.js'
+import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 import { onMount } from 'svelte'
 import { get } from 'svelte/store'
 
@@ -17,21 +17,21 @@ const _sparkles = Array.from({ length: 12 }, () => ({
 
 // Reactive variables
 const _totalGoals = globalThis.$derived(
-    globalThis.globalThis.$players?.reduce((sum, player) => sum + player.goals, 0) || 0
+    globalThis.$players?.reduce((sum, player) => sum + player.goals, 0) || 0
 )
 const _totalAssists = globalThis.$derived(
-    globalThis.globalThis.$players?.reduce((sum, player) => sum + player.assists, 0) || 0
+    globalThis.$players?.reduce((sum, player) => sum + player.assists, 0) || 0
 )
 const _totalPoints = globalThis.$derived(
-    globalThis.globalThis.$players?.reduce((sum, player) => sum + player.points, 0) || 0
+    globalThis.$players?.reduce((sum, player) => sum + player.points, 0) || 0
 )
 const _totalPenaltyMinutes = globalThis.$derived(
-    globalThis.globalThis.$players?.reduce(
+    globalThis.$players?.reduce(
         (sum, player) => sum + (player.penalty_minutes || 0),
         0
     ) || 0
 )
-const totalPlayers = globalThis.$derived(globalThis.globalThis.$players?.length || 0)
+const totalPlayers = globalThis.$derived(globalThis.$players?.length || 0)
 
 /** @param {string} value */
 function buildDateLabel(value) {
