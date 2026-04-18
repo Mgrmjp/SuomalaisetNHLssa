@@ -47,14 +47,6 @@ function checkMobile() {
     _isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 }
 
-function pauseAds() {
-    isPaused = true
-}
-
-function resumeAds() {
-    isPaused = false
-}
-
 // --- Banner rotation ---
 function nextBanner() {
     if (isPaused) return
@@ -135,8 +127,8 @@ function getLogoSrc(ad) {
 -->
 <div
     class="ad-container"
-    on:mouseenter={pauseAds}
-    on:mouseleave={resumeAds}
+    onmouseenter={() => (isPaused = true)}
+    onmouseleave={() => (isPaused = false)}
     role="region"
     aria-label="Mainos"
 >
@@ -157,7 +149,7 @@ function getLogoSrc(ad) {
                         <span class="firefly" style="top:55%;right:8%;width:3px;height:3px;--delay:2.7s"></span>
                         <span class="firefly" style="bottom:25%;left:25%;width:2px;height:2px;--delay:5.1s"></span>
                         <span class="firefly" style="top:35%;left:60%;width:2px;height:2px;--delay:1.4s"></span>
-                        <img src={getLogoSrc(ad)} alt="DNA" class="logo" on:error={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
+                        <img src={getLogoSrc(ad)} alt="DNA" class="logo" onerror={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
                         <div class="content">Voita iPhone 17 Pro!</div>
                         <span class="cta">Lisätietoja</span>
                     </div>
@@ -167,7 +159,7 @@ function getLogoSrc(ad) {
                         <span class="firefly" style="top:60%;right:15%;width:2px;height:2px;--delay:3.5s"></span>
                         <span class="firefly" style="bottom:30%;left:30%;width:3px;height:3px;--delay:6.2s"></span>
                         <span class="firefly" style="top:40%;left:50%;width:2px;height:2px;--delay:1.9s"></span>
-                        <img src={getLogoSrc(ad)} alt="Multitronic" class="logo" on:error={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
+                        <img src={getLogoSrc(ad)} alt="Multitronic" class="logo" onerror={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
                         <div class="content">IT-tuotteet parhaaseen hintaan</div>
                         <span class="cta">Lisätietoja</span>
                     </div>
@@ -177,7 +169,7 @@ function getLogoSrc(ad) {
                         <span class="firefly dark" style="top:50%;right:12%;width:3px;height:3px;--delay:4.8s"></span>
                         <span class="firefly dark" style="bottom:22%;left:35%;width:2px;height:2px;--delay:7.3s"></span>
                         <span class="firefly dark" style="top:38%;left:55%;width:2px;height:2px;--delay:2.5s"></span>
-                        <img src={getLogoSrc(ad)} alt="Vattenfall" class="logo" on:error={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
+                        <img src={getLogoSrc(ad)} alt="Vattenfall" class="logo" onerror={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
                         <div class="content">Kiinteä hinta 12 kk + CO₂-säästö</div>
                         <span class="cta">Lisätietoja</span>
                     </div>
@@ -187,7 +179,7 @@ function getLogoSrc(ad) {
                         <span class="firefly yellow" style="top:58%;right:14%;width:2px;height:2px;--delay:3.2s"></span>
                         <span class="firefly yellow" style="bottom:28%;left:28%;width:3px;height:3px;--delay:5.9s"></span>
                         <span class="firefly yellow" style="top:42%;left:52%;width:2px;height:2px;--delay:1.7s"></span>
-                        <img src={getLogoSrc(ad)} alt="Vattenfall" class="logo" on:error={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
+                        <img src={getLogoSrc(ad)} alt="Vattenfall" class="logo" onerror={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
                         <div class="content">Edullinen sähkö opiskelijalle</div>
                         <span class="cta">Lisätietoja</span>
                     </div>
@@ -197,7 +189,7 @@ function getLogoSrc(ad) {
                         <span class="firefly green" style="top:52%;right:10%;width:2px;height:2px;--delay:5.6s"></span>
                         <span class="firefly green" style="bottom:24%;left:40%;width:3px;height:3px;--delay:0.4s"></span>
                         <span class="firefly green" style="top:35%;left:58%;width:2px;height:2px;--delay:7.1s"></span>
-                        <img src={getLogoSrc(ad)} alt="Kvarn X" class="logo on-dark" on:error={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
+                        <img src={getLogoSrc(ad)} alt="Kvarn X" class="logo on-dark" onerror={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
                         <div class="content">Osakkeet & krypto Suomessa</div>
                         <span class="cta">Lisätietoja</span>
                     </div>
@@ -207,7 +199,7 @@ function getLogoSrc(ad) {
                         <span class="firefly pink" style="top:55%;right:16%;width:2px;height:2px;--delay:4.4s"></span>
                         <span class="firefly pink" style="bottom:26%;left:32%;width:2px;height:2px;--delay:6.8s"></span>
                         <span class="firefly pink" style="top:38%;left:48%;width:2px;height:2px;--delay:2.1s"></span>
-                        <img src={getLogoSrc(ad)} alt="Kodin 1" class="logo" on:error={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
+                        <img src={getLogoSrc(ad)} alt="Kodin 1" class="logo" onerror={(e) => { if (e.target instanceof HTMLElement) e.target.style.display='none'; }} />
                         <div class="content">Sisusta kotisi edullisesti</div>
                         <span class="cta">Lisätietoja</span>
                     </div>
