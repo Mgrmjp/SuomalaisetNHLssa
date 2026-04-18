@@ -393,19 +393,24 @@ function getLogoSrc(ad) {
         display: flex;
         align-items: center;
         gap: 1rem;
-        padding: 1.75rem 1.25rem;
+        padding: 0 1.25rem;
         border-radius: 6px;
         overflow: hidden;
         transition: transform 0.2s ease;
+        /* Fill container - no fixed dimensions */
+        height: 100%;
+        width: 100%;
+        box-sizing: border-box;
     }
+
+    .custom-banner > * { flex-shrink: 0; }
 
     .custom-banner:hover { transform: translateY(-2px); }
 
-    .logo { height: 56px; width: auto; flex-shrink: 0; }
+    .logo { height: 56px; width: auto; max-height: 100%; object-fit: contain; }
     .logo.on-dark { background: #fff; padding: 4px; border-radius: 4px; }
-    .content { font-size: 1.1rem; line-height: 1.4; }
+    .content { font-size: 1.1rem; line-height: 1.4; flex: 1; min-width: 0; }
     .cta {
-        margin-left: auto;
         font-size: 0.8rem;
         font-weight: 500;
         padding: 0.4rem 0.75rem;
@@ -468,12 +473,13 @@ function getLogoSrc(ad) {
         .custom-banner {
             flex-direction: column;
             text-align: center;
+            justify-content: center;
             gap: 0.5rem;
-            padding: 1rem 0.75rem;
+            padding: 0.75rem;
         }
-        .logo { height: 28px; }
+        .logo { height: 36px; }
         .content { font-size: 0.85rem; }
-        .cta { margin-left: 0; width: 100%; text-align: center; }
+        .cta { width: 100%; text-align: center; }
         .firefly { display: none; }
     }
 </style>
