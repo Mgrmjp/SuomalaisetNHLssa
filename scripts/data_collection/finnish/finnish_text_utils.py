@@ -3,11 +3,41 @@ Finnish text normalization utilities for player and city names.
 Handles auto-correction of ASCII approximations to proper Finnish letters (ä, ö, å) using OpenAI gpt-5-nano.
 """
 
+import json
 import os
+from pathlib import Path
 from openai import OpenAI
 
 _openai_client = None
-_correction_cache = {}  # Cache corrections to avoid duplicate API calls
+_correction_cache = {}  # In-memory cache
+_cache_file = Path(__file__).parent / "cache" / "correction_cache.json"
+
+
+def _load_correction_cache():
+    """Load correction cache from file."""
+    global _correction_cache
+    if _cache_file.exists():
+        try:
+            _correction_cache = json.loads(_cache_file.read_text())
+        except (json.JSONDecodeError, IOError):
+            _correction_cache = {}
+    else:
+        _correction_cache = {}
+
+
+def _save_correction_cache():
+    """Save correction cache to file."""
+    try:
+        _cache_file.parent.mkdir(parents=True, exist_ok=True)
+        _cache_file.write_text(
+            json.dumps(_correction_cache, ensure_ascii=False, indent=2)
+        )
+    except IOError:
+        pass  # Ignore write errors
+
+
+# Load cache on module import
+_load_correction_cache()
 
 # Manual overrides for specific names/cities where LLM might fail or be inconsistent
 MANUAL_CORRECTIONS = {
@@ -87,7 +117,7 @@ Output:"""
         model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
-        max_tokens=50
+        max_tokens=50,
     )
 
     if not response.choices or not response.choices[0].message.content:
@@ -96,17 +126,17 @@ Output:"""
     corrected = response.choices[0].message.content.strip()
 
     # Clean up any extra text LLM might add (take first line or first word)
-    if '\n' in corrected:
-        corrected = corrected.split('\n')[0].strip()
-    if ' ' in corrected and context_type == "city" and ' ' not in text:
+    if "\n" in corrected:
+        corrected = corrected.split("\n")[0].strip()
+    if " " in corrected and context_type == "city" and " " not in text:
         # If original was single word but response has multiple, take first word
         corrected = corrected.split()[0]
 
     # Remove common LLM artifacts
-    corrected = corrected.replace('Corrected spelling:', '').strip()
-    corrected = corrected.replace('Output:', '').strip()
-    corrected = corrected.replace('**Reasoning**', '').strip()
-    corrected = corrected.replace('**', '').strip()
+    corrected = corrected.replace("Corrected spelling:", "").strip()
+    corrected = corrected.replace("Output:", "").strip()
+    corrected = corrected.replace("**Reasoning**", "").strip()
+    corrected = corrected.replace("**", "").strip()
 
     # Validate: return original if corrected is too different or empty
     if not corrected or len(corrected) > len(text) * 2:
@@ -117,6 +147,7 @@ Output:"""
 
     # Cache the result
     _correction_cache[cache_key] = corrected
+    _save_correction_cache()
     return corrected
 
 
@@ -134,7 +165,7 @@ def correct_finnish_name(name_dict):
         return ""
 
     # Use default locale as input (OpenAI will handle correction)
-    default = name_dict.get('default', '')
+    default = name_dict.get("default", "")
     if not default:
         return ""
 
@@ -155,7 +186,7 @@ def correct_finnish_city(city_dict):
         return ""
 
     # Use default locale as input (OpenAI will handle correction)
-    default = city_dict.get('default', '')
+    default = city_dict.get("default", "")
     if not default:
         return ""
 
@@ -177,44 +208,41 @@ def normalize_finnish_player_data(player_data):
         return player_data
 
     # Correct first name
-    if 'firstName' in player_data and isinstance(player_data['firstName'], dict):
-        original = player_data['firstName'].get('default', '')
-        corrected = correct_finnish_name(player_data['firstName'])
+    if "firstName" in player_data and isinstance(player_data["firstName"], dict):
+        original = player_data["firstName"].get("default", "")
+        corrected = correct_finnish_name(player_data["firstName"])
         if original != corrected:
             print(f"  Name correction: {original} → {corrected}")
-        player_data['firstName']['default'] = corrected
+        player_data["firstName"]["default"] = corrected
 
     # Correct last name
-    if 'lastName' in player_data and isinstance(player_data['lastName'], dict):
-        original = player_data['lastName'].get('default', '')
-        corrected = correct_finnish_name(player_data['lastName'])
+    if "lastName" in player_data and isinstance(player_data["lastName"], dict):
+        original = player_data["lastName"].get("default", "")
+        corrected = correct_finnish_name(player_data["lastName"])
         if original != corrected:
             print(f"  Name correction: {original} → {corrected}")
-        player_data['lastName']['default'] = corrected
+        player_data["lastName"]["default"] = corrected
 
     # Recalculate full name
-    first = player_data.get('firstName', {}).get('default', '')
-    last = player_data.get('lastName', {}).get('default', '')
-    player_data['name'] = f"{first} {last}".strip()
+    first = player_data.get("firstName", {}).get("default", "")
+    last = player_data.get("lastName", {}).get("default", "")
+    player_data["name"] = f"{first} {last}".strip()
 
     # Correct birth city
-    if 'birthCity' in player_data and isinstance(player_data['birthCity'], dict):
-        original = player_data['birthCity'].get('default', '')
-        corrected = correct_finnish_city(player_data['birthCity'])
+    if "birthCity" in player_data and isinstance(player_data["birthCity"], dict):
+        original = player_data["birthCity"].get("default", "")
+        corrected = correct_finnish_city(player_data["birthCity"])
         if original != corrected:
             print(f"  City correction: {original} → {corrected}")
-        player_data['birthCity']['default'] = corrected
+        player_data["birthCity"]["default"] = corrected
 
         # Update birthplace string
-        country = player_data.get('birthCountry', '')
-        player_data['birthplace'] = f"{corrected}, {country}"
+        country = player_data.get("birthCountry", "")
+        player_data["birthplace"] = f"{corrected}, {country}"
 
     return player_data
 
 
 def get_cache_stats():
     """Return cache statistics for debugging."""
-    return {
-        "entries": len(_correction_cache),
-        "keys": list(_correction_cache.keys())
-    }
+    return {"entries": len(_correction_cache), "keys": list(_correction_cache.keys())}
