@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 // biome-ignore lint/correctness/noUnusedImports: used in template
 import TeamStandingRow from '$lib/components/standings/TeamStandingRow.svelte'
 import { DIVISION_NAMES } from '$lib/utils/nhlStructure.js'
@@ -30,7 +31,7 @@ $effect(() => {
             const leaderTeam = teams[0].team
             try {
                 _divisionLeaderColors = await getTeamColorVariables(leaderTeam)
-            } catch (error) {
+            } catch (_error) {
                 // Silently ignore color loading errors
             }
         }

@@ -1,6 +1,7 @@
+// @ts-nocheck
+import fs from 'node:fs'
+import path from 'node:path'
 import { beforeAll, describe, expect, it } from 'vitest'
-import fs from 'fs'
-import path from 'path'
 
 const ROSTER_PATH = path.resolve(process.cwd(), 'static/data/players/finnish-roster.json')
 const CACHE_PATH = path.resolve(
@@ -220,7 +221,7 @@ describe('Finnish roster - inactive player data', () => {
             rosterInactive.forEach((p) => {
                 if (p.lastTeam) rosterWithLastTeam++
                 const cachePlayer = cache[String(p.playerId)]
-                if (cachePlayer && cachePlayer.lastTeam) cacheWithLastTeam++
+                if (cachePlayer?.lastTeam) cacheWithLastTeam++
             })
 
             expect(rosterWithLastTeam).toBeGreaterThan(0)

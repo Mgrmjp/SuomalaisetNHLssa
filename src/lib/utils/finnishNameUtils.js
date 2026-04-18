@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Finnish name correction utilities.
  * Corrects Finnish letter patterns (ä, ö, å) using cache + patterns.

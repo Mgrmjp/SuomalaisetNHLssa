@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { base } from '$app/paths'
 
 /** @type {import('./$types').PageServerLoad} */

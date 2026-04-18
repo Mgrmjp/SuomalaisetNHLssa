@@ -3,14 +3,17 @@
  * Extracts dominant colors from team SVG logos and provides them for styling
  */
 
+/** @typedef {{ r: number, g: number, b: number }} RGB */
+/** @typedef {{ h: number, s: number, l: number }} HSL */
+
 import { base } from '$app/paths'
 import logger from './logger.js'
 import { normalizeTeamAbbreviation } from './teamMapping.js'
 
-// Cache for extracted team colors
+/** @type {Map<string, string[]>} */
 const teamColorCache = new Map()
 
-// Predefined fallback colors for teams in case extraction fails
+/** @type {Record<string, string[]>} */
 const fallbackTeamColors = {
     ANA: ['#8B0000', '#FDD017'], // Anaheim Ducks - Maroon & Gold
     ARI: ['#8C2633', '#E31937'], // Arizona Coyotes - Brick Red & Coyote Red
@@ -51,17 +54,16 @@ const fallbackTeamColors = {
 /**
  * Convert hex color to RGB
  * @param {string} hex - Hex color string
- * @returns {Object|null} RGB values or null if invalid
+ * @returns {RGB|null} RGB values or null if invalid
  */
 function hexToRgb(hex) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    return result
-        ? {
-              r: parseInt(result[1], 16),
-              g: parseInt(result[2], 16),
-              b: parseInt(result[3], 16),
-          }
-        : null
+    if (!result) return null
+    return {
+        r: parseInt(/** @type {string} */ (result[1]), 16),
+        g: parseInt(/** @type {string} */ (result[2]), 16),
+        b: parseInt(/** @type {string} */ (result[3]), 16),
+    }
 }
 
 /**
@@ -69,7 +71,7 @@ function hexToRgb(hex) {
  * @param {number} r - Red value (0-255)
  * @param {number} g - Green value (0-255)
  * @param {number} b - Blue value (0-255)
- * @returns {Object} HSL values
+ * @returns {HSL} HSL values
  */
 function rgbToHsl(r, g, b) {
     const red = r / 255
@@ -78,8 +80,10 @@ function rgbToHsl(r, g, b) {
 
     const max = Math.max(red, green, blue)
     const min = Math.min(red, green, blue)
-    let h
-    let s
+    /** @type {number} */
+    let h = 0
+    /** @type {number} */
+    let s = 0
     const l = (max + min) / 2
 
     if (max === min) {
@@ -160,41 +164,9 @@ function isColorVibrantEnough(hexColor) {
 }
 
 /**
- * Calculate color vibrancy score
- * @param {string} hexColor - Hex color string
- * @param {number} frequency - How often color appears in SVG
- * @returns {number} Vibrancy score
- */
-function _calculateColorVibrancyScore(hexColor, frequency) {
-    const rgb = hexToRgb(hexColor)
-    if (!rgb) return 0
-
-    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
-
-    let score = 0
-
-    // Saturation scoring (40% weight) - vibrant colors score higher
-    score += hsl.s * 0.4
-
-    // Lightness scoring (30% weight) - avoid pure white/black
-    const lightnessScore = hsl.l > 20 && hsl.l < 80 ? 50 : 0
-    score += lightnessScore * 0.3
-
-    // Team color prioritization (20% weight)
-    const hueScore = getTeamColorHueScore(hsl.h)
-    score += hueScore * 0.2
-
-    // Frequency bonus (10% weight) - minor tie-breaker
-    const frequencyBonus = Math.log(frequency + 1) * 2
-    score += frequencyBonus * 0.1
-
-    return score
-}
-
-/**
  * Extract colors from team SVG file
  * @param {string} teamAbbr - Team abbreviation (e.g., 'TOR', 'MTL')
- * @returns {Promise<Array>} Array of hex colors extracted from the SVG
+ * @returns {Promise<string[]>} Array of hex colors extracted from the SVG
  */
 async function extractTeamColors(teamAbbr) {
     const normalizedTeam = normalizeTeamAbbreviation(teamAbbr).toLowerCase()
@@ -206,7 +178,12 @@ async function extractTeamColors(teamAbbr) {
         if (typeof window !== 'undefined') {
             const response = await fetch(svgPath)
             if (!response.ok) {
-                return fallbackTeamColors[teamAbbr.toUpperCase()] || ['#000000', '#FFFFFF']
+                return (
+                    fallbackTeamColors[/** @type {string} */ (teamAbbr.toUpperCase())] || [
+                        '#000000',
+                        '#FFFFFF',
+                    ]
+                )
             }
 
             const svgContent = await response.text()
@@ -216,25 +193,36 @@ async function extractTeamColors(teamAbbr) {
         }
     } catch (error) {
         logger.warn(`Error extracting colors for ${teamAbbr}:`, error)
-        return fallbackTeamColors[teamAbbr.toUpperCase()] || ['#000000', '#FFFFFF']
+        return (
+            fallbackTeamColors[/** @type {string} */ (teamAbbr.toUpperCase())] || [
+                '#000000',
+                '#FFFFFF',
+            ]
+        )
     }
+
+    return ['#000000', '#FFFFFF']
 }
 
 /**
  * Extract colors from SVG content string
  * @param {string} svgContent - SVG content as string
- * @returns {Array} Array of hex colors
+ * @returns {string[]} Array of hex colors
  */
 function extractColorsFromSVG(svgContent) {
+    /** @type {Map<string, number>} */
     const colors = new Map()
 
     // Extract colors from fill attributes with frequency counting
     const fillMatches = svgContent.match(/fill="([^"]+)"/g)
     if (fillMatches) {
         fillMatches.forEach((match) => {
-            const color = match.match(/fill="([^"]+)"/)[1]
-            if (isValidColor(color)) {
-                colors.set(color, (colors.get(color) || 0) + 1)
+            const fillResult = match.match(/fill="([^"]+)"/)
+            if (fillResult?.[1]) {
+                const color = fillResult[1]
+                if (isValidColor(color)) {
+                    colors.set(color, (colors.get(color) || 0) + 1)
+                }
             }
         })
     }
@@ -243,13 +231,15 @@ function extractColorsFromSVG(svgContent) {
     const styleMatches = svgContent.match(/style="([^"]+)"/g)
     if (styleMatches) {
         styleMatches.forEach((match) => {
-            const styleContent = match.match(/style="([^"]+)"/)[1]
+            const styleResult = match.match(/style="([^"]+)"/)
+            if (!styleResult || !styleResult[1]) return
+            const styleContent = styleResult[1]
             // Look for color properties
             const colorProps = styleContent.match(/(fill|stroke):\s*([^;]+)/g)
             if (colorProps) {
                 colorProps.forEach((prop) => {
-                    const color = prop.split(':')[1].trim()
-                    if (isValidColor(color)) {
+                    const color = prop.split(':')[1]?.trim()
+                    if (color && isValidColor(color)) {
                         colors.set(color, (colors.get(color) || 0) + 1)
                     }
                 })
@@ -353,7 +343,7 @@ function isValidColor(color) {
 /**
  * Get team colors with caching
  * @param {string} teamAbbr - Team abbreviation
- * @returns {Promise<Array>} Array of team colors
+ * @returns {Promise<string[]>} Array of team colors
  */
 export async function getTeamColors(teamAbbr) {
     const upperTeamAbbr = normalizeTeamAbbreviation(teamAbbr)
@@ -361,7 +351,7 @@ export async function getTeamColors(teamAbbr) {
     // For debugging: clear cache to force re-extraction
     if (teamColorCache.has(upperTeamAbbr)) {
         logger.debug(`Using cached colors for ${upperTeamAbbr}:`, teamColorCache.get(upperTeamAbbr))
-        return teamColorCache.get(upperTeamAbbr)
+        return /** @type {string[]} */ (teamColorCache.get(upperTeamAbbr))
     }
 
     try {
@@ -407,24 +397,25 @@ export async function getTeamBorderStyle(teamAbbr) {
 function generateAccentColor(primaryColor, secondaryColor) {
     try {
         // Convert hex to RGB
-        const hexToRgb = (hex) => {
+        /** @param {string} hex */
+        const localHexToRgb = (hex) => {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-            return result
-                ? {
-                      r: parseInt(result[1], 16),
-                      g: parseInt(result[2], 16),
-                      b: parseInt(result[3], 16),
-                  }
-                : null
+            if (!result) return null
+            return {
+                r: parseInt(/** @type {string} */ (result[1]), 16),
+                g: parseInt(/** @type {string} */ (result[2]), 16),
+                b: parseInt(/** @type {string} */ (result[3]), 16),
+            }
         }
 
         // Convert RGB to hex
-        const rgbToHex = (r, g, b) => {
+        /** @param {number} r @param {number} g @param {number} b */
+        const localRgbToHex = (r, g, b) => {
             return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
         }
 
-        const primary = hexToRgb(primaryColor)
-        const secondary = hexToRgb(secondaryColor)
+        const primary = localHexToRgb(primaryColor)
+        const secondary = localHexToRgb(secondaryColor)
 
         if (!primary || !secondary) {
             return primaryColor // Fallback to primary if conversion fails
@@ -450,7 +441,7 @@ function generateAccentColor(primaryColor, secondaryColor) {
         const finalB =
             accentB > 200 ? Math.max(accentB - 30, primary.b + 20, secondary.b + 20) : accentB
 
-        return rgbToHex(
+        return localRgbToHex(
             Math.max(0, Math.min(255, finalR)),
             Math.max(0, Math.min(255, finalG)),
             Math.max(0, Math.min(255, finalB))
@@ -464,7 +455,7 @@ function generateAccentColor(primaryColor, secondaryColor) {
 /**
  * Darken a hex color by reducing lightness
  * @param {string} hexColor - Hex color string
- * @param {number} amount - Amount to darken (0-1), default 0.3
+ * @param {number} [amount=0.3] - Amount to darken (0-1)
  * @returns {string} Darkened hex color
  */
 function darkenColor(hexColor, amount = 0.3) {
@@ -488,6 +479,7 @@ function darkenColor(hexColor, amount = 0.3) {
         return `#${gray.toString(16).padStart(2, '0')}${gray.toString(16).padStart(2, '0')}${gray.toString(16).padStart(2, '0')}`
     }
 
+    /** @param {number} p @param {number} q @param {number} t */
     const hue2rgb = (p, q, t) => {
         let adjustedT = t
         if (adjustedT < 0) adjustedT += 1
@@ -509,9 +501,9 @@ function darkenColor(hexColor, amount = 0.3) {
 
 /**
  * Randomly select colors from extracted palette for variety
- * @param {Array} colors - Array of extracted colors
- * @param {number} count - Number of colors to select
- * @returns {Array} Array of randomly selected and darkened colors
+ * @param {string[]} colors - Array of extracted colors
+ * @param {number} [count=3] - Number of colors to select
+ * @returns {string[]} Array of randomly selected and darkened colors
  */
 function getRandomColors(colors, count = 3) {
     // Filter out white and light colors that become white when darkened
@@ -559,7 +551,7 @@ function getRandomColors(colors, count = 3) {
 /**
  * Generate CSS variables for team colors with random selection from logo palette
  * @param {string} teamAbbr - Team abbreviation
- * @returns {Promise<Object>} Object with CSS variable values
+ * @returns {Promise<Record<string, string>>} Object with CSS variable values
  */
 export async function getTeamColorVariables(teamAbbr) {
     const colors = await getTeamColors(teamAbbr)
@@ -602,20 +594,21 @@ export async function getTeamColorVariables(teamAbbr) {
 /**
  * Get team colors specifically optimized for gradient animations
  * @param {string} teamAbbr - Team abbreviation
- * @returns {Promise<Array>} Array of 3 colors optimized for gradients
+ * @returns {Promise<string[]>} Array of 3 colors optimized for gradients
  */
 export async function getTeamGradientColors(teamAbbr) {
     const colorVars = await getTeamColorVariables(teamAbbr)
 
     return [
-        colorVars['--team-primary-color'],
-        colorVars['--team-secondary-color'],
-        colorVars['--team-accent-color'],
+        /** @type {string} */ (colorVars['--team-primary-color']),
+        /** @type {string} */ (colorVars['--team-secondary-color']),
+        /** @type {string} */ (colorVars['--team-accent-color']),
     ]
 }
 
 /**
  * Preload colors for common teams (called during app initialization)
+ * @returns {Promise<void>}
  */
 export async function preloadCommonTeamColors() {
     const commonTeams = [

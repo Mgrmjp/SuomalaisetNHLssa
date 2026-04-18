@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 import { base } from '$app/paths'
 import { normalizeTeamAbbreviation } from '$lib/utils/teamMapping.js'
 

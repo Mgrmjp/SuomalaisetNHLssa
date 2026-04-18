@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 import { onMount } from 'svelte'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 

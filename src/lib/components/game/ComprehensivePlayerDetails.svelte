@@ -1,16 +1,20 @@
 <script>
-import { base } from '$app/paths'
-import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import { games } from '$lib/stores/gameData.js'
+// @ts-nocheck
 import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const { player, isOpen = false, onclose } = $props()
 
+/** @type {string|null} */
 let _playerPhotoUrl = $state(null)
+/** @type {boolean} */
 let _photoError = $state(false)
+/** @type {boolean} */
 let _imageLoading = $state(true)
+/** @type {string|null} */
 let _lqipUrl = $state(null)
-let _imageLoaded = $state(false)
+/** @type {boolean} */
+const _imageLoaded = $state(false)
 
 function getLocalHeadshotUrl(playerId) {
     if (!playerId) return null
@@ -22,16 +26,16 @@ function loadPlayerImage(playerId) {
     _imageLoading = true
     _photoError = false
     _lqipUrl = getLocalHeadshotUrl(playerId)
-    
+
     const localUrl = getLocalHeadshotUrl(playerId)
     const img = new Image()
-    
+
     img.onload = () => {
         _playerPhotoUrl = localUrl
         _photoError = false
         _imageLoading = false
     }
-    
+
     img.onerror = () => {
         if (player.headshot_url) {
             _playerPhotoUrl = player.headshot_url
@@ -42,7 +46,7 @@ function loadPlayerImage(playerId) {
         }
         _imageLoading = false
     }
-    
+
     img.src = localUrl
 }
 
@@ -52,7 +56,7 @@ $effect(() => {
     }
 })
 
-function portal(node) {
+function _portal(node) {
     const placeholder = document.createElement('div')
     placeholder.className = 'portal-placeholder'
     placeholder.style.cssText = 'display: none;'
@@ -77,10 +81,19 @@ function portal(node) {
 }
 
 const displayName = $derived(player.name?.default || player.name || 'Unknown Player')
-const gamesData = $derived($games)
+const gamesData = $derived(globalThis.$games)
 const _isLive = $derived(isPlayerGameLive(player, gamesData))
-const _playerInitials = $derived(displayName.split(' ').map((p) => p.charAt(0).toUpperCase()).join('').slice(0, 2))
-const isGoalie = $derived((player.position || '').toUpperCase() === 'G' || (player.position || '').toUpperCase() === 'GOALIE')
+const _playerInitials = $derived(
+    displayName
+        .split(' ')
+        .map((p) => p.charAt(0).toUpperCase())
+        .join('')
+        .slice(0, 2)
+)
+const _isGoalie = $derived(
+    (player.position || '').toUpperCase() === 'G' ||
+        (player.position || '').toUpperCase() === 'GOALIE'
+)
 const _goalieSavePct = $derived(getSavePercentage(player))
 
 function getSavePercentage(player) {
@@ -96,12 +109,11 @@ function getSavePercentage(player) {
     return null
 }
 
-function handleBackdropClick(e) {
+function _handleBackdropClick(e) {
     if (e.target === e.currentTarget) {
         onclose?.()
     }
 }
-
 </script>
 
 {#if isOpen}

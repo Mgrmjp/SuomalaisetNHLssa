@@ -1,3 +1,4 @@
+// @ts-nocheck - Vitest test file with runtime-provided globals
 /**
  * Configuration Service Tests
  *

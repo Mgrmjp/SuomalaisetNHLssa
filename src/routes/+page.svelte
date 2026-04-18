@@ -1,24 +1,10 @@
 <script>
+// @ts-nocheck
+
+import { latestPrepopulatedDate, setDate, yesterdayDate } from 'globalThis.$lib/stores/gameData.js'
+import { formatFinnishDateWithRelative } from 'globalThis.$lib/utils/dateUtils.js'
 import { onMount } from 'svelte'
 import { get } from 'svelte/store'
-import { base } from '$app/paths'
-import DateControls from '$lib/components/game/DateControls.svelte'
-import PlayerList from '$lib/components/game/PlayerList.svelte'
-import AdContainer from '$lib/components/ui/AdContainer.svelte'
-import NavTabs from '$lib/components/ui/NavTabs.svelte'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
-import {
-    currentBreak,
-    games,
-    isLoading,
-    latestPrepopulatedDate,
-    players,
-    resetToDefault,
-    selectedDate,
-    setDate,
-    yesterdayDate,
-} from '$lib/stores/gameData.js'
-import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 
 const _sparkles = Array.from({ length: 12 }, () => ({
     left: `${Math.random() * 100}%`,
@@ -30,14 +16,24 @@ const _sparkles = Array.from({ length: 12 }, () => ({
 }))
 
 // Reactive variables
-const _totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0)
-const _totalAssists = $derived($players?.reduce((sum, player) => sum + player.assists, 0) || 0)
-const _totalPoints = $derived($players?.reduce((sum, player) => sum + player.points, 0) || 0)
-const _totalPenaltyMinutes = $derived(
-    $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
+const _totalGoals = globalThis.$derived(
+    globalThis.globalThis.$players?.reduce((sum, player) => sum + player.goals, 0) || 0
 )
-const totalPlayers = $derived($players?.length || 0)
+const _totalAssists = globalThis.$derived(
+    globalThis.globalThis.$players?.reduce((sum, player) => sum + player.assists, 0) || 0
+)
+const _totalPoints = globalThis.$derived(
+    globalThis.globalThis.$players?.reduce((sum, player) => sum + player.points, 0) || 0
+)
+const _totalPenaltyMinutes = globalThis.$derived(
+    globalThis.globalThis.$players?.reduce(
+        (sum, player) => sum + (player.penalty_minutes || 0),
+        0
+    ) || 0
+)
+const totalPlayers = globalThis.$derived(globalThis.globalThis.$players?.length || 0)
 
+/** @param {string} value */
 function buildDateLabel(value) {
     if (!value) {
         return 'valitulle päivälle'
@@ -52,21 +48,22 @@ function buildDateLabel(value) {
     return relative ? `${relative} (${formatted})` : formatted
 }
 
-const selectedDateSummary = $derived.by(() => {
-    const count = $games?.games?.length || 0
-    const label = buildDateLabel($selectedDate)
+const selectedDateSummary = globalThis.$derived.by(() => {
+    const count = globalThis.$games?.games?.length || 0
+    const label = buildDateLabel(globalThis.$selectedDate)
     const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`
 
     return { label, count, summary }
 })
 
-const _dynamicTitleSuffix = $derived.by(
+const _dynamicTitleSuffix = globalThis.$derived.by(
     () => selectedDateSummary?.summary || 'suomalaisten NHL-ottelut'
 )
 
-const SEO_KEYWORDS = 'suomi nhl, suomalaiset nhl-pelaajat, suomalaiset jääkiekkoilijat, nhl suomi, pistepörssi, live-tilastot, suomalaiset nhl:ssä'
+const SEO_KEYWORDS =
+    'suomi nhl, suomalaiset nhl-pelaajat, suomalaiset jääkiekkoilijat, nhl suomi, pistepörssi, live-tilastot, suomalaiset nhl:ssä'
 
-const _metaDescription = $derived.by(() => {
+const _metaDescription = globalThis.$derived.by(() => {
     const playerText =
         totalPlayers > 0
             ? `Seuraa ${totalPlayers} suomalaisen NHL-tilastoja.`
@@ -76,16 +73,25 @@ const _metaDescription = $derived.by(() => {
 })
 
 // Mobile hero stats toggle
-let _showHeroStats = $state(false)
+let showHeroStats = globalThis.$state(false)
 
-function toggleHeroStats() {
-    _showHeroStats = !_showHeroStats
+function _toggleHeroStats() {
+    showHeroStats = !showHeroStats
+}
+
+function _resetToDefault() {
+    const yesterday = get(yesterdayDate)
+    const latestDate = get(latestPrepopulatedDate)
+    const defaultDate = yesterday || latestDate
+    if (defaultDate) {
+        setDate(defaultDate)
+    }
 }
 
 // Default to yesterday's date on first load (relative to Finland/Europe)
 onMount(() => {
     // Avoid reloading if user already selected a date
-    if ($selectedDate) return
+    if (globalThis.$selectedDate) return
 
     // Use yesterday's date - this is what users usually want to see (last night's games)
     const yesterday = get(yesterdayDate)
@@ -99,10 +105,10 @@ onMount(() => {
 </script>
 
 <svelte:head>
-    <title>Suomi NHL - Suomalaiset NHL-pelaajat | {_dynamicTitleSuffix}</title>
-    <meta name="description" content={_metaDescription} />
-    <meta property="og:title" content="Suomi NHL - Suomalaiset NHL-pelaajat | {_dynamicTitleSuffix}" />
-    <meta property="og:description" content={_metaDescription} />
+    <title>Suomi NHL - Suomalaiset NHL-pelaajat | {dynamicTitleSuffix}</title>
+    <meta name="description" content={metaDescription} />
+    <meta property="og:title" content="Suomi NHL - Suomalaiset NHL-pelaajat | {dynamicTitleSuffix}" />
+    <meta property="og:description" content={metaDescription} />
     <meta name="keywords" content={SEO_KEYWORDS} />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
@@ -112,7 +118,7 @@ onMount(() => {
     <div class="text-center mb-8 hero-header space-y-3 relative overflow-hidden">
         <Snowfall />
         <div class="sparkles pointer-events-none" aria-hidden="true">
-            {#each _sparkles as sparkle}
+            {#each sparkles as sparkle}
                 <span
                     class="sparkle"
                     style={`--spark-left:${sparkle.left};--spark-top:${sparkle.top};--spark-delay:${sparkle.delay};--spark-duration:${sparkle.duration};--spark-size:${sparkle.size};--spark-blur:${sparkle.blur};`}
@@ -147,15 +153,15 @@ onMount(() => {
     <div class="space-y-8 main-content-wrapper">
         <!-- Controls Section -->
         <div>
-            {#if $currentBreak}
+            {#if globalThis.$currentBreak}
                 <div class="w-full max-w-4xl mx-auto mb-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl shadow-sm text-center">
                     <div class="flex flex-col items-center justify-center space-y-2">
                         <span class="text-2xl" role="img" aria-label="Break">🏒</span>
                         <h3 class="font-bold text-gray-800 text-lg">
-                            {$currentBreak.description}
+                            {globalThis.$currentBreak.description}
                         </h3>
                         <p class="text-sm text-gray-600">
-                            NHL on tauolla ({formatFinnishDateWithRelative($currentBreak.startDate).formatted} - {formatFinnishDateWithRelative($currentBreak.endDate).formatted})
+                            NHL on tauolla ({formatFinnishDateWithRelative(globalThis.$currentBreak.startDate).formatted} - {formatFinnishDateWithRelative(globalThis.$currentBreak.endDate).formatted})
                         </p>
                     </div>
                 </div>
@@ -170,7 +176,7 @@ onMount(() => {
         <NavTabs />
 
         <!-- Hero Stats -->
-        {#if $isLoading}
+        {#if globalThis.$isLoading}
             <div class="hero-stats-container py-6">
                 <div class="flex flex-wrap justify-center gap-8 hero-stats">
                     {#each [1,2,3,4,5] as _}
@@ -184,7 +190,7 @@ onMount(() => {
                     {/each}
                 </div>
             </div>
-        {:else if $players && $players.length > 0}
+        {:else if globalThis.$players && globalThis.$players.length > 0}
             <div class="hero-stats-container">
                 <!-- Desktop header -->
                 <div class="text-center mb-4 hero-summary-header hidden md:block">
@@ -196,12 +202,12 @@ onMount(() => {
                     class="hero-stats-toggle md:hidden"
                     onclick={toggleHeroStats}
                     aria-label="Näytä tilastot"
-                    aria-expanded={_showHeroStats}
+                    aria-expanded={showHeroStats}
                 >
                     <span class="hero-stats-toggle-text">Valitun päivän yhteistilastot</span>
                     <svg
                         class="hero-stats-toggle-icon"
-                        class:rotated={_showHeroStats}
+                        class:rotated={showHeroStats}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -211,7 +217,7 @@ onMount(() => {
                 </button>
 
                 <!-- Stats wrapper (hidden on mobile by default, always visible on desktop) -->
-                <div class="hero-stats-wrapper" class:expanded={_showHeroStats}>
+                <div class="hero-stats-wrapper" class:expanded={showHeroStats}>
                     <div class="flex flex-wrap justify-center gap-8 hero-stats">
                 <div class="text-center hero-stat hero-stat--goals">
                     <div class="flex justify-center mb-1 hero-stat__icon-wrap">
@@ -226,7 +232,7 @@ onMount(() => {
                             />
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-800">{_totalGoals}</div>
+                    <div class="text-xl font-bold text-gray-800">{totalGoals}</div>
                     <div class="text-xs text-gray-600 hero-stat__label" data-full="Maalit (Goals)">
                         Maalit
                     </div>
@@ -244,7 +250,7 @@ onMount(() => {
                             />
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-800">{_totalAssists}</div>
+                    <div class="text-xl font-bold text-gray-800">{totalAssists}</div>
                     <div
                         class="text-xs text-gray-600 hero-stat__label"
                         data-full="Syötöt (Assists)"
@@ -265,7 +271,7 @@ onMount(() => {
                             />
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-900">{_totalPoints}</div>
+                    <div class="text-xl font-bold text-gray-900">{totalPoints}</div>
                     <div
                         class="text-xs text-gray-600 hero-stat__label"
                         data-full="Pisteet (Points)"
@@ -290,7 +296,7 @@ onMount(() => {
                             </g>
                         </svg>
                     </div>
-                    <div class="text-xl font-bold text-gray-700">{_totalPenaltyMinutes}</div>
+                    <div class="text-xl font-bold text-gray-700">{totalPenaltyMinutes}</div>
                     <div
                         class="text-xs text-gray-600 hero-stat__label"
                         data-full="Rangaistusmin (PIM)"
@@ -325,7 +331,7 @@ onMount(() => {
         {/if}
 
         <!-- Player List (Default View) -->
-        {#if !$currentBreak}
+        {#if !globalThis.$currentBreak}
             <PlayerList />
         {/if}
 

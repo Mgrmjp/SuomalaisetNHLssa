@@ -1,6 +1,6 @@
 <script>
+// @ts-nocheck
 import { onMount } from 'svelte'
-import { base } from '$app/paths'
 
 function initKofi() {
     const container = document.getElementById('kofi-widget-container')

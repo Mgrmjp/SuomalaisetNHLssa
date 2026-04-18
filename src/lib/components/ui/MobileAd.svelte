@@ -1,6 +1,13 @@
 <script>
+// @ts-nocheck
 import { onDestroy, onMount } from 'svelte'
-import { AD_SPOTS, getMobileAds, getRandomAdIndex, getNextAdIndex, setAdSpotIndex } from '$lib/stores/ads.js'
+import {
+    AD_SPOTS,
+    getMobileAds,
+    getNextAdIndex,
+    getRandomAdIndex,
+    setAdSpotIndex,
+} from '$lib/stores/ads.js'
 
 const ads = getMobileAds()
 let currentAdIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, ads)
@@ -11,11 +18,11 @@ let interval
 // Mark this spot as active
 setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
 
-function pauseAds() {
+function _pauseAds() {
     _isPaused = true
 }
 
-function resumeAds() {
+function _resumeAds() {
     _isPaused = false
 }
 

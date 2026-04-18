@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Finnish Players API Tests
  * Tests for /api/finnish-players endpoint

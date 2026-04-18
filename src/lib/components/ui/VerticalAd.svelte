@@ -1,11 +1,11 @@
 <script>
+// @ts-nocheck
 import { onDestroy, onMount } from 'svelte'
 import { base } from '$app/paths'
 
-const _width = 160
-const _height = 600
+const { position = 'right', ads: adsProp, delay = position === 'left' ? 12000 : 4000 } = $props()
 
-const ads = [
+const defaultRightAds = [
     {
         href: 'https://go.adt291.com/t/t?a=2028121988&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=2028121988&as=2038972948&t=1&tk=1&i=1',
@@ -23,16 +23,42 @@ const ads = [
     },
 ]
 
+const defaultLeftAds = [
+    {
+        href: 'https://id.skruvat.fi/t/t?a=1483923855&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1483923855&as=2038972948&t=1&tk=1&i=1',
+        width: 160,
+        height: 600,
+        alt: 'Mainos',
+    },
+    {
+        href: 'https://to.bjornborg.com/t/t?a=1616919154&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1616919154&as=2038972948&t=1&tk=1&i=1',
+        width: 120,
+        height: 600,
+        alt: 'Mainos',
+    },
+    {
+        href: 'https://go.adt242.com/t/t?a=1875158502&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1875158502&as=2038972948&t=1&tk=1&i=1',
+        width: 160,
+        height: 600,
+        alt: 'Mainos',
+    },
+]
+
+const ads = adsProp ?? (position === 'left' ? defaultLeftAds : defaultRightAds)
+
 let currentAdIndex = 0
 let _isTransitioning = false
 let _isPaused = false
 let interval
 
-function pauseAds() {
+function _pauseAds() {
     _isPaused = true
 }
 
-function resumeAds() {
+function _resumeAds() {
     _isPaused = false
 }
 
@@ -50,7 +76,7 @@ function nextAd() {
 onMount(() => {
     setTimeout(() => {
         interval = setInterval(nextAd, 20000)
-    }, 4000)
+    }, delay)
 })
 
 onDestroy(() => {
@@ -58,8 +84,8 @@ onDestroy(() => {
 })
 </script>
 
-<div class="vertical-ad-container">
-    <div 
+<div class="vertical-ad-container" class:vertical-ad-container-left={position === 'left'}>
+    <div
         class="ad-wrapper"
         on:mouseenter={pauseAds}
         on:mouseleave={resumeAds}
@@ -76,8 +102,8 @@ onDestroy(() => {
                 <div class="ad-content-wrapper">
                     <img
                         src={ad.src}
-                        width={_width}
-                        height={_height}
+                        width={ad.width ?? 160}
+                        height={ad.height ?? 600}
                         alt={ad.alt}
                         class="ad-img"
                     />
@@ -101,6 +127,12 @@ onDestroy(() => {
         max-height: 100dvh;
     }
 
+    .vertical-ad-container-left {
+        position: fixed;
+        left: 1rem;
+        right: auto;
+    }
+
     /* Hide on tablet */
     @media (max-width: 1399px) {
         .vertical-ad-container {
@@ -111,15 +143,8 @@ onDestroy(() => {
     @media (min-width: 1400px) {
         .vertical-ad-container {
             display: block;
-            position: fixed;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
             width: 160px;
             height: 600px;
-            max-height: 100vh;
-            max-height: 100dvh;
-            overflow: hidden;
         }
 
         .ad-wrapper {
@@ -176,9 +201,20 @@ onDestroy(() => {
         opacity: 0;
     }
 
-    .ad-img {
+    .vertical-ad-container:not(.vertical-ad-container-left) .ad-img {
         width: 160px;
         height: 600px;
+        border: 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        display: block;
+    }
+
+    .vertical-ad-container-left .ad-img {
+        width: auto;
+        height: auto;
+        max-width: 160px;
+        max-height: 600px;
         border: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
@@ -188,17 +224,25 @@ onDestroy(() => {
     .ad-disclaimer {
         position: absolute;
         top: 8px;
-        right: 0;
         background: rgba(0, 0, 0, 0.6);
         color: #fff;
         font-size: 10px;
         font-weight: 600;
         padding: 3px 6px;
-        border-radius: 4px 0 0 4px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
         pointer-events: none;
         z-index: 1;
+    }
+
+    .vertical-ad-container:not(.vertical-ad-container-left) .ad-disclaimer {
+        right: 0;
+        border-radius: 4px 0 0 4px;
+    }
+
+    .vertical-ad-container-left .ad-disclaimer {
+        left: 0;
+        border-radius: 0 4px 4px 0;
     }
 
     @media (prefers-reduced-motion: reduce) {

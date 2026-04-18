@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * NHL Structure and Conference/Division Mappings
  */

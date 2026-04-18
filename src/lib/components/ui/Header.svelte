@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 import { browser } from '$app/environment'
 import { setDate } from '$lib/stores/gameData.js'
 

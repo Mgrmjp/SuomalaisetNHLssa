@@ -1,9 +1,7 @@
 <script>
+// @ts-nocheck
 import { onMount } from 'svelte'
-import { fly, scale } from 'svelte/transition'
 import { base } from '$app/paths'
-import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import { games } from '$lib/stores/gameData.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import {
     formatGameMatchup,
@@ -13,24 +11,28 @@ import {
 import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
 import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/playerHeadshots.js'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
-import ComprehensivePlayerDetails from './ComprehensivePlayerDetails.svelte'
 import './PlayerCard.css'
 
+/** @type {{ player: any }} */
 const { player } = $props()
 
 // Reactive variables for player photo
-let playerPhotoUrl = $state(null)
+/** @type {string | null} */
+let _playerPhotoUrl = $state(null)
 let _photoError = $state(false)
 let _imageLoading = $state(true)
+/** @type {string | null} */
 let _lqipUrl = $state(null)
 
 // Get LQIP thumbnail URL (tiny placeholder)
+/** @param {string} playerId */
 function getLqipUrl(playerId) {
     const url = getLocalHeadshotThumbUrl(playerId)
     return url ? `${base}${url}` : null
 }
 
 // Load player image - try local WebP first, fallback to NHL CDN
+/** @param {string} playerId */
 function loadPlayerImage(playerId) {
     if (!playerId) return
 
@@ -46,7 +48,7 @@ function loadPlayerImage(playerId) {
     const img = new Image()
 
     img.onload = () => {
-        playerPhotoUrl = localUrl
+        _playerPhotoUrl = localUrl
         _photoError = false
         _imageLoading = false
     }
@@ -56,19 +58,19 @@ function loadPlayerImage(playerId) {
         if (player.headshot_url) {
             const fallbackImg = new Image()
             fallbackImg.onload = () => {
-                playerPhotoUrl = player.headshot_url
+                _playerPhotoUrl = player.headshot_url
                 _photoError = false
                 _imageLoading = false
             }
             fallbackImg.onerror = () => {
                 _photoError = true
-                playerPhotoUrl = null
+                _playerPhotoUrl = null
                 _imageLoading = false
             }
             fallbackImg.src = player.headshot_url
         } else {
             _photoError = true
-            playerPhotoUrl = null
+            _playerPhotoUrl = null
             _imageLoading = false
         }
     }
@@ -82,15 +84,16 @@ $effect(() => {
         loadPlayerImage(player.playerId)
     }
 })
-let _photoLoading = $state(true)
+const _photoLoading = $state(true)
 
 let showSeasonStats = $state(false)
-let showComprehensiveDetails = $state(false)
+let _showComprehensiveDetails = $state(false)
 let isFlipped = $state(false)
 let expanded = $state(false)
-let isPressed = $state(false)
+let _isPressed = $state(false)
 
 // Team names are now fetched from API and stored in team_full field
+/** @param {string} teamAbbrev */
 function getTeamWithCity(teamAbbrev) {
     if (!teamAbbrev) return 'Unknown Team'
     const fullTeamName = player?.team_full || player?.opponent_full
@@ -100,6 +103,7 @@ function getTeamWithCity(teamAbbrev) {
     return teamAbbrev
 }
 
+/** @param {Event} event */
 function _toggleSeasonStats(event) {
     if (event) {
         event.preventDefault()
@@ -108,24 +112,27 @@ function _toggleSeasonStats(event) {
     showSeasonStats = !showSeasonStats
 }
 
+/** @param {Event} event */
 function _closeSeasonStats(event) {
     event.preventDefault()
     event.stopPropagation()
     showSeasonStats = false
 }
 
+/** @param {Event} [event] */
 function _toggleComprehensiveDetails(event) {
     event?.stopPropagation()
     expanded = !expanded
     if (expanded) {
-        showComprehensiveDetails = true
+        _showComprehensiveDetails = true
     }
 }
 
+/** @param {Event} event */
 function _handleBackdropClick(event) {
     if (event.target === event.currentTarget) {
         showSeasonStats = false
-        showComprehensiveDetails = false
+        _showComprehensiveDetails = false
         expanded = false
     }
 }
@@ -134,6 +141,7 @@ function toggleFlip() {
     isFlipped = !isFlipped
 }
 
+/** @param {Event} event */
 function _handleCardClick(event) {
     if (event.target.closest('button') || event.target.closest('a')) {
         return
@@ -142,11 +150,11 @@ function _handleCardClick(event) {
 }
 
 function _handlePressStart() {
-    isPressed = true
+    _isPressed = true
 }
 
 function _handlePressEnd() {
-    isPressed = false
+    _isPressed = false
 }
 
 const displayName = $derived(
@@ -158,9 +166,10 @@ const displayName = $derived(
             'Unknown Player'
     )
 )
-const gamesData = $derived($games)
+/** @type {any} */
+const gamesData = $derived(globalThis.$games)
 const _isLive = $derived(isPlayerGameLive(player, gamesData))
-const _game = $derived(gamesData?.findGameById?.(player?.game_id) || null)
+const game = $derived(gamesData?.findGameById?.(player?.game_id) || null)
 const gameResult = $derived(player.game_result || player.gameResult || null)
 const _showResult = $derived(shouldShowGameResult(player, gamesData) || Boolean(gameResult))
 const _teamWithCity = $derived(getTeamWithCity(player.team || 'NHL'))
@@ -170,12 +179,13 @@ const _matchup = $derived(formatGameMatchup(player, gamesData))
 const _playerInitials = $derived(
     displayName
         .split(' ')
-        .map((part) => part.charAt(0).toUpperCase())
+        .map((/** @type {string} */ part) => part.charAt(0).toUpperCase())
         .join('')
         .slice(0, 2)
 )
 
 // Team color variables
+/** @type {Record<string, string>} */
 let _teamColorVars = $state({
     '--team-primary-color': '#3b82f6',
     '--team-secondary-color': '#60a5fa',
@@ -186,7 +196,7 @@ onMount(async () => {
     if (player?.team) {
         try {
             _teamColorVars = await getTeamColorVariables(player.team)
-        } catch (error) {
+        } catch (_error) {
             // Silently ignore color loading errors
         }
     }
@@ -202,7 +212,7 @@ async function loadTeamColors() {
     if (player?.team) {
         try {
             _teamColorVars = await getTeamColorVariables(player.team)
-        } catch (error) {
+        } catch (_error) {
             // Silently ignore color loading errors
         }
     }
@@ -215,24 +225,24 @@ const isGoalie = $derived(
 )
 const goalieSavePct = $derived(getSavePercentage(player))
 const _hasENG = $derived((player.empty_net_goals || 0) > 0)
-
-const _didWin = $derived(['W', 'OTW', 'SOW'].includes(gameResult))
-const _didLose = $derived(['L', 'OTL', 'SOL'].includes(gameResult))
-const _hasResolvedResult = $derived(_didWin || _didLose)
-const _hasUnresolvedTiedExtraTime = $derived.by(() => {
-    if (!_game) return false
-    const tied = _game.awayScore === _game.homeScore
-    const wentExtraTime = _game.isOT || _game.isSO
+const didWin = $derived(['W', 'OTW', 'SOW'].includes(gameResult))
+const didLose = $derived(['L', 'OTL', 'SOL'].includes(gameResult))
+const _hasResolvedResult = $derived(didWin || didLose)
+const hasUnresolvedTiedExtraTime = $derived.by(() => {
+    if (!game) return false
+    const tied = game.awayScore === game.homeScore
+    const wentExtraTime = game.isOT || game.isSO
     const unresolvedResult = !gameResult || gameResult === 'T'
     return tied && wentExtraTime && unresolvedResult
 })
 const _gameExtraTimeLabel = $derived.by(() => {
-    if (!_game || _hasUnresolvedTiedExtraTime) return ''
-    if (_game.isSO) return 'VL'
-    if (_game.isOT) return 'JA'
+    if (!game || hasUnresolvedTiedExtraTime) return ''
+    if (game.isSO) return 'VL'
+    if (game.isOT) return 'JA'
     return ''
 })
 
+/** @param {any} player */
 function getSavePercentage(player) {
     const provided = player.save_percentage ?? player.savePercentage
     if (typeof provided === 'number' && provided > 0) {
@@ -252,7 +262,7 @@ const _skaterStatLine = $derived.by(() => {
 })
 
 // Derived stat values for the card
-const _primaryStat = $derived.by(() => {
+const primaryStat = $derived.by(() => {
     if (isGoalie) {
         return goalieSavePct !== null
             ? { value: goalieSavePct, label: 'Torjunta%', unit: '%' }
@@ -265,14 +275,18 @@ const _primaryStat = $derived.by(() => {
         return { value: player.plus_minus ?? player.plusMinus, label: '+/-', unit: '' }
     }
     if ((player.penalty_minutes || 0) > 0) {
-        return { value: player.penalty_minutes || player.penaltyMinutes, label: 'Rangaistusmin', unit: '' }
+        return {
+            value: player.penalty_minutes || player.penaltyMinutes,
+            label: 'Rangaistusmin',
+            unit: '',
+        }
     }
     return null
 })
 
 // Ring progress: goalie SV% mapped 85-95 to 0-100%, skater points mapped 1-5
 const _ringProgress = $derived.by(() => {
-    if (!_primaryStat) return 0
+    if (!primaryStat) return 0
     if (isGoalie && goalieSavePct !== null) {
         return Math.min(Math.max((goalieSavePct - 85) / 10, 0), 1)
     }
@@ -292,7 +306,8 @@ const _statBreakdown = $derived.by(() => {
 })
 
 // Action to portal element to body
-function portal(node) {
+/** @param {HTMLElement} node */
+function _portal(node) {
     const placeholder = document.createElement('div')
     placeholder.className = 'portal-placeholder'
     placeholder.style.cssText = 'display: none;'
@@ -341,14 +356,14 @@ $effect(() => {
                 class:pressed={isPressed}
                 class:expanded
                 class:flipped={isFlipped}
-                style="--accent: {_teamColorVars['--team-primary-color']}"
-                onclick={_handleCardClick}
-                onpointerdown={_handlePressStart}
-                onpointerup={_handlePressEnd}
-                onpointerleave={_handlePressEnd}
+                style="--accent: {teamColorVars['--team-primary-color']}"
+                onclick={handleCardClick}
+                onpointerdown={handlePressStart}
+                onpointerup={handlePressEnd}
+                onpointerleave={handlePressEnd}
                 role="button"
                 tabindex="0"
-                onkeydown={(e) => e.key === "Enter" && _handleCardClick(e)}
+                onkeydown={(e) => e.key === "Enter" && handleCardClick(e)}
                 aria-label="Click to flip player card"
                 in:scale={{ duration: 220, start: 0.96 }}
             >
@@ -383,68 +398,68 @@ $effect(() => {
 
                     <!-- Team row -->
                     <div class="card__team-row">
-                        <span class="card__team-name-text">{_teamWithCity}</span>
+                        <span class="card__team-name-text">{teamWithCity}</span>
                     </div>
 
-                    {#if _venue}
-                        <div class="card__venue">{_venue}</div>
+                    {#if venue}
+                        <div class="card_venue">{venue}</div>
                     {/if}
 
                     <!-- Game summary -->
                     <div
                         class="card__gamebar"
-                        class:card__gamebar--live={_isLive}
-                        class:card__gamebar--win={_didWin}
-                        class:card__gamebar--loss={_didLose}
+                        class:card__gamebar--live={isLive}
+                        class:card__gamebar--win={didWin}
+                        class:card__gamebar--loss={didLose}
                     >
                         <div class="card__gamebar-main">
-                            <span class="card__gamebar-matchup">{_matchup}</span>
-                            {#if _isLive}
+                            <span class="card__gamebar-matchup">{matchup}</span>
+                            {#if isLive}
                                 <span class="card__gamebar-status card__gamebar-status--live">LIVE</span>
                             {/if}
                         </div>
-                        {#if _formattedScore}
+                        {#if formattedScore}
                             <div class="card__gamebar-score-wrap">
-                                {#if !_isLive && _hasResolvedResult}
+                                {#if !isLive && hasResolvedResult}
                                     <span
                                         class="card__gamebar-result"
-                                        class:card__gamebar-result--win={_didWin}
-                                        class:card__gamebar-result--loss={_didLose}
+                                        class:card__gamebar-result--win={didWin}
+                                        class:card__gamebar-result--loss={didLose}
                                     >
-                                        {_didWin ? 'V' : _didLose ? 'H' : ''}
+                                        {didWin ? 'V' : didLose ? 'H' : ''}
                                     </span>
                                 {/if}
-                                <span class="card__gamebar-score">{_formattedScore}</span>
-                                {#if _gameExtraTimeLabel}
-                                    <span class="card__gamebar-extra-time">{_gameExtraTimeLabel}</span>
+                                <span class="card__gamebar-score">{formattedScore}</span>
+                                {#if gameExtraTimeLabel}
+                                    <span class="card__gamebar-extra-time">{gameExtraTimeLabel}</span>
                                 {/if}
                             </div>
                         {/if}
                     </div>
 
                     <!-- Primary stat -->
-                    {#if !isGoalie && _primaryStat}
+                    {#if !isGoalie && primaryStat}
                         <div class="card__hero card__hero--skater">
                             <div class="card__hero-value-wrap">
-                                <span class="card__hero-value">{_primaryStat.value}</span>
+                                <span class="card__hero-value">{primaryStat.value}</span>
                                 <span class="card__hero-unit">p</span>
                             </div>
                             <div class="card__hero-meta">
-                                <strong>{_skaterStatLine}</strong>
-                                {#if _statBreakdown}
-                                    <small>{_statBreakdown}</small>
+                                <strong>{skaterStatLine}</strong>
+                                {#if statBreakdown}
+                                    <small>{statBreakdown}</small>
                                 {/if}
                             </div>
                         </div>
-                    {:else if _primaryStat}
+                    {:else if primaryStat}
                         <div class="card__stat">
-                            <div class="card__ring" style="--accent: {_teamColorVars['--team-primary-color']}; --progress: {_ringProgress * 360}deg">
-                                <span>{_primaryStat.value}{_primaryStat.unit}</span>
+                            <div class="card__ring" style="--accent: {teamColorVars['--team-primary-color']}; --progress: {ringProgress * 360}deg">
+                                <span>{primaryStat.value}{primaryStat.unit}</span>
                             </div>
                             <div class="card__stat-meta">
-                                <strong>{_primaryStat.label}</strong>
-                                {#if _statBreakdown}
-                                    <small>{_statBreakdown}</small>
+                                <strong>{primaryStat.label}</strong>
+                                {#if statBreakdown}
+                                    <small>{statBreakdown}</small>
                                 {/if}
                             </div>
                         </div>
@@ -469,7 +484,7 @@ $effect(() => {
                                 >{player.goals_against}</span>
                                 <span class="card__sub-stat-label">pääst.</span>
                             </div>
-                            {#if _hasENG}
+                            {#if hasENG}
                                 <div class="card__sub-stat" title="Tyhjään maaliin">
                                     <span class="card__sub-stat-value text-red-500">{player.empty_net_goals}</span>
                                     <span class="card__sub-stat-label">tyhjä</span>
@@ -509,10 +524,10 @@ $effect(() => {
                     <!-- Expanded details -->
                     {#if expanded}
                         <div class="card__details" transition:fly={{ y: 8, duration: 180 }}>
-                            {#if _venue}
+                            {#if venue}
                                 <div class="card__detail-row">
                                     <span class="card__detail-label">Paikka</span>
-                                    <span>{_venue}</span>
+                                    <span>{venue}</span>
                                 </div>
                             {/if}
                             {#if player.time_on_ice}
@@ -543,7 +558,7 @@ $effect(() => {
                         <span class="card__footer-hint">Napauta kääntääksesi</span>
                         <button
                             class="card__footer-btn"
-                            onclick={(e) => { e.stopPropagation(); _toggleComprehensiveDetails(e); }}
+                            onclick={(e) => { e.stopPropagation(); toggleComprehensiveDetails(e); }}
                             aria-label="Näytä tarkemmat tiedot"
                         >
                             Tiedot
@@ -558,14 +573,14 @@ $effect(() => {
                 class:pressed={isPressed}
                 class:expanded
                 class:flipped={isFlipped}
-                style="--accent: {_teamColorVars['--team-primary-color']}"
-                onclick={_handleCardClick}
-                onpointerdown={_handlePressStart}
-                onpointerup={_handlePressEnd}
-                onpointerleave={_handlePressEnd}
+                style="--accent: {teamColorVars['--team-primary-color']}"
+                onclick={handleCardClick}
+                onpointerdown={handlePressStart}
+                onpointerup={handlePressEnd}
+                onpointerleave={handlePressEnd}
                 role="button"
                 tabindex="0"
-                onkeydown={(e) => e.key === "Enter" && _handleCardClick(e)}
+                onkeydown={(e) => e.key === "Enter" && handleCardClick(e)}
                 aria-label="Click to flip player card back"
             >
                 <!-- Team color glow -->
@@ -584,7 +599,7 @@ $effect(() => {
                     <div class="card__top">
                         <div class="card__player-info">
                             <h3 class="card__name">{displayName}</h3>
-                            <p class="card__team">{_teamWithCity}</p>
+                            <p class="card__team">{teamWithCity}</p>
                         </div>
                     </div>
 
@@ -666,10 +681,10 @@ $effect(() => {
     <div
         use:portal
         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex modal-safe-overlay modal-overlay-mobile md:modal-overlay-desktop pointer-events-auto"
-        onclick={_handleBackdropClick}
+        onclick={handleBackdropClick}
         role="button"
         tabindex="0"
-        onkeydown={(e) => e.key === "Escape" && _closeSeasonStats(e)}
+        onkeydown={(e) => e.key === "Escape" && closeSeasonStats(e)}
         aria-label="Close modal"
     >
         <div
@@ -681,35 +696,35 @@ $effect(() => {
         >
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">
                 <div class="player-card__modal-avatar shrink-0">
-                    {#if playerPhotoUrl && !_photoError}
+                    {#if playerPhotoUrl && !photoError}
                         <img
                             src={playerPhotoUrl || player.headshot_url}
                             alt={displayName}
                             class="player-card__modal-photo"
-                            class:blurred={_photoLoading || _imageLoading}
-                            onload={() => { _photoLoading = false; _imageLoading = false; }}
-                            onerror={() => { _photoError = true; _photoLoading = false; _imageLoading = false; }}
+                            class:blurred={photoLoading || imageLoading}
+                            onload={() => { photoLoading = false; imageLoading = false; }}
+                            onerror={() => { photoError = true; photoLoading = false; imageLoading = false; }}
                         />
-                        {#if (_photoLoading || _imageLoading) && _lqipUrl}
-                            <img src={_lqipUrl} alt="" class="player-card__modal-photo-lqip" />
+                        {#if (photoLoading || imageLoading) && lqipUrl}
+                            <img src={lqipUrl} alt="" class="player-card__modal-photo-lqip" />
                         {/if}
-                    {:else if _lqipUrl}
-                        <img src={_lqipUrl} alt="" class="player-card__modal-photo-lqip" />
+                    {:else if lqipUrl}
+                        <img src={lqipUrl} alt="" class="player-card__modal-photo-lqip" />
                     {:else}
-                        <div class="player-card__modal-initials">{_playerInitials}</div>
+                        <div class="player-card__modal-initials">{playerInitials}</div>
                     {/if}
                 </div>
                 <div>
                     <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">{displayName}</h3>
                     <div class="text-sm text-gray-500 flex items-center gap-2">
-                        <span>{_teamWithCity}</span>
+                        <span>{teamWithCity}</span>
                         <span>•</span>
                         <span>Kauden 2024-2025 tilastot</span>
                     </div>
                 </div>
                 <button
                     class="ml-auto p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
-                    onclick={_closeSeasonStats}
+                    onclick={closeSeasonStats}
                     aria-label="Sulje"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

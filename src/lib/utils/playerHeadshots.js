@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { normalizeTeamAbbreviation } from './teamMapping.js'
 
 /**

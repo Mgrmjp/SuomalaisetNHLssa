@@ -26,10 +26,16 @@
 }
 
 @media (min-width: 768px) {
-    .player-card__container { min-height: 310px; }
-    .player-card { min-height: 310px; }
+    .player-card__container {
+        min-height: 310px;
+    }
+    .player-card {
+        min-height: 310px;
+    }
     .goalie-card,
-    .goalie-card .player-card { min-height: 330px; }
+    .goalie-card .player-card {
+        min-height: 330px;
+    }
 }
 
 .player-card__spacer {
@@ -46,7 +52,9 @@
     transform-style: preserve-3d;
 }
 
-.goalie-card .player-card__inner { min-height: 0; }
+.goalie-card .player-card__inner {
+    min-height: 0;
+}
 
 .player-card.flipped .player-card__inner {
     transform: rotateY(180deg);
@@ -115,7 +123,9 @@
     pointer-events: none;
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    transition:
+        opacity 0.4s ease,
+        visibility 0.4s ease;
 }
 
 .player-card:not(.flipped) .card:not(.card--back) {
@@ -128,14 +138,18 @@
     pointer-events: auto;
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    transition:
+        opacity 0.4s ease,
+        visibility 0.4s ease;
 }
 
 .player-card.flipped .card:not(.card--back) {
     pointer-events: none;
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
+    transition:
+        opacity 0.4s ease,
+        visibility 0.4s ease;
 }
 
 /* ==============================
@@ -280,8 +294,13 @@
 }
 
 @keyframes badge-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
 }
 
 /* ==============================
@@ -485,7 +504,8 @@
 }
 
 .card__ring--empty {
-    background: radial-gradient(closest-side, white 78%, transparent 79% 100%),
+    background:
+        radial-gradient(closest-side, white 78%, transparent 79% 100%),
         conic-gradient(#d1d5db 0deg 0deg, rgba(0, 0, 0, 0.06) 0deg 360deg);
     box-shadow: 0 0 0 8px rgba(209, 213, 219, 0.15);
 }
@@ -687,7 +707,9 @@
     height: 56px;
     border-radius: 9999px;
     background: linear-gradient(135deg, #e2e8f0, #f8fafc);
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    box-shadow:
+        0 6px 16px rgba(15, 23, 42, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(148, 163, 184, 0.4);
     display: flex;
     align-items: center;
@@ -701,7 +723,9 @@
     height: 100%;
     object-fit: cover;
     border-radius: inherit;
-    transition: filter 0.3s ease, opacity 0.3s ease;
+    transition:
+        filter 0.3s ease,
+        opacity 0.3s ease;
 }
 
 .player-card__modal-photo.blurred {

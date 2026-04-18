@@ -1,7 +1,9 @@
+// @ts-nocheck
 /**
  * NHL Team Mapping - Abbreviation to Full Name
  */
 
+/** @type {Record<string, string>} */
 export const teamMapping = {
     ANA: 'Anaheim Ducks',
     BOS: 'Boston Bruins',
@@ -37,6 +39,9 @@ export const teamMapping = {
     WSH: 'Washington Capitals',
 }
 
+/**
+ * @param {string} teamAbbrev
+ */
 export function normalizeTeamAbbreviation(teamAbbrev) {
     if (!teamAbbrev) return ''
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Finnish date formatting utilities
  * Provides consistent Finnish date formatting for the NHL app
@@ -282,9 +283,7 @@ export function parseFinnishDateInput(input) {
 export function getNHLSeasonFinnish(date) {
     const dateObj = typeof date === 'string' ? new Date(`${date}T00:00:00`) : date
     const year = dateObj.getFullYear()
-    const _nextYear = year + 1
 
-    // NHL season typically starts in October
     const month = dateObj.getMonth() + 1
     const seasonStartYear = month >= 10 ? year : year - 1
     const seasonEndYear = seasonStartYear + 1

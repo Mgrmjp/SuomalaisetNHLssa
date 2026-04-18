@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 // biome-ignore lint/correctness/noUnusedImports: used in template
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
@@ -34,7 +35,7 @@ $effect(async () => {
     if (team) {
         try {
             _teamColorVars = await getTeamColorVariables(team)
-        } catch (error) {
+        } catch (_error) {
             // Silently ignore color loading errors
         }
     }

@@ -1,3 +1,34 @@
+// @ts-nocheck
+/**
+ * @typedef {Object} PlayerData
+ * @property {string} [team]
+ * @property {string} [opponent]
+ * @property {string} [game_id]
+ * @property {string} [game_score]
+ * @property {string} [game_result]
+ * @property {string} [gameResult]
+ * @property {string} [game_venue]
+ * @property {string} [game_city]
+ * @property {string} [headshot_url]
+ * @property {string} [team_full]
+ * @property {string} [opponent_full]
+ */
+
+/**
+ * @typedef {Object} GameData
+ * @property {function(string): GameInfo} findGameById
+ */
+
+/**
+ * @typedef {Object} GameInfo
+ * @property {string} homeTeam
+ * @property {string} awayTeam
+ * @property {number} homeScore
+ * @property {number} awayScore
+ * @property {boolean} isOT
+ * @property {boolean} isSO
+ */
+
 /**
  * Helper functions to format game information in "Away @ Home" pattern
  * These functions ensure consistent display regardless of which team the Finnish player is on
@@ -5,8 +36,8 @@
 
 /**
  * Format game matchup in "Away @ Home" pattern
- * @param {Object} player - Player data object
- * @param {Object} gamesData - Games data object with findGameById function
+ * @param {PlayerData} player - Player data object
+ * @param {GameData | null} [gamesData] - Games data object with findGameById function
  * @returns {string} Formatted matchup string
  */
 export function formatGameMatchup(player, gamesData = null) {
@@ -38,8 +69,8 @@ export function formatGameMatchup(player, gamesData = null) {
 
 /**
  * Format game score in "Away Score - Home Score" pattern
- * @param {Object} player - Player data object
- * @param {Object} gamesData - Games data object with findGameById function
+ * @param {PlayerData} player - Player data object
+ * @param {GameData | null} [gamesData] - Games data object with findGameById function
  * @returns {string} Formatted score string
  */
 export function formatGameScore(player, gamesData = null) {
@@ -50,7 +81,9 @@ export function formatGameScore(player, gamesData = null) {
         const game = gamesData.findGameById(player.game_id)
         if (game && game.homeScore !== undefined && game.awayScore !== undefined) {
             if (game.isSO && game.awayScore === game.homeScore) {
-                const result = (player?.game_result || player?.gameResult || '').trim().toUpperCase()
+                const result = (player?.game_result || player?.gameResult || '')
+                    .trim()
+                    .toUpperCase()
                 const playerTeam = player?.team
                 const opponentTeam = player?.opponent
                 let winningTeam = null
@@ -76,6 +109,7 @@ export function formatGameScore(player, gamesData = null) {
     // The current data might be in "homeScore-awayScore" format, so we need to check
     const scoreParts = player.game_score.split('-')
     if (scoreParts.length === 2) {
+        /** @type {[number, number]} */
         const [firstScore, secondScore] = scoreParts.map(Number)
 
         // If we have games data, we can determine which format is correct
@@ -90,7 +124,11 @@ export function formatGameScore(player, gamesData = null) {
             }
         }
 
-        if (Number.isFinite(firstScore) && Number.isFinite(secondScore) && firstScore === secondScore) {
+        if (
+            Number.isFinite(firstScore) &&
+            Number.isFinite(secondScore) &&
+            firstScore === secondScore
+        ) {
             const result = (player?.game_result || player?.gameResult || '').trim().toUpperCase()
             if (result === 'W') {
                 return `${firstScore + 1}-${secondScore}`
@@ -107,7 +145,7 @@ export function formatGameScore(player, gamesData = null) {
 
 /**
  * Format game venue information
- * @param {Object} player - Player data object
+ * @param {PlayerData} player - Player data object
  * @returns {string} Formatted venue string
  */
 export function formatGameVenue(player) {

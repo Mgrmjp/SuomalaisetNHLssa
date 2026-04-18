@@ -1,8 +1,7 @@
 <script>
+// @ts-nocheck
 import { onMount } from 'svelte'
-import { base } from '$app/paths'
 import { page } from '$app/stores'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
 
 const status = page.status || 404
 let _message = 'Sivua ei löytynyt'

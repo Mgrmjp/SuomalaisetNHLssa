@@ -1,4 +1,5 @@
 <script>
+// @ts-nocheck
 // biome-ignore lint/correctness/noUnusedImports: used in template
 import DivisionStandings from '$lib/components/standings/DivisionStandings.svelte'
 import { CONFERENCE_NAMES, calculateWildCardTeams } from '$lib/utils/nhlStructure.js'
@@ -25,7 +26,7 @@ const wildCardData = $derived(hasData ? calculateWildCardTeams(allConferenceData
 const _wildCardTeams = $derived(wildCardData[conferenceName] || [])
 
 // Loading state
-const isLoading = $derived(loading || !hasData)
+const _isLoading = $derived(loading || !hasData)
 
 // Error state
 const _hasError = $derived(error !== null)

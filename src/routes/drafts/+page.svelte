@@ -1,7 +1,6 @@
 <script>
-import { base } from '$app/paths'
-
-const topPicks = [
+// @ts-nocheck
+const _topPicks = [
     { year: 2016, rank: 2, name: 'Patrik Laine', team: 'Winnipeg', points: 367, games: 537 },
     { year: 2021, rank: 3, name: 'Anton Lundell', team: 'Florida', points: 156, games: 271 },
     { year: 2019, rank: 3, name: 'Kaapo Kakko', team: 'NY Rangers', points: 133, games: 327 },
@@ -11,7 +10,7 @@ const topPicks = [
     { year: 2015, rank: 9, name: 'Mikko Rantanen', team: 'Colorado', points: 509, games: 555 },
 ]
 
-const yearlyStats = [
+const _yearlyStats = [
     { year: 2025, count: 28, top: '#12' },
     { year: 2024, count: 24, top: '#8' },
     { year: 2023, count: 22, top: '#17' },

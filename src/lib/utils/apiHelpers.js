@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * API Helper Utilities
  *
@@ -51,7 +52,7 @@ export async function fetchLocalJSON(path) {
         const response = await fetch(fullPath)
         if (!response.ok) return null
         return await response.json()
-    } catch (error) {
+    } catch (_error) {
         return null
     }
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
 /**

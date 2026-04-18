@@ -1,17 +1,20 @@
 <script>
+// @ts-nocheck
 import { onMount } from 'svelte'
-import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
-import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
-import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import teamMapping from '$lib/utils/teamMapping.js'
 
 // State
+/** @type {Array<Object>} */
 let _players = []
+/** @type {Map<string, Array<Object>>} */
 let _teamsMap = new Map()
+/** @type {Array<Object>} */
 let _inactivePlayers = []
+/** @type {boolean} */
 let _loading = true
+/** @type {string|null} */
 let _error = null
 
 // Extract team abbreviation from headshot URL

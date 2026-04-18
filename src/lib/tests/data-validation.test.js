@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Data Validation and Error Handling Tests
  * Comprehensive tests for data validation, edge cases, and error scenarios

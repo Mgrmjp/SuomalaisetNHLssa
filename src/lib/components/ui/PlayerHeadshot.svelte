@@ -1,18 +1,28 @@
 <script>
+// @ts-nocheck
 import { getHeadshotCandidates } from '$lib/utils/playerHeadshots.js'
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const {
     playerId,
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     alt = 'Player headshot',
     teamAbbrev = '',
     explicitUrl = '',
     seasonId = '',
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     loading = 'lazy',
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     imageClass = '',
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     fallbackClass = '',
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     initials = '',
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     zoom = 1,
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     objectPosition = '50% 20%',
+    // biome-ignore lint/correctness/noUnusedVariables: used in template
     autoFocusFace = false,
 } = $props()
 

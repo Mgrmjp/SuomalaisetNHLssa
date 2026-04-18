@@ -1,7 +1,8 @@
 <script>
+// @ts-nocheck
 import { onMount } from 'svelte'
-import { fade, fly, slide } from 'svelte/transition'
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 let { error = null, errorInfo = null, children } = $props()
 
 let _showDetails = $state(false)

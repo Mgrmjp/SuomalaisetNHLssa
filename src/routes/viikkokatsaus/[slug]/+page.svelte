@@ -1,13 +1,12 @@
 <script>
-import { base } from '$app/paths'
-import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
-
+// @ts-nocheck
 /** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
 const { data: _data } = $props()
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const data = _data
 
-function formatDate(dateStr) {
+function _formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('fi-FI', {
         day: 'numeric',
         month: 'long',

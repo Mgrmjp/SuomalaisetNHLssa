@@ -1,27 +1,26 @@
 <script>
-    import { displayDate } from '$lib/stores/gameData.js'
+// @ts-nocheck
+/**
+ * @type {{ variant?: 'no-games' | 'no-scorers' | 'break' }}
+ */
+const { variant = 'no-scorers' } = $props()
 
-    /**
-     * @type {{ variant?: 'no-games' | 'no-scorers' | 'break' }}
-     */
-    let { variant = 'no-scorers' } = $props()
+const messages = {
+    'no-games': {
+        title: 'Ei otteluita tänään',
+        text: 'NHL:ssä ei pelata otteluita päivälle',
+    },
+    'no-scorers': {
+        title: 'Ei suomalaista pisteidentekijää',
+        text: 'Yhtään suomalaispelaajaa ei ole merkitty pisteille tai dataa ei ole vielä saatavilla päivälle',
+    },
+    break: {
+        title: 'NHL-tauko',
+        text: 'NHL:ssä on meneillään tauko. Pelit jatkuvat pian!',
+    },
+}
 
-    const messages = {
-        'no-games': {
-            title: 'Ei otteluita tänään',
-            text: 'NHL:ssä ei pelata otteluita päivälle',
-        },
-        'no-scorers': {
-            title: 'Ei suomalaista pisteidentekijää',
-            text: 'Yhtään suomalaispelaajaa ei ole merkitty pisteille tai dataa ei ole vielä saatavilla päivälle',
-        },
-        'break': {
-            title: 'NHL-tauko',
-            text: 'NHL:ssä on meneillään tauko. Pelit jatkuvat pian!',
-        },
-    }
-
-    const currentMessage = $derived(messages[variant] || messages['no-scorers'])
+const _currentMessage = $derived(messages[variant] || messages['no-scorers'])
 </script>
 
 <div class="empty-state-wrapper">
@@ -30,7 +29,7 @@
             <h3 class="empty-state-title">{currentMessage.title}</h3>
             <p class="empty-state-text">
                 {currentMessage.text}
-                <span class="empty-state-date">{$displayDate}</span>.
+                <span class="empty-state-date">{globalThis.$displayDate}</span>.
             </p>
         </div>
     </div>

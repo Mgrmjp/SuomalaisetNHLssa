@@ -2,8 +2,6 @@
 // Contains only validation functions and utility functions, no API calls
 // All data is now loaded from JSON files in the browser
 
-import logger from '$lib/utils/logger.js'
-
 // Note: Previous API statistics and stub functions have been removed as they were no longer functional.
 
 /**
@@ -51,13 +49,4 @@ export function isWithinNhlSeasonRange(date) {
     const today = new Date()
 
     return parsedDate >= earliestDate && parsedDate <= today
-}
-
-/**
- * Initialize NHL system
- */
-export function initializeNhlApi() {
-    logger.log('🚀 Initializing NHL system for local files')
-
-    logger.log('✅ NHL system initialized for local files')
 }

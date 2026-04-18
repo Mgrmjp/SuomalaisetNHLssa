@@ -1,7 +1,7 @@
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import { error } from '@sveltejs/kit'
-import fs from 'fs/promises'
 import { marked } from 'marked'
-import path from 'path'
 
 export async function load({ params }) {
     const { slug } = params
@@ -16,7 +16,7 @@ export async function load({ params }) {
             slug,
             content: html,
         }
-    } catch (err) {
+    } catch (_err) {
         throw error(404, 'Scouting report not found')
     }
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Simplified Player Detection Service
  *
@@ -6,56 +7,14 @@
  */
 
 import { base } from '$app/paths'
+import { fetchFromAPI } from '$lib/utils/apiHelpers.js'
 import logger from '$lib/utils/logger.js'
 
-// Configuration
-const CONFIG = {
-    NHL_API_BASE: `${base}/api`, // Use proxy instead of direct API
-    REQUEST_TIMEOUT: 8000,
-    MAX_RETRIES: 2,
-    RETRY_DELAY: 500,
-}
+const NHL_API_BASE = `${base}/api`
 
-// Cache for recently verified Finnish players (simple in-memory cache)
+/** @type {Map<number, {player: Object, timestamp: number}>} */
 const finnishPlayerCache = new Map()
-const CACHE_EXPIRY_MS = 5 * 60 * 1000 // 5 minutes
-
-/**
- * Fetch data from NHL API with retry logic
- * @param {string} url - URL to fetch
- * @returns {Promise<any|null>} API response or null on error
- */
-async function fetchFromAPI(url) {
-    for (let attempt = 1; attempt <= CONFIG.MAX_RETRIES; attempt++) {
-        try {
-            const controller = new AbortController()
-            const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT)
-
-            const response = await fetch(url, {
-                signal: controller.signal,
-            })
-
-            clearTimeout(timeoutId)
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-            }
-
-            return await response.json()
-        } catch (error) {
-            if (attempt === CONFIG.MAX_RETRIES) {
-                console.error(
-                    `Error fetching ${url}:`,
-                    error instanceof Error ? error.message : String(error)
-                )
-                return null
-            }
-
-            console.warn(`Attempt ${attempt} failed for ${url}, retrying...`)
-            await new Promise((resolve) => setTimeout(resolve, CONFIG.RETRY_DELAY))
-        }
-    }
-}
+const CACHE_EXPIRY_MS = 5 * 60 * 1000
 
 /**
  * Verify if a player is Finnish using the NHL API
@@ -70,9 +29,7 @@ async function verifyFinnishPlayer(playerId) {
     }
 
     try {
-        const playerData = await fetchFromAPI(
-            `${CONFIG.NHL_API_BASE}/v1/player/${playerId}/landing`
-        )
+        const playerData = await fetchFromAPI(`${NHL_API_BASE}/v1/player/${playerId}/landing`)
 
         if (!playerData) {
             return null
@@ -226,7 +183,7 @@ async function getAllTeamAbbreviations() {
     try {
         // Use current date to avoid redirect
         const today = new Date().toISOString().split('T')[0]
-        const standingsData = await fetchFromAPI(`${CONFIG.NHL_API_BASE}/v1/standings/${today}`)
+        const standingsData = await fetchFromAPI(`${NHL_API_BASE}/v1/standings/${today}`)
         if (!standingsData || !standingsData.standings) {
             return []
         }
@@ -296,7 +253,7 @@ async function scanAllTeamsForFinnishPlayers() {
 
     for (const teamAbbrev of teamAbbreviations) {
         try {
-            const rosterUrl = `${CONFIG.NHL_API_BASE}/v1/roster/${teamAbbrev}/${seasonId}`
+            const rosterUrl = `${NHL_API_BASE}/v1/roster/${teamAbbrev}/${seasonId}`
             const rosterData = await fetchFromAPI(rosterUrl)
 
             if (
@@ -351,8 +308,13 @@ function clearExpiredCache() {
     }
 }
 
-// Clean up expired cache entries periodically
-setInterval(clearExpiredCache, CACHE_EXPIRY_MS)
+let _cacheCleanupInterval = null
+
+export function initPlayerDetection() {
+    if (!_cacheCleanupInterval) {
+        _cacheCleanupInterval = setInterval(clearExpiredCache, CACHE_EXPIRY_MS)
+    }
+}
 
 export default {
     getFinnishPlayerIds,

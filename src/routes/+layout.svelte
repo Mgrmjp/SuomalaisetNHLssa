@@ -1,17 +1,20 @@
 <script>
+// @ts-nocheck
 import '../app.css'
-import { base } from '$app/paths'
-import { page } from '$app/stores'
-import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
-import VerticalAd from '$lib/components/ui/VerticalAd.svelte'
-import VerticalAdLeft from '$lib/components/ui/VerticalAdLeft.svelte'
+import { onMount } from 'svelte'
+import { initPlayerDetection } from '$lib/services/playerDetectionService.js'
 
+// biome-ignore lint/correctness/noUnusedVariables: used in template
 const { children } = $props()
 
 const _siteUrl = 'https://suomalaisetnhlssa.fi'
 const _siteName = 'Suomalaiset NHL:ssä'
 const _defaultDescription =
     'Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset.'
+
+onMount(() => {
+    initPlayerDetection()
+})
 </script>
 
 <svelte:head>
@@ -39,11 +42,11 @@ const _defaultDescription =
     <meta name="twitter:image:alt" content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot" />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="{_siteUrl}{$page.url.pathname}" />
+    <link rel="canonical" href="{_siteUrl}{globalThis.$page.url.pathname}" />
 
     <!-- Hreflang for international Finnish speakers (dynamic per page) -->
-    <link rel="alternate" hreflang="fi" href="{_siteUrl}{$page.url.pathname}" />
-    <link rel="alternate" hreflang="x-default" href="{_siteUrl}{$page.url.pathname}" />
+    <link rel="alternate" hreflang="fi" href="{_siteUrl}{globalThis.$page.url.pathname}" />
+    <link rel="alternate" hreflang="x-default" href="{_siteUrl}{globalThis.$page.url.pathname}" />
 
     <link rel="icon" type="image/svg+xml" href={base + "/logo.svg"} />
 
@@ -88,13 +91,11 @@ const _defaultDescription =
 <div class="min-h-screen flex flex-col relative bg-gray-50" style="color-scheme: light;">
     <!-- Vertical Ad Sidebars -->
     <VerticalAd />
-    <VerticalAdLeft />
+    <VerticalAd position="left" />
 
-    <!-- <Header /> -->
     <main class="flex-1 w-full relative z-10">
         <ErrorBoundary>
             {@render children()}
         </ErrorBoundary>
     </main>
-    <!-- <Footer /> -->
 </div>

@@ -11,32 +11,6 @@ import logger from '$lib/utils/logger.js'
 
 // API configuration removed - using only prepopulated data
 
-/**
- * Get Finnish player IDs for tracking
- * @returns {Promise<Set<number>>} Set of Finnish player IDs
- */
-async function _getFinnishPlayerIds() {
-    return await playerDetectionService.getFinnishPlayerIds()
-}
-
-/**
- * Check if a player ID is Finnish
- * @param {number} playerId - Player ID to check
- * @returns {Promise<boolean>} True if player is Finnish
- */
-async function _hasFinnishPlayerId(playerId) {
-    return await playerDetectionService.isFinnishPlayer(playerId)
-}
-
-/**
- * Get Finnish player by ID
- * @param {number} playerId - Player ID
- * @returns {Promise<Object|null>} Finnish player info or null
- */
-async function _getFinnishPlayerById(playerId) {
-    return await playerDetectionService.getFinnishPlayerById(playerId)
-}
-
 // Helper functions removed - only prepopulated data is used
 
 // API fetching functions removed - only prepopulated data is used

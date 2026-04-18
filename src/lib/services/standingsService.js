@@ -7,28 +7,82 @@ import {
 } from '$lib/utils/nhlStructure.js'
 import teamMapping from '$lib/utils/teamMapping.js'
 
-/** Average power play opportunities per game in NHL */
-const AVG_POWER_PLAY_OPPORTUNITIES_PER_GAME = 3.2
+/** @typedef {{ r: number, g: number, b: number }} RGB */
 
-/** Average penalty kill times shorthanded per game in NHL */
-const AVG_PENALTY_KILL_TIMES_PER_GAME = 3.5
+/**
+ * @typedef {object} GameData
+ * @property {string} date
+ * @property {object} [error]
+ * @property {{ games: Game[] }} [data]
+ */
 
-// Prepopulated game dates - all dates we have data for
-// Prepopulated game dates - all dates we have data for
-// This will be populated from /data/games_manifest.json
+/**
+ * @typedef {object} Game
+ * @property {string} gameState
+ * @property {number} gameType
+ * @property {string} homeTeam
+ * @property {string} awayTeam
+ * @property {number} homeScore
+ * @property {number} awayScore
+ * @property {number} period
+ * @property {boolean} [isOT]
+ * @property {boolean} [isSO]
+ */
+
+/**
+ * @typedef {object} HomeAwayStats
+ * @property {number} games
+ * @property {number} wins
+ * @property {number} losses
+ * @property {number} ot
+ */
+
+/**
+ * @typedef {object} TeamStats
+ * @property {string} team
+ * @property {number} gamesPlayed
+ * @property {number} wins
+ * @property {number} losses
+ * @property {number} overtimeLosses
+ * @property {number} points
+ * @property {number} goalsFor
+ * @property {number} goalsAgainst
+ * @property {number} goalDifferential
+ * @property {number} pointsPercentage
+ * @property {number} regulationWins
+ * @property {number} regulationPlusOTWins
+ * @property {string} streak
+ * @property {string} last10
+ * @property {string[]} last10Results
+ * @property {HomeAwayStats} home
+ * @property {HomeAwayStats} away
+ * @property {boolean} hasSpecialTeamsData
+ * @property {number} powerPlayGoals
+ * @property {number} powerPlayOpportunities
+ * @property {number} penaltyKillGoalsAllowed
+ * @property {number} penaltyKillTimesShorthanded
+ */
+
+/** @type {string[]} */
 let prepopulatedDates = []
-
-// Cache for fetched game data to avoid repeated fetches
-const gameDataCache = new Map()
-
-// Cache object for the manifest
+/** @type {object|null} */
 let gamesManifestCache = null
 
+// Cache for fetched game data to avoid repeated fetches
+/** @type {Map<string, object>} */
+const gameDataCache = new Map()
+
+/**
+ * @param {string} date
+ * @returns {Promise<{ games: Game[] } | null>}
+ */
 async function loadGameDataForDate(date) {
     if (gameDataCache.has(date)) {
-        return gameDataCache.get(date)
+        return /** @type {{ games: Game[] } | null} */ (gameDataCache.get(date) || null)
     }
-    const data = await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
+    const data = /** @type {{ games: Game[] } | null} */ (
+        await fetchLocalJSON(`/data/prepopulated/games/${date}.json`)
+    )
     if (data) {
         gameDataCache.set(date, data)
     }
@@ -44,13 +98,14 @@ const DEFAULT_SEASON_START = '2025-10-07'
  */
 export class StandingsService {
     constructor() {
+        /** @type {Map<string, { data: object, timestamp: number }>} */
         this.cache = new Map()
         this.cacheTimeout = 5 * 60 * 1000 // 5 minutes
     }
 
     /**
      * Calculate season standings from existing game data
-     * @param {string} seasonStart - Season start date (YYYY-MM-DD)
+     * @param {string} [seasonStart=DEFAULT_SEASON_START] - Season start date (YYYY-MM-DD)
      * @returns {Promise<object>} Complete standings data
      */
     async calculateSeasonStandings(seasonStart = DEFAULT_SEASON_START) {
@@ -86,20 +141,30 @@ export class StandingsService {
             // Parallelize fetching of game data
             const gamesDataPromises = gameDates.map((date) =>
                 this.getGamesDataForDate(date)
-                    .then((data) => ({ date, data }))
-                    .catch((error) => ({ date, error }))
+                    .then((/** @type {{ games: Game[] } | null} */ data) => ({
+                        date,
+                        data: data || undefined,
+                    }))
+                    .catch((/** @type {unknown} */ error) => ({
+                        date,
+                        error:
+                            typeof error === 'object' && error && 'message' in error
+                                ? error
+                                : { message: String(error) },
+                    }))
             )
 
             const results = await Promise.all(gamesDataPromises)
 
             // Process the fetched data sequentially to ensure data consistency
             for (const result of results) {
-                if (result.error) {
+                if ('error' in result && result.error) {
                     logger.log(`⚠️ No game data for ${result.date}: ${result.error.message}`)
                     continue
                 }
 
-                const gamesData = result.data
+                const gamesData =
+                    'data' in result ? /** @type {{ games: Game[] }} */ (result.data) : null
                 if (!gamesData || !gamesData.games || gamesData.games.length === 0) {
                     continue
                 }
@@ -122,8 +187,9 @@ export class StandingsService {
 
             logger.log('✅ Standings calculation complete')
             return standings
-        } catch (error) {
-            logger.log(`❌ Error calculating standings: ${error.message}`)
+        } catch (/** @type {unknown} */ error) {
+            const msg = error instanceof Error ? error.message : String(error)
+            logger.log(`❌ Error calculating standings: ${msg}`)
             throw error
         }
     }
@@ -131,7 +197,7 @@ export class StandingsService {
     /**
      * Get available game dates in a date range
      * @param {string} startDate - Start date (YYYY-MM-DD)
-     * @param {string} endDate - End date (YYYY-MM-DD), defaults to today
+     * @param {string|null} [endDate=null] - End date (YYYY-MM-DD), defaults to today
      * @returns {Promise<string[]>} Array of dates with games
      */
     async getGameDatesInRange(startDate, endDate = null) {
@@ -155,23 +221,28 @@ export class StandingsService {
             // Import games data dynamically to avoid bundling issues
             const gamesData = await this.getGamesDataForDate(date)
 
-            if (!gamesData || !gamesData.games || gamesData.games.length === 0) {
+            if (
+                !gamesData ||
+                !(/** @type {any} */ (gamesData).games) ||
+                /** @type {{ games: Game[] }} */ (gamesData).games.length === 0
+            ) {
                 return // No games on this date
             }
 
-            for (const game of gamesData.games) {
+            for (const game of /** @type {{ games: Game[] }} */ (gamesData).games) {
                 this.processGame(game, standings)
             }
-        } catch (error) {
+        } catch (/** @type {unknown} */ error) {
             // Log error but continue processing other dates
-            logger.log(`⚠️ No game data for ${date}: ${error.message}`)
+            const msg = error instanceof Error ? error.message : String(error)
+            logger.log(`⚠️ No game data for ${date}: ${msg}`)
         }
     }
 
     /**
      * Get games data for a specific date
      * @param {string} date - Date (YYYY-MM-DD)
-     * @returns {Promise<object>} Games data object
+     * @returns {Promise<{ games: Game[] } | null>} Games data object
      */
     async getGamesDataForDate(date) {
         return await loadGameDataForDate(date)
@@ -179,7 +250,7 @@ export class StandingsService {
 
     /**
      * Process a single game and update standings
-     * @param {object} game - Game object
+     * @param {Game} game - Game object
      * @param {object} standings - Standings object to update
      */
     processGame(game, standings) {
@@ -219,27 +290,37 @@ export class StandingsService {
     }
 
     /**
+     * @typedef {{ conference: string, division: string }} ConferenceDivisionInfo
+     */
+
+    /**
      * Get team info and stats objects for both teams in a game
      * @param {string} homeTeam - Home team abbreviation
      * @param {string} awayTeam - Away team abbreviation
-     * @param {object} standings - Standings object
-     * @returns {object} Object containing team info and stats
+     * @param {any} standings - Standings object
+     * @returns {{ homeInfo: ConferenceDivisionInfo|null, awayInfo: ConferenceDivisionInfo|null, homeTeamStats: TeamStats|null, awayTeamStats: TeamStats|null }}
      */
     getGameTeamsInfo(homeTeam, awayTeam, standings) {
-        const homeInfo = getTeamConferenceAndDivision(homeTeam)
-        const awayInfo = getTeamConferenceAndDivision(awayTeam)
+        const homeInfo = /** @type {ConferenceDivisionInfo|null} */ (
+            getTeamConferenceAndDivision(homeTeam)
+        )
+        const awayInfo = /** @type {ConferenceDivisionInfo|null} */ (
+            getTeamConferenceAndDivision(awayTeam)
+        )
 
         if (!homeInfo || !awayInfo) {
             logger.log(`⚠️ Unknown team in game: ${homeTeam} vs ${awayTeam}`)
             return { homeInfo: null, awayInfo: null, homeTeamStats: null, awayTeamStats: null }
         }
 
-        const homeTeamStats = standings[homeInfo.conference][homeInfo.division].find(
-            (team) => team.team === homeTeam
-        )
-        const awayTeamStats = standings[awayInfo.conference][awayInfo.division].find(
-            (team) => team.team === awayTeam
-        )
+        /** @type {TeamStats|undefined} */
+        const homeTeamStats = /** @type {any} */ (standings)[homeInfo.conference][
+            homeInfo.division
+        ].find((/** @type {TeamStats} */ team) => team.team === homeTeam)
+        /** @type {TeamStats|undefined} */
+        const awayTeamStats = /** @type {any} */ (standings)[awayInfo.conference][
+            awayInfo.division
+        ].find((/** @type {TeamStats} */ team) => team.team === awayTeam)
 
         if (!homeTeamStats || !awayTeamStats) {
             logger.log(`⚠️ Team not found in standings: ${homeTeam} or ${awayTeam}`)
@@ -251,8 +332,8 @@ export class StandingsService {
 
     /**
      * Update games played count for both teams
-     * @param {object} homeTeamStats - Home team stats
-     * @param {object} awayTeamStats - Away team stats
+     * @param {TeamStats} homeTeamStats - Home team stats
+     * @param {TeamStats} awayTeamStats - Away team stats
      */
     updateGamesPlayed(homeTeamStats, awayTeamStats) {
         homeTeamStats.gamesPlayed++
@@ -261,8 +342,8 @@ export class StandingsService {
 
     /**
      * Update goals for/after for both teams
-     * @param {object} homeTeamStats - Home team stats
-     * @param {object} awayTeamStats - Away team stats
+     * @param {TeamStats} homeTeamStats - Home team stats
+     * @param {TeamStats} awayTeamStats - Away team stats
      * @param {number} homeScore - Home team score
      * @param {number} awayScore - Away team score
      */
@@ -275,8 +356,8 @@ export class StandingsService {
 
     /**
      * Update home/away records
-     * @param {object} homeTeamStats - Home team stats
-     * @param {object} awayTeamStats - Away team stats
+     * @param {TeamStats} homeTeamStats - Home team stats
+     * @param {TeamStats} awayTeamStats - Away team stats
      */
     updateHomeAwayRecords(homeTeamStats, awayTeamStats) {
         homeTeamStats.home.games++
@@ -285,10 +366,11 @@ export class StandingsService {
 
     /**
      * Update win/loss records and points based on game result
-     * @param {object} homeTeamStats - Home team stats
-     * @param {object} awayTeamStats - Away team stats
+     * @param {TeamStats} homeTeamStats - Home team stats
+     * @param {TeamStats} awayTeamStats - Away team stats
      * @param {number} homeScore - Home team score
      * @param {number} awayScore - Away team score
+     * @param {Game} game - Game object
      */
     updateGameResult(homeTeamStats, awayTeamStats, homeScore, awayScore, game) {
         const isOT = game.period > 3 || game.isOT === true || game.isSO === true
@@ -338,8 +420,9 @@ export class StandingsService {
 
     /**
      * Apply win statistics to a team
-     * @param {object} teamStats - Team stats to update
-     * @param {object} locationStats - Home or away stats to update
+     * @param {TeamStats} teamStats - Team stats to update
+     * @param {HomeAwayStats} locationStats - Home or away stats to update
+     * @param {boolean} [isOT=false]
      */
     applyWin(teamStats, locationStats, isOT = false) {
         teamStats.wins++
@@ -353,8 +436,8 @@ export class StandingsService {
 
     /**
      * Apply loss statistics to a team
-     * @param {object} teamStats - Team stats to update
-     * @param {object} locationStats - Home or away stats to update
+     * @param {TeamStats} teamStats - Team stats to update
+     * @param {HomeAwayStats} locationStats - Home or away stats to update
      */
     applyLoss(teamStats, locationStats) {
         teamStats.losses++
@@ -363,8 +446,8 @@ export class StandingsService {
 
     /**
      * Apply overtime/shootout loss statistics to a team
-     * @param {object} teamStats - Team stats to update
-     * @param {object} locationStats - Home or away stats to update
+     * @param {TeamStats} teamStats - Team stats to update
+     * @param {HomeAwayStats} locationStats - Home or away stats to update
      */
     applyOTLoss(teamStats, locationStats) {
         teamStats.overtimeLosses++
@@ -374,8 +457,8 @@ export class StandingsService {
 
     /**
      * Update derived statistics (goal differential, points percentage)
-     * @param {object} homeTeamStats - Home team stats
-     * @param {object} awayTeamStats - Away team stats
+     * @param {TeamStats} homeTeamStats - Home team stats
+     * @param {TeamStats} awayTeamStats - Away team stats
      */
     updateDerivedStats(homeTeamStats, awayTeamStats) {
         homeTeamStats.goalDifferential = homeTeamStats.goalsFor - homeTeamStats.goalsAgainst
@@ -391,7 +474,7 @@ export class StandingsService {
 
     /**
      * Update team streak
-     * @param {object} teamStats - Team stats object
+     * @param {TeamStats} teamStats - Team stats object
      * @param {string} result - 'W', 'L', or 'OT'
      */
     updateStreak(teamStats, result) {
@@ -411,8 +494,8 @@ export class StandingsService {
             return
         }
 
-        const [, type, countStr] = match
-        const count = parseInt(countStr, 10)
+        const type = /** @type {string} */ (match[1])
+        const count = parseInt(/** @type {string} */ (match[2]), 10)
 
         if (type === result) {
             teamStats.streak = `${result}${count + 1}`
@@ -423,7 +506,7 @@ export class StandingsService {
 
     /**
      * Record a game result in the last 10 games tracking
-     * @param {object} teamStats - Team stats object
+     * @param {TeamStats} teamStats - Team stats object
      * @param {string} result - 'W', 'L', or 'OT'
      */
     recordLast10Result(teamStats, result) {
@@ -437,7 +520,7 @@ export class StandingsService {
 
     /**
      * Update last 10 games record from actual game results
-     * @param {object} teamStats - Team stats object
+     * @param {TeamStats} teamStats - Team stats object
      */
     updateLast10(teamStats) {
         const results = teamStats.last10Results
@@ -454,40 +537,24 @@ export class StandingsService {
      * @returns {string} Full team name
      */
     getTeamFullName(teamAbbrev) {
-        return teamMapping[teamAbbrev] || teamAbbrev
+        return /** @type {any} */ (teamMapping)[teamAbbrev] || teamAbbrev
     }
 
     /**
      * Update special teams statistics
-     * @param {object} teamStats - Team stats object
+     * @param {TeamStats} teamStats - Team stats object
      */
     updateSpecialTeamsStats(teamStats) {
         this.initializeSpecialTeamsStats(teamStats)
 
         if (!teamStats.hasSpecialTeamsData) {
-            const gamesPlayed = teamStats.gamesPlayed || 1
-
-            teamStats.powerPlayOpportunities = Math.round(
-                gamesPlayed * AVG_POWER_PLAY_OPPORTUNITIES_PER_GAME
-            )
-            teamStats.powerPlayGoals = Math.round(
-                (teamStats.powerPlayOpportunities * (18 + Math.random() * 10)) / 100
-            ) // 18-28% PP%
-
-            teamStats.penaltyKillTimesShorthanded = Math.round(
-                gamesPlayed * AVG_PENALTY_KILL_TIMES_PER_GAME
-            )
-            teamStats.penaltyKillGoalsAllowed = Math.round(
-                (teamStats.penaltyKillTimesShorthanded * (15 + Math.random() * 8)) / 100
-            ) // 15-23% PK%
-
             teamStats.hasSpecialTeamsData = true
         }
     }
 
     /**
      * Initialize special teams stats if they don't exist
-     * @param {object} teamStats - Team stats object
+     * @param {TeamStats} teamStats - Team stats object
      */
     initializeSpecialTeamsStats(teamStats) {
         teamStats.powerPlayGoals ??= 0
@@ -508,6 +575,7 @@ export class StandingsService {
 
     /**
      * Fetch the list of available game dates from the server
+     * @returns {Promise<string[]>}
      */
     async fetchAvailableDates() {
         // Return if already populated (and valid)
@@ -520,17 +588,22 @@ export class StandingsService {
             const timestamp = Date.now()
             const manifest = await fetchLocalJSON(`/data/games_manifest.json?t=${timestamp}`)
 
-            if (manifest?.games && Array.isArray(manifest.games)) {
+            if (
+                manifest &&
+                /** @type {any} */ (manifest).games &&
+                Array.isArray(/** @type {any} */ (manifest).games)
+            ) {
                 gamesManifestCache = manifest
-                prepopulatedDates = manifest.games.sort()
+                prepopulatedDates = /** @type {{ games: string[] }} */ (manifest).games.sort()
                 logger.log(`✅ Loaded ${prepopulatedDates.length} game dates from manifest`)
             } else {
                 logger.log('⚠️ Failed to load games manifest or invalid format')
                 // Fallback to minimal set or keep empty?
                 // If it fails, prepopulatedDates remains empty or whatever it was
             }
-        } catch (error) {
-            logger.log(`❌ Error fetching games manifest: ${error.message}`)
+        } catch (/** @type {unknown} */ error) {
+            const msg = error instanceof Error ? error.message : String(error)
+            logger.log(`❌ Error fetching games manifest: ${msg}`)
         }
 
         return prepopulatedDates

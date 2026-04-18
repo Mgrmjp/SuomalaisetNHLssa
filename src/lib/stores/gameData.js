@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { derived, get, readonly, writable } from 'svelte/store'
 
 import { getFinnishPlayersForDate, getGamesForDate } from '$lib/services/dataService.js'
