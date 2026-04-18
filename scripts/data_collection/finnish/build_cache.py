@@ -23,7 +23,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config import FINNISH_CACHE_FILE
+from config import FINNISH_CACHE_FILE, DATA_DIR
 from utils import save_json, load_json, fetch_from_api, player_landing_url
 
 # Import Finnish text correction utilities
@@ -37,10 +37,10 @@ NHL_STATS_API = "https://api.nhle.com/stats/rest/en"
 def get_master_finnish_players():
     """
     Fetch ALL Finnish players (skaters and goalies) from NHL Stats API.
-    
+
     This uses nationalityCode="FIN" which correctly identifies all Finnish players
     regardless of birth country or current team assignment.
-    
+
     Returns:
         Tuple of (player_ids_dict, is_reliable)
         - player_ids_dict: {player_id: {firstName, lastName, position, teamAbbrev}}
@@ -54,10 +54,7 @@ def get_master_finnish_players():
 
     # Fetch skaters
     skater_url = f"{NHL_STATS_API}/skater/bios"
-    params = {
-        "limit": -1,
-        "cayenneExp": 'nationalityCode="FIN"'
-    }
+    params = {"limit": -1, "cayenneExp": 'nationalityCode="FIN"'}
 
     try:
         r = requests.get(skater_url, params=params, timeout=15)
@@ -113,12 +110,12 @@ def get_master_finnish_players():
 def get_current_nhl_rosters():
     """
     Get current rosters for all NHL teams to enrich player data with team info.
-    
+
     Returns:
         Dict mapping player_id -> team_abbrev for players on NHL rosters
     """
     print("Fetching current NHL team rosters for team enrichment...")
-    
+
     # Get all teams
     url = f"{NHL_API_BASE}/v1/standings/now"
     standings_data = fetch_from_api(url)
@@ -128,9 +125,9 @@ def get_current_nhl_rosters():
             abbrev = record.get("teamAbbrev", {}).get("default")
             if abbrev:
                 teams.append(abbrev)
-    
+
     print(f"   Found {len(teams)} teams")
-    
+
     player_teams = {}
     for team in teams:
         roster_url = f"{NHL_API_BASE}/v1/roster/{team}/current"
@@ -142,7 +139,7 @@ def get_current_nhl_rosters():
                     if player_id:
                         player_teams[player_id] = team
         time.sleep(0.3)
-    
+
     print(f"   Found {len(player_teams)} players on NHL rosters\n")
     return player_teams
 
@@ -180,23 +177,23 @@ def fetch_player_landing(player_id):
 def build_player_cache_entry(player_landing, team_abbrev=None):
     """
     Build a standardized cache entry from player landing data.
-    
+
     Args:
         player_landing: Full player data from NHL API
         team_abbrev: Current team abbreviation (from roster scan or stats API)
-    
+
     Returns:
         Standardized player data dict
     """
     if not player_landing:
         return None
-    
+
     # Apply Finnish text corrections
     player_info = normalize_finnish_player_data(player_landing)
-    
+
     # Use provided team or fall back to player's currentTeam
     team = team_abbrev or player_info.get("currentTeamAbbrev", "")
-    
+
     return {
         "playerId": player_info.get("playerId"),
         "name": f"{player_info.get('firstName', {}).get('default', '')} {player_info.get('lastName', {}).get('default', '')}".strip(),
@@ -213,13 +210,40 @@ def build_player_cache_entry(player_landing, team_abbrev=None):
         "shootsCatches": player_info.get("shootsCatches", ""),
         "headshot": player_info.get("headshot", ""),
         "isActive": player_info.get("isActive", True),
-        "currentTeam": team
+        "currentTeam": team,
     }
 
 
+def load_existing_roster_fields():
+    """Load lastTeam and gamesPlayed from the existing roster file to preserve them."""
+    roster_file = DATA_DIR / "players" / "finnish-roster.json"
+    if not roster_file.exists():
+        return {}
+    try:
+        raw = load_json(roster_file)
+        if not raw:
+            return {}
+        fields = {}
+        for pid, pdata in raw.items():
+            extra = {}
+            if "lastTeam" in pdata:
+                extra["lastTeam"] = pdata["lastTeam"]
+            if "gamesPlayed" in pdata:
+                extra["gamesPlayed"] = pdata["gamesPlayed"]
+            if extra:
+                fields[str(pid)] = extra
+        return fields
+    except Exception:
+        return {}
+
+
 def main():
-    parser = argparse.ArgumentParser(description='Build Finnish players cache')
-    parser.add_argument('--dry-run', action='store_true', help='Only show what would be done without fetching player data')
+    parser = argparse.ArgumentParser(description="Build Finnish players cache")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Only show what would be done without fetching player data",
+    )
     args = parser.parse_args()
 
     print("Building comprehensive Finnish players cache (Master List Mode)...")
@@ -229,6 +253,21 @@ def main():
     # Load existing cache first to preserve manual edits/inactive players
     finnish_players = load_existing_cache()
     print(f"Loaded {len(finnish_players)} existing players from cache.")
+
+    # Preserve lastTeam/gamesPlayed from the roster file (populated by fetch-last-teams.cjs)
+    roster_fields = load_existing_roster_fields()
+    if roster_fields:
+        preserved_count = 0
+        for pid, fields in roster_fields.items():
+            if pid in finnish_players:
+                for key, value in fields.items():
+                    if value is not None:
+                        finnish_players[pid][key] = value
+                        preserved_count += 1
+        if preserved_count:
+            print(
+                f"Preserved {preserved_count} extra field(s) from existing roster (lastTeam/gamesPlayed)."
+            )
     print()
 
     # Step 1: Get master list of ALL Finnish players from Stats API
@@ -239,12 +278,18 @@ def main():
     # This prevents accidental data loss during partial API outages.
     if master_ids_reliable:
         before_prune = len(finnish_players)
-        finnish_players = prune_cache_with_master_ids(finnish_players, master_finnish_ids)
+        finnish_players = prune_cache_with_master_ids(
+            finnish_players, master_finnish_ids
+        )
         removed_count = before_prune - len(finnish_players)
         if removed_count > 0:
-            print(f"🧹 Pruned {removed_count} non-Finnish stale entries from existing cache.\n")
+            print(
+                f"🧹 Pruned {removed_count} non-Finnish stale entries from existing cache.\n"
+            )
     else:
-        print("⚠️ Master Finnish IDs not fully reliable; skipping stale entry pruning.\n")
+        print(
+            "⚠️ Master Finnish IDs not fully reliable; skipping stale entry pruning.\n"
+        )
 
     # Step 2: Get current NHL rosters for team enrichment
     player_teams = get_current_nhl_rosters()
@@ -263,9 +308,11 @@ def main():
         print("🔍 DRY RUN - would add these players:")
         print("-" * 60)
         for player_id, player_meta in sorted(missing_from_cache)[:20]:
-            name = f"{player_meta.get('firstName', '')} {player_meta.get('lastName', '')}"
-            position = player_meta.get('position', 'N/A')
-            team = player_meta.get('teamAbbrev', 'N/A')
+            name = (
+                f"{player_meta.get('firstName', '')} {player_meta.get('lastName', '')}"
+            )
+            position = player_meta.get("position", "N/A")
+            team = player_meta.get("teamAbbrev", "N/A")
             print(f"   ID: {player_id:<10} | {name:<30} | {position} | {team}")
         if len(missing_from_cache) > 20:
             print(f"   ... and {len(missing_from_cache) - 20} more")
@@ -294,6 +341,7 @@ def main():
             print(f"🔄 Updated team info for {updated_players_count} existing players")
             save_json(finnish_players, FINNISH_CACHE_FILE)
             from sync_roster import sync_roster
+
             sync_roster()
         return
 
@@ -320,7 +368,7 @@ def main():
 
     # Process in batches to show progress and manage rate limiting
     for batch_start in range(0, len(missing_from_cache), batch_size):
-        batch = missing_from_cache[batch_start:batch_start + batch_size]
+        batch = missing_from_cache[batch_start : batch_start + batch_size]
         batch_results = {}
 
         # Use thread pool for concurrent fetching
@@ -340,7 +388,9 @@ def main():
                     failed_fetches.append(player_id)
 
         processed += len(batch)
-        print(f"   Progress: {processed}/{len(missing_from_cache)} players processed ({new_players_count} added)")
+        print(
+            f"   Progress: {processed}/{len(missing_from_cache)} players processed ({new_players_count} added)"
+        )
 
         # Rate limit between batches
         if batch_start + batch_size < len(missing_from_cache):
@@ -351,7 +401,9 @@ def main():
     print(f"✅ Built comprehensive cache with {len(finnish_players)} players")
     print(f"🆕 Added {new_players_count} newly discovered players")
     if failed_fetches:
-        print(f"❌ Failed to fetch {len(failed_fetches)} players: {failed_fetches[:10]}{'...' if len(failed_fetches) > 10 else ''}")
+        print(
+            f"❌ Failed to fetch {len(failed_fetches)} players: {failed_fetches[:10]}{'...' if len(failed_fetches) > 10 else ''}"
+        )
     print()
 
     # Save cache
@@ -363,6 +415,7 @@ def main():
     # Sync to static roster location for frontend
     print("🔄 Syncing to static roster...")
     from sync_roster import sync_roster
+
     sync_roster()
 
     # Print summary by position
@@ -378,9 +431,12 @@ def main():
 
     # Print all players
     print("🌟 All Finnish players:")
-    for player_id, player in sorted(finnish_players.items(), key=lambda x: x[1]["name"]):
-        team = player.get('currentTeam', 'N/A')
+    for player_id, player in sorted(
+        finnish_players.items(), key=lambda x: x[1]["name"]
+    ):
+        team = player.get("currentTeam", "N/A")
         print(f"   {player['name']} (ID: {player_id}) - {player['position']} - {team}")
+
 
 if __name__ == "__main__":
     main()
