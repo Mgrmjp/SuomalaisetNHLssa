@@ -276,21 +276,19 @@ function getLogoSrc(ad) {
     .ad-link {
         position: absolute;
         top: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 0;
+        width: 100%;
+        height: 100%;
         display: block;
         border: none;
         opacity: 0;
         transition: opacity 0.8s ease-in-out;
         pointer-events: none;
-        width: 100%;
-        height: 100%;
+        overflow: hidden;
+        border-radius: 6px;
     }
 
     .ad-link.active {
-        position: relative;
-        left: 0;
-        transform: none;
         opacity: 1;
         pointer-events: auto;
     }
@@ -298,8 +296,9 @@ function getLogoSrc(ad) {
     .ad-link.fade-out { opacity: 0; }
 
     .ad-img {
-        max-width: 100%;
-        height: auto;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         border: 0;
         border-radius: 8px;
         display: block;
@@ -323,17 +322,14 @@ function getLogoSrc(ad) {
 
     /* =====================
        DESKTOP (>=768px)
-       Only banner visible
+       Only banner visible - 728x90 IAB leaderboard
        ===================== */
     .ad-slot--desktop {
         position: relative;
-        display: flex;
-        justify-content: center;
         width: 100%;
-        max-width: 980px;
-        /* IAB standard: 728x90 or 980x120 */
+        max-width: 728px;
         height: 90px;
-        padding: 0;
+        margin: 0 auto;
     }
 
     .ad-slot--mobile-square,
@@ -352,13 +348,10 @@ function getLogoSrc(ad) {
 
         .ad-slot--mobile-square {
             position: relative;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            /* Reserved: 300x250 IAB Medium Rectangle */
-            min-height: 250px;
-            max-width: 300px;
-            padding: 0.75rem 0 0.5rem;
+            width: 300px;
+            height: 250px;
+            margin: 0 auto;
+            padding: 0;
         }
 
         .ad-link--square {
@@ -375,13 +368,10 @@ function getLogoSrc(ad) {
 
         .ad-slot--mobile-banner {
             position: relative;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            /* Reserved: 300x250 IAB Medium Rectangle */
-            min-height: 250px;
-            max-width: 300px;
-            padding: 0.5rem 0 0.75rem;
+            width: 300px;
+            height: 250px;
+            margin: 0 auto;
+            padding: 0;
         }
 
         .ad-link--mbanner {
