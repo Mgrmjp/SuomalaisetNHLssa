@@ -2,26 +2,24 @@
 // @ts-nocheck
 import { onDestroy, onMount } from 'svelte'
 
+// Standard IAB vertical rectangle: 160x600
+const SLOT_WIDTH = 160
+const SLOT_HEIGHT = 600
+
 const ads = [
     {
         href: 'https://id.skruvat.fi/t/t?a=1483923855&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1483923855&as=2038972948&t=1&tk=1&i=1',
-        width: 160,
-        height: 600,
         alt: 'Mainos',
     },
     {
         href: 'https://to.bjornborg.com/t/t?a=1616919154&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1616919154&as=2038972948&t=1&tk=1&i=1',
-        width: 120,
-        height: 600,
         alt: 'Mainos',
     },
     {
         href: 'https://go.adt242.com/t/t?a=1875158502&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1875158502&as=2038972948&t=1&tk=1&i=1',
-        width: 160,
-        height: 600,
         alt: 'Mainos',
     },
 ]
@@ -77,7 +75,7 @@ onDestroy(() => {
                 class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
                 <div class="ad-content-wrapper">
-                    <img src={ad.src} width={ad.width} height={ad.height} alt={ad.alt} class="ad-img" />
+                    <img src={ad.src} width={SLOT_WIDTH} height={SLOT_HEIGHT} alt={ad.alt} class="ad-img" />
                     <span class="ad-disclaimer">Mainos</span>
                 </div>
             </a>
@@ -129,12 +127,6 @@ onDestroy(() => {
             width: 160px;
             height: 600px;
         }
-
-        .ad-img {
-            width: 160px;
-            height: 600px;
-            object-fit: cover;
-        }
     }
 
     .ad-wrapper {
@@ -160,7 +152,11 @@ onDestroy(() => {
 
     .ad-content-wrapper {
         position: relative;
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 160px;
+        height: 600px;
         line-height: 0;
     }
 
@@ -174,10 +170,9 @@ onDestroy(() => {
     }
 
     .ad-img {
-        width: auto;
-        height: auto;
-        max-width: 160px;
-        max-height: 600px;
+        width: 160px;
+        height: 600px;
+        object-fit: cover;
         border: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: 8px;

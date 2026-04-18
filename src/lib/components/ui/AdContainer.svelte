@@ -326,6 +326,7 @@ function getLogoSrc(ad) {
        Only banner visible
        ===================== */
     .ad-slot--desktop {
+        position: relative;
         display: flex;
         justify-content: center;
         width: 100%;
@@ -350,7 +351,9 @@ function getLogoSrc(ad) {
         }
 
         .ad-slot--mobile-square {
+            position: relative;
             display: flex;
+            justify-content: center;
             width: 100%;
             /* Reserved: 300x250 IAB Medium Rectangle */
             min-height: 250px;
@@ -359,18 +362,21 @@ function getLogoSrc(ad) {
         }
 
         .ad-link--square {
+            position: absolute;
             width: 300px;
             height: 250px;
         }
 
         .ad-img--square {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            width: 300px;
+            height: 250px;
+            object-fit: cover;
         }
 
         .ad-slot--mobile-banner {
+            position: relative;
             display: flex;
+            justify-content: center;
             width: 100%;
             /* Reserved: 300x250 IAB Medium Rectangle */
             min-height: 250px;
@@ -379,6 +385,7 @@ function getLogoSrc(ad) {
         }
 
         .ad-link--mbanner {
+            position: absolute;
             width: 300px;
             height: 250px;
         }

@@ -3,8 +3,9 @@
 import { onDestroy, onMount } from 'svelte'
 import { base } from '$app/paths'
 
-const _width = 160
-const _height = 600
+// Standard IAB vertical rectangle: 160x600
+const SLOT_WIDTH = 160
+const SLOT_HEIGHT = 600
 
 const ads = [
     {
@@ -77,8 +78,8 @@ onDestroy(() => {
                 <div class="ad-content-wrapper">
                     <img
                         src={ad.src}
-                        width={_width}
-                        height={_height}
+                        width={SLOT_WIDTH}
+                        height={SLOT_HEIGHT}
                         alt={ad.alt}
                         class="ad-img"
                     />
