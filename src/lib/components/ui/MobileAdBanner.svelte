@@ -54,6 +54,8 @@ onDestroy(() => {
         class="ad-wrapper"
         on:mouseenter={pauseAds}
         on:mouseleave={resumeAds}
+        role="region"
+        aria-label="Mainos"
     >
         {#each ads as ad, index (ad.id)}
             <a

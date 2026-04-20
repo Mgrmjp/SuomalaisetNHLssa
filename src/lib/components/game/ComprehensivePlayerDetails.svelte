@@ -141,7 +141,12 @@ function handleBackdropClick(e) {
                         <h2 class="text-2xl font-bold text-gray-900">{displayName}</h2>
                         <div class="text-gray-600">{player.team_full || player.team || "Unknown Team"}</div>
                     </div>
-                    <button onclick={onclose} class="shrink-0 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors cursor-pointer">
+                    <button
+                        type="button"
+                        aria-label="Sulje pelaajan lisätiedot"
+                        onclick={onclose}
+                        class="shrink-0 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
+                    >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M18 6L6 18M6 6l12 12"/>
                         </svg>

@@ -1,6 +1,5 @@
 <script>
 // @ts-nocheck
-// biome-ignore lint/correctness/noUnusedImports: used in template
 import TeamStandingRow from '$lib/components/standings/TeamStandingRow.svelte'
 import { DIVISION_NAMES } from '$lib/utils/nhlStructure.js'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'

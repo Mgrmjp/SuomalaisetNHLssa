@@ -99,7 +99,7 @@ const winners = _winners
                                         {#if winner.validation?.verified && winner.validation?.hasCup}
                                             <span
                                                 class="text-[10px] text-green-600 mt-1 flex items-center gap-0.5"
-                                                title="Vahvistettu NHL API:sta"
+                                                title="Vahvistettu paikallisesta datasta"
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"

@@ -15,6 +15,8 @@ function getLogoSrc(id) {
 
 <svelte:head>
     <title>Ad Debug - Suomalaiset NHL:ssä</title>
+    <meta name="description" content="Sisäinen mainosnäkymä Suomalaiset NHL:ssä -sivustolle." />
+    <meta name="robots" content="noindex,nofollow" />
 </svelte:head>
 
 <div class="min-h-screen bg-gray-100 p-4">
@@ -144,10 +146,6 @@ function getLogoSrc(id) {
         line-height: 1.4;
     }
 
-    .content strong {
-        font-weight: 600;
-    }
-
     .cta {
         margin-left: auto;
         font-size: 0.8rem;
@@ -204,8 +202,7 @@ function getLogoSrc(id) {
     /* Multitronic - dark */
     .custom-banner.multitronic { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid rgba(255,255,255,0.15); }
     .custom-banner.multitronic .cta { background: #f97316; color: #fff; }
-    .custom-banner.multitronic .content,
-    .custom-banner.multitronic .content strong { color: #fff; }
+    .custom-banner.multitronic .content { color: #fff; }
 
     /* Vattenfall - yellow */
     .custom-banner.vattenfall { background: linear-gradient(135deg, #ffd600, #f5c400); border: 2px solid #000; }
@@ -214,15 +211,13 @@ function getLogoSrc(id) {
     /* Vattenfall Student - black */
     .custom-banner.vattenfall-opiskelija { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border: 2px solid #ffd600; }
     .custom-banner.vattenfall-opiskelija .cta { background: #ffd600; color: #000; }
-    .custom-banner.vattenfall-opiskelija .content,
-    .custom-banner.vattenfall-opiskelija .content strong { color: #fff; }
+    .custom-banner.vattenfall-opiskelija .content { color: #fff; }
 
     /* Kvarn - dark teal */
     .custom-banner.kvarn { background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid #5dde7d; }
     .custom-banner.kvarn .logo { background: #fff; padding: 4px; border-radius: 4px; }
     .custom-banner.kvarn .cta { background: #5dde7d; color: #0f172a; }
-    .custom-banner.kvarn .content,
-    .custom-banner.kvarn .content strong { color: #fff; }
+    .custom-banner.kvarn .content { color: #fff; }
 
     /* Kodin1 - white with pink border */
     .custom-banner.kodin1 { background: linear-gradient(135deg, #fff, #fce4ec); border: 2px solid #e9196c; }

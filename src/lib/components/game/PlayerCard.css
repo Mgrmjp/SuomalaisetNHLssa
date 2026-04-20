@@ -60,14 +60,11 @@
     transform: rotateY(180deg);
 }
 
-.player-card__inner > .card {
-    grid-area: 1 / 1;
-}
-
 /* ==============================
    Card Surface
    ============================== */
 .card {
+    grid-area: 1 / 1;
     position: relative;
     width: 100%;
     min-height: 100%;

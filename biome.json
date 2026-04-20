@@ -119,6 +119,16 @@
     },
     "overrides": [
         {
+            "includes": ["src/lib/tests/**/*.js"],
+            "linter": {
+                "rules": {
+                    "complexity": {
+                        "noForEach": "off"
+                    }
+                }
+            }
+        },
+        {
             "includes": ["**/*.svelte"],
             "linter": {
                 "rules": {

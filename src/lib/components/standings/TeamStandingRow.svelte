@@ -1,6 +1,5 @@
 <script>
 // @ts-nocheck
-// biome-ignore lint/correctness/noUnusedImports: used in template
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
 import teamMapping from '$lib/utils/teamMapping.js'

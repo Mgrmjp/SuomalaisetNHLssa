@@ -13,10 +13,12 @@ const _siteUrl = 'https://suomalaisetnhlssa.fi'
 const _siteName = 'Suomalaiset NHL:ssä'
 const _defaultDescription =
     'Miten suomalaisilla kulkee NHL:ssä? Tutki päivän ottelut, pisteet ja onnistumiset.'
+const _canonicalUrl = $derived(
+    `${_siteUrl}${$page.url.pathname === '/' ? '/' : $page.url.pathname.replace(/\/$/, '')}`
+)
 </script>
 
 <svelte:head>
-    <meta name="description" content={_defaultDescription} />
     <meta
         name="keywords"
         content="suomi nhl, nhl suomi, suomalaiset nhl-pelaajat, NHL, suomalaiset pelaajat, jääkiekko, pisteet, maalit, syötöt, Leijonat, suomalaisten nhl"
@@ -40,11 +42,11 @@ const _defaultDescription =
     <meta name="twitter:image:alt" content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot" />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="{_siteUrl}{$page.url.pathname}" />
+    <link rel="canonical" href={_canonicalUrl} />
 
     <!-- Hreflang for international Finnish speakers (dynamic per page) -->
-    <link rel="alternate" hreflang="fi" href="{_siteUrl}{$page.url.pathname}" />
-    <link rel="alternate" hreflang="x-default" href="{_siteUrl}{$page.url.pathname}" />
+    <link rel="alternate" hreflang="fi" href={_canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={_canonicalUrl} />
 
     <link rel="icon" type="image/svg+xml" href={base + "/logo.svg"} />
 

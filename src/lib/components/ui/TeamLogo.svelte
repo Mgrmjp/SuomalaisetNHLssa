@@ -3,7 +3,6 @@
 import { base } from '$app/paths'
 import { normalizeTeamAbbreviation } from '$lib/utils/teamMapping.js'
 
-// biome-ignore lint/correctness/noUnusedVariables: used in template
 const { team, size = '48', className = '' } = $props()
 
 const teamFullNames = {

@@ -322,14 +322,14 @@ export const availableDates = derived(
     ([$availableDates, $breaks]) => {
         const breakDates = []
         if ($breaks && $breaks.length > 0) {
-            $breaks.forEach((b) => {
+            for (const b of $breaks) {
                 const current = new Date(b.startDate)
                 const end = new Date(b.endDate)
                 while (current <= end) {
                     breakDates.push(current.toISOString().split('T')[0])
                     current.setDate(current.getDate() + 1)
                 }
-            })
+            }
         }
 
         // Merge and deduplicate

@@ -1,7 +1,6 @@
 <script>
 // @ts-nocheck
 import { onMount } from 'svelte'
-import { get } from 'svelte/store'
 import { base } from '$app/paths'
 import DateControls from '$lib/components/game/DateControls.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
@@ -13,14 +12,15 @@ import {
     currentBreak,
     games,
     isLoading,
-    latestPrepopulatedDate,
     players,
     resetToDefault,
     selectedDate,
     setDate,
-    yesterdayDate,
 } from '$lib/stores/gameData.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
+
+/** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number } } }} */
+const { data } = $props()
 
 const _sparkles = Array.from({ length: 12 }, () => ({
     left: `${Math.random() * 100}%`,
@@ -55,6 +55,14 @@ function buildDateLabel(value) {
 }
 
 const selectedDateSummary = $derived.by(() => {
+    if (!$selectedDate && data.seo) {
+        return {
+            label: data.seo.dateLabel,
+            count: data.seo.gameCount,
+            summary: data.seo.summary,
+        }
+    }
+
     const count = $games?.games?.length || 0
     const label = buildDateLabel($selectedDate)
     const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`
@@ -70,6 +78,10 @@ const SEO_KEYWORDS =
     'suomi nhl, suomalaiset nhl-pelaajat, suomalaiset jääkiekkoilijat, nhl suomi, pistepörssi, live-tilastot, suomalaiset nhl:ssä'
 
 const _metaDescription = $derived.by(() => {
+    if (!$selectedDate && data.seo?.description) {
+        return data.seo.description
+    }
+
     const playerText =
         totalPlayers > 0
             ? `Seuraa ${totalPlayers} suomalaisen NHL-tilastoja.`
@@ -85,18 +97,13 @@ function toggleHeroStats() {
     _showHeroStats = !_showHeroStats
 }
 
-// Default to yesterday's date on first load (relative to Finland/Europe)
+// Use the same local-data snapshot that generated initial SEO metadata.
 onMount(() => {
     // Avoid reloading if user already selected a date
     if ($selectedDate) return
 
-    // Use yesterday's date - this is what users usually want to see (last night's games)
-    const yesterday = get(yesterdayDate)
-    const latestDate = get(latestPrepopulatedDate)
-
-    const defaultDate = yesterday || latestDate
-    if (defaultDate) {
-        setDate(defaultDate)
+    if (data.initialDate) {
+        setDate(data.initialDate)
     }
 })
 </script>

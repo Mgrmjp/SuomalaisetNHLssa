@@ -216,7 +216,7 @@ function extractColorsFromSVG(svgContent) {
     // Extract colors from fill attributes with frequency counting
     const fillMatches = svgContent.match(/fill="([^"]+)"/g)
     if (fillMatches) {
-        fillMatches.forEach((match) => {
+        for (const match of fillMatches) {
             const fillResult = match.match(/fill="([^"]+)"/)
             if (fillResult?.[1]) {
                 const color = fillResult[1]
@@ -224,27 +224,27 @@ function extractColorsFromSVG(svgContent) {
                     colors.set(color, (colors.get(color) || 0) + 1)
                 }
             }
-        })
+        }
     }
 
     // Extract colors from style attributes
     const styleMatches = svgContent.match(/style="([^"]+)"/g)
     if (styleMatches) {
-        styleMatches.forEach((match) => {
+        for (const match of styleMatches) {
             const styleResult = match.match(/style="([^"]+)"/)
-            if (!styleResult || !styleResult[1]) return
+            if (!styleResult || !styleResult[1]) continue
             const styleContent = styleResult[1]
             // Look for color properties
             const colorProps = styleContent.match(/(fill|stroke):\s*([^;]+)/g)
             if (colorProps) {
-                colorProps.forEach((prop) => {
+                for (const prop of colorProps) {
                     const color = prop.split(':')[1]?.trim()
                     if (color && isValidColor(color)) {
                         colors.set(color, (colors.get(color) || 0) + 1)
                     }
-                })
+                }
             }
-        })
+        }
     }
 
     // Convert to array and sort by frequency (most used colors first)

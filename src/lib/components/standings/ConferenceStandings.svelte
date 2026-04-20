@@ -1,6 +1,5 @@
 <script>
 // @ts-nocheck
-// biome-ignore lint/correctness/noUnusedImports: used in template
 import DivisionStandings from '$lib/components/standings/DivisionStandings.svelte'
 import { CONFERENCE_NAMES, calculateWildCardTeams } from '$lib/utils/nhlStructure.js'
 

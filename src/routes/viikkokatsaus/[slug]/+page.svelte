@@ -7,6 +7,12 @@ import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 const { data: _data } = $props()
 
 const data = _data
+const articleUrl = $derived(`https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`)
+const articleDescription = $derived(
+    data.article.excerpt ||
+        `Viikon ${data.article.week} katsaus suomalaisten NHL-pelaajien menestykseen.`
+)
+const articleImage = 'https://suomalaisetnhlssa.fi/og-image.svg'
 
 function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('fi-FI', {
@@ -19,25 +25,26 @@ function formatDate(dateStr) {
 
 <svelte:head>
     <title>{data.article.title} - Suomalaiset NHL:ssä</title>
-    <meta
-        name="description"
-        content={`Viikon ${data.article.week} katsaus suomalaisten NHL-pelaajien menestykseen.`}
-    />
+    <meta name="description" content={articleDescription} />
     <meta property="og:title" content={`${data.article.title} - Suomalaiset NHL:ssä`} />
-    <meta
-        property="og:description"
-        content={`Viikon ${data.article.week} katsaus suomalaisten NHL-pelaajien menestykseen.`}
-    />
-    <meta
-        property="og:url"
-        content={`https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`}
-    />
+    <meta property="og:description" content={articleDescription} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={articleUrl} />
+    <meta property="og:image" content={articleImage} />
+    <meta property="article:published_time" content={data.article.date} />
+    <meta property="article:modified_time" content={data.article.date} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${data.article.title} - Suomalaiset NHL:ssä`} />
+    <meta name="twitter:description" content={articleDescription} />
+    <meta name="twitter:image" content={articleImage} />
 
     <!-- NewsArticle Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
         "@context": "https://schema.org",
         "@type": "NewsArticle",
         headline: data.article.title,
+        description: articleDescription,
+        image: [articleImage],
         datePublished: data.article.date,
         dateModified: data.article.date,
         author: {
@@ -55,10 +62,10 @@ function formatDate(dateStr) {
         },
         mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`
+            "@id": articleUrl
         },
         inLanguage: "fi",
-        description: `Viikon ${data.article.week} katsaus suomalaisten NHL-pelaajien menestykseen.`
+        articleSection: "Viikkokatsaus"
     })}</script>`}
 
     <!-- Breadcrumb Schema for Article -->
@@ -82,7 +89,7 @@ function formatDate(dateStr) {
                 "@type": "ListItem",
                 position: 3,
                 name: data.article.title,
-                item: `https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`
+                item: articleUrl
             }
         ]
     })}</script>`}

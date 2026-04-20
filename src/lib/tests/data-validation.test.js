@@ -170,9 +170,9 @@ describe('Data Validation', () => {
                 expect(typeof player.game_score).toBe('string')
                 expect(typeof player.game_result).toBe('string')
 
-                expect(player.name.trim()).length.toBeGreaterThan(0)
-                expect(player.team.trim()).length.toBeGreaterThan(0)
-                expect(player.team_full.trim()).length.toBeGreaterThan(0)
+                expect(player.name.trim().length).toBeGreaterThan(0)
+                expect(player.team.trim().length).toBeGreaterThan(0)
+                expect(player.team_full.trim().length).toBeGreaterThan(0)
             })
         })
 

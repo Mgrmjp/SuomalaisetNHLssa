@@ -2,9 +2,7 @@
 // @ts-nocheck
 import { onMount } from 'svelte'
 import { getCurrentSeason } from '$lib/api/nhlApi.js'
-// biome-ignore lint/correctness/noUnusedImports: used in template
 import ConferenceStandings from '$lib/components/standings/ConferenceStandings.svelte'
-// biome-ignore lint/correctness/noUnusedImports: used via $store syntax
 import { loadStandings, standings, standingsLoading } from '$lib/stores/gameData.js'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 

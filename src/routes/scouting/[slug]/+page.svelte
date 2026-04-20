@@ -2,13 +2,77 @@
 // @ts-nocheck
 import { base } from '$app/paths'
 
-/** @type {{ data: { slug: string, content: string } }} */
+/** @type {{ data: { slug: string, content: string, metadata: { title: string, playerName: string, pageTitle: string, description: string, updated: string, url: string } } }} */
 const { data } = $props()
+
+const articleSchema = $derived({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: data.metadata.title,
+    description: data.metadata.description,
+    dateModified: data.metadata.updated || undefined,
+    inLanguage: 'fi',
+    author: {
+        '@type': 'Organization',
+        name: 'Suomalaiset NHL:ssä',
+    },
+    publisher: {
+        '@type': 'Organization',
+        name: 'Suomalaiset NHL:ssä',
+        url: 'https://suomalaisetnhlssa.fi',
+        logo: {
+            '@type': 'ImageObject',
+            url: 'https://suomalaisetnhlssa.fi/logo.svg',
+        },
+    },
+    mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': data.metadata.url,
+    },
+    about: data.metadata.playerName,
+})
+
+const breadcrumbSchema = $derived({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+        {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Etusivu',
+            item: 'https://suomalaisetnhlssa.fi/',
+        },
+        {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Scouting',
+            item: 'https://suomalaisetnhlssa.fi/scouting',
+        },
+        {
+            '@type': 'ListItem',
+            position: 3,
+            name: data.metadata.playerName,
+            item: data.metadata.url,
+        },
+    ],
+})
 </script>
 
 <svelte:head>
-    <title>Scouting Report - {data.slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</title>
-    <meta name="description" content="Yksityiskohtainen scouting-raportti pelaajasta." />
+    <title>{data.metadata.pageTitle}</title>
+    <meta name="description" content={data.metadata.description} />
+    <meta property="og:title" content={data.metadata.pageTitle} />
+    <meta property="og:description" content={data.metadata.description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={data.metadata.url} />
+    <meta property="og:image" content="https://suomalaisetnhlssa.fi/og-image.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={data.metadata.pageTitle} />
+    <meta name="twitter:description" content={data.metadata.description} />
+    <meta name="twitter:image" content="https://suomalaisetnhlssa.fi/og-image.svg" />
+
+    {@html `<script type="application/ld+json">${JSON.stringify(articleSchema)}</script>`}
+    {@html `<script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>`}
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50">
@@ -54,5 +118,4 @@ const { data } = $props()
         </div>
     </div>
 </div>
-
 

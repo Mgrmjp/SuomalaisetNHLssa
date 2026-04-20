@@ -5,21 +5,48 @@ import { env } from '$env/dynamic/private'
 import { correctFullName, correctFullNameWithLLM } from '$lib/utils/finnishNameUtils.js'
 import { sanitizeImageUrl } from '$lib/utils/playerHeadshots.js'
 
+/** @param {string} name */
+function nameToSlug(name) {
+    return name
+        .toLowerCase()
+        .replace(/ä/g, 'a')
+        .replace(/ö/g, 'o')
+        .replace(/å/g, 'o')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '')
+}
+
+/** @param {any} player */
+function getRosterName(player) {
+    const firstName = player.firstName?.default || ''
+    const lastName = player.lastName?.fi || player.lastName?.default || ''
+    return correctFullName(`${firstName} ${lastName}`.trim() || player.name)
+}
+
+/** @param {any} player */
+function rosterToPlayer(player) {
+    const team = player.currentTeam || player.lastTeam || 'NHL'
+
+    return {
+        ...player,
+        name: getRosterName(player),
+        skaterFullName: player.position === 'G' ? undefined : getRosterName(player),
+        goalieFullName: player.position === 'G' ? getRosterName(player) : undefined,
+        teamAbbrevs: team,
+        positionCode: player.position,
+        jerseyNumber: player.sweaterNumber,
+        headshot: sanitizeImageUrl(player.headshot),
+        age: player.birthDate
+            ? new Date().getFullYear() - new Date(player.birthDate).getFullYear()
+            : undefined,
+        hasSeasonStats: false,
+        isRosterProfile: true,
+    }
+}
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
     const { slug } = params
-
-    // Helper function to convert player name to URL-friendly slug
-    /** @param {string} name */
-    function nameToSlug(name) {
-        return name
-            .toLowerCase()
-            .replace(/ä/g, 'a')
-            .replace(/ö/g, 'o')
-            .replace(/å/g, 'o')
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9-]/g, '')
-    }
 
     /**
      * @param {any[]} players
@@ -135,6 +162,10 @@ export async function load({ params }) {
             console.warn('Failed to load roster info for augmentation:', rosterError)
         }
 
+        if (player) {
+            player.hasSeasonStats = true
+        }
+
         // Get other players from the same team for related content
         const sameTeamPlayers = allPlayers
             .filter((p) => p.teamAbbrevs === player.teamAbbrevs && p.playerId !== player.playerId)
@@ -148,8 +179,51 @@ export async function load({ params }) {
             updatedAt: new Date().toISOString(),
         }
     } catch (err) {
-        if (err && typeof err === 'object' && 'status' in err) throw err
+        if (err && typeof err === 'object' && 'status' in err && err.status !== 404) throw err
+
+        try {
+            const now = new Date()
+            const currentYear = now.getFullYear()
+            const currentMonth = now.getMonth()
+            const startYear = currentMonth < 9 ? currentYear - 1 : currentYear
+            const seasonId = `${startYear}${startYear + 1}`
+            const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
+            const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
+            const rosterPlayer = Object.values(rosterData).find(
+                (p) => nameToSlug(getRosterName(p)) === slug.toLowerCase()
+            )
+
+            if (!rosterPlayer) {
+                throw error(404, 'Pelaajaa ei löytynyt')
+            }
+
+            return {
+                player: rosterToPlayer(rosterPlayer),
+                sameTeamPlayers: [],
+                seasonId,
+                slug,
+                updatedAt: new Date().toISOString(),
+            }
+        } catch (rosterError) {
+            if (rosterError && typeof rosterError === 'object' && 'status' in rosterError) {
+                throw rosterError
+            }
+        }
+
         console.error('Error fetching player data:', err)
         throw error(500, 'Pelaajatietojen lataus epäonnistui')
     }
 }
+
+/** @type {import('./$types').EntryGenerator} */
+export function entries() {
+    const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
+    const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
+    const slugs = new Set(
+        Object.values(rosterData).map((player) => nameToSlug(getRosterName(player)))
+    )
+
+    return Array.from(slugs).map((slug) => ({ slug }))
+}
+
+export const prerender = true

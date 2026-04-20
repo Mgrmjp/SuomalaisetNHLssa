@@ -444,21 +444,18 @@ function getLogoSrc(ad) {
 
     .custom-banner.multitronic { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid rgba(255,255,255,0.15); }
     .custom-banner.multitronic .cta { background: #f97316; color: #fff; }
-    .custom-banner.multitronic .content,
-    .custom-banner.multitronic .content strong { color: #fff; }
+    .custom-banner.multitronic .content { color: #fff; }
 
     .custom-banner.vattenfall { background: linear-gradient(135deg, #ffd600, #f5c400); border: 2px solid #000; }
     .custom-banner.vattenfall .cta { background: #000; color: #fff; }
 
     .custom-banner.vattenfall-opiskelija { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border: 2px solid #ffd600; }
     .custom-banner.vattenfall-opiskelija .cta { background: #ffd600; color: #000; }
-    .custom-banner.vattenfall-opiskelija .content,
-    .custom-banner.vattenfall-opiskelija .content strong { color: #fff; }
+    .custom-banner.vattenfall-opiskelija .content { color: #fff; }
 
     .custom-banner.kvarn { background: linear-gradient(135deg, #0f172a, #1e293b); border: 2px solid #5dde7d; }
     .custom-banner.kvarn .cta { background: #5dde7d; color: #0f172a; }
-    .custom-banner.kvarn .content,
-    .custom-banner.kvarn .content strong { color: #fff; }
+    .custom-banner.kvarn .content { color: #fff; }
 
     .custom-banner.kodin1 { background: linear-gradient(135deg, #fff, #fce4ec); border: 2px solid #e9196c; }
     .custom-banner.kodin1 .cta { background: #e9196c; color: #fff; }

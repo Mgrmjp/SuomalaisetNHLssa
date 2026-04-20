@@ -11,11 +11,12 @@ const { data } = $props()
 const { player, sameTeamPlayers, seasonId, slug } = data
 const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
 
-const playerName = player.skaterFullName || player.goalieFullName || 'Unknown Player'
+const playerName = player.skaterFullName || player.goalieFullName || player.name || 'Unknown Player'
 const displayName = $derived(correctFullName(playerName))
-const teamName = player.teamAbbrevs || 'NHL'
-const position = player.positionCode || 'N/A'
+const teamName = player.teamAbbrevs || player.lastTeam || player.currentTeam || 'NHL'
+const position = player.positionCode || player.position || 'N/A'
 const isGoalie = position === 'G'
+const hasSeasonStats = $derived(Boolean(player.hasSeasonStats ?? !player.isRosterProfile))
 
 function getTeamFullName(abbrev) {
     const teamNames = {
@@ -67,6 +68,33 @@ function nameToSlug(name) {
 }
 
 const teamFullName = $derived(getTeamFullName(teamName))
+const pageTitle = $derived(
+    hasSeasonStats
+        ? `${displayName} - ${teamFullName} - Tilastot | Suomalaiset NHL:ssä`
+        : `${displayName} - NHL-profiili | Suomalaiset NHL:ssä`
+)
+const ogTitle = $derived(
+    hasSeasonStats
+        ? `${displayName} - ${teamFullName} - NHL-tilastot`
+        : `${displayName} - suomalainen NHL-pelaaja`
+)
+const playerDescription = $derived(
+    hasSeasonStats
+        ? `Katso pelaajan ${displayName} tilastot kaudella ${formattedSeason}. ${teamFullName}, ${position}, ${player.gamesPlayed || 0} ottelua, ${player.goals || 0}+${player.assists || 0}=${player.points || 0}.`
+        : `Katso pelaajan ${displayName} NHL-profiili. Suomalainen ${position}, ${teamFullName}, ${player.gamesPlayed || 0} NHL-ottelua.`
+)
+const ogDescription = $derived(
+    hasSeasonStats
+        ? `${displayName} - ${teamFullName}: ${player.gamesPlayed || 0} ottelua, ${player.goals || 0} maalia, ${player.assists || 0} syöttöä, ${player.points || 0} pistettä kaudella ${formattedSeason}.`
+        : `${displayName} - suomalainen NHL-pelaaja. ${player.gamesPlayed || 0} NHL-ottelua, ${teamFullName}.`
+)
+const playerImage = $derived(
+    player.headshot && /^https?:\/\//i.test(player.headshot)
+        ? player.headshot
+        : player.headshot
+          ? `https://cms.nhk.bamgrid.com/images/${player.headshot}`
+          : undefined
+)
 
 function getPlayerName(p) {
     return correctFullName(p.skaterFullName || p.goalieFullName)
@@ -78,15 +106,15 @@ function getPlayerSlug(p) {
 </script>
 
 <svelte:head>
-    <title>{displayName} - {teamFullName} - Tilastot | Suomalaiset NHL:ssä</title>
+    <title>{pageTitle}</title>
     <meta
         name="description"
-        content={`Katso {displayName}in tilastot kaudella {formattedSeason}. {teamFullName}, {position}, {player.gamesPlayed} ottelua, {player.goals || 0}+${player.assists || 0}={player.points || 0}.`}
+        content={playerDescription}
     />
-    <meta property="og:title" content={`${displayName} - ${teamFullName} - NHL-tilastot`} />
+    <meta property="og:title" content={ogTitle} />
     <meta
         property="og:description"
-        content={`${displayName} - ${teamFullName}: {player.gamesPlayed} ottelua, {player.goals || 0} maalia, {player.assists || 0} syöttöä, {player.points || 0} pistettä kaudella {formattedSeason}.`}
+        content={ogDescription}
     />
     <meta property="og:url" content={`https://suomalaisetnhlssa.fi/pelaajat/${slug}`} />
 
@@ -96,7 +124,7 @@ function getPlayerSlug(p) {
         "@type": "Person",
         "name": displayName,
         "url": `https://suomalaisetnhlssa.fi/pelaajat/${slug}`,
-        "image": player.headshot ? `https://cms.nhk.bamgrid.com/images/${player.headshot}` : undefined,
+        "image": playerImage,
         "jobTitle": `Professional Ice Hockey ${isGoalie ? "Goaltender" : "Player"}`,
         "memberOf": {
             "@type": "SportsTeam",
@@ -199,27 +227,50 @@ function getPlayerSlug(p) {
 
             <!-- Stats Grid -->
             <div class="p-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-6">Kauden {formattedSeason} tilastot</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="text-center p-4 bg-slate-50 rounded-xl">
-                        <div class="text-3xl font-bold text-gray-900">{player.gamesPlayed}</div>
-                        <div class="text-sm text-gray-500 mt-1">Ottelut</div>
+                <h2 class="text-xl font-bold text-gray-900 mb-6">
+                    {hasSeasonStats ? `Kauden ${formattedSeason} tilastot` : 'NHL-profiili'}
+                </h2>
+                {#if hasSeasonStats}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="text-3xl font-bold text-gray-900">{player.gamesPlayed}</div>
+                            <div class="text-sm text-gray-500 mt-1">Ottelut</div>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="text-3xl font-bold text-gray-900">{player.goals}</div>
+                            <div class="text-sm text-gray-500 mt-1">Maalit</div>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="text-3xl font-bold text-gray-900">{player.assists}</div>
+                            <div class="text-sm text-gray-500 mt-1">Syötöt</div>
+                        </div>
+                        <div class="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <div class="text-3xl font-bold text-blue-600">{player.points}</div>
+                            <div class="text-sm text-blue-600 mt-1 font-medium">Pisteet</div>
+                        </div>
                     </div>
-                    <div class="text-center p-4 bg-slate-50 rounded-xl">
-                        <div class="text-3xl font-bold text-gray-900">{player.goals}</div>
-                        <div class="text-sm text-gray-500 mt-1">Maalit</div>
+                {:else}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="text-3xl font-bold text-gray-900">{player.gamesPlayed || 0}</div>
+                            <div class="text-sm text-gray-500 mt-1">NHL-ottelut</div>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="text-3xl font-bold text-gray-900">{teamName}</div>
+                            <div class="text-sm text-gray-500 mt-1">Viimeisin joukkue</div>
+                        </div>
+                        <div class="text-center p-4 bg-slate-50 rounded-xl">
+                            <div class="text-3xl font-bold text-gray-900">{position}</div>
+                            <div class="text-sm text-gray-500 mt-1">Pelipaikka</div>
+                        </div>
+                        <div class="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <div class="text-xl font-bold text-blue-600">{player.birthplace || 'Suomi'}</div>
+                            <div class="text-sm text-blue-600 mt-1 font-medium">Syntymäpaikka</div>
+                        </div>
                     </div>
-                    <div class="text-center p-4 bg-slate-50 rounded-xl">
-                        <div class="text-3xl font-bold text-gray-900">{player.assists}</div>
-                        <div class="text-sm text-gray-500 mt-1">Syötöt</div>
-                    </div>
-                    <div class="text-center p-4 bg-blue-50 rounded-xl border border-blue-100">
-                        <div class="text-3xl font-bold text-blue-600">{player.points}</div>
-                        <div class="text-sm text-blue-600 mt-1 font-medium">Pisteet</div>
-                    </div>
-                </div>
+                {/if}
 
-                {#if !isGoalie}
+                {#if hasSeasonStats && !isGoalie}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
                         <div class="text-center p-4 bg-slate-50 rounded-xl">
                             <div class="text-2xl font-bold text-gray-900">{player.plusMinus > 0 ? '+' : ''}{player.plusMinus}</div>
@@ -238,7 +289,7 @@ function getPlayerSlug(p) {
                             <div class="text-sm text-gray-500 mt-1">Laukais-%</div>
                         </div>
                     </div>
-                {:else}
+                {:else if hasSeasonStats}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
                         <div class="text-center p-4 bg-slate-50 rounded-xl">
                             <div class="text-2xl font-bold text-gray-900">{player.saves || 0}</div>

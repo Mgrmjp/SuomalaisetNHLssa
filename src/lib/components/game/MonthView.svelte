@@ -9,7 +9,6 @@ import {
     showCalendarView,
 } from '$lib/stores/gameData.js'
 
-// biome-ignore lint/correctness/noUnusedVariables: used in template
 function isSameMonth(date1, date2) {
     return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth()
 }
