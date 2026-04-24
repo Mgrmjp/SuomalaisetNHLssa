@@ -111,6 +111,13 @@ const mobileAds = [
         width: 300,
         height: 250,
     },
+    {
+        id: 'blackhorse-mobile',
+        href: 'https://id.blackhorse.fi/t/t?a=1775743329&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1775743329&as=2038972948&t=1&tk=1&i=1',
+        width: 300,
+        height: 250,
+    },
 ]
 
 // Mobile banner ads - 300x250 only

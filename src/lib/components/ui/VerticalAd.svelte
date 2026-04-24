@@ -23,6 +23,13 @@ const ads = [
         src: `${base}/valco.jpg`,
         alt: 'Mainos',
     },
+    {
+        href: 'https://id.blackhorse.fi/t/t?a=1775743331&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1775743331&as=2038972948&t=1&tk=1&i=1',
+        alt: 'Black Horse',
+        width: 120,
+        height: 600,
+    },
 ]
 
 let currentAdIndex = 0
@@ -77,10 +84,15 @@ onDestroy(() => {
                 class:active={index === currentAdIndex}
                 class:fade-out={index !== currentAdIndex || _isTransitioning}
             >
-                <div class="ad-content-wrapper">
+                <div
+                    class="ad-content-wrapper"
+                    style={`--ad-width:${ad.width || SLOT_WIDTH}px; --ad-height:${ad.height || SLOT_HEIGHT}px;`}
+                >
                     <img
                         src={ad.src}
                         alt={ad.alt}
+                        width={ad.width || SLOT_WIDTH}
+                        height={ad.height || SLOT_HEIGHT}
                         class="ad-img"
                     />
                     <span class="ad-disclaimer">Mainos</span>
@@ -165,7 +177,11 @@ onDestroy(() => {
 
     .ad-content-wrapper {
         position: relative;
-        display: inline-block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--ad-width, 160px);
+        height: var(--ad-height, 600px);
         line-height: 0;
     }
 
@@ -179,9 +195,9 @@ onDestroy(() => {
     }
 
     .ad-img {
-        width: 160px;
-        height: 600px;
-        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
         border: 0;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
