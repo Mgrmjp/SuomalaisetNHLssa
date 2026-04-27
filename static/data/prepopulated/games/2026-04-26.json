@@ -42,7 +42,7 @@
       "startTime": "2026-04-26T23:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     },
@@ -84,7 +84,7 @@
       "game_id": 2025030154,
       "game_date": "2026-04-26",
       "game_status": "OFF",
-      "created_at": "2026-04-26T23:54:22.549280",
+      "created_at": "2026-04-27T00:16:27.899534",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
       "goals": 0,
       "assists": 1,
@@ -106,6 +106,21 @@
       "shifts": 28,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-04-26",
+          "opponent": "LAK",
+          "opponent_full": "Los Angeles Kings",
+          "team_score": 5,
+          "opponent_score": 1,
+          "result": "W",
+          "goals": 0,
+          "assists": 1,
+          "points": 1,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-04-23",
           "opponent": "LAK",
@@ -165,21 +180,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-04-14",
-          "opponent": "CGY",
-          "opponent_full": "Calgary Flames",
-          "team_score": 3,
-          "opponent_score": 1,
-          "result": "W",
-          "goals": 1,
-          "assists": 0,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -204,7 +204,7 @@
       "game_id": 2025030114,
       "game_date": "2026-04-26",
       "game_status": "OFF",
-      "created_at": "2026-04-26T23:54:16.390647",
+      "created_at": "2026-04-27T00:16:22.196098",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
       "goals": 0,
       "assists": 0,
@@ -328,7 +328,7 @@
       "game_id": 2025030124,
       "game_date": "2026-04-26",
       "game_status": "OFF",
-      "created_at": "2026-04-26T23:54:31.700987",
+      "created_at": "2026-04-27T00:16:36.732117",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/MTL/8482775.png",
       "goals": 0,
       "assists": 0,
@@ -448,7 +448,7 @@
       "game_id": 2025030154,
       "game_date": "2026-04-26",
       "game_status": "OFF",
-      "created_at": "2026-04-26T23:54:25.850852",
+      "created_at": "2026-04-27T00:16:31.089086",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/LAK/8482726.png",
       "goals": 0,
       "assists": 0,
@@ -470,6 +470,21 @@
       "shifts": 12,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-04-26",
+          "opponent": "COL",
+          "opponent_full": "Colorado Avalanche",
+          "team_score": 1,
+          "opponent_score": 5,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-04-23",
           "opponent": "COL",
@@ -529,21 +544,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-04-14",
-          "opponent": "VAN",
-          "opponent_full": "Vancouver Canucks",
-          "team_score": 3,
-          "opponent_score": 4,
-          "result": "L",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -568,7 +568,7 @@
       "game_id": 2025030114,
       "game_date": "2026-04-26",
       "game_status": "OFF",
-      "created_at": "2026-04-26T23:54:13.100487",
+      "created_at": "2026-04-27T00:16:18.929596",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -673,6 +673,6 @@
     }
   ],
   "total_players": 5,
-  "generated_at": "2026-04-26T23:54:36.490864",
+  "generated_at": "2026-04-27T00:16:41.389377",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
