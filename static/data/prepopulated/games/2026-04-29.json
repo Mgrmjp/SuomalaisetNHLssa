@@ -5,14 +5,14 @@
       "gameId": 2025030125,
       "homeTeam": "TBL",
       "awayTeam": "MTL",
-      "homeScore": 0,
-      "awayScore": 1,
+      "homeScore": 2,
+      "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 3,
       "startTime": "2026-04-29T23:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -27,7 +27,7 @@
       "startTime": "2026-04-29T23:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     },
@@ -69,7 +69,7 @@
       "game_id": 2025030146,
       "game_date": "2026-04-29",
       "game_status": "OFF",
-      "created_at": "2026-04-30T00:00:11.648422",
+      "created_at": "2026-04-30T01:05:22.995619",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
       "goals": 0,
       "assists": 0,
@@ -78,7 +78,7 @@
       "penalty_minutes": 0,
       "shots": 1,
       "plus_minus": 0,
-      "time_on_ice": "03:36",
+      "time_on_ice": "11:32",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -88,7 +88,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 5,
+      "shifts": 17,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -170,6 +170,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-04-30T00:00:16.410257",
+  "generated_at": "2026-04-30T01:05:28.338050",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
