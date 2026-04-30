@@ -30,6 +30,21 @@
       "period": 4,
       "finnish_players_count": 1,
       "empty_net_goals": 0
+    },
+    {
+      "gameId": 2025030175,
+      "homeTeam": "VGK",
+      "awayTeam": "UTA",
+      "homeScore": 5,
+      "awayScore": 4,
+      "gameState": "CRIT",
+      "gameType": 3,
+      "startTime": "2026-04-30T02:00:00Z",
+      "isOT": true,
+      "isSO": false,
+      "period": 5,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
     }
   ],
   "players": [
@@ -54,7 +69,7 @@
       "game_id": 2025030146,
       "game_date": "2026-04-29",
       "game_status": "OFF",
-      "created_at": "2026-04-30T05:19:11.263827",
+      "created_at": "2026-04-30T06:17:00.358915",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
       "goals": 0,
       "assists": 0,
@@ -155,6 +170,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-04-30T05:19:15.934456",
+  "generated_at": "2026-04-30T06:17:06.366700",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
