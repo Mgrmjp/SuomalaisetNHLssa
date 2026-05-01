@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { loadRegularSeasonStatsFromDisk } from '$lib/server/playerStats.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
 export const prerender = true
@@ -152,19 +153,7 @@ function getPlayerRoutes() {
         const statsLastMod = getPlayerStatsLastMod()
         const rosterPath = join(process.cwd(), 'static/data/players/finnish-roster.json')
         const rosterLastMod = fileLastMod(rosterPath)
-        const now = new Date()
-        const currentYear = now.getFullYear()
-        const currentMonth = now.getMonth()
-        const startYear = currentMonth < 9 ? currentYear - 1 : currentYear
-        const endYear = startYear + 1
-        const seasonId = `${startYear}${endYear}`
-
-        const prebuiltDir = join(process.cwd(), 'static/data/player-stats')
-        const skatersFile = join(prebuiltDir, `skaters-${seasonId}.json`)
-        const goaliesFile = join(prebuiltDir, `goalies-${seasonId}.json`)
-
-        const skatersData = readJson(skatersFile)
-        const goaliesData = readJson(goaliesFile)
+        const { skaters: skatersData, goalies: goaliesData } = loadRegularSeasonStatsFromDisk()
 
         const allPlayers = [...skatersData, ...goaliesData]
 

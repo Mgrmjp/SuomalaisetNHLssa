@@ -1,7 +1,14 @@
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
 import { error } from '@sveltejs/kit'
 import { env } from '$env/dynamic/private'
+import {
+    fetchRegularSeasonStats,
+    getCurrentSeasonId,
+    getRosterPath,
+    loadRegularSeasonStatsFromDisk,
+    loadRosterLookupFromDisk,
+    mergeRosterInfo,
+    readJsonFileSync,
+} from '$lib/server/playerStats.js'
 import { correctFullName, correctFullNameWithLLM } from '$lib/utils/finnishNameUtils.js'
 import { sanitizeImageUrl } from '$lib/utils/playerHeadshots.js'
 
@@ -45,7 +52,7 @@ function rosterToPlayer(player) {
 }
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export async function load({ params, fetch }) {
     const { slug } = params
 
     /**
@@ -83,26 +90,16 @@ export async function load({ params }) {
     }
 
     try {
-        const now = new Date()
-        const currentYear = now.getFullYear()
-        const currentMonth = now.getMonth()
+        const seasonId = getCurrentSeasonId()
 
-        const startYear = currentMonth < 9 ? currentYear - 1 : currentYear
-        const endYear = startYear + 1
-        const seasonId = `${startYear}${endYear}`
-
-        // Try to load from pre-built JSON files first
-        const prebuiltDir = join(process.cwd(), 'static/data/player-stats')
-        const skatersFile = join(prebuiltDir, `skaters-${seasonId}.json`)
-        const goaliesFile = join(prebuiltDir, `goalies-${seasonId}.json`)
-
+        /** @type {any | null} */
         let player = null
         /** @type {any[]} */
         let allPlayers = []
 
         try {
-            const skatersData = JSON.parse(readFileSync(skatersFile, 'utf-8'))
-            const goaliesData = JSON.parse(readFileSync(goaliesFile, 'utf-8'))
+            const { skaters: skatersData, goalies: goaliesData } =
+                loadRegularSeasonStatsFromDisk(seasonId)
             allPlayers = [...skatersData, ...goaliesData]
 
             // Find player by slug (name-based URL)
@@ -120,21 +117,16 @@ export async function load({ params }) {
             // Fallback to API if pre-built files don't exist
             console.warn('Pre-built data not found, fetching from NHL API...')
 
-            const skaterUrl = `https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22skaterFullName%22,%22direction%22:%22ASC%22%7D%5D&start=0&limit=500&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D2%20and%20seasonId%3D${seasonId}`
-            const goalieUrl = `https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22goalieFullName%22,%22direction%22:%22ASC%22%7D%5D&start=0&limit=100&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D2%20and%20seasonId%3D${seasonId}`
+            const { skaters: skatersData, goalies: goaliesData } = await fetchRegularSeasonStats(
+                fetch,
+                seasonId
+            )
+            allPlayers = [...skatersData, ...goaliesData]
 
-            const [skaterRes, goalieRes] = await Promise.all([fetch(skaterUrl), fetch(goalieUrl)])
+            player = findPlayerByDeterministicSlug(allPlayers, slug.toLowerCase())
 
-            if (skaterRes.ok && goalieRes.ok) {
-                const skatersData = await skaterRes.json()
-                const goaliesData = await goalieRes.json()
-                allPlayers = [...(skatersData.data || []), ...(goaliesData.data || [])]
-
-                player = findPlayerByDeterministicSlug(allPlayers, slug.toLowerCase())
-
-                if (!player && Number.isNaN(parseInt(slug, 10))) {
-                    player = await findPlayerByLLMSlug(allPlayers, slug.toLowerCase())
-                }
+            if (!player && Number.isNaN(parseInt(slug, 10))) {
+                player = await findPlayerByLLMSlug(allPlayers, slug.toLowerCase())
             }
         }
 
@@ -144,20 +136,10 @@ export async function load({ params }) {
 
         // Augment with roster data (birthDate, height, weight etc)
         try {
-            const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
-            const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
-            const rosterInfo = rosterData[player.playerId.toString()]
-            if (rosterInfo) {
-                player.birthDate = rosterInfo.birthDate
-                if (player.birthDate) {
-                    player.age = new Date().getFullYear() - new Date(player.birthDate).getFullYear()
-                }
-                player.heightInches = rosterInfo.heightInches
-                player.weightLbs = rosterInfo.weightLbs
-                player.birthplace = rosterInfo.birthplace
-                // Sanitize headshot URL to strip malformed transformation parameters
-                player.headshot = sanitizeImageUrl(rosterInfo.headshot) || player.headshot
-            }
+            const rosterData = loadRosterLookupFromDisk()
+            const [augmentedPlayer] = mergeRosterInfo([player], rosterData)
+            player = augmentedPlayer || player
+            player.headshot = sanitizeImageUrl(player.headshot || '') || player.headshot
         } catch (rosterError) {
             console.warn('Failed to load roster info for augmentation:', rosterError)
         }
@@ -182,13 +164,8 @@ export async function load({ params }) {
         if (err && typeof err === 'object' && 'status' in err && err.status !== 404) throw err
 
         try {
-            const now = new Date()
-            const currentYear = now.getFullYear()
-            const currentMonth = now.getMonth()
-            const startYear = currentMonth < 9 ? currentYear - 1 : currentYear
-            const seasonId = `${startYear}${startYear + 1}`
-            const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
-            const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
+            const seasonId = getCurrentSeasonId()
+            const rosterData = loadRosterLookupFromDisk()
             const rosterPlayer = Object.values(rosterData).find(
                 (p) => nameToSlug(getRosterName(p)) === slug.toLowerCase()
             )
@@ -217,8 +194,7 @@ export async function load({ params }) {
 
 /** @type {import('./$types').EntryGenerator} */
 export function entries() {
-    const rosterFile = join(process.cwd(), 'static/data/players/finnish-roster.json')
-    const rosterData = JSON.parse(readFileSync(rosterFile, 'utf-8'))
+    const rosterData = readJsonFileSync(getRosterPath())
     const slugs = new Set(
         Object.values(rosterData).map((player) => nameToSlug(getRosterName(player)))
     )

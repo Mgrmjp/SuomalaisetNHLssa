@@ -1,25 +1,12 @@
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { fetchStats, getCurrentSeasonId, loadSkaterStatsFromDisk } from '$lib/server/playerStats.js'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch }) {
     try {
-        // Calculate current season ID dynamically
-        const now = new Date()
-        const currentYear = now.getFullYear()
-        const currentMonth = now.getMonth()
-
-        const startYear = currentMonth < 9 ? currentYear - 1 : currentYear
-        const endYear = startYear + 1
-        const seasonId = `${startYear}${endYear}`
-
-        // Try to load from pre-built JSON files first
-        const prebuiltDir = join(process.cwd(), 'static/data/player-stats')
-        const skatersFile = join(prebuiltDir, `skaters-${seasonId}.json`)
+        const seasonId = getCurrentSeasonId()
 
         try {
-            const fileData = readFileSync(skatersFile, 'utf-8')
-            const players = JSON.parse(fileData)
+            const players = loadSkaterStatsFromDisk(seasonId)
 
             return {
                 players,
@@ -31,18 +18,17 @@ export async function load({ fetch }) {
             // Fallback to API if pre-built file doesn't exist
             console.warn('Pre-built data not found, fetching from NHL API...')
 
-            const apiUrl = `https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=100&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D2%20and%20seasonId%3D${seasonId}`
-
-            const response = await fetch(apiUrl)
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch stats: ${response.status}`)
-            }
-
-            const data = await response.json()
+            const players = await fetchStats(fetch, {
+                statType: 'skater',
+                seasonId,
+                gameTypeId: 2,
+                sortProperty: 'points',
+                sortDirection: 'DESC',
+                limit: 100,
+            })
 
             return {
-                players: data.data || [],
+                players,
                 seasonId,
                 updatedAt: new Date().toISOString(),
                 source: 'api',
