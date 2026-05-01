@@ -502,7 +502,7 @@ $effect(() => {
                             {#if (player.penalty_minutes || 0) > 0}
                                 <div class="card__sub-stat" title="Rangaistusminuutit">
                                     <span class="card__sub-stat-value text-amber-600">{player.penalty_minutes || player.penaltyMinutes}</span>
-                                    <span class="card__sub-stat-label">jäähyt</span>
+                                    <span class="card__sub-stat-label">ran. min</span>
                                 </div>
                             {/if}
                         {/if}
