@@ -7,12 +7,12 @@
       "awayTeam": "TBL",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "PRE",
+      "gameState": "LIVE",
       "gameType": 3,
       "startTime": "2026-05-01T23:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 1,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -49,6 +49,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-05-01T23:07:14.729183",
+  "generated_at": "2026-05-01T23:30:11.643954",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
