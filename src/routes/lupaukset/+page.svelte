@@ -27,6 +27,7 @@ const _epSeasonStatsByName = $state(new Map())
 let _nhlSeasonStatsById = $state(new Map())
 let _selectedSeasonIndexByPlayer = $state({})
 const _unifiedGoalieStats = $state(new Map())
+let _leagueHeadshotOwnerById = $state(new Map())
 
 onMount(() => {
     loadProspects()
@@ -55,6 +56,7 @@ async function _loadDraftSeasonStats() {
             ])
 
         const officialLookup = new Map()
+        const leagueHeadshotOwners = new Map()
         const nhlLookup = new Map()
 
         const appendEntry = (map, key, value) => {
@@ -69,6 +71,20 @@ async function _loadDraftSeasonStats() {
 
             for (const player of officialPlayers) {
                 appendEntry(officialLookup, _normalizeName(player.name), player)
+
+                const playerId = String(player.player_id || player.id || '')
+                    .split('_')
+                    .pop()
+                if (playerId) {
+                    leagueHeadshotOwners.set(playerId, player.name)
+                }
+
+                const headshotId = _extractLiigaHeadshotId(
+                    player.headshot_url || player.headshotUrl
+                )
+                if (headshotId) {
+                    leagueHeadshotOwners.set(headshotId, player.name)
+                }
             }
         }
 
@@ -95,13 +111,13 @@ async function _loadDraftSeasonStats() {
             for (const goalie of goalies) {
                 nhlLookup.set(String(goalie.playerId), {
                     league: 'NHL',
-                    team: goalie.teamAbbrev || '',
+                    team: goalie.teamAbbrevs || goalie.teamAbbrev || '',
                     gp: Number(goalie.gamesPlayed) || 0,
                     goals: 0,
                     assists: 0,
                     points: 0,
-                    savePct: Number(goalie.savePercentage) || 0,
-                    gaa: Number(goalie.goalsAgainstAverage) || 0,
+                    savePct: Number(goalie.savePct ?? goalie.savePercentage) || 0,
+                    gaa: Number(goalie.goalsAgainstAverage ?? goalie.gaa) || 0,
                     shutouts: Number(goalie.shutouts) || 0,
                     headshotUrl: goalie.headshot || goalie.headshotUrl || null,
                 })
@@ -109,6 +125,7 @@ async function _loadDraftSeasonStats() {
         }
 
         _officialSeasonStatsByName = officialLookup
+        _leagueHeadshotOwnerById = leagueHeadshotOwners
         _nhlSeasonStatsById = nhlLookup
 
         // Load unified goalie stats from all-goalies.json
@@ -228,9 +245,49 @@ function _mergeSeasonEntries(officialEntries, epEntries) {
     return Array.from(merged.values())
 }
 
+function _hasGoalieStats(entry) {
+    return Boolean(entry?.savePct || entry?.gaa || entry?.shutouts)
+}
+
+function _hasSkaterStats(entry) {
+    return Boolean(entry?.goals || entry?.assists || entry?.points)
+}
+
+function _isSameGoalieSeasonEntry(a, b) {
+    return (
+        _normalizeLeagueForPhoto(a?.league) === _normalizeLeagueForPhoto(b?.league) &&
+        (a?.gp || 0) === (b?.gp || 0) &&
+        (_hasGoalieStats(a) || _hasGoalieStats(b)) &&
+        !_hasSkaterStats(a) &&
+        !_hasSkaterStats(b)
+    )
+}
+
+function _mergeSeasonEntryStats(existing, entry) {
+    return {
+        ...existing,
+        ...entry,
+        team: existing.team || entry.team,
+        league: existing.league || entry.league,
+        headshotUrl: existing.headshotUrl || entry.headshotUrl,
+        headshotCrop: existing.headshotCrop || entry.headshotCrop,
+        gp: existing.gp || entry.gp,
+        goals: existing.goals || entry.goals,
+        assists: existing.assists || entry.assists,
+        points: existing.points || entry.points,
+        savePct: existing.savePct || entry.savePct,
+        gaa: existing.gaa || entry.gaa,
+        shutouts: existing.shutouts || entry.shutouts,
+    }
+}
+
 function _sortSeasonEntries(entries) {
     return [...entries].sort((a, b) => {
         if ((b.gp || 0) !== (a.gp || 0)) return (b.gp || 0) - (a.gp || 0)
+        if (_hasGoalieStats(a) || _hasGoalieStats(b)) {
+            if (Boolean(b.gaa) !== Boolean(a.gaa))
+                return Number(Boolean(b.gaa)) - Number(Boolean(a.gaa))
+        }
         if ((b.points || 0) !== (a.points || 0)) return (b.points || 0) - (a.points || 0)
         return (b.savePct || 0) - (a.savePct || 0)
     })
@@ -259,10 +316,17 @@ function _buildSeasonData(player, fallbackStats = null) {
         : null
 
     if (fallbackEntry) {
-        const hasMatch = seasonEntries.some(
-            (entry) => _getSeasonEntryKey(entry) === _getSeasonEntryKey(fallbackEntry)
+        const matchIndex = seasonEntries.findIndex(
+            (entry) =>
+                _getSeasonEntryKey(entry) === _getSeasonEntryKey(fallbackEntry) ||
+                _isSameGoalieSeasonEntry(entry, fallbackEntry)
         )
-        if (!hasMatch) {
+        if (matchIndex >= 0) {
+            seasonEntries[matchIndex] = _mergeSeasonEntryStats(
+                seasonEntries[matchIndex],
+                fallbackEntry
+            )
+        } else {
             seasonEntries.push(fallbackEntry)
         }
     }
@@ -594,11 +658,34 @@ function _isNhlMugshotUrl(url) {
     return typeof url === 'string' && url.includes('assets.nhle.com/mugs/')
 }
 
+function _extractLiigaHeadshotId(url) {
+    if (typeof url !== 'string') return null
+    if (!url.includes('liiga-backend-prod') && !url.includes('/prospect-headshots/liiga-')) {
+        return null
+    }
+
+    const match = url.match(/(?:liiga-)?(\d+)\.(?:png|jpe?g|webp)(?:\?|$)/i)
+    return match?.[1] || null
+}
+
+function _getValidProspectHeadshot(player, url) {
+    if (!url) return null
+
+    const headshotId = _extractLiigaHeadshotId(url)
+    const ownerName = headshotId ? _leagueHeadshotOwnerById.get(headshotId) : null
+
+    if (ownerName && _normalizeName(ownerName) !== _normalizeName(player?.name)) {
+        return null
+    }
+
+    return url
+}
+
 function _getPreferredProspectHeadshot(player, seasonStats = null) {
-    const currentLeaguePhoto = seasonStats?.headshotUrl || null
+    const currentLeaguePhoto = _getValidProspectHeadshot(player, seasonStats?.headshotUrl)
     if (currentLeaguePhoto) return currentLeaguePhoto
 
-    const playerHeadshot = player?.headshot || null
+    const playerHeadshot = _getValidProspectHeadshot(player, player?.headshot)
     if (playerHeadshot && !_isNhlMugshotUrl(playerHeadshot)) {
         return playerHeadshot
     }
@@ -657,7 +744,8 @@ function _getSeasonSelectorEntries(player) {
 
 function _getBestAvailableSeasonHeadshot(player) {
     const selectedSeason = _getSelectedSeasonEntry(player)
-    if (selectedSeason?.headshotUrl) return selectedSeason.headshotUrl
+    const selectedSeasonHeadshot = _getValidProspectHeadshot(player, selectedSeason?.headshotUrl)
+    if (selectedSeasonHeadshot) return selectedSeasonHeadshot
 
     const entries = Array.isArray(player?.seasonEntries) ? player.seasonEntries : []
     const selectedLeague = _normalizeLeagueForPhoto(selectedSeason?.league || player?.league)
@@ -665,31 +753,40 @@ function _getBestAvailableSeasonHeadshot(player) {
     if (!_shouldUseNhlMugshot(selectedLeague)) {
         const preferredLeagueEntry = entries.find(
             (entry) =>
-                entry?.headshotUrl &&
+                _getValidProspectHeadshot(player, entry?.headshotUrl) &&
                 _normalizeLeagueForPhoto(entry?.league) === selectedLeague &&
                 !_isNhlMugshotUrl(entry.headshotUrl)
         )
-        if (preferredLeagueEntry?.headshotUrl) return preferredLeagueEntry.headshotUrl
+        const preferredLeagueHeadshot = _getValidProspectHeadshot(
+            player,
+            preferredLeagueEntry?.headshotUrl
+        )
+        if (preferredLeagueHeadshot) return preferredLeagueHeadshot
 
         const anyNonNhlEntry = entries.find(
-            (entry) => entry?.headshotUrl && !_isNhlMugshotUrl(entry.headshotUrl)
+            (entry) =>
+                _getValidProspectHeadshot(player, entry?.headshotUrl) &&
+                !_isNhlMugshotUrl(entry.headshotUrl)
         )
-        if (anyNonNhlEntry?.headshotUrl) return anyNonNhlEntry.headshotUrl
+        const anyNonNhlHeadshot = _getValidProspectHeadshot(player, anyNonNhlEntry?.headshotUrl)
+        if (anyNonNhlHeadshot) return anyNonNhlHeadshot
     }
 
     for (const entry of entries) {
-        if (entry?.headshotUrl) return entry.headshotUrl
+        const entryHeadshot = _getValidProspectHeadshot(player, entry?.headshotUrl)
+        if (entryHeadshot) return entryHeadshot
     }
 
+    const displayHeadshot = _getValidProspectHeadshot(player, player?.displayHeadshot)
     if (
         !_shouldUseNhlMugshot(selectedLeague) &&
-        player?.displayHeadshot &&
-        !_isNhlMugshotUrl(player.displayHeadshot)
+        displayHeadshot &&
+        !_isNhlMugshotUrl(displayHeadshot)
     ) {
-        return player.displayHeadshot
+        return displayHeadshot
     }
 
-    return player?.displayHeadshot || null
+    return displayHeadshot
 }
 
 function _getBestFallbackPlayerId(player) {

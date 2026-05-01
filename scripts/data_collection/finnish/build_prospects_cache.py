@@ -9,9 +9,11 @@ Sources:
 """
 
 import requests
+import re
 import time
 import sys
 import os
+import unicodedata
 from datetime import datetime
 from pathlib import Path
 
@@ -53,7 +55,12 @@ def fetch_from_api(url, max_retries=3):
 
 def normalize_name(name):
     """Normalize full names for stable matching."""
-    return " ".join((name or "").strip().lower().split())
+    without_diacritics = "".join(
+        char
+        for char in unicodedata.normalize("NFD", name or "")
+        if unicodedata.category(char) != "Mn"
+    )
+    return " ".join(without_diacritics.strip().lower().split())
 
 
 def normalize_person_name(name):
@@ -577,18 +584,24 @@ def _build_league_player_lookups():
 def _extract_league_id_from_headshot(headshot_url, source_file_stem):
     """Extract the actual player ID from a headshot URL for validation."""
     if not headshot_url:
-        return None
+        return None, None
 
     filename = (
-        headshot_url.replace("/prospect-headshots/", "")
+        headshot_url.split("?", 1)[0]
+        .rstrip("/")
+        .rsplit("/", 1)[-1]
+        .replace("/prospect-headshots/", "")
         .replace(".webp", "")
         .replace(".jpg", "")
+        .replace(".jpeg", "")
         .replace(".png", "")
     )
 
     if source_file_stem == "league_prospects_official":
         if filename.startswith("liiga-"):
             return filename.replace("liiga-", ""), "liiga"
+        if re.fullmatch(r"\d+", filename):
+            return filename, "liiga"
     elif source_file_stem == "league_prospects_advanced":
         if filename.startswith("mestis-"):
             return filename.replace("mestis-", ""), "mestis"
@@ -598,6 +611,25 @@ def _extract_league_id_from_headshot(headshot_url, source_file_stem):
                 return filename.replace(prefix, ""), prefix.rstrip("-")
 
     return None, None
+
+
+def _league_row_matches_candidate(row, candidate):
+    """Check whether a league row is safe to merge into an existing candidate."""
+    row_name = row.get("name")
+    candidate_name = candidate.get("name")
+    if row_name and candidate_name and not _names_are_compatible(row_name, candidate_name):
+        return False, f"name mismatch: league row '{row_name}' vs candidate '{candidate_name}'"
+
+    row_birth_date = row.get("birth_date") or row.get("birthDate")
+    candidate_birth_date = candidate.get("birthDate")
+    if row_birth_date and candidate_birth_date:
+        if str(row_birth_date)[:10] != str(candidate_birth_date)[:10]:
+            return (
+                False,
+                f"birthdate mismatch: league row {row_birth_date} vs candidate {candidate_birth_date}",
+            )
+
+    return True, None
 
 
 def _names_are_compatible(name1, name2):
@@ -700,14 +732,21 @@ def ingest_league_prospects_files(candidates, by_name):
 
             normalized_name = normalize_person_name(full_name)
             candidate_id = by_name.get(normalized_name)
+            birth_date = row.get("birth_date") or row.get("birthDate")
 
             if not candidate_id:
-                nhl_id = search_player_id(full_name)
+                nhl_id = search_player_id(full_name, birth_date)
                 if nhl_id:
                     candidate_id = str(nhl_id)
 
             if not candidate_id:
                 continue
+
+            if candidate_id in candidates:
+                is_match, reason = _league_row_matches_candidate(row, candidates[candidate_id])
+                if not is_match:
+                    print(f"  Skipping league merge for {full_name}: {reason}")
+                    continue
 
             before = len(candidates)
             league_position = row.get("position")
@@ -724,6 +763,7 @@ def ingest_league_prospects_files(candidates, by_name):
             if headshot_url and candidate_id in candidates:
                 existing = candidates[candidate_id]
                 existing_league = existing.get("league", "")
+                target_name = existing.get("name") or full_name
                 if existing_league and existing_league != source_league_from_row:
                     if not _is_headshot_url_consistent(
                         headshot_url, source_league_from_row
@@ -734,7 +774,7 @@ def ingest_league_prospects_files(candidates, by_name):
                         headshot_for_merge = None
                     else:
                         is_valid, reason = _validate_headshot_assignment(
-                            headshot_url, full_name, source_file.stem, league_lookups
+                            headshot_url, target_name, source_file.stem, league_lookups
                         )
                         if not is_valid:
                             print(f"  VALIDATION FAILED: {full_name} - {reason}")
