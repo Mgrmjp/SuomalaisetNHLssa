@@ -13,11 +13,6 @@ const ads = [
         alt: 'Mainos',
     },
     {
-        href: 'https://to.bjornborg.com/t/t?a=1616919154&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1616919154&as=2038972948&t=1&tk=1&i=1',
-        alt: 'Mainos',
-    },
-    {
         href: 'https://go.adt242.com/t/t?a=1875158502&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1875158502&as=2038972948&t=1&tk=1&i=1',
         alt: 'Mainos',
@@ -184,17 +179,22 @@ onDestroy(() => {
     .ad-disclaimer {
         position: absolute;
         top: 8px;
-        left: 0;
-        background: rgba(0, 0, 0, 0.6);
+        left: 8px;
+        background: linear-gradient(135deg, rgba(255, 87, 87, 0.95), rgba(255, 59, 48, 0.95));
         color: #fff;
-        font-size: 10px;
-        font-weight: 600;
-        padding: 3px 6px;
-        border-radius: 0 4px 4px 0;
+        border: 2px solid rgba(255, 255, 255, 0.9);
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.08em;
+        box-shadow: 0 2px 8px rgba(255, 59, 48, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(8px);
         pointer-events: none;
         z-index: 1;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     @media (prefers-reduced-motion: reduce) {

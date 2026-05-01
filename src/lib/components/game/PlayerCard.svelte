@@ -365,9 +365,6 @@ $effect(() => {
                     <TeamLogo team={player.team || "NHL"} size="120" />
                 </div>
 
-                <!-- Top accent stripe -->
-                <div class="card__stripe" aria-hidden="true"></div>
-
                 <div class="card__content">
                     <!-- Header: name + badges -->
                     <div class="card__top">
