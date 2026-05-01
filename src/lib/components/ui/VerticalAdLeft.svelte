@@ -178,23 +178,21 @@ onDestroy(() => {
 
     .ad-disclaimer {
         position: absolute;
-        top: 8px;
-        left: 8px;
-        background: linear-gradient(135deg, rgba(255, 87, 87, 0.95), rgba(255, 59, 48, 0.95));
-        color: #fff;
-        border: 2px solid rgba(255, 255, 255, 0.9);
-        border-radius: 6px;
+        top: 12px;
+        left: 12px;
+        background: rgba(0, 0, 0, 0.55);
+        color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
         padding: 4px 10px;
-        font-size: 11px;
-        font-weight: 800;
-        line-height: 1;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.2;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        box-shadow: 0 2px 8px rgba(255, 59, 48, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(8px);
+        letter-spacing: 0.07em;
+        backdrop-filter: blur(6px);
         pointer-events: none;
         z-index: 1;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     }
 
     @media (prefers-reduced-motion: reduce) {
