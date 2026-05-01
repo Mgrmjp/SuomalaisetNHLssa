@@ -133,7 +133,7 @@ export async function GET({ url }) {
                 draft_round: player.draft_round || null,
                 draft_overall: player.draft_overall || null,
                 is_rookie: player.is_rookie || false,
-                is_active: player.is_active || true,
+                is_active: player.is_active ?? true,
                 id: player.id || null,
             }))
         }
