@@ -69,9 +69,64 @@ function buildSeo(data, date) {
     }
 }
 
+function getSeasonId() {
+    const now = new Date()
+    const currentYear = now.getFullYear()
+    const currentMonth = now.getMonth()
+    const startYear = currentMonth < 9 ? currentYear - 1 : currentYear
+    return `${startYear}${startYear + 1}`
+}
+
+function formatSeason(seasonId) {
+    return `${seasonId.slice(0, 4)}-${seasonId.slice(6, 8)}`
+}
+
+async function readJsonIfExists(filePath) {
+    try {
+        return JSON.parse(await readFile(filePath, 'utf-8'))
+    } catch (error) {
+        if (error?.code !== 'ENOENT') {
+            console.warn(`Could not load ${filePath}:`, error)
+        }
+        return []
+    }
+}
+
+async function loadPlayoffStats() {
+    const seasonId = getSeasonId()
+    const statsDir = join(process.cwd(), 'static', 'data', 'player-stats')
+    const [skaters, goalies] = await Promise.all([
+        readJsonIfExists(join(statsDir, `playoff-skaters-${seasonId}.json`)),
+        readJsonIfExists(join(statsDir, `playoff-goalies-${seasonId}.json`)),
+    ])
+
+    return {
+        seasonId,
+        season: formatSeason(seasonId),
+        skaters: skaters.map((player) => ({
+            playerId: player.playerId,
+            name: player.skaterFullName,
+            team: player.teamAbbrevs,
+            gamesPlayed: player.gamesPlayed,
+            goals: player.goals,
+            assists: player.assists,
+            points: player.points,
+        })),
+        goalies: goalies.map((goalie) => ({
+            playerId: goalie.playerId,
+            name: goalie.goalieFullName,
+            team: goalie.teamAbbrevs,
+            gamesPlayed: goalie.gamesPlayed,
+            wins: goalie.wins,
+            savePct: goalie.savePct,
+        })),
+    }
+}
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
     const gamesDir = join(process.cwd(), 'static', 'data', 'prepopulated', 'games')
+    const playoffStats = await loadPlayoffStats()
 
     try {
         const dates = await getGameDates(gamesDir)
@@ -89,12 +144,14 @@ export async function load() {
         return {
             initialDate,
             seo: buildSeo(gameData, initialDate),
+            playoffStats,
         }
     } catch (error) {
         console.warn('Could not load homepage SEO data:', error)
         return {
             initialDate: '',
             seo: buildSeo(null, ''),
+            playoffStats,
         }
     }
 }

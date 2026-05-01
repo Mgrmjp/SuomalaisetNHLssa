@@ -233,7 +233,8 @@ async function fetchWithFallback(url, seasonId, dataType, nameField) {
         if (CACHE_FALLBACK_ENABLED) {
             console.error(`   ❌ API failed: ${error.message}`);
             console.warn(`   ↩️  Falling back to cached ${dataType} data...`);
-            return loadCachedData(seasonId, dataType);
+            const cachedData = loadCachedData(seasonId, dataType);
+            if (cachedData) return cachedData;
         }
         throw error;
     }
@@ -277,12 +278,36 @@ async function main() {
     fs.writeFileSync(goaliesFile, JSON.stringify(correctedGoalies, null, 2));
     console.log(`   💾 Saved: ${goaliesFile}`);
 
+    // Fetch Finnish playoff skaters
+    console.log('\n🏆 Fetching playoff skaters...');
+    const playoffSkaterUrl = `https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=500&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D3%20and%20seasonId%3D${seasonId}`;
+
+    const correctedPlayoffSkaters = await fetchWithFallback(playoffSkaterUrl, seasonId, 'playoff-skaters', 'skaterFullName');
+    console.log(`   ✅ ${correctedPlayoffSkaters.length} playoff skaters processed`);
+
+    const playoffSkatersFile = path.join(OUTPUT_DIR, `playoff-skaters-${seasonId}.json`);
+    fs.writeFileSync(playoffSkatersFile, JSON.stringify(correctedPlayoffSkaters, null, 2));
+    console.log(`   💾 Saved: ${playoffSkatersFile}`);
+
+    // Fetch Finnish playoff goalies
+    console.log('\n🏆 Fetching playoff goalies...');
+    const playoffGoalieUrl = `https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22wins%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=100&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D3%20and%20seasonId%3D${seasonId}`;
+
+    const correctedPlayoffGoalies = await fetchWithFallback(playoffGoalieUrl, seasonId, 'playoff-goalies', 'goalieFullName');
+    console.log(`   ✅ ${correctedPlayoffGoalies.length} playoff goalies processed`);
+
+    const playoffGoaliesFile = path.join(OUTPUT_DIR, `playoff-goalies-${seasonId}.json`);
+    fs.writeFileSync(playoffGoaliesFile, JSON.stringify(correctedPlayoffGoalies, null, 2));
+    console.log(`   💾 Saved: ${playoffGoaliesFile}`);
+
     // Save metadata
     const metadata = {
         seasonId,
         updatedAt: new Date().toISOString(),
         skaterCount: correctedSkaters.length,
-        goalieCount: correctedGoalies.length
+        goalieCount: correctedGoalies.length,
+        playoffSkaterCount: correctedPlayoffSkaters.length,
+        playoffGoalieCount: correctedPlayoffGoalies.length
     };
 
     const metaFile = path.join(OUTPUT_DIR, 'metadata.json');

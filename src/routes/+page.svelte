@@ -8,6 +8,7 @@ import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import {
     currentBreak,
     games,
@@ -19,8 +20,9 @@ import {
 } from '$lib/stores/gameData.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 
-/** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number } } }} */
+/** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number }, playoffStats: { season: string, skaters: Array<{ name: string, team: string, gamesPlayed: number, goals: number, assists: number, points: number }>, goalies: Array<{ name: string, team: string, gamesPlayed: number, wins: number, savePct: number }> } } }} */
 const { data } = $props()
+const playoffStats = data.playoffStats
 
 const _sparkles = Array.from({ length: 12 }, () => ({
     left: `${Math.random() * 100}%`,
@@ -92,9 +94,19 @@ const _metaDescription = $derived.by(() => {
 
 // Mobile hero stats toggle
 let _showHeroStats = $state(false)
+let _showPlayoffStats = $state(false)
 
 function toggleHeroStats() {
     _showHeroStats = !_showHeroStats
+}
+
+function togglePlayoffStats() {
+    _showPlayoffStats = !_showPlayoffStats
+}
+
+function formatSavePct(value) {
+    if (!Number.isFinite(value)) return '.---'
+    return value.toFixed(3).replace(/^0/, '')
 }
 
 // Use the same local-data snapshot that generated initial SEO metadata.
@@ -181,6 +193,80 @@ onMount(() => {
 
         <!-- Ad Container (desktop banner, hidden on mobile) -->
         <AdContainer />
+
+        <!-- Playoff Stat Tracker -->
+        <section class="playoff-tracker mx-auto w-full max-w-2xl border-y border-slate-200 bg-white">
+            <div class="flex items-center justify-between gap-3 px-3 py-2 sm:px-4">
+                <div class="min-w-0">
+                    <h2 class="truncate text-sm font-semibold text-slate-900">
+                        Pudotuspelien suomalaiset
+                    </h2>
+                    <p class="text-xs text-slate-500">NHL {playoffStats.season}</p>
+                </div>
+                <button
+                    type="button"
+                    class="shrink-0 text-xs font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline"
+                    onclick={togglePlayoffStats}
+                    aria-expanded={_showPlayoffStats}
+                    aria-controls="playoff-stats-panel"
+                >
+                    {_showPlayoffStats ? 'Piilota' : 'Näytä'}
+                </button>
+            </div>
+
+            {#if _showPlayoffStats}
+                <div id="playoff-stats-panel">
+                    {#if playoffStats.skaters.length > 0 || playoffStats.goalies.length > 0}
+                        <div class="divide-y divide-slate-100 border-t border-slate-100">
+                            {#if playoffStats.skaters.length > 0}
+                                {#each playoffStats.skaters as player, index}
+                                    <div class="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-center gap-2 px-3 py-2 sm:px-4">
+                                        <div class="text-xs tabular-nums text-slate-400">{index + 1}</div>
+                                        <div class="min-w-0">
+                                            <div class="flex items-center gap-1.5">
+                                                <TeamLogo team={player.team} size="24" />
+                                                <span class="truncate text-sm text-slate-900">
+                                                    {player.name}
+                                                </span>
+                                            </div>
+                                            <div class="mt-0.5 text-xs text-slate-500">
+                                                {player.gamesPlayed} ott. · {player.goals}+{player.assists}
+                                            </div>
+                                        </div>
+                                        <div class="text-right text-sm font-semibold tabular-nums text-slate-900">
+                                            {player.points} P
+                                        </div>
+                                    </div>
+                                {/each}
+                            {/if}
+
+                            {#if playoffStats.goalies.length > 0}
+                                {#each playoffStats.goalies as goalie}
+                                    <div class="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-center gap-2 px-3 py-2 sm:px-4">
+                                        <div class="text-xs text-slate-400">MV</div>
+                                        <div class="flex min-w-0 items-center gap-1.5">
+                                            <TeamLogo team={goalie.team} size="24" />
+                                            <div class="min-w-0">
+                                                <div class="truncate text-sm text-slate-900">
+                                                    {goalie.name}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right text-xs tabular-nums text-slate-600">
+                                            {goalie.wins} W · {formatSavePct(goalie.savePct)} SV%
+                                        </div>
+                                    </div>
+                                {/each}
+                            {/if}
+                        </div>
+                    {:else}
+                        <div class="border-t border-slate-100 px-3 py-2 text-sm text-slate-600 sm:px-4">
+                            Pudotuspelitilastot päivittyvät tähän, kun suomalaispelaajille kertyy pelejä.
+                        </div>
+                    {/if}
+                </div>
+            {/if}
+        </section>
 
         <!-- Hero Stats -->
         {#if $isLoading}
