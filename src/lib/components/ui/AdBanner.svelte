@@ -186,18 +186,21 @@ function getLogoSrc(ad) {
 
     .ad-disclaimer {
         position: absolute;
-        top: 8px;
-        right: 8px;
-        background: rgba(0, 0, 0, 0.6);
-        color: #fff;
+        top: 12px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.55);
+        color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        padding: 4px 10px;
         font-size: 10px;
-        font-weight: 600;
-        padding: 3px 6px;
-        border-radius: 4px;
+        font-weight: 700;
+        line-height: 1.2;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.07em;
+        backdrop-filter: blur(6px);
         pointer-events: none;
-        z-index: 10;
+        z-index: 1;
     }
 
     @media (max-width: 639px) {
