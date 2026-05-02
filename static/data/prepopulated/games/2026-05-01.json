@@ -36,13 +36,13 @@
       "homeTeam": "UTA",
       "awayTeam": "VGK",
       "homeScore": 0,
-      "awayScore": 0,
+      "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 3,
       "startTime": "2026-05-02T02:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     }
@@ -69,7 +69,7 @@
       "game_id": 2025030116,
       "game_date": "2026-05-01",
       "game_status": "OFF",
-      "created_at": "2026-05-02T02:50:50.670896",
+      "created_at": "2026-05-02T04:04:49.911839",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8480035.png",
       "goals": 0,
       "assists": 0,
@@ -189,7 +189,7 @@
       "game_id": 2025030116,
       "game_date": "2026-05-01",
       "game_status": "OFF",
-      "created_at": "2026-05-02T02:50:53.906358",
+      "created_at": "2026-05-02T04:04:53.149125",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BOS/8476914.png",
       "goals": 0,
       "assists": 0,
@@ -313,7 +313,7 @@
       "game_id": 2025030116,
       "game_date": "2026-05-01",
       "game_status": "OFF",
-      "created_at": "2026-05-02T02:50:47.439358",
+      "created_at": "2026-05-02T04:04:46.613613",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -418,6 +418,6 @@
     }
   ],
   "total_players": 3,
-  "generated_at": "2026-05-02T02:50:59.509357",
+  "generated_at": "2026-05-02T04:04:59.018325",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
