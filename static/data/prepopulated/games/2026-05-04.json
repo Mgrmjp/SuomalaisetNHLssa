@@ -20,14 +20,14 @@
       "gameId": 2025030241,
       "homeTeam": "VGK",
       "awayTeam": "ANA",
-      "homeScore": 0,
+      "homeScore": 1,
       "awayScore": 0,
       "gameState": "LIVE",
       "gameType": 3,
       "startTime": "2026-05-05T01:30:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 2,
+      "period": 3,
       "finnish_players_count": 2,
       "empty_net_goals": 0
     }
@@ -46,15 +46,15 @@
       "status": "Active",
       "opponent": "VGK",
       "opponent_full": "Vegas Golden Knights",
-      "game_score": "0-0",
-      "game_result": "T",
+      "game_score": "0-1",
+      "game_result": "L",
       "game_venue": "T-Mobile Arena",
       "game_city": "Vegas",
       "game_address": "3780 South Las Vegas Boulevard, Las Vegas, Nevada, United States",
       "game_id": 2025030241,
       "game_date": "2026-05-04",
       "game_status": "OFF",
-      "created_at": "2026-05-05T02:47:36.066210",
+      "created_at": "2026-05-05T03:58:51.540963",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8475798.png",
       "goals": 0,
       "assists": 0,
@@ -63,7 +63,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "06:54",
+      "time_on_ice": "16:17",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 2,
@@ -73,7 +73,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 10,
+      "shifts": 21,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -174,7 +174,7 @@
       "game_id": 2025030222,
       "game_date": "2026-05-04",
       "game_status": "OFF",
-      "created_at": "2026-05-05T02:47:26.801458",
+      "created_at": "2026-05-05T03:58:42.296264",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/PHI/8477499.png",
       "goals": 0,
       "assists": 0,
@@ -196,6 +196,21 @@
       "shifts": 42,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-05-04",
+          "opponent": "CAR",
+          "opponent_full": "Carolina Hurricanes",
+          "team_score": 2,
+          "opponent_score": 3,
+          "result": "L",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-05-02",
           "opponent": "CAR",
@@ -255,21 +270,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-04-22",
-          "opponent": "PIT",
-          "opponent_full": "Pittsburgh Penguins",
-          "team_score": 5,
-          "opponent_score": 2,
-          "result": "W",
-          "goals": 1,
-          "assists": 0,
-          "points": 1,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -294,7 +294,7 @@
       "game_id": 2025030222,
       "game_date": "2026-05-04",
       "game_status": "OFF",
-      "created_at": "2026-05-05T02:47:30.058838",
+      "created_at": "2026-05-05T03:58:45.608980",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/CAR/8478427.png",
       "goals": 0,
       "assists": 0,
@@ -316,6 +316,21 @@
       "shifts": 30,
       "average_ice_time": "00:00",
       "recent_results": [
+        {
+          "date": "2026-05-04",
+          "opponent": "PHI",
+          "opponent_full": "Philadelphia Flyers",
+          "team_score": 3,
+          "opponent_score": 2,
+          "result": "W",
+          "goals": 0,
+          "assists": 0,
+          "points": 0,
+          "goals_against": null,
+          "save_percentage": null,
+          "shots_against": null,
+          "saves": null
+        },
         {
           "date": "2026-05-02",
           "opponent": "PHI",
@@ -375,21 +390,6 @@
           "save_percentage": null,
           "shots_against": null,
           "saves": null
-        },
-        {
-          "date": "2026-04-18",
-          "opponent": "OTT",
-          "opponent_full": "Ottawa Senators",
-          "team_score": 2,
-          "opponent_score": 0,
-          "result": "W",
-          "goals": 0,
-          "assists": 0,
-          "points": 0,
-          "goals_against": null,
-          "save_percentage": null,
-          "shots_against": null,
-          "saves": null
         }
       ]
     },
@@ -406,15 +406,15 @@
       "status": "Active",
       "opponent": "VGK",
       "opponent_full": "Vegas Golden Knights",
-      "game_score": "0-0",
-      "game_result": "T",
+      "game_score": "0-1",
+      "game_result": "L",
       "game_venue": "T-Mobile Arena",
       "game_city": "Vegas",
       "game_address": "3780 South Las Vegas Boulevard, Las Vegas, Nevada, United States",
       "game_id": 2025030241,
       "game_date": "2026-05-04",
       "game_status": "OFF",
-      "created_at": "2026-05-05T02:47:39.229039",
+      "created_at": "2026-05-05T03:58:54.693777",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/ANA/8478024.png",
       "goals": 0,
       "assists": 0,
@@ -519,6 +519,6 @@
     }
   ],
   "total_players": 4,
-  "generated_at": "2026-05-05T02:47:42.490153",
+  "generated_at": "2026-05-05T03:58:59.433255",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
