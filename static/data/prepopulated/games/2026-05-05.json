@@ -5,14 +5,14 @@
       "gameId": 2025030232,
       "homeTeam": "COL",
       "awayTeam": "MIN",
-      "homeScore": 2,
+      "homeScore": 3,
       "awayScore": 1,
       "gameState": "LIVE",
       "gameType": 3,
       "startTime": "2026-05-06T00:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     }
@@ -31,7 +31,7 @@
       "status": "Active",
       "opponent": "MIN",
       "opponent_full": "Minnesota Wild",
-      "game_score": "2-1",
+      "game_score": "3-1",
       "game_result": "W",
       "game_venue": "Ball Arena",
       "game_city": "Colorado",
@@ -39,7 +39,7 @@
       "game_id": 2025030232,
       "game_date": "2026-05-05",
       "game_status": "OFF",
-      "created_at": "2026-05-06T00:42:51.437302",
+      "created_at": "2026-05-06T01:19:02.096876",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/COL/8477476.png",
       "goals": 0,
       "assists": 0,
@@ -48,7 +48,7 @@
       "penalty_minutes": 0,
       "shots": 0,
       "plus_minus": 0,
-      "time_on_ice": "04:13",
+      "time_on_ice": "06:51",
       "takeaways": 0,
       "giveaways": 0,
       "blocked_shots": 0,
@@ -58,7 +58,7 @@
       "even_strength_goals": 0,
       "power_play_assists": 0,
       "short_handed_assists": 0,
-      "shifts": 7,
+      "shifts": 10,
       "average_ice_time": "00:00",
       "recent_results": [
         {
@@ -140,6 +140,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-05-06T00:42:54.749549",
+  "generated_at": "2026-05-06T01:19:05.350722",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
