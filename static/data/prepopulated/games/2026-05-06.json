@@ -6,13 +6,13 @@
       "homeTeam": "BUF",
       "awayTeam": "MTL",
       "homeScore": 2,
-      "awayScore": 0,
+      "awayScore": 1,
       "gameState": "LIVE",
       "gameType": 3,
       "startTime": "2026-05-06T23:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 1,
+      "period": 2,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     },
@@ -46,7 +46,7 @@
       "status": "Active",
       "opponent": "MTL",
       "opponent_full": "Montréal Canadiens",
-      "game_score": "2-0",
+      "game_score": "2-1",
       "game_result": "W",
       "game_venue": "KeyBank Center",
       "game_city": "Buffalo",
@@ -54,7 +54,7 @@
       "game_id": 2025030211,
       "game_date": "2026-05-06",
       "game_status": "OFF",
-      "created_at": "2026-05-06T23:45:03.958977",
+      "created_at": "2026-05-07T00:05:38.606010",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -159,6 +159,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-05-06T23:45:08.753453",
+  "generated_at": "2026-05-07T00:05:43.417963",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
