@@ -1,0 +1,39 @@
+{
+  "date": "2026-05-08",
+  "games": [
+    {
+      "gameId": 2025030212,
+      "homeTeam": "BUF",
+      "awayTeam": "MTL",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 3,
+      "startTime": "2026-05-08T23:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2025030243,
+      "homeTeam": "ANA",
+      "awayTeam": "VGK",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 3,
+      "startTime": "2026-05-09T01:30:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    }
+  ],
+  "players": [],
+  "total_players": 0,
+  "generated_at": "2026-05-08T06:41:16.733071",
+  "source": "NHL API - Enhanced with Empty Net Goal Tracking"
+}
