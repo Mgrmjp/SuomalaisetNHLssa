@@ -39,24 +39,30 @@ if [ $? -ne 0 ]; then
 fi
 echo ""
 
-# Step 2: Determine Date
-# Usage: ./daily_update.sh [YYYY-MM-DD]
-# Default: Yesterday (to get completed games if run in the morning)
-if [ -n "$1" ]; then
-    TARGET_DATE="$1"
-    echo -e "${GREEN}[2/3] Using specified date: $TARGET_DATE${NC}"
+# Step 2: Determine Fetch Window
+# Usage:
+#   ./daily_update.sh                    -> yesterday through 7 days ahead
+#   ./daily_update.sh YYYY-MM-DD         -> single date
+#   ./daily_update.sh YYYY-MM-DD YYYY-MM-DD -> explicit date range
+if [ -n "$2" ]; then
+    START_DATE="$1"
+    END_DATE="$2"
+    echo -e "${GREEN}[2/3] Using specified date range: $START_DATE -> $END_DATE${NC}"
+elif [ -n "$1" ]; then
+    START_DATE="$1"
+    END_DATE="$1"
+    echo -e "${GREEN}[2/3] Using specified date: $START_DATE${NC}"
 else
-    # Check if requests is available for checking schedule logic, otherwise just use yesterday
-    # For simplicity, we default to yesterday as that's the extensive use case (checking last night's games)
-    TARGET_DATE=$(date -d "yesterday" +%Y-%m-%d)
-    echo -e "${GREEN}[2/3] Using default date (yesterday): $TARGET_DATE${NC}"
-    echo "Tip: You can provide a specific date: ./scripts/daily_update.sh 2026-01-23"
+    START_DATE=$(date -d "yesterday" +%Y-%m-%d)
+    END_DATE=$(date -d "+7 days" +%Y-%m-%d)
+    echo -e "${GREEN}[2/3] Using default fetch window: $START_DATE -> $END_DATE${NC}"
+    echo "Tip: You can provide a specific date or range: ./scripts/daily_update.sh 2026-01-23 [2026-01-30]"
 fi
 echo ""
 
 # Step 3: Fetch Game Data
-echo -e "${GREEN}[3/3] Fetching Game Data for $TARGET_DATE...${NC}"
-$VENV_PYTHON scripts/data_collection/finnish/fetch.py "$TARGET_DATE"
+echo -e "${GREEN}[3/3] Fetching Game Data for $START_DATE -> $END_DATE...${NC}"
+$VENV_PYTHON scripts/data_collection/finnish/fetch.py "$START_DATE" "$END_DATE"
 
 EXIT_CODE=$?
 echo ""
@@ -70,5 +76,5 @@ fi
 
 # Step 4: Optional Git Commit (uncomment if running on server)
 # git add static/data/prepopulated/games/
-# git commit -m "Auto-update data for $TARGET_DATE"
+# git commit -m "Auto-update data for $START_DATE -> $END_DATE"
 # git push

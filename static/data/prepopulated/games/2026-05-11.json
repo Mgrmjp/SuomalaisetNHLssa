@@ -1,15 +1,15 @@
 {
-  "date": "2026-05-08",
+  "date": "2026-05-11",
   "games": [
     {
-      "gameId": 2025030212,
-      "homeTeam": "BUF",
-      "awayTeam": "MTL",
+      "gameId": 2025030234,
+      "homeTeam": "MIN",
+      "awayTeam": "COL",
       "homeScore": 0,
       "awayScore": 0,
       "gameState": "FUT",
       "gameType": 3,
-      "startTime": "2026-05-08T23:00:00Z",
+      "startTime": "2026-05-11T16:00:00Z",
       "isOT": false,
       "isSO": false,
       "period": 3,
@@ -17,14 +17,14 @@
       "empty_net_goals": 0
     },
     {
-      "gameId": 2025030243,
-      "homeTeam": "ANA",
-      "awayTeam": "VGK",
+      "gameId": 2025030225,
+      "homeTeam": "CAR",
+      "awayTeam": "PHI",
       "homeScore": 0,
       "awayScore": 0,
       "gameState": "FUT",
       "gameType": 3,
-      "startTime": "2026-05-09T01:30:00Z",
+      "startTime": "2026-05-11T23:00:00Z",
       "isOT": false,
       "isSO": false,
       "period": 3,
@@ -34,6 +34,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-05-08T20:25:30.720345",
+  "generated_at": "2026-05-08T20:25:41.569810",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }

@@ -8,12 +8,14 @@ import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import {
+    availableDates,
     currentBreak,
     displayDate,
     error,
     games,
     isLoading,
     players,
+    selectedDate,
     setDate,
 } from '$lib/stores/gameData.js'
 import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
@@ -25,6 +27,9 @@ let forwardsSwiper = null
 let defendersSwiper = null
 let goaliesSwiper = null
 let isMobile = false
+let relatedFinnishGames = $state([])
+let relatedFinnishGamesLabel = $state('')
+let futureLookupToken = 0
 
 function checkMobile() {
     isMobile = typeof window !== 'undefined' && window.innerWidth < 768
@@ -227,6 +232,153 @@ const emptyStateVariant = $derived.by(() => {
     if (hasNoGames) return 'no-games'
     return 'no-scorers'
 })
+
+const upcomingFinnishGames = $derived.by(() => {
+    const sameDayGames = $games?.games?.length
+        ? [...$games.games]
+              .filter(
+                  (game) =>
+                      Number(game?.finnish_players_count || 0) > 0 &&
+                      ['FUT', 'PRE'].includes(game?.gameState)
+              )
+              .sort(
+                  (a, b) =>
+                      new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
+              )
+              .slice(0, 4)
+        : []
+
+    if (sameDayGames.length > 0) {
+        return sameDayGames
+    }
+
+    return relatedFinnishGames
+})
+
+const sameDayUpcomingFinnishGames = $derived(
+    $games?.games?.length
+        ? [...$games.games]
+              .filter(
+                  (game) =>
+                      Number(game?.finnish_players_count || 0) > 0 &&
+                      ['FUT', 'PRE'].includes(game?.gameState)
+              )
+              .sort(
+                  (a, b) =>
+                      new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
+              )
+              .slice(0, 4)
+        : []
+)
+
+const relatedGamesLabel = $derived(
+    sameDayUpcomingFinnishGames.length > 0
+        ? 'Seuraavaksi suomalaisia mukana näissä otteluissa:'
+        : relatedFinnishGamesLabel
+)
+
+async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesValue) {
+    const token = ++futureLookupToken
+
+    if (!selectedDateValue || !availableDatesValue?.length) {
+        relatedFinnishGames = []
+        relatedFinnishGamesLabel = ''
+        return
+    }
+
+    const futureDates = availableDatesValue.filter((date) => date > selectedDateValue).slice(0, 10)
+    const upcomingGames = []
+
+    for (const date of futureDates) {
+        try {
+            const response = await fetch(`/data/prepopulated/games/${date}.json`)
+            if (!response.ok) continue
+
+            const data = await response.json()
+            const gamesWithFinns = (data?.games || [])
+                .filter(
+                    (game) =>
+                        Number(game?.finnish_players_count || 0) > 0 &&
+                        ['FUT', 'PRE'].includes(game?.gameState)
+                )
+                .sort(
+                    (a, b) =>
+                        new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
+                )
+
+            upcomingGames.push(...gamesWithFinns)
+
+            if (upcomingGames.length >= 4) {
+                break
+            }
+        } catch {
+            // Ignore missing local future data files
+        }
+    }
+
+    if (token !== futureLookupToken) return
+
+    if (upcomingGames.length > 0) {
+        relatedFinnishGames = upcomingGames.slice(0, 4)
+        relatedFinnishGamesLabel = 'Seuraavaksi suomalaisia mukana näissä otteluissa:'
+        return
+    }
+
+    const pastDates = [...availableDatesValue]
+        .filter((date) => date < selectedDateValue)
+        .sort((a, b) => b.localeCompare(a))
+        .slice(0, 10)
+    const recentGames = []
+
+    for (const date of pastDates) {
+        try {
+            const response = await fetch(`/data/prepopulated/games/${date}.json`)
+            if (!response.ok) continue
+
+            const data = await response.json()
+            const gamesWithFinns = (data?.games || [])
+                .filter((game) => Number(game?.finnish_players_count || 0) > 0)
+                .sort(
+                    (a, b) =>
+                        new Date(b.startTime || 0).getTime() - new Date(a.startTime || 0).getTime()
+                )
+
+            recentGames.push(...gamesWithFinns)
+
+            if (recentGames.length >= 4) {
+                break
+            }
+        } catch {
+            // Ignore missing local past data files
+        }
+    }
+
+    if (token !== futureLookupToken) return
+    relatedFinnishGames = recentGames.slice(0, 4)
+    relatedFinnishGamesLabel =
+        recentGames.length > 0 ? 'Viimeksi suomalaisia oli mukana näissä otteluissa:' : ''
+}
+
+$effect(() => {
+    const selectedDateValue = $selectedDate
+    const availableDatesValue = $availableDates
+    const currentVariant = emptyStateVariant
+    const currentSameDayUpcomingGames = sameDayUpcomingFinnishGames
+
+    if (currentVariant !== 'no-scorers') {
+        relatedFinnishGames = []
+        relatedFinnishGamesLabel = ''
+        return
+    }
+
+    if (currentSameDayUpcomingGames.length > 0) {
+        relatedFinnishGames = []
+        relatedFinnishGamesLabel = ''
+        return
+    }
+
+    loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesValue)
+})
 </script>
 
 {#if $isLoading}
@@ -247,7 +399,11 @@ const emptyStateVariant = $derived.by(() => {
         />
     </div>
 {:else if !hasAnyPlayers}
-    <EmptyState variant={emptyStateVariant} />
+    <EmptyState
+        variant={emptyStateVariant}
+        relatedGames={upcomingFinnishGames}
+        relatedGamesLabel={relatedGamesLabel}
+    />
 {:else}
     <section id="scoringList" class="scoring-list py-12 bg-gray-50/50">
         <div class="scoring-list__container w-full">

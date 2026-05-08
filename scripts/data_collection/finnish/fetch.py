@@ -5,14 +5,9 @@ Enhanced Finnish NHL Players Data Fetcher with Empty Net Goal Tracking
 Refactored to use shared config and utilities from parent package.
 """
 
-import json
 import sys
 import time
-from datetime import datetime
-from pathlib import Path
-
-# Import shared configuration and utilities
-import sys
+from datetime import datetime, timedelta
 from pathlib import Path
 
 # Add parent directory to path for imports
@@ -765,15 +760,31 @@ def generate_finnish_players_data(game_date):
     }
 
 
-# =============================================================================
-# Main Entry Point
-# =============================================================================
-if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        date_str = sys.argv[1]
-    else:
-        date_str = datetime.now().strftime("%Y-%m-%d")
+def parse_date(date_str):
+    """Parse YYYY-MM-DD into datetime."""
+    return datetime.strptime(date_str, "%Y-%m-%d")
 
+
+def format_date(date_obj):
+    """Format datetime into YYYY-MM-DD."""
+    return date_obj.strftime("%Y-%m-%d")
+
+
+def iter_date_range(start_date_str, end_date_str):
+    """Yield dates from start to end inclusive."""
+    current = parse_date(start_date_str)
+    end = parse_date(end_date_str)
+
+    if current > end:
+        raise ValueError(f"Start date must be before or equal to end date: {start_date_str} > {end_date_str}")
+
+    while current <= end:
+        yield format_date(current)
+        current += timedelta(days=1)
+
+
+def generate_and_save_for_date(date_str):
+    """Generate, enrich and save one day's Finnish NHL data."""
     print("=" * 80)
     print(f"Fetching Finnish NHL players data for {date_str}...")
     print("=" * 80)
@@ -781,13 +792,11 @@ if __name__ == "__main__":
 
     data = generate_finnish_players_data(date_str)
 
-    # Sync headshots for any new players
     if data.get("players"):
         new_headshots = sync_headshots(data["players"])
         if new_headshots > 0:
             print(f"\n📷 Downloaded {new_headshots} new headshot(s)")
 
-    # Save using shared utilities
     output_file = GAMES_DIR / f"{date_str}.json"
     save_json(data, output_file)
 
@@ -795,4 +804,49 @@ if __name__ == "__main__":
     print("=" * 80)
     print(f"✅ Generated data for {len(data['players'])} Finnish players")
     print(f"📁 Saved to: {output_file}")
+    print("=" * 80)
+
+    return data
+
+
+# =============================================================================
+# Main Entry Point
+# =============================================================================
+if __name__ == "__main__":
+    if len(sys.argv) > 2:
+        start_date = sys.argv[1]
+        end_date = sys.argv[2]
+    elif len(sys.argv) > 1:
+        start_date = sys.argv[1]
+        end_date = start_date
+    else:
+        today = datetime.now()
+        start_date = format_date(today)
+        end_date = format_date(today + timedelta(days=7))
+
+    try:
+        dates_to_fetch = list(iter_date_range(start_date, end_date))
+    except ValueError as exc:
+        print(f"❌ {exc}")
+        sys.exit(1)
+
+    print()
+    print(f"📅 Fetch window: {dates_to_fetch[0]} -> {dates_to_fetch[-1]}")
+    print(f"📦 Total dates: {len(dates_to_fetch)}")
+    print()
+
+    total_players = 0
+
+    for index, date_str in enumerate(dates_to_fetch, start=1):
+        print(f"[{index}/{len(dates_to_fetch)}] Processing {date_str}")
+        data = generate_and_save_for_date(date_str)
+        total_players += len(data.get("players", []))
+
+        if index < len(dates_to_fetch):
+            time.sleep(1)
+
+    print()
+    print("=" * 80)
+    print(f"✅ Fetch complete for {len(dates_to_fetch)} date(s)")
+    print(f"🏒 Total Finnish player entries generated: {total_players}")
     print("=" * 80)
