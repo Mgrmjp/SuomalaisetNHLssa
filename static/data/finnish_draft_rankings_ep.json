@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-05-07T07:54:55.515098",
+  "updatedAt": "2026-05-08T07:32:53.189109",
   "sources": [
     {
       "name": "EliteProspects.com",
@@ -4258,7 +4258,7 @@
           "playerId": "927671"
         },
         {
-          "rank": 16,
+          "rank": 17,
           "name": "Oliver Suvanto",
           "firstName": null,
           "lastName": null,
@@ -4279,7 +4279,7 @@
           "playerId": "925061"
         },
         {
-          "rank": 19,
+          "rank": 20,
           "name": "Juho Piiparinen",
           "firstName": null,
           "lastName": null,
@@ -4298,27 +4298,6 @@
             "metrics": 92
           },
           "playerId": "925157"
-        },
-        {
-          "rank": 60,
-          "name": "Vertti Svensk",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2007-11-09",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'1\"",
-            "metrics": 185
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 168,
-            "metrics": 76
-          },
-          "playerId": "872901"
         },
         {
           "rank": 62,
@@ -4342,7 +4321,28 @@
           "playerId": "959462"
         },
         {
-          "rank": 81,
+          "rank": 63,
+          "name": "Vertti Svensk",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-11-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'1\"",
+            "metrics": 185
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 168,
+            "metrics": 76
+          },
+          "playerId": "872901"
+        },
+        {
+          "rank": 83,
           "name": "Matias Vanhanen",
           "firstName": null,
           "lastName": null,
@@ -4363,7 +4363,7 @@
           "playerId": "865769"
         },
         {
-          "rank": 91,
+          "rank": 93,
           "name": "Noel Pakarinen",
           "firstName": null,
           "lastName": null,
@@ -4382,27 +4382,6 @@
             "metrics": 90
           },
           "playerId": "1003492"
-        },
-        {
-          "rank": 100,
-          "name": "Luka Arkko",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2008-01-14",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'3\"",
-            "metrics": 190
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 209,
-            "metrics": 95
-          },
-          "playerId": "959469"
         },
         {
           "rank": null,
@@ -4424,6 +4403,27 @@
             "metrics": 90
           },
           "playerId": "925170"
+        },
+        {
+          "rank": null,
+          "name": "Luka Arkko",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-14",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'3\"",
+            "metrics": 190
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 209,
+            "metrics": 95
+          },
+          "playerId": "959469"
         },
         {
           "rank": null,
