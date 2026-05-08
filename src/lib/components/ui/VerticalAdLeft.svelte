@@ -88,7 +88,7 @@ onDestroy(() => {
         transform: translateY(-50%);
         z-index: 40;
         display: none;
-        overflow: hidden;
+        overflow: visible;
         max-height: 100vh;
         max-height: 100dvh;
     }
@@ -111,7 +111,7 @@ onDestroy(() => {
             height: 600px;
             max-height: 100vh;
             max-height: 100dvh;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .ad-wrapper {
@@ -155,6 +155,11 @@ onDestroy(() => {
         width: 160px;
         height: 600px;
         line-height: 0;
+        border-radius: 12px;
+        box-shadow:
+            0 0 0 4px rgba(15, 23, 42, 0.16),
+            0 14px 32px rgba(15, 23, 42, 0.18);
+        isolation: isolate;
     }
 
     .ad-link.active {
@@ -166,20 +171,43 @@ onDestroy(() => {
         opacity: 0;
     }
 
+    .ad-content-wrapper::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        background: linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0) 42%,
+            rgba(255, 255, 255, 0.38) 50%,
+            rgba(255, 255, 255, 0) 58%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 250% 100%;
+        animation: border-shimmer 7s ease-in-out infinite;
+        opacity: 0.8;
+        pointer-events: none;
+        z-index: 0;
+    }
+
     .ad-img {
         width: 160px;
         height: 600px;
         object-fit: cover;
-        border: 0;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+        border: 1px solid rgba(15, 23, 42, 0.85);
+        box-shadow: none;
+        border-radius: 10px;
         display: block;
+        position: relative;
+        z-index: 1;
     }
 
     .ad-disclaimer {
         position: absolute;
-        top: 12px;
-        left: 12px;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background: rgba(0, 0, 0, 0.55);
         color: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.18);
@@ -199,5 +227,11 @@ onDestroy(() => {
         .ad-link {
             transition: none;
         }
+    }
+
+    @keyframes border-shimmer {
+        0%, 72%, 100% { background-position: 140% 50%; opacity: 0; }
+        78% { background-position: 60% 50%; opacity: 0.8; }
+        84% { background-position: -20% 50%; opacity: 0; }
     }
 </style>

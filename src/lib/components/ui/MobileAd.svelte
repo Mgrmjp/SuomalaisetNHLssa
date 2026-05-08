@@ -91,7 +91,7 @@ onDestroy(() => {
         position: relative;
         width: 300px;
         height: 250px;
-        overflow: hidden;
+        overflow: visible;
     }
 
     .mobile-ad-link {
@@ -105,8 +105,9 @@ onDestroy(() => {
         opacity: 0;
         transition: opacity 1s ease-in-out;
         pointer-events: none;
-        overflow: hidden;
+        overflow: visible;
         border-radius: 8px;
+        isolation: isolate;
     }
 
     .mobile-ad-link.active {
@@ -118,19 +119,44 @@ onDestroy(() => {
         opacity: 0;
     }
 
+    .mobile-ad-link.active::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        background: linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0) 42%,
+            rgba(255, 255, 255, 0.38) 50%,
+            rgba(255, 255, 255, 0) 58%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 250% 100%;
+        animation: border-shimmer 7s ease-in-out infinite;
+        opacity: 0.8;
+        pointer-events: none;
+        z-index: 0;
+    }
+
     .mobile-ad-img {
         width: 300px;
         height: 250px;
         object-fit: cover;
-        border: 0;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(15, 23, 42, 0.85);
+        border-radius: 10px;
+        box-shadow:
+            0 0 0 4px rgba(15, 23, 42, 0.16),
+            0 14px 32px rgba(15, 23, 42, 0.18);
+        position: relative;
+        z-index: 1;
     }
 
     .ad-disclaimer {
         position: absolute;
-        top: 12px;
-        right: 12px;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background: rgba(0, 0, 0, 0.55);
         color: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.18);
@@ -150,5 +176,11 @@ onDestroy(() => {
         .mobile-ad-link {
             transition: none;
         }
+    }
+
+    @keyframes border-shimmer {
+        0%, 72%, 100% { background-position: 140% 50%; opacity: 0; }
+        78% { background-position: 60% 50%; opacity: 0.8; }
+        84% { background-position: -20% 50%; opacity: 0; }
     }
 </style>

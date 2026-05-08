@@ -79,6 +79,30 @@ const bannerAds = [
         href: 'https://go.kvarnx.com/t/t?a=1946750195&as=2038972948&t=2&tk=1',
         isCustom: 'kvarn',
     },
+    {
+        id: 'finlayson',
+        href: 'https://to.finlayson.fi/t/t?a=1914383795&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1914383795&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Finlayson',
+    },
+    {
+        id: 'matkapojat',
+        href: 'https://do.matkapojat.fi/t/t?a=1749276268&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1749276268&as=2038972948&t=1&tk=1&i=1',
+        width: 1456,
+        height: 180,
+        alt: 'Matkapojat',
+    },
+    {
+        id: 'matkapojat-2',
+        href: 'https://do.matkapojat.fi/t/t?a=1749275885&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1749275885&as=2038972948&t=1&tk=1&i=1',
+        width: 1450,
+        height: 179,
+        alt: 'Matkapojat',
+    },
 ]
 
 // Mobile ads - 300x250 only (IAB Medium Rectangle)

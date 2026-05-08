@@ -276,8 +276,9 @@ function getLogoSrc(ad) {
         opacity: 0;
         transition: opacity 0.8s ease-in-out;
         pointer-events: none;
-        overflow: hidden;
+        overflow: visible;
         border-radius: 6px;
+        isolation: isolate;
     }
 
     .ad-link.active {
@@ -287,19 +288,46 @@ function getLogoSrc(ad) {
 
     .ad-link.fade-out { opacity: 0; }
 
+    .ad-link.active::before,
+    .custom-banner::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        background: linear-gradient(
+            110deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0) 42%,
+            rgba(255, 255, 255, 0.38) 50%,
+            rgba(255, 255, 255, 0) 58%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 250% 100%;
+        animation: border-shimmer 7s ease-in-out infinite;
+        opacity: 0.8;
+        pointer-events: none;
+        z-index: 0;
+    }
+
     .ad-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border: 0;
-        border-radius: 8px;
+        border: 1px solid rgba(15, 23, 42, 0.85);
+        border-radius: 10px;
+        box-shadow:
+            0 0 0 4px rgba(15, 23, 42, 0.16),
+            0 14px 32px rgba(15, 23, 42, 0.18);
         display: block;
+        position: relative;
+        z-index: 1;
     }
 
     .ad-disclaimer {
         position: absolute;
-        top: 12px;
-        right: 12px;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background: rgba(0, 0, 0, 0.55);
         color: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(255, 255, 255, 0.18);
@@ -392,8 +420,13 @@ function getLogoSrc(ad) {
         gap: 0.75rem;
         padding: 0 1rem;
         border-radius: 6px;
-        overflow: hidden;
+        overflow: visible;
+        box-shadow:
+            0 0 0 4px rgba(15, 23, 42, 0.16),
+            0 14px 32px rgba(15, 23, 42, 0.18);
         transition: transform 0.2s ease;
+        isolation: isolate;
+        z-index: 1;
         /* Fixed IAB standard height */
         height: 90px;
         width: 100%;
@@ -438,6 +471,12 @@ function getLogoSrc(ad) {
         25% { opacity: 0.5; }
         50% { opacity: 0.25; transform: translate(6px, -10px); }
         75% { opacity: 0.4; }
+    }
+
+    @keyframes border-shimmer {
+        0%, 72%, 100% { background-position: 140% 50%; opacity: 0; }
+        78% { background-position: 60% 50%; opacity: 0.8; }
+        84% { background-position: -20% 50%; opacity: 0; }
     }
 
     /* Color themes */
