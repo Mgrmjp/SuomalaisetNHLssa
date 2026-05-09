@@ -163,7 +163,7 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
         border-radius: 12px;
         padding: 2.5rem 2rem;
         text-align: center;
-        border: 1px solid #e5e7eb;
+        border: 1px solid #cbd5e1;
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
     }
 
@@ -207,7 +207,7 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
     }
 
     .upcoming-game-row {
-        border: 1px solid #e5e7eb;
+        border: 1px solid #cbd5e1;
         border-radius: 10px;
         background: #f8fafc;
         padding: 0.75rem 0.875rem;
@@ -286,7 +286,7 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
     }
 
     .daily-news-item {
-        border: 1px solid #e5e7eb;
+        border: 1px solid #cbd5e1;
         border-radius: 10px;
         background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
         padding: 0.9rem 1rem;
