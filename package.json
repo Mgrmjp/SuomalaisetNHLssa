@@ -24,6 +24,7 @@
     "data:fetch": ".venv/bin/python3 scripts/data_collection/finnish/fetch.py",
     "data:fetch:date": ".venv/bin/python3 scripts/data_collection/finnish/fetch.py",
     "data:fetch:season": ".venv/bin/python3 scripts/data_collection/season/fetch_season_games.py",
+    "data:news:daily": ".venv/bin/python3 scripts/generate_daily_news.py",
     "players:update": "node scripts/node_utils/player-cli.js update",
     "players:validate": "node scripts/node_utils/player-cli.js validate",
     "players:stats": "node scripts/node_utils/player-cli.js stats",

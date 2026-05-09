@@ -31,7 +31,7 @@ echo -e "${BLUE}================================================================
 echo ""
 
 # Step 1: Update Player Cache
-echo -e "${GREEN}[1/3] Updating Player Cache...${NC}"
+echo -e "${GREEN}[1/4] Updating Player Cache...${NC}"
 echo "Scanning rosters for new Finnish players..."
 $VENV_PYTHON scripts/data_collection/finnish/build_cache.py
 if [ $? -ne 0 ]; then
@@ -47,28 +47,33 @@ echo ""
 if [ -n "$2" ]; then
     START_DATE="$1"
     END_DATE="$2"
-    echo -e "${GREEN}[2/3] Using specified date range: $START_DATE -> $END_DATE${NC}"
+    echo -e "${GREEN}[2/4] Using specified date range: $START_DATE -> $END_DATE${NC}"
 elif [ -n "$1" ]; then
     START_DATE="$1"
     END_DATE="$1"
-    echo -e "${GREEN}[2/3] Using specified date: $START_DATE${NC}"
+    echo -e "${GREEN}[2/4] Using specified date: $START_DATE${NC}"
 else
     START_DATE=$(date -d "yesterday" +%Y-%m-%d)
     END_DATE=$(date -d "+7 days" +%Y-%m-%d)
-    echo -e "${GREEN}[2/3] Using default fetch window: $START_DATE -> $END_DATE${NC}"
+    echo -e "${GREEN}[2/4] Using default fetch window: $START_DATE -> $END_DATE${NC}"
     echo "Tip: You can provide a specific date or range: ./scripts/daily_update.sh 2026-01-23 [2026-01-30]"
 fi
 echo ""
 
 # Step 3: Fetch Game Data
-echo -e "${GREEN}[3/3] Fetching Game Data for $START_DATE -> $END_DATE...${NC}"
+echo -e "${GREEN}[3/4] Fetching Game Data for $START_DATE -> $END_DATE...${NC}"
 $VENV_PYTHON scripts/data_collection/finnish/fetch.py "$START_DATE" "$END_DATE"
 
 EXIT_CODE=$?
 echo ""
+
+echo -e "${GREEN}[4/4] Generating Daily News Fallbacks for $START_DATE -> $END_DATE...${NC}"
+$VENV_PYTHON scripts/generate_daily_news.py "$START_DATE" "$END_DATE"
+NEWS_EXIT_CODE=$?
+echo ""
 echo -e "${BLUE}================================================================${NC}"
 
-if [ $EXIT_CODE -eq 0 ]; then
+if [ $EXIT_CODE -eq 0 ] && [ $NEWS_EXIT_CODE -eq 0 ]; then
     echo -e "${GREEN}✅ Update completed successfully!${NC}"
 else
     echo -e "${YELLOW}⚠️ Update completed with issues.${NC}"

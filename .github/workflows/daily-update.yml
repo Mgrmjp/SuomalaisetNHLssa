@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -48,10 +49,10 @@ jobs:
             python scripts/data_collection/finnish/build_cache.py
           fi
 
-      - name: Fetch today's data
+      - name: Run daily update pipeline
         run: |
-          source .venv/bin/activate
-          python scripts/data_collection/finnish/fetch.py $(date +%Y-%m-%d)
+          chmod +x scripts/daily_update.sh
+          ./scripts/daily_update.sh $(date +%Y-%m-%d)
 
       - name: Sync Finnish players roster
         run: |
@@ -62,7 +63,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json
           git diff --cached --quiet || git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git push
 

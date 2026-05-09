@@ -7,6 +7,7 @@ import { FreeMode, Mousewheel } from 'swiper/modules'
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import { getDailyFallbackNews } from '$lib/services/dailyNewsService.js'
 import {
     availableDates,
     currentBreak,
@@ -29,7 +30,9 @@ let goaliesSwiper = null
 let isMobile = false
 let relatedFinnishGames = $state([])
 let relatedFinnishGamesLabel = $state('')
+let fallbackNews = $state([])
 let futureLookupToken = 0
+let newsLookupToken = 0
 
 function checkMobile() {
     isMobile = typeof window !== 'undefined' && window.innerWidth < 768
@@ -379,6 +382,24 @@ $effect(() => {
 
     loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesValue)
 })
+
+async function loadFallbackNews(selectedDateValue, variant) {
+    const token = ++newsLookupToken
+
+    if (!selectedDateValue || variant === 'break') {
+        fallbackNews = []
+        return
+    }
+
+    const newsItems = await getDailyFallbackNews(selectedDateValue)
+
+    if (token !== newsLookupToken) return
+    fallbackNews = newsItems
+}
+
+$effect(() => {
+    loadFallbackNews($selectedDate, emptyStateVariant)
+})
 </script>
 
 {#if $isLoading}
@@ -403,6 +424,7 @@ $effect(() => {
         variant={emptyStateVariant}
         relatedGames={upcomingFinnishGames}
         relatedGamesLabel={relatedGamesLabel}
+        newsItems={fallbackNews}
     />
 {:else}
     <section id="scoringList" class="scoring-list py-12 bg-gray-50/50">

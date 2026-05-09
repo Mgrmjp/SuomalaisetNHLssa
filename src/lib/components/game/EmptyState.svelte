@@ -8,10 +8,11 @@ import { displayDate } from '$lib/stores/gameData.js'
  * @type {{
  *   variant?: 'no-games' | 'no-scorers' | 'break',
  *   relatedGames?: Array<{ gameId: number|string, homeTeam: string, awayTeam: string, startTime?: string, finnish_players_count?: number }>,
- *   relatedGamesLabel?: string
+ *   relatedGamesLabel?: string,
+ *   newsItems?: Array<{ translatedTitle?: string, translatedSummary?: string, title?: string, summary?: string, source?: string, url?: string }>
  * }}
  */
-let { variant = 'no-scorers', relatedGames = [], relatedGamesLabel = '' } = $props()
+let { variant = 'no-scorers', relatedGames = [], relatedGamesLabel = '', newsItems = [] } = $props()
 
 const messages = {
     'no-games': {
@@ -64,6 +65,7 @@ const showNoRelatedGamesNote = $derived(
 )
 
 const showRelatedGameDates = $derived(relatedGamesLabel.toLowerCase().includes('viimeksi'))
+const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
 </script>
 
 <div class="empty-state-wrapper">
@@ -111,6 +113,35 @@ const showRelatedGameDates = $derived(relatedGamesLabel.toLowerCase().includes('
                     Tulevia tai viimeisimpiä suomalaispelaajien otteluita ei löytynyt paikallisesta
                     datasta.
                 </p>
+            {/if}
+
+            {#if hasNewsItems}
+                <div class="daily-news">
+                    <p class="daily-news-label">Päivän NHL-uutisia</p>
+
+                    <div class="daily-news-list">
+                        {#each newsItems as item, index (`${item.url || item.title || index}`)}
+                            <article class="daily-news-item">
+                                <h4 class="daily-news-title">
+                                    {item.translatedTitle || item.title}
+                                </h4>
+                                <p class="daily-news-summary">
+                                    {item.translatedSummary || item.summary}
+                                </p>
+                                {#if item.url}
+                                    <a
+                                        class="daily-news-link"
+                                        href={item.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        {item.source ? `Lähde: ${item.source}` : 'Avaa lähde'}
+                                    </a>
+                                {/if}
+                            </article>
+                        {/each}
+                    </div>
+                </div>
             {/if}
         </div>
     </div>
@@ -233,6 +264,60 @@ const showRelatedGameDates = $derived(relatedGamesLabel.toLowerCase().includes('
         max-width: 28rem;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .daily-news {
+        margin-top: 1.5rem;
+        text-align: left;
+    }
+
+    .daily-news-label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 0.75rem;
+        text-align: center;
+    }
+
+    .daily-news-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .daily-news-item {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        padding: 0.9rem 1rem;
+    }
+
+    .daily-news-title {
+        font-size: 0.9375rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 0.35rem;
+        line-height: 1.4;
+    }
+
+    .daily-news-summary {
+        font-size: 0.8125rem;
+        color: #475569;
+        margin: 0;
+        line-height: 1.55;
+    }
+
+    .daily-news-link {
+        display: inline-flex;
+        margin-top: 0.55rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #1d4ed8;
+        text-decoration: none;
+    }
+
+    .daily-news-link:hover {
+        text-decoration: underline;
     }
 
     .empty-state-date {
