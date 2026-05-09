@@ -9,6 +9,11 @@ body {
 /* Ensure light theme colors are always used */
 :root {
     --color-finnish-blue: #003580;
+    --border-gray-200-strong: #cbd5e1;
+    --border-gray-300-strong: #94a3b8;
+    --border-slate-100-strong: #dbe4ee;
+    --border-slate-200-strong: #cbd5e1;
+    --border-slate-200-soft-strong: rgba(148, 163, 184, 0.45);
 }
 
 /* Custom utilities */
@@ -130,11 +135,35 @@ body::before {
 }
 
 .border-gray-200 {
-    border-color: #e5e7eb;
+    border-color: var(--border-gray-200-strong);
 }
 
 .border-gray-300 {
-    border-color: #d1d5db;
+    border-color: var(--border-gray-300-strong);
+}
+
+.border-slate-100 {
+    border-color: var(--border-slate-100-strong);
+}
+
+.border-slate-200 {
+    border-color: var(--border-slate-200-strong);
+}
+
+.border-slate-200\/50 {
+    border-color: var(--border-slate-200-soft-strong);
+}
+
+.divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+    border-color: var(--border-gray-200-strong);
+}
+
+.divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+    border-color: var(--border-slate-100-strong);
+}
+
+.divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+    border-color: var(--border-slate-200-strong);
 }
 
 .bg-gray-50 {

@@ -144,7 +144,7 @@ function _toggleCalendar() {
                         <button
                             type="button"
                             onclick={_toggleCalendar}
-                            class="date-controls__toggle-btn flex-1 sm:flex-initial p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 bg-gray-50 rounded-lg transition-all duration-200 border border-gray-100 flex items-center justify-center min-h-[44px]"
+                            class="date-controls__toggle-btn flex-1 sm:flex-initial p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 bg-gray-50 rounded-lg transition-all duration-200 border border-gray-200 flex items-center justify-center min-h-[44px]"
                             title="Näytä kalenteri"
                         >
                             <svg
@@ -234,7 +234,7 @@ function _toggleCalendar() {
         overflow: visible;
         z-index: 10;
         background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
         box-shadow:
             0 10px 22px rgba(15, 23, 42, 0.1),
             inset 0 1px 0 rgba(255, 255, 255, 0.75);
@@ -243,7 +243,7 @@ function _toggleCalendar() {
     .nav-btn {
         padding: 0.5rem;
         border-radius: 0.75rem;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
         background: white;
         cursor: pointer;
         box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
@@ -265,7 +265,7 @@ function _toggleCalendar() {
         width: 100%;
         padding: 0.75rem 0.9rem;
         border-radius: 0.75rem;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #cbd5e1;
         background: #fff;
         cursor: pointer;
     }

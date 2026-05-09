@@ -583,7 +583,7 @@ onMount(() => {
         padding: 0.75rem 1rem;
         margin-bottom: 0.5rem;
         background: white;
-        border: 1px solid rgba(226, 232, 240, 0.8);
+        border: 1px solid rgba(203, 213, 225, 0.95);
         border-radius: 0.75rem;
         box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
         cursor: pointer;
