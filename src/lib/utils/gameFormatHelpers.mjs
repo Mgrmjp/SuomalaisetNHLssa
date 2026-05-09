@@ -3,7 +3,7 @@
  * @typedef {Object} PlayerData
  * @property {string} [team]
  * @property {string} [opponent]
- * @property {string} [game_id]
+ * @property {string|number} [game_id]
  * @property {string} [game_score]
  * @property {string} [game_result]
  * @property {string} [gameResult]
@@ -16,7 +16,7 @@
 
 /**
  * @typedef {Object} GameData
- * @property {function(string): GameInfo} findGameById
+ * @property {function(string|number): GameInfo|null} findGameById
  */
 
 /**
@@ -74,62 +74,34 @@ export function formatGameMatchup(player, gamesData = null) {
  * @returns {string} Formatted score string
  */
 export function formatGameScore(player, gamesData = null) {
-    if (!player.game_score) return ''
+    const result = (player?.game_result || player?.gameResult || '').trim().toUpperCase()
 
-    // If we have games data, use it to ensure correct "awayScore-homeScore" format
-    if (gamesData?.findGameById && player.game_id) {
+    // The card result badge is player-relative, so the displayed score must stay
+    // player-relative too. Away-home ordering makes home-player wins look backwards.
+    if (!player.game_score && gamesData?.findGameById && player.game_id) {
         const game = gamesData.findGameById(player.game_id)
         if (game && game.homeScore !== undefined && game.awayScore !== undefined) {
-            if (game.isSO && game.awayScore === game.homeScore) {
-                const result = (player?.game_result || player?.gameResult || '')
-                    .trim()
-                    .toUpperCase()
-                const playerTeam = player?.team
-                const opponentTeam = player?.opponent
-                let winningTeam = null
-
-                if (result === 'W') winningTeam = playerTeam
-                if (result === 'L') winningTeam = opponentTeam
-
-                if (winningTeam === game.awayTeam) {
-                    return `${game.awayScore + 1}-${game.homeScore}`
-                }
-
-                if (winningTeam === game.homeTeam) {
-                    return `${game.awayScore}-${game.homeScore + 1}`
-                }
+            if (player.team === game.awayTeam) {
+                return `${game.awayScore}-${game.homeScore}`
             }
-
-            // Return scores in consistent "awayScore-homeScore" format
-            return `${game.awayScore}-${game.homeScore}`
+            if (player.team === game.homeTeam) {
+                return `${game.homeScore}-${game.awayScore}`
+            }
         }
     }
 
-    // Fallback: Use player.game_score but ensure it's in "awayScore-homeScore" format
-    // The current data might be in "homeScore-awayScore" format, so we need to check
+    if (!player.game_score) return ''
+
     const scoreParts = player.game_score.split('-')
     if (scoreParts.length === 2) {
         /** @type {[number, number]} */
         const [firstScore, secondScore] = scoreParts.map(Number)
-
-        // If we have games data, we can determine which format is correct
-        if (gamesData?.findGameById && player.game_id) {
-            const game = gamesData.findGameById(player.game_id)
-            if (game && game.homeScore !== undefined && game.awayScore !== undefined) {
-                // Check if player.game_score is in "homeScore-awayScore" format
-                if (firstScore === game.homeScore && secondScore === game.awayScore) {
-                    // It's in wrong format, swap it
-                    return `${game.awayScore}-${game.homeScore}`
-                }
-            }
-        }
 
         if (
             Number.isFinite(firstScore) &&
             Number.isFinite(secondScore) &&
             firstScore === secondScore
         ) {
-            const result = (player?.game_result || player?.gameResult || '').trim().toUpperCase()
             if (result === 'W') {
                 return `${firstScore + 1}-${secondScore}`
             }

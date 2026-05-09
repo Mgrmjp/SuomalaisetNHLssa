@@ -45,7 +45,7 @@ def fetch_from_api(url: str, max_retries: int = 2) -> dict | None:
 
 def find_games_needing_fix(dry_run: bool = False, target_date: str | None = None) -> List[Tuple[Path, int, dict]]:
     """
-    Scan game JSON files for games with CRIT or FINAL states.
+    Scan game JSON files for games with non-final or inconsistent final states.
 
     Returns:
         List of (file_path, game_id, game_data) tuples
@@ -57,7 +57,7 @@ def find_games_needing_fix(dry_run: bool = False, target_date: str | None = None
     else:
         json_files = sorted(GAMES_DIR.glob("*.json"), reverse=True)
 
-    print(f"🔍 Scanning for games with CRIT/FINAL states...")
+    print(f"🔍 Scanning for games with CRIT/FINAL/LIVE states...")
 
     for file_path in json_files:
         if not file_path.exists():
@@ -71,7 +71,7 @@ def find_games_needing_fix(dry_run: bool = False, target_date: str | None = None
                 game_state = game.get("gameState")
                 game_id = game.get("gameId")
 
-                if game_state in ["CRIT", "FINAL"] and game_id:
+                if game_state in ["CRIT", "FINAL", "LIVE"] and game_id:
                     games_to_fix.append((file_path, game_id, game))
 
         except Exception as e:
