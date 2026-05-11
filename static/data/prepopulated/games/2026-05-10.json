@@ -5,14 +5,14 @@
       "gameId": 2025030213,
       "homeTeam": "MTL",
       "awayTeam": "BUF",
-      "homeScore": 4,
+      "homeScore": 5,
       "awayScore": 2,
       "gameState": "LIVE",
       "gameType": 3,
       "startTime": "2026-05-10T23:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 2,
+      "period": 3,
       "finnish_players_count": 1,
       "empty_net_goals": 0
     },
@@ -46,7 +46,7 @@
       "status": "Active",
       "opponent": "MTL",
       "opponent_full": "Montréal Canadiens",
-      "game_score": "2-4",
+      "game_score": "2-5",
       "game_result": "L",
       "game_venue": "Centre Bell",
       "game_city": "Montréal",
@@ -54,7 +54,7 @@
       "game_id": 2025030213,
       "game_date": "2026-05-10",
       "game_status": "OFF",
-      "created_at": "2026-05-11T01:03:12.452803",
+      "created_at": "2026-05-11T01:46:45.828784",
       "headshot_url": "https://assets.nhle.com/mugs/nhl/20252026/BUF/8480045.png",
       "goals": 0,
       "assists": 0,
@@ -159,6 +159,6 @@
     }
   ],
   "total_players": 1,
-  "generated_at": "2026-05-11T01:03:17.248204",
+  "generated_at": "2026-05-11T01:46:50.616168",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
