@@ -5,6 +5,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 CACHE_FILE = Path("static/data/tavily_news_cache.json")
 DAILY_CACHE_FILE = Path("static/data/daily-news-source-cache.json")
@@ -41,6 +42,128 @@ DATE_PATTERNS = [
     re.compile(r"\b(20\d{2})-(\d{2})-(\d{2})\b"),
     re.compile(r"\b(20\d{2})/(\d{1,2})/(\d{1,2})\b"),
     re.compile(r"\b([A-Za-z]{3,9})\.?\s+(\d{1,2}),\s*(20\d{2})\b"),
+]
+
+GENERIC_TITLE_PATTERNS = [
+    re.compile(r"^NHL-lähde julkaisi NHL-uutisen\b", re.IGNORECASE),
+]
+
+GENERIC_SUMMARY_PATTERNS = [
+    re.compile(r"\bNHL-aiheisen jutun\b", re.IGNORECASE),
+    re.compile(r"\bAlkuperäinen kuvaus:", re.IGNORECASE),
+    re.compile(r"\bAlkuperäinen otsikko:", re.IGNORECASE),
+]
+
+NOISE_TEXT_PATTERNS = [
+    re.compile(r"discover a winning edge at vsin", re.IGNORECASE),
+    re.compile(r"\bbetting splits\b", re.IGNORECASE),
+    re.compile(r"\breal-time odds\b", re.IGNORECASE),
+    re.compile(r"\blive broadcasts?\b", re.IGNORECASE),
+    re.compile(r"we and our third-party partners may use cookies", re.IGNORECASE),
+    re.compile(r"\bpersonalized advertising\b", re.IGNORECASE),
+    re.compile(r"\blive scoring leaders?\b", re.IGNORECASE),
+    re.compile(r"\bplay fantasy hockey\b", re.IGNORECASE),
+    re.compile(r"\bsubscribers only\b", re.IGNORECASE),
+    re.compile(r"\bissues by year\b", re.IGNORECASE),
+]
+
+NOISE_TITLE_PATTERNS = [
+    re.compile(r"^schedule\s*\|", re.IGNORECASE),
+    re.compile(r"^nhl scores\b", re.IGNORECASE),
+    re.compile(r"\bscores and schedule\b", re.IGNORECASE),
+    re.compile(r"\bstandings\b", re.IGNORECASE),
+    re.compile(r"\blive updates\b", re.IGNORECASE),
+    re.compile(r"\bgame center\b", re.IGNORECASE),
+    re.compile(r"\barchive\b", re.IGNORECASE),
+    re.compile(r"\bcookies?\b", re.IGNORECASE),
+    re.compile(r"\bbetting\b", re.IGNORECASE),
+    re.compile(r"\bhighlights?\b", re.IGNORECASE),
+    re.compile(r"\bpost game\b", re.IGNORECASE),
+    re.compile(r"^review of .* nhl games\b", re.IGNORECASE),
+    re.compile(r"^daily nhl recap\b", re.IGNORECASE),
+    re.compile(r"\bplayoff board update\b", re.IGNORECASE),
+]
+
+NOISE_URL_PATTERNS = [
+    re.compile(r"/info/cookies", re.IGNORECASE),
+    re.compile(r"/partner/vsin", re.IGNORECASE),
+    re.compile(r"/stats/", re.IGNORECASE),
+    re.compile(r"/schedule/", re.IGNORECASE),
+    re.compile(r"archive\.thehockeynews\.com", re.IGNORECASE),
+]
+
+SOURCE_LABELS = {
+    "archive": "Archive",
+    "espnpressroom": "ESPN Press Room",
+    "headlinehockey": "Headline Hockey",
+    "hockey-reference": "Hockey-Reference",
+    "insidetherink": "Inside the Rink",
+    "insidetherink com": "Inside the Rink",
+    "media": "NHL Media",
+    "msn": "MSN",
+    "nhl": "NHL.com",
+    "nytimes": "The Athletic",
+    "plaintextsports": "Plain Text Sports",
+    "prohockeynews": "Pro Hockey News",
+    "prohockeyrumors": "Pro Hockey Rumors",
+    "spectorshockey": "Spectors Hockey",
+    "sportsnews-365": "SportsNews 365",
+    "thehockeynews": "The Hockey News",
+    "thehockeywriters": "The Hockey Writers",
+    "youtube": "YouTube",
+}
+
+CATEGORY_PATTERNS = [
+    (
+        "rumors",
+        [
+            re.compile(r"rumor roundup", re.IGNORECASE),
+            re.compile(r"rumor mill", re.IGNORECASE),
+            re.compile(r"trade board", re.IGNORECASE),
+        ],
+    ),
+    (
+        "recap",
+        [
+            re.compile(r"morning recap", re.IGNORECASE),
+            re.compile(r"preseason roundup", re.IGNORECASE),
+            re.compile(r"recap of nhl", re.IGNORECASE),
+            re.compile(r"recap of stanley cup playoffs", re.IGNORECASE),
+        ],
+    ),
+    (
+        "morning-skate",
+        [
+            re.compile(r"morning skate", re.IGNORECASE),
+        ],
+    ),
+    (
+        "headlines",
+        [
+            re.compile(r"morning coffee headlines", re.IGNORECASE),
+            re.compile(r"\bbuzz\b", re.IGNORECASE),
+        ],
+    ),
+    (
+        "key-stories",
+        [
+            re.compile(r"five key stories", re.IGNORECASE),
+        ],
+    ),
+    (
+        "playoffs",
+        [
+            re.compile(r"playoffs buzz", re.IGNORECASE),
+            re.compile(r"stanley cup playoffs buzz", re.IGNORECASE),
+        ],
+    ),
+    (
+        "analysis",
+        [
+            re.compile(r"trade deadline aftermath", re.IGNORECASE),
+            re.compile(r"\banalysis\b", re.IGNORECASE),
+        ],
+    ),
 ]
 
 
@@ -131,45 +254,204 @@ def truncate(text, limit=220):
     return text[: limit - 1].rstrip() + "…"
 
 
+def matches_any_pattern(text, patterns):
+    normalized = normalize_whitespace(text)
+    return bool(normalized) and any(pattern.search(normalized) for pattern in patterns)
+
+
+def is_generic_fallback_title(title):
+    return matches_any_pattern(title, GENERIC_TITLE_PATTERNS)
+
+
+def is_generic_fallback_summary(summary):
+    return matches_any_pattern(summary, GENERIC_SUMMARY_PATTERNS)
+
+
+def infer_source_label(source, url=""):
+    normalized_source = normalize_whitespace(source)
+    source_key = normalized_source.lower()
+
+    if source_key in SOURCE_LABELS:
+        return SOURCE_LABELS[source_key]
+
+    if normalized_source:
+        return normalized_source
+
+    try:
+        hostname = (urlparse(url).hostname or "").lower().removeprefix("www.")
+    except ValueError:
+        hostname = ""
+
+    if not hostname:
+        return ""
+
+    if hostname in SOURCE_LABELS:
+        return SOURCE_LABELS[hostname]
+
+    primary = hostname.split(".")[0]
+    if primary in SOURCE_LABELS:
+        return SOURCE_LABELS[primary]
+
+    label = " ".join(hostname.split(".")[:2]).strip()
+    return label.title()
+
+
+def infer_category(*parts):
+    combined = " ".join(normalize_whitespace(part).lower() for part in parts if part)
+    if not combined:
+        return None
+
+    for category, patterns in CATEGORY_PATTERNS:
+        if any(pattern.search(combined) for pattern in patterns):
+            return category
+
+    return None
+
+
+def format_category_title(category, matched_date=None):
+    date_label = format_finnish_date(matched_date) if matched_date else ""
+
+    titles = {
+        "rumors": "NHL:n huhukatsaus",
+        "recap": "NHL:n kierroskatsaus",
+        "morning-skate": "NHL:n aamukatsaus",
+        "headlines": "NHL:n päivän puheenaiheet",
+        "key-stories": "NHL:n viikon puheenaiheet",
+        "playoffs": "NHL:n pudotuspeliseuranta",
+        "analysis": "NHL-analyysi",
+    }
+
+    base_title = titles.get(category, "")
+    if not base_title:
+        return ""
+
+    return f"{base_title} {date_label}".strip()
+
+
+def format_category_summary(category):
+    summaries = {
+        "rumors": "Kooste päivän siirtohuhuista ja puheenaiheista NHL:ssä.",
+        "recap": "Yhteenveto päivän NHL-otteluista ja käännekohdista.",
+        "morning-skate": "Kooste päivän tärkeimmistä NHL-uutisista ja ottelunostoista.",
+        "headlines": "Kooste päivän tärkeimmistä NHL-uutisista ja puheenaiheista.",
+        "key-stories": "Kooste viikon tärkeimmistä NHL-uutisista ja puheenaiheista.",
+        "playoffs": "Tilannekatsaus pudotuspeleihin ja sarjojen tärkeimpiin puheenaiheisiin.",
+        "analysis": "Taustoittava katsaus päivän NHL-aiheeseen.",
+    }
+    return summaries.get(category, "")
+
+
+def is_noise_news_item(title="", summary="", translated_title="", translated_summary="", url=""):
+    title_text = normalize_whitespace(title)
+    summary_text = normalize_whitespace(summary)
+    translated_title_text = normalize_whitespace(translated_title)
+    translated_summary_text = normalize_whitespace(translated_summary)
+    combined_text = " ".join(
+        text
+        for text in [title_text, summary_text, translated_title_text, translated_summary_text]
+        if text
+    )
+
+    if matches_any_pattern(combined_text, NOISE_TEXT_PATTERNS):
+        return True
+
+    if matches_any_pattern(title_text, NOISE_TITLE_PATTERNS):
+        return True
+
+    return matches_any_pattern(url, NOISE_URL_PATTERNS)
+
+
 def build_fallback_title(item, matched_date):
     title = normalize_whitespace(item.get("title", ""))
-    source = normalize_whitespace(item.get("source", "NHL-lähde"))
-    date_label = format_finnish_date(matched_date)
-    lower_title = title.lower()
+    summary = normalize_whitespace(item.get("summary") or item.get("description", ""))
+    translated_title = normalize_whitespace(item.get("translatedTitle", ""))
+    translated_summary = normalize_whitespace(item.get("translatedSummary", ""))
+    category = infer_category(title, summary, translated_title, translated_summary)
 
-    if "morning skate" in lower_title:
-        return f"NHL:n aamukatsaus {date_label}"
-    if "morning recap" in lower_title:
-        return f"NHL:n aamuyhteenveto {date_label}"
-    if "scores" in lower_title:
-        return f"NHL-tulokset {date_label}"
-    if "buzz" in lower_title:
-        return f"NHL:n päivän puheenaiheet {date_label}"
-    if "roundup" in lower_title or "recap" in lower_title:
-        return f"NHL:n kierroskatsaus {date_label}"
+    if category:
+        return format_category_title(category, matched_date)
 
-    return f"{source} julkaisi NHL-uutisen {date_label}"
+    return title
 
 
 def build_fallback_summary(item, matched_date):
     title = normalize_whitespace(item.get("title", ""))
-    description = truncate(item.get("description", ""))
-    source = normalize_whitespace(item.get("source", "NHL-lähde"))
-    date_label = format_finnish_date(matched_date)
+    summary = normalize_whitespace(item.get("summary") or item.get("description", ""))
+    translated_title = normalize_whitespace(item.get("translatedTitle", ""))
+    translated_summary = normalize_whitespace(item.get("translatedSummary", ""))
+    category = infer_category(title, summary, translated_title, translated_summary)
 
-    if description:
-        return (
-            f"{source} julkaisi {date_label} NHL-aiheisen jutun. "
-            f"Alkuperäinen kuvaus: {description}"
-        )
+    if category:
+        return format_category_summary(category)
+
+    if summary:
+        return truncate(summary)
 
     if title:
-        return (
-            f"{source} julkaisi {date_label} NHL-aiheisen jutun. "
-            f"Alkuperäinen otsikko: {title}"
-        )
+        return "NHL-aiheinen juttu englanniksi."
 
-    return f"{source} julkaisi {date_label} NHL-aiheisen jutun englanniksi."
+    return ""
+
+
+def normalize_news_entry(item, matched_date=None):
+    if not isinstance(item, dict):
+        return None
+
+    title = normalize_whitespace(item.get("title", ""))
+    summary = normalize_whitespace(item.get("summary") or item.get("description", ""))
+    translated_title = normalize_whitespace(item.get("translatedTitle", ""))
+    translated_summary = normalize_whitespace(item.get("translatedSummary", ""))
+    url = item.get("url", "")
+    source = infer_source_label(item.get("source", ""), url)
+    effective_date = matched_date or item.get("matchedDate")
+
+    if is_noise_news_item(title, summary, translated_title, translated_summary, url):
+        return None
+
+    normalized_title = (
+        build_fallback_title(
+            {
+                "title": title,
+                "summary": summary,
+                "translatedTitle": translated_title,
+                "translatedSummary": translated_summary,
+            },
+            effective_date,
+        )
+        if not translated_title or is_generic_fallback_title(translated_title)
+        else translated_title
+    )
+
+    normalized_summary = (
+        build_fallback_summary(
+            {
+                "title": title,
+                "summary": summary,
+                "translatedTitle": translated_title,
+                "translatedSummary": translated_summary,
+            },
+            effective_date,
+        )
+        if not translated_summary or is_generic_fallback_summary(translated_summary)
+        else translated_summary
+    )
+
+    if is_noise_news_item(normalized_title, normalized_summary, url=url):
+        return None
+
+    normalized_entry = {
+        **item,
+        "title": title,
+        "summary": truncate(summary),
+        "source": source,
+        "url": url,
+        "matchedDate": effective_date,
+        "translatedTitle": normalize_whitespace(normalized_title),
+        "translatedSummary": truncate(normalized_summary),
+    }
+
+    normalized_entry.pop("description", None)
+    return normalized_entry
 
 
 def translate_with_openai(item, matched_date):
@@ -187,7 +469,7 @@ Translate this NHL news item into concise Finnish for a website fallback card.
 Date: {matched_date}
 Source: {item.get("source", "")}
 Title: {item.get("title", "")}
-Description: {item.get("description", "")}
+Description: {item.get("summary") or item.get("description", "")}
 
 Return strict JSON with keys:
 - translatedTitle
@@ -217,7 +499,15 @@ Rules:
 
 def fetch_daily_news_tavily(date_str, daily_cache):
     if date_str in daily_cache:
-        return daily_cache[date_str]
+        cached_items = [
+            normalized
+            for item in daily_cache[date_str]
+            if (normalized := normalize_news_entry(item, date_str))
+        ]
+        if cached_items != daily_cache[date_str]:
+            daily_cache[date_str] = cached_items
+            save_daily_cache(daily_cache)
+        return cached_items
 
     try:
         from tavily import TavilyClient
@@ -236,13 +526,13 @@ def fetch_daily_news_tavily(date_str, daily_cache):
         for result in results.get("results", [])[:3]:
             title = normalize_whitespace(result.get("title", ""))
             description = truncate(result.get("description", "") or result.get("content", ""))
-            source = normalize_whitespace(result.get("source", ""))
+            source = infer_source_label(result.get("source", ""), result.get("url", ""))
             url = result.get("url", "")
 
             if not title and not description:
                 continue
 
-            items.append(
+            normalized_item = normalize_news_entry(
                 {
                     "title": title,
                     "summary": description,
@@ -254,8 +544,11 @@ def fetch_daily_news_tavily(date_str, daily_cache):
                         {"source": source, "title": title, "description": description},
                         date_str,
                     ),
-                }
+                },
+                date_str,
             )
+            if normalized_item:
+                items.append(normalized_item)
 
         daily_cache[date_str] = items
         save_daily_cache(daily_cache)
@@ -294,6 +587,13 @@ def build_news_index(cache, explicit_daily_cache=None):
             if not isinstance(item, dict):
                 continue
 
+            if is_noise_news_item(
+                item.get("title", ""),
+                item.get("summary") or item.get("description", ""),
+                url=item.get("url", ""),
+            ):
+                continue
+
             matched_dates = extract_dates(
                 item.get("title", ""), item.get("description", ""), item.get("url", "")
             )
@@ -305,8 +605,8 @@ def build_news_index(cache, explicit_daily_cache=None):
 
             base_entry = {
                 "title": normalize_whitespace(item.get("title", "")),
-                "summary": truncate(item.get("description", "")),
-                "source": normalize_whitespace(item.get("source", "")),
+                "summary": truncate(item.get("summary") or item.get("description", "")),
+                "source": infer_source_label(item.get("source", ""), item.get("url", "")),
                 "url": item.get("url", ""),
                 "weekKey": effective_week_key,
             }
@@ -327,7 +627,9 @@ def build_news_index(cache, explicit_daily_cache=None):
                         "translatedSummary": translated.get("translatedSummary")
                         or build_fallback_summary(item, matched_date),
                     }
-                    by_date[matched_date].append(entry)
+                    normalized_entry = normalize_news_entry(entry, matched_date)
+                    if normalized_entry:
+                        by_date[matched_date].append(normalized_entry)
 
             week_fallback_date = matched_dates[0] if matched_dates else None
             week_entry = {
@@ -339,17 +641,24 @@ def build_news_index(cache, explicit_daily_cache=None):
                 "translatedSummary": build_fallback_summary(item, week_fallback_date)
                 if week_fallback_date
                 else (
-                    f"{base_entry['source'] or 'NHL-lähde'} julkaisi tällä viikolla NHL-aiheisen jutun. "
-                    f"{base_entry['summary'] or base_entry['title']}"
+                    base_entry["summary"]
+                    or "Kooste viikon NHL-aiheisesta jutusta englanniksi."
                 ),
             }
-            by_week[effective_week_key].append(week_entry)
+            normalized_week_entry = normalize_news_entry(week_entry, week_fallback_date)
+            if normalized_week_entry:
+                by_week[effective_week_key].append(normalized_week_entry)
 
     if explicit_daily_cache:
         for matched_date, items in explicit_daily_cache.items():
             if not isinstance(items, list):
                 continue
-            by_date[matched_date] = items + by_date[matched_date]
+            normalized_items = [
+                normalized
+                for item in items
+                if (normalized := normalize_news_entry(item, matched_date))
+            ]
+            by_date[matched_date] = normalized_items + by_date[matched_date]
 
     def dedupe(items):
         seen = set()
