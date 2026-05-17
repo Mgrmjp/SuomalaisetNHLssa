@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-05-14T07:57:32.929910",
+  "updatedAt": "2026-05-17T07:49:40.789999",
   "sources": [
     {
       "name": "NHL Central Scouting",
@@ -20,7 +20,8 @@
             "birthDate": "2008-08-13",
             "birthCity": "Vaasa",
             "birthCountry": "FIN",
-            "midtermRank": 11
+            "midtermRank": 11,
+            "finalRank": 11
           },
           {
             "lastName": "Vanhanen",
@@ -34,7 +35,8 @@
             "birthDate": "2007-09-11",
             "birthCity": "Nokia",
             "birthCountry": "FIN",
-            "midtermRank": 76
+            "midtermRank": 76,
+            "finalRank": 54
           },
           {
             "lastName": "Kuhta",
@@ -48,7 +50,22 @@
             "birthDate": "2006-10-28",
             "birthCity": "Helsinki",
             "birthCountry": "FIN",
-            "midtermRank": 93
+            "midtermRank": 93,
+            "finalRank": 95
+          },
+          {
+            "lastName": "Saari",
+            "firstName": "Julius",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 74,
+            "weightInPounds": 190,
+            "lastAmateurClub": "ERIE",
+            "lastAmateurLeague": "OHL",
+            "birthDate": "2007-03-07",
+            "birthCity": "Vantaa",
+            "birthCountry": "FIN",
+            "finalRank": 218
           }
         ],
         "international": [
@@ -64,7 +81,8 @@
             "birthDate": "2008-09-03",
             "birthCity": "Turku",
             "birthCountry": "FIN",
-            "midtermRank": 3
+            "midtermRank": 3,
+            "finalRank": 3
           },
           {
             "lastName": "Piiparinen",
@@ -78,7 +96,8 @@
             "birthDate": "2008-08-10",
             "birthCity": "Lahti",
             "birthCountry": "FIN",
-            "midtermRank": 6
+            "midtermRank": 6,
+            "finalRank": 6
           },
           {
             "lastName": "Vanhatalo",
@@ -92,7 +111,8 @@
             "birthDate": "2008-01-18",
             "birthCity": "Tampere",
             "birthCountry": "FIN",
-            "midtermRank": 14
+            "midtermRank": 14,
+            "finalRank": 16
           },
           {
             "lastName": "Alalauri",
@@ -106,7 +126,8 @@
             "birthDate": "2008-05-31",
             "birthCity": "Lahti",
             "birthCountry": "FIN",
-            "midtermRank": 19
+            "midtermRank": 19,
+            "finalRank": 17
           },
           {
             "lastName": "Arkko",
@@ -120,7 +141,8 @@
             "birthDate": "2008-01-14",
             "birthCity": "Lahti",
             "birthCountry": "FIN",
-            "midtermRank": 26
+            "midtermRank": 26,
+            "finalRank": 34
           },
           {
             "lastName": "Tukio",
@@ -134,7 +156,8 @@
             "birthDate": "2007-11-03",
             "birthCity": "Tampere",
             "birthCountry": "FIN",
-            "midtermRank": 44
+            "midtermRank": 44,
+            "finalRank": 45
           },
           {
             "lastName": "Laitinen",
@@ -148,49 +171,8 @@
             "birthDate": "2008-04-16",
             "birthCity": "Tampere",
             "birthCountry": "FIN",
-            "midtermRank": 48
-          },
-          {
-            "lastName": "Tarvainen",
-            "firstName": "Joel",
-            "positionCode": "D",
-            "shootsCatches": "L",
-            "heightInInches": 78,
-            "weightInPounds": 220,
-            "lastAmateurClub": "KALPA JR.",
-            "lastAmateurLeague": "FINLAND-JR.",
-            "birthDate": "2008-04-06",
-            "birthCity": "Tampere",
-            "birthCountry": "FIN",
-            "midtermRank": 72
-          },
-          {
-            "lastName": "Tuuva",
-            "firstName": "Leo",
-            "positionCode": "RW",
-            "shootsCatches": "R",
-            "heightInInches": 73,
-            "weightInPounds": 187,
-            "lastAmateurClub": "LUKKO",
-            "lastAmateurLeague": "FINLAND",
-            "birthDate": "2006-08-02",
-            "birthCity": "Lappeenranta",
-            "birthCountry": "FIN",
-            "midtermRank": 74
-          },
-          {
-            "lastName": "Svensk",
-            "firstName": "Vertti",
-            "positionCode": "D",
-            "shootsCatches": "L",
-            "heightInInches": 72,
-            "weightInPounds": 169,
-            "lastAmateurClub": "SAIPA JR.",
-            "lastAmateurLeague": "FINLAND-JR.",
-            "birthDate": "2007-11-09",
-            "birthCity": "Joensuu",
-            "birthCountry": "FIN",
-            "midtermRank": 84
+            "midtermRank": 48,
+            "finalRank": 47
           },
           {
             "lastName": "Uronen",
@@ -204,49 +186,81 @@
             "birthDate": "2008-06-24",
             "birthCity": "Kerava",
             "birthCountry": "FIN",
-            "midtermRank": 86
+            "midtermRank": 86,
+            "finalRank": 54
           },
           {
-            "lastName": "Wahlroos",
-            "firstName": "Olli",
+            "lastName": "Tarvainen",
+            "firstName": "Joel",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 78,
+            "weightInPounds": 220,
+            "lastAmateurClub": "KALPA JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-04-06",
+            "birthCity": "Tampere",
+            "birthCountry": "FIN",
+            "midtermRank": 72,
+            "finalRank": 64
+          },
+          {
+            "lastName": "Vuori",
+            "firstName": "Atte",
+            "positionCode": "C",
+            "shootsCatches": "L",
+            "heightInInches": 70,
+            "weightInPounds": 167,
+            "lastAmateurClub": "K-ESPOO JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-01-23",
+            "birthCity": "Espoo",
+            "birthCountry": "FIN",
+            "finalRank": 67
+          },
+          {
+            "lastName": "Tuuva",
+            "firstName": "Leo",
+            "positionCode": "RW",
+            "shootsCatches": "R",
+            "heightInInches": 73,
+            "weightInPounds": 187,
+            "lastAmateurClub": "LUKKO",
+            "lastAmateurLeague": "FINLAND",
+            "birthDate": "2006-08-02",
+            "birthCity": "Lappeenranta",
+            "birthCountry": "FIN",
+            "midtermRank": 74,
+            "finalRank": 77
+          },
+          {
+            "lastName": "Kostilainen",
+            "firstName": "Sakari",
             "positionCode": "LW",
             "shootsCatches": "L",
-            "heightInInches": 73,
-            "weightInPounds": 188,
-            "lastAmateurClub": "TPS JR.",
-            "lastAmateurLeague": "FINLAND-JR.",
-            "birthDate": "2008-02-15",
-            "birthCity": "Kaarina",
+            "heightInInches": 71,
+            "weightInPounds": 181,
+            "lastAmateurClub": "ASSAT",
+            "lastAmateurLeague": "FINLAND",
+            "birthDate": "2006-12-02",
+            "birthCity": "Helsinki",
             "birthCountry": "FIN",
-            "midtermRank": 88
+            "finalRank": 80
           },
           {
-            "lastName": "Juntunen",
-            "firstName": "Oiva",
-            "positionCode": "LW",
-            "shootsCatches": "L",
-            "heightInInches": 73,
-            "weightInPounds": 216,
-            "lastAmateurClub": "KOOKOO JR.",
-            "lastAmateurLeague": "FINLAND-JR.",
-            "birthDate": "2008-08-07",
-            "birthCity": "Vantaa",
-            "birthCountry": "FIN",
-            "midtermRank": 91
-          },
-          {
-            "lastName": "Uronen",
-            "firstName": "Eelis",
+            "lastName": "Svensk",
+            "firstName": "Vertti",
             "positionCode": "D",
             "shootsCatches": "L",
             "heightInInches": 72,
-            "weightInPounds": 201,
-            "lastAmateurClub": "HIFK JR.",
+            "weightInPounds": 169,
+            "lastAmateurClub": "SAIPA JR.",
             "lastAmateurLeague": "FINLAND-JR.",
-            "birthDate": "2008-06-24",
-            "birthCity": "Kerava",
+            "birthDate": "2007-11-09",
+            "birthCity": "Joensuu",
             "birthCountry": "FIN",
-            "midtermRank": 101
+            "midtermRank": 84,
+            "finalRank": 87
           },
           {
             "lastName": "Vaananen",
@@ -260,7 +274,8 @@
             "birthDate": "2008-08-13",
             "birthCity": "Vantaa",
             "birthCountry": "FIN",
-            "midtermRank": 103
+            "midtermRank": 103,
+            "finalRank": 97
           },
           {
             "lastName": "Rasanen",
@@ -274,7 +289,67 @@
             "birthDate": "2006-08-26",
             "birthCity": "Joensuu",
             "birthCountry": "FIN",
-            "midtermRank": 108
+            "midtermRank": 108,
+            "finalRank": 101
+          },
+          {
+            "lastName": "Parkkali",
+            "firstName": "Jonne",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 72,
+            "weightInPounds": 196,
+            "lastAmateurClub": "HIFK JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-01-05",
+            "birthCity": "Helsinki",
+            "birthCountry": "FIN",
+            "finalRank": 104
+          },
+          {
+            "lastName": "Wahlroos",
+            "firstName": "Olli",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 73,
+            "weightInPounds": 188,
+            "lastAmateurClub": "TPS JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-02-15",
+            "birthCity": "Kaarina",
+            "birthCountry": "FIN",
+            "midtermRank": 88,
+            "finalRank": 107
+          },
+          {
+            "lastName": "Juntunen",
+            "firstName": "Oiva",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 73,
+            "weightInPounds": 216,
+            "lastAmateurClub": "KOOKOO JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-08-07",
+            "birthCity": "Vantaa",
+            "birthCountry": "FIN",
+            "midtermRank": 91,
+            "finalRank": 121
+          },
+          {
+            "lastName": "Uronen",
+            "firstName": "Eelis",
+            "positionCode": "D",
+            "shootsCatches": "L",
+            "heightInInches": 72,
+            "weightInPounds": 201,
+            "lastAmateurClub": "HIFK JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2008-06-24",
+            "birthCity": "Kerava",
+            "birthCountry": "FIN",
+            "midtermRank": 101,
+            "finalRank": 124
           },
           {
             "lastName": "Vatjus",
@@ -288,7 +363,36 @@
             "birthDate": "2008-07-02",
             "birthCity": "Haapavesi",
             "birthCountry": "FIN",
-            "midtermRank": 113
+            "midtermRank": 113,
+            "finalRank": 129
+          },
+          {
+            "lastName": "Keltikangas",
+            "firstName": "Onni",
+            "positionCode": "C",
+            "shootsCatches": "L",
+            "heightInInches": 77,
+            "weightInPounds": 198,
+            "lastAmateurClub": "JYP JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2007-12-14",
+            "birthCity": "Seinajoki",
+            "birthCountry": "FIN",
+            "finalRank": 139
+          },
+          {
+            "lastName": "Melanen",
+            "firstName": "Jalmari",
+            "positionCode": "LW",
+            "shootsCatches": "L",
+            "heightInInches": 71,
+            "weightInPounds": 176,
+            "lastAmateurClub": "ILVES JR.",
+            "lastAmateurLeague": "FINLAND-JR.",
+            "birthDate": "2007-12-03",
+            "birthCity": "Tampere",
+            "birthCountry": "FIN",
+            "finalRank": 145
           }
         ]
       }
