@@ -1,9 +1,28 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { error } from '@sveltejs/kit'
-import { marked } from 'marked'
+import { renderSafeMarkdown } from '$lib/utils/safeMarkdown.js'
 
 export const prerender = true
+
+const SCOUTING_DIR = path.resolve('content/scouting')
+const SLUG_PATTERN = /^[a-z0-9-]{1,100}$/i
+
+/** @param {string} slug */
+function getContentPath(slug) {
+    if (!SLUG_PATTERN.test(slug)) {
+        throw error(404, 'Scouting report not found')
+    }
+
+    const contentPath = path.resolve(SCOUTING_DIR, `${slug}.md`)
+    const relativePath = path.relative(SCOUTING_DIR, contentPath)
+
+    if (relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+        throw error(404, 'Scouting report not found')
+    }
+
+    return contentPath
+}
 
 /** @param {string} content @param {string} label */
 function extractField(content, label) {
@@ -48,11 +67,11 @@ function buildMetadata(content, slug) {
 export async function load({ params }) {
     const { slug } = params
 
-    const contentPath = path.resolve('content/scouting', `${slug}.md`)
+    const contentPath = getContentPath(slug)
 
     try {
         const content = await fs.readFile(contentPath, 'utf-8')
-        const html = marked.parse(content)
+        const html = renderSafeMarkdown(content)
 
         return {
             slug,
@@ -65,10 +84,8 @@ export async function load({ params }) {
 }
 
 export async function entries() {
-    const scoutingDir = path.resolve('content/scouting')
-
     try {
-        const files = await fs.readdir(scoutingDir)
+        const files = await fs.readdir(SCOUTING_DIR)
         const mdFiles = files.filter((f) => f.endsWith('.md') && f !== 'index.md')
 
         return mdFiles.map((file) => ({

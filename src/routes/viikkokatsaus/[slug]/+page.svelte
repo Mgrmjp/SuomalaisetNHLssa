@@ -2,6 +2,7 @@
 // @ts-nocheck
 import { base } from '$app/paths'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
+import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
 /** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
 const { data: _data } = $props()
@@ -39,7 +40,7 @@ function formatDate(dateStr) {
     <meta name="twitter:image" content={articleImage} />
 
     <!-- NewsArticle Schema -->
-    {@html `<script type="application/ld+json">${JSON.stringify({
+    {@html jsonLdScript({
         "@context": "https://schema.org",
         "@type": "NewsArticle",
         headline: data.article.title,
@@ -66,10 +67,10 @@ function formatDate(dateStr) {
         },
         inLanguage: "fi",
         articleSection: "Viikkokatsaus"
-    })}</script>`}
+    })}
 
     <!-- Breadcrumb Schema for Article -->
-    {@html `<script type="application/ld+json">${JSON.stringify({
+    {@html jsonLdScript({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
@@ -92,7 +93,7 @@ function formatDate(dateStr) {
                 item: articleUrl
             }
         ]
-    })}</script>`}
+    })}
 </svelte:head>
 
 <div class="w-full max-w-3xl mx-auto px-4 py-8">

@@ -117,9 +117,9 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
+    cors: false,
     fs: {
-      // Suppress socket.io errors from browser extensions/dev tools
-      strict: false,
+      strict: true,
     },
     proxy: {
       // Proxy NHL API calls to external NHL API
@@ -208,7 +208,7 @@ export default defineConfig({
     // Optimize build
     target: 'es2022',
     minify: "terser",
-    sourcemap: true,
+    sourcemap: process.env.BUILD_SOURCEMAPS === 'true',
     // Enable CSS code splitting
     cssCodeSplit: true,
     // Optimize assets
@@ -247,6 +247,7 @@ export default defineConfig({
   },
   preview: {
     port: 4173,
+    cors: false,
   },
   optimizeDeps: {
     // Let the SvelteKit plugin handle framework deps to avoid bundling the server runtime in the browser

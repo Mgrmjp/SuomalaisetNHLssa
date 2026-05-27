@@ -4,6 +4,7 @@ import { base } from '$app/paths'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
 /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
 const { data } = $props()
@@ -119,7 +120,7 @@ function getPlayerSlug(p) {
     <meta property="og:url" content={`https://suomalaisetnhlssa.fi/pelaajat/${slug}`} />
 
     <!-- Person Schema for SEO -->
-    {@html `<script type="application/ld+json">${JSON.stringify({
+    {@html jsonLdScript({
         "@context": "https://schema.org",
         "@type": "Person",
         "name": displayName,
@@ -140,10 +141,10 @@ function getPlayerSlug(p) {
             "@type": "Country",
             "name": "Finland"
         }
-    })}</script>`}
+    })}
 
     <!-- Breadcrumb Schema -->
-    {@html `<script type="application/ld+json">${JSON.stringify({
+    {@html jsonLdScript({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
@@ -166,7 +167,7 @@ function getPlayerSlug(p) {
                 "item": `https://suomalaisetnhlssa.fi/pelaajat/${slug}`
             }
         ]
-    })}</script>`}
+    })}
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50 relative overflow-hidden">

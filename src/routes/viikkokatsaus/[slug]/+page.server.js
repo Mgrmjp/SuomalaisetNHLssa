@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { error } from '@sveltejs/kit'
-import { marked } from 'marked'
 import { base } from '$app/paths'
+import { renderSafeMarkdown } from '$lib/utils/safeMarkdown.js'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch, params }) {
@@ -24,7 +24,7 @@ export async function load({ fetch, params }) {
     // Convert markdown content to HTML
     const articleWithHtml = {
         ...article,
-        content: marked.parse(article.content),
+        content: renderSafeMarkdown(article.content),
     }
 
     return {

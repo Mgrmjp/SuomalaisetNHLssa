@@ -6,6 +6,36 @@ interface PlayerPhotoData {
     fallbackUrl: string
 }
 
+const FETCH_TIMEOUT_MS = 5000
+const PLAYER_ID_PATTERN = /^\d{1,10}$/
+const TRUSTED_IMAGE_HOSTS = new Set([
+    'assets.nhle.com',
+    'cms.nhl.bamgrid.com',
+    'nhl.bamcontent.com',
+])
+
+function parsePlayerId(value: string | null): number | null {
+    if (!value || !PLAYER_ID_PATTERN.test(value)) return null
+
+    const playerId = Number(value)
+    return Number.isSafeInteger(playerId) && playerId > 0 ? playerId : null
+}
+
+function getTrustedImageUrl(value: unknown): string | null {
+    if (!value || typeof value !== 'string') return null
+
+    try {
+        const url = new URL(value)
+        if (url.protocol !== 'https:' || !TRUSTED_IMAGE_HOSTS.has(url.hostname)) {
+            return null
+        }
+
+        return url.toString()
+    } catch {
+        return null
+    }
+}
+
 /**
  * Get player photo/headshot from NHL API
  * @param {number} playerId - NHL player ID
@@ -15,7 +45,7 @@ async function getPlayerPhoto(playerId: number): Promise<PlayerPhotoData | null>
     try {
         // First try to get player landing data which includes headshot
         const url = `https://api-web.nhle.com/v1/player/${playerId}/landing`
-        const response = await fetch(url)
+        const response = await fetch(url, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
 
         if (!response.ok) {
             console.warn(`Failed to fetch player photo for ${playerId}: ${response.status}`)
@@ -25,7 +55,7 @@ async function getPlayerPhoto(playerId: number): Promise<PlayerPhotoData | null>
         const data = await response.json()
 
         // Extract headshot URL from player data
-        const headshotUrl = data.headshot
+        const headshotUrl = getTrustedImageUrl(data.headshot)
 
         if (!headshotUrl) {
             console.warn(`No headshot found for player ${playerId}`)
@@ -51,11 +81,21 @@ async function getPlayerPhoto(playerId: number): Promise<PlayerPhotoData | null>
  */
 function generateFallbackAvatar(playerName: string, team: string): string {
     // Use UI Avatars API for consistent fallback avatars
-    const initials = playerName
-        .split(' ')
-        .map((part) => part.charAt(0).toUpperCase())
-        .join('')
-        .substring(0, 2)
+    const initials =
+        playerName
+            .trim()
+            .split(/\s+/)
+            .map((part) => Array.from(part)[0] || '')
+            .join('')
+            .replace(/[^\p{L}\p{N}]/gu, '')
+            .toUpperCase()
+            .substring(0, 2) || 'P'
+
+    const normalizedTeam = team
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z]/g, '')
+        .substring(0, 3)
 
     // Generate a consistent color based on team
     const teamColors: Record<string, string> = {
@@ -93,21 +133,16 @@ function generateFallbackAvatar(playerName: string, team: string): string {
         WSH: 'C8102E',
     }
 
-    const backgroundColor = teamColors[team] || '6B7280'
+    const backgroundColor = teamColors[normalizedTeam] || '6B7280'
 
-    return `https://ui-avatars.com/api/?name=${initials}&background=${backgroundColor}&color=FFFFFF&font-size=0.6&bold=true`
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=${backgroundColor}&color=FFFFFF&font-size=0.6&bold=true`
 }
 
 export async function GET({ url }) {
     try {
-        const playerId = url.searchParams.get('id')
+        const numericPlayerId = parsePlayerId(url.searchParams.get('id'))
 
-        if (!playerId) {
-            return json({ error: 'Player ID is required' }, { status: 400 })
-        }
-
-        const numericPlayerId = parseInt(playerId, 10)
-        if (Number.isNaN(numericPlayerId)) {
+        if (!numericPlayerId) {
             return json({ error: 'Invalid player ID' }, { status: 400 })
         }
 

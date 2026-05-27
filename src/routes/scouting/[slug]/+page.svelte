@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
 import { base } from '$app/paths'
+import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
 /** @type {{ data: { slug: string, content: string, metadata: { title: string, playerName: string, pageTitle: string, description: string, updated: string, url: string } } }} */
 const { data } = $props()
@@ -71,8 +72,8 @@ const breadcrumbSchema = $derived({
     <meta name="twitter:description" content={data.metadata.description} />
     <meta name="twitter:image" content="https://suomalaisetnhlssa.fi/og-image.svg" />
 
-    {@html `<script type="application/ld+json">${JSON.stringify(articleSchema)}</script>`}
-    {@html `<script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>`}
+    {@html jsonLdScript(articleSchema)}
+    {@html jsonLdScript(breadcrumbSchema)}
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50">
@@ -118,4 +119,3 @@ const breadcrumbSchema = $derived({
         </div>
     </div>
 </div>
-

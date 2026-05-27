@@ -12,6 +12,9 @@ import {
 import { correctFullName, correctFullNameWithLLM } from '$lib/utils/finnishNameUtils.js'
 import { sanitizeImageUrl } from '$lib/utils/playerHeadshots.js'
 
+const PLAYER_SLUG_PATTERN = /^[a-z0-9-]{1,100}$/i
+const NUMERIC_SLUG_PATTERN = /^\d+$/
+
 /** @param {string} name */
 function nameToSlug(name) {
     return name
@@ -54,6 +57,15 @@ function rosterToPlayer(player) {
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params, fetch }) {
     const { slug } = params
+    const normalizedSlug = slug.toLowerCase()
+    const numericPlayerId =
+        NUMERIC_SLUG_PATTERN.test(normalizedSlug) && normalizedSlug.length <= 10
+            ? parseInt(normalizedSlug, 10)
+            : null
+
+    if (!PLAYER_SLUG_PATTERN.test(slug)) {
+        throw error(404, 'Pelaajaa ei löytynyt')
+    }
 
     /**
      * @param {any[]} players
@@ -103,15 +115,15 @@ export async function load({ params, fetch }) {
             allPlayers = [...skatersData, ...goaliesData]
 
             // Find player by slug (name-based URL)
-            player = findPlayerByDeterministicSlug(allPlayers, slug.toLowerCase())
+            player = findPlayerByDeterministicSlug(allPlayers, normalizedSlug)
 
             // Also support numeric IDs for backwards compatibility
-            if (!player && !Number.isNaN(parseInt(slug, 10))) {
-                player = allPlayers.find((p) => p.playerId === parseInt(slug, 10))
+            if (!player && numericPlayerId !== null) {
+                player = allPlayers.find((p) => p.playerId === numericPlayerId)
             }
 
-            if (!player && Number.isNaN(parseInt(slug, 10))) {
-                player = await findPlayerByLLMSlug(allPlayers, slug.toLowerCase())
+            if (!player && numericPlayerId === null) {
+                player = await findPlayerByLLMSlug(allPlayers, normalizedSlug)
             }
         } catch (_fileError) {
             // Fallback to API if pre-built files don't exist
@@ -123,10 +135,10 @@ export async function load({ params, fetch }) {
             )
             allPlayers = [...skatersData, ...goaliesData]
 
-            player = findPlayerByDeterministicSlug(allPlayers, slug.toLowerCase())
+            player = findPlayerByDeterministicSlug(allPlayers, normalizedSlug)
 
-            if (!player && Number.isNaN(parseInt(slug, 10))) {
-                player = await findPlayerByLLMSlug(allPlayers, slug.toLowerCase())
+            if (!player && numericPlayerId === null) {
+                player = await findPlayerByLLMSlug(allPlayers, normalizedSlug)
             }
         }
 
@@ -167,7 +179,7 @@ export async function load({ params, fetch }) {
             const seasonId = getCurrentSeasonId()
             const rosterData = loadRosterLookupFromDisk()
             const rosterPlayer = Object.values(rosterData).find(
-                (p) => nameToSlug(getRosterName(p)) === slug.toLowerCase()
+                (p) => nameToSlug(getRosterName(p)) === normalizedSlug
             )
 
             if (!rosterPlayer) {
