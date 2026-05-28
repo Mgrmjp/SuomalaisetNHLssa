@@ -5,7 +5,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 CACHE_FILE = Path("static/data/tavily_news_cache.json")
 DAILY_CACHE_FILE = Path("static/data/daily-news-source-cache.json")
@@ -111,6 +111,49 @@ SOURCE_LABELS = {
     "thehockeynews": "The Hockey News",
     "thehockeywriters": "The Hockey Writers",
     "youtube": "YouTube",
+}
+
+TRUSTED_NEWS_DOMAINS = {
+    "nhl.com",
+    "media.nhl.com",
+    "sportsnet.ca",
+    "nytimes.com",
+    "theathletic.com",
+    "espn.com",
+    "thehockeywriters.com",
+    "spectorshockey.net",
+    "thehockeynews.com",
+    "prohockeyrumors.com",
+    "insidetherink.com",
+}
+
+LOW_VALUE_TITLE_HINTS = [
+    "free picks",
+    "predictions",
+    "dawg of the day",
+    "best bets",
+    "betting",
+    "odds",
+    "live stream",
+]
+
+LOW_VALUE_SUMMARY_HINTS = [
+    "pickdawgz",
+    "best bets",
+    "betting splits",
+    "real-time odds",
+    "winning edge",
+]
+
+TRACKING_QUERY_KEYS = {
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "fbclid",
+    "gclid",
+    "igshid",
 }
 
 CATEGORY_PATTERNS = [
@@ -308,6 +351,154 @@ def infer_category(*parts):
     return None
 
 
+def infer_keyword_category(title, summary):
+    combined = f"{normalize_whitespace(title).lower()} {normalize_whitespace(summary).lower()}"
+    if "playoff" in combined or "stanley cup" in combined:
+        return "playoffs"
+    if "rumor" in combined or "rumour" in combined or "trade" in combined:
+        return "rumors"
+    if "recap" in combined:
+        return "recap"
+    if "ufa" in combined or "free agent" in combined:
+        return "analysis"
+    return None
+
+
+def canonicalize_url(url):
+    normalized_url = normalize_whitespace(url)
+    if not normalized_url:
+        return ""
+
+    try:
+        parsed = urlparse(normalized_url)
+    except ValueError:
+        return normalized_url
+
+    host = (parsed.hostname or "").lower()
+    if host.startswith("www."):
+        host = host[4:]
+
+    path = parsed.path or ""
+    if path != "/" and path.endswith("/"):
+        path = path.rstrip("/")
+
+    query_parts = []
+    for key, value in parse_qsl(parsed.query, keep_blank_values=False):
+        lowered_key = key.lower()
+        if lowered_key in TRACKING_QUERY_KEYS:
+            continue
+        query_parts.append((key, value))
+
+    query_parts.sort(key=lambda pair: (pair[0].lower(), pair[1]))
+    normalized_query = urlencode(query_parts, doseq=True)
+
+    return urlunparse((parsed.scheme.lower() or "https", host, path, "", normalized_query, ""))
+
+
+def semantic_title_key(title):
+    text = normalize_whitespace(title).lower()
+    if not text:
+        return ""
+
+    cleaned = []
+    previous_space = False
+    for char in text:
+        if char.isalnum():
+            cleaned.append(char)
+            previous_space = False
+            continue
+        if not previous_space:
+            cleaned.append(" ")
+            previous_space = True
+
+    words = [word for word in "".join(cleaned).split(" ") if len(word) > 2]
+    return " ".join(words[:10])
+
+
+def _hostname(url):
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except ValueError:
+        return ""
+
+    if host.startswith("www."):
+        return host[4:]
+    return host
+
+
+def score_news_item(item):
+    title = normalize_whitespace(item.get("title", "")).lower()
+    summary = normalize_whitespace(item.get("summary") or item.get("description", "")).lower()
+    url = item.get("url", "")
+    host = _hostname(url)
+    source = normalize_whitespace(item.get("source", "")).lower()
+
+    score = 0
+    reasons = []
+
+    if host in TRUSTED_NEWS_DOMAINS:
+        score += 3
+        reasons.append("trusted_domain")
+    elif source in SOURCE_LABELS:
+        score += 1
+        reasons.append("mapped_source")
+
+    if "nhl" in title or "stanley cup" in title:
+        score += 1
+        reasons.append("relevant_title")
+
+    if len(summary) >= 80:
+        score += 1
+        reasons.append("descriptive_summary")
+
+    combined = f"{title} {summary}"
+    if any(hint in combined for hint in LOW_VALUE_TITLE_HINTS):
+        score -= 4
+        reasons.append("promo_title")
+    if any(hint in combined for hint in LOW_VALUE_SUMMARY_HINTS):
+        score -= 3
+        reasons.append("promo_summary")
+    if "youtube.com" in host and "nhl media" not in source:
+        score -= 2
+        reasons.append("low_value_video")
+
+    if is_noise_news_item(
+        item.get("title", ""),
+        item.get("summary") or item.get("description", ""),
+        item.get("translatedTitle", ""),
+        item.get("translatedSummary", ""),
+        item.get("url", ""),
+    ):
+        score -= 6
+        reasons.append("noise_pattern")
+
+    return score, reasons
+
+
+def rank_and_limit(items, limit, diagnostics=None, bucket_name="unknown"):
+    enriched = []
+    for item in items:
+        score, reasons = score_news_item(item)
+        if score < 0:
+            if diagnostics is not None:
+                diagnostics["low_quality_filtered"] += 1
+            continue
+        enriched.append((score, reasons, item))
+
+    enriched.sort(
+        key=lambda row: (
+            row[0],
+            len(normalize_whitespace(row[2].get("translatedSummary") or row[2].get("summary", ""))),
+        ),
+        reverse=True,
+    )
+
+    limited = [row[2] for row in enriched[:limit]]
+    if diagnostics is not None:
+        diagnostics[f"{bucket_name}_accepted"] += len(limited)
+    return limited
+
+
 def format_category_title(category, matched_date=None):
     date_label = format_finnish_date(matched_date) if matched_date else ""
 
@@ -367,6 +558,8 @@ def build_fallback_title(item, matched_date):
     translated_title = normalize_whitespace(item.get("translatedTitle", ""))
     translated_summary = normalize_whitespace(item.get("translatedSummary", ""))
     category = infer_category(title, summary, translated_title, translated_summary)
+    if not category:
+        category = infer_keyword_category(title, summary)
 
     if category:
         return format_category_title(category, matched_date)
@@ -380,6 +573,8 @@ def build_fallback_summary(item, matched_date):
     translated_title = normalize_whitespace(item.get("translatedTitle", ""))
     translated_summary = normalize_whitespace(item.get("translatedSummary", ""))
     category = infer_category(title, summary, translated_title, translated_summary)
+    if not category:
+        category = infer_keyword_category(title, summary)
 
     if category:
         return format_category_summary(category)
@@ -388,7 +583,7 @@ def build_fallback_summary(item, matched_date):
         return truncate(summary)
 
     if title:
-        return "NHL-aiheinen juttu englanniksi."
+        return "Lyhyt nosto päivän NHL-aiheesta englanninkielisestä lähteestä."
 
     return ""
 
@@ -578,6 +773,15 @@ def build_news_index(cache, explicit_daily_cache=None):
     by_date = defaultdict(list)
     by_week = defaultdict(list)
     translation_cache = {}
+    diagnostics = {
+        "total_candidates": 0,
+        "noise_filtered": 0,
+        "low_quality_filtered": 0,
+        "date_deduped": 0,
+        "week_deduped": 0,
+        "by_date_accepted": 0,
+        "by_week_accepted": 0,
+    }
 
     for week_key, items in cache.items():
         if not isinstance(items, list):
@@ -586,12 +790,14 @@ def build_news_index(cache, explicit_daily_cache=None):
         for item in items:
             if not isinstance(item, dict):
                 continue
+            diagnostics["total_candidates"] += 1
 
             if is_noise_news_item(
                 item.get("title", ""),
                 item.get("summary") or item.get("description", ""),
                 url=item.get("url", ""),
             ):
+                diagnostics["noise_filtered"] += 1
                 continue
 
             matched_dates = extract_dates(
@@ -660,23 +866,40 @@ def build_news_index(cache, explicit_daily_cache=None):
             ]
             by_date[matched_date] = normalized_items + by_date[matched_date]
 
-    def dedupe(items):
+    def dedupe(items, bucket_name):
         seen = set()
         result = []
         for item in items:
-            key = item.get("url") or item.get("title")
+            url_key = canonicalize_url(item.get("url", ""))
+            title_key = semantic_title_key(item.get("translatedTitle") or item.get("title", ""))
+            key = url_key or title_key or item.get("url") or item.get("title")
             if key in seen:
+                if bucket_name == "date":
+                    diagnostics["date_deduped"] += 1
+                else:
+                    diagnostics["week_deduped"] += 1
                 continue
             seen.add(key)
             result.append(item)
         return result
 
+    ranked_by_date = {}
+    for key, value in sorted(by_date.items()):
+        deduped = dedupe(value, "date")
+        ranked_by_date[key] = rank_and_limit(deduped, 3, diagnostics, "by_date")
+
+    ranked_by_week = {}
+    for key, value in sorted(by_week.items()):
+        deduped = dedupe(value, "week")
+        ranked_by_week[key] = rank_and_limit(deduped, 5, diagnostics, "by_week")
+
     return {
-        "byDate": {key: dedupe(value) for key, value in sorted(by_date.items())},
-        "byWeek": {key: dedupe(value) for key, value in sorted(by_week.items())},
+        "byDate": ranked_by_date,
+        "byWeek": ranked_by_week,
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds").replace(
             "+00:00", "Z"
         ),
+        "_diagnostics": diagnostics,
     }
 
 
@@ -700,6 +923,18 @@ def main():
     print(f"Wrote {OUTPUT_FILE}")
     print(f"Daily dates: {len(index['byDate'])}")
     print(f"Weeks: {len(index['byWeek'])}")
+    diagnostics = index.get("_diagnostics", {})
+    if diagnostics:
+        print(
+            "Quality diagnostics: "
+            f"candidates={diagnostics.get('total_candidates', 0)}, "
+            f"noise_filtered={diagnostics.get('noise_filtered', 0)}, "
+            f"low_quality_filtered={diagnostics.get('low_quality_filtered', 0)}, "
+            f"date_deduped={diagnostics.get('date_deduped', 0)}, "
+            f"week_deduped={diagnostics.get('week_deduped', 0)}, "
+            f"accepted_date={diagnostics.get('by_date_accepted', 0)}, "
+            f"accepted_week={diagnostics.get('by_week_accepted', 0)}"
+        )
 
 
 if __name__ == "__main__":

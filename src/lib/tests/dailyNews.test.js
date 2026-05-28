@@ -133,4 +133,84 @@ describe('dailyNews helpers', () => {
             },
         ])
     })
+
+    it('prioritizes higher-quality trusted stories over promo-like entries', () => {
+        const newsIndex = {
+            byDate: {
+                '2026-05-27': [
+                    {
+                        title: 'NHL Free Picks and Predictions for Today 5/27/2026',
+                        summary: 'Dawg of the Day and best bets for tonight.',
+                        source: 'YouTube',
+                        url: 'https://www.youtube.com/watch?v=dKt_SVMmC54',
+                    },
+                    {
+                        title: 'Stanley Cup Playoffs Edition – May 27, 2026',
+                        summary:
+                            "Undrafted forward Cole Smith scored the series-clinching goal to propel the Golden Knights to a sweep of the Presidents' Trophy winners.",
+                        source: 'NHL Media',
+                        url: 'https://media.nhl.com/public/news/19859',
+                        matchedDate: '2026-05-27',
+                    },
+                ],
+            },
+            byWeek: {},
+        }
+
+        const selected = selectDailyNews(newsIndex, '2026-05-27')
+        expect(selected).toHaveLength(1)
+        expect(selected[0]).toMatchObject({
+            source: 'NHL Media',
+            url: 'https://media.nhl.com/public/news/19859',
+        })
+    })
+
+    it('dedupes equivalent stories with tracking query differences', () => {
+        const newsIndex = {
+            byDate: {
+                '2026-05-30': [
+                    {
+                        title: 'NHL Morning Recap – May 30, 2026',
+                        summary: 'Daily NHL recap with key game takeaways and player performances.',
+                        source: 'The Hockey Writers',
+                        url: 'https://thehockeywriters.com/nhl-morning-recap-may-30-2026/?utm_source=x',
+                    },
+                    {
+                        title: 'NHL Morning Recap – May 30, 2026',
+                        summary: 'Daily NHL recap with key game takeaways and player performances.',
+                        source: 'The Hockey Writers',
+                        url: 'https://www.thehockeywriters.com/nhl-morning-recap-may-30-2026/',
+                    },
+                ],
+            },
+            byWeek: {},
+        }
+
+        const selected = selectDailyNews(newsIndex, '2026-05-30')
+        expect(selected).toHaveLength(1)
+    })
+
+    it('keeps mainstream non-promo stories available for fallback cards', () => {
+        const newsIndex = {
+            byDate: {
+                '2026-05-27': [
+                    {
+                        title: "NHL's top 12 UFAs of 2026: Latest rumours, reports - Sportsnet",
+                        summary:
+                            'Consider the long list of star talent who had the option of going to the highest bidder on Canada Day but instead elected to re-up with their current team.',
+                        source: 'Sportsnet Ca',
+                        url: 'https://www.sportsnet.ca/nhl/article/nhls-top-12-ufas-of-2026-latest-rumours-reports',
+                        matchedDate: '2026-05-27',
+                    },
+                ],
+            },
+            byWeek: {},
+        }
+
+        const selected = selectDailyNews(newsIndex, '2026-05-27')
+        expect(selected).toHaveLength(1)
+        expect(selected[0].translatedTitle).toBe(
+            "NHL's top 12 UFAs of 2026: Latest rumours, reports - Sportsnet"
+        )
+    })
 })

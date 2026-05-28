@@ -66,6 +66,38 @@ const SOURCE_LABELS = {
     youtube: 'YouTube',
 }
 
+const TRUSTED_NEWS_DOMAINS = new Set([
+    'nhl.com',
+    'media.nhl.com',
+    'sportsnet.ca',
+    'nytimes.com',
+    'theathletic.com',
+    'espn.com',
+    'thehockeywriters.com',
+    'spectorshockey.net',
+    'thehockeynews.com',
+    'prohockeyrumors.com',
+    'insidetherink.com',
+])
+
+const LOW_VALUE_TITLE_HINTS = [
+    'free picks',
+    'predictions',
+    'dawg of the day',
+    'best bets',
+    'betting',
+    'odds',
+    'live stream',
+]
+
+const LOW_VALUE_SUMMARY_HINTS = [
+    'pickdawgz',
+    'best bets',
+    'betting splits',
+    'real-time odds',
+    'winning edge',
+]
+
 const CATEGORY_CONFIG = [
     {
         key: 'rumors',
@@ -211,6 +243,104 @@ function inferCategory(...parts) {
     return null
 }
 
+function getHost(url) {
+    try {
+        const hostname = new URL(url).hostname.toLowerCase()
+        const normalizedHostname = hostname.startsWith('www.') ? hostname.slice(4) : hostname
+        return normalizedHostname
+    } catch {
+        return ''
+    }
+}
+
+function canonicalizeUrl(url) {
+    const normalizedUrl = normalizeWhitespace(url)
+    if (!normalizedUrl) return ''
+
+    try {
+        const parsed = new URL(normalizedUrl)
+        parsed.hash = ''
+        const trackingKeys = [
+            'utm_source',
+            'utm_medium',
+            'utm_campaign',
+            'utm_term',
+            'utm_content',
+            'fbclid',
+            'gclid',
+            'igshid',
+        ]
+
+        for (const key of trackingKeys) {
+            parsed.searchParams.delete(key)
+        }
+
+        const sortedParams = [...parsed.searchParams.entries()].sort((a, b) =>
+            a[0] === b[0] ? a[1].localeCompare(b[1]) : a[0].localeCompare(b[0])
+        )
+        parsed.search = ''
+        for (const [key, value] of sortedParams) {
+            parsed.searchParams.append(key, value)
+        }
+
+        const loweredHost = parsed.hostname.toLowerCase()
+        parsed.hostname = loweredHost.startsWith('www.') ? loweredHost.slice(4) : loweredHost
+        if (parsed.pathname !== '/' && parsed.pathname.endsWith('/')) {
+            parsed.pathname = parsed.pathname.slice(0, -1)
+        }
+
+        return parsed.toString()
+    } catch {
+        return normalizedUrl
+    }
+}
+
+function semanticTitleKey(title) {
+    const lower = normalizeWhitespace(title).toLowerCase()
+    if (!lower) return ''
+
+    const words = lower
+        .split(' ')
+        .map((word) => {
+            const chars = []
+            for (const char of word) {
+                const code = char.charCodeAt(0)
+                const isNumber = code >= 48 && code <= 57
+                const isLowerAlpha = code >= 97 && code <= 122
+                if (isNumber || isLowerAlpha) {
+                    chars.push(char)
+                }
+            }
+            return chars.join('')
+        })
+        .filter((word) => word.length > 2)
+
+    return words.slice(0, 10).join(' ')
+}
+
+function scoreNewsItem(item) {
+    const title = normalizeWhitespace(item.title).toLowerCase()
+    const summary = normalizeWhitespace(item.summary).toLowerCase()
+    const source = normalizeWhitespace(item.source).toLowerCase()
+    const host = getHost(item.url)
+    let score = 0
+
+    if (TRUSTED_NEWS_DOMAINS.has(host)) score += 3
+    else if (SOURCE_LABELS[source]) score += 1
+
+    if (title.includes('nhl') || title.includes('stanley cup')) score += 1
+    if (summary.length >= 80) score += 1
+
+    const combined = `${title} ${summary}`
+    if (LOW_VALUE_TITLE_HINTS.some((hint) => combined.includes(hint))) score -= 4
+    if (LOW_VALUE_SUMMARY_HINTS.some((hint) => combined.includes(hint))) score -= 3
+    if (host.includes('youtube.com') && source !== 'nhl media') score -= 2
+
+    if (isNoiseNewsItem(item)) score -= 6
+
+    return score
+}
+
 function isNoiseNewsItem({ title, summary, translatedTitle, translatedSummary, url }) {
     const titleText = normalizeWhitespace(title)
     const summaryText = normalizeWhitespace(summary)
@@ -310,9 +440,8 @@ function collectNewsItems(items, limit) {
         }
 
         const key =
-            normalizeWhitespace(normalizedItem.url) ||
-            normalizeWhitespace(normalizedItem.translatedTitle) ||
-            normalizeWhitespace(normalizedItem.title) ||
+            canonicalizeUrl(normalizedItem.url) ||
+            semanticTitleKey(normalizedItem.translatedTitle || normalizedItem.title) ||
             normalizeWhitespace(normalizedItem.id)
 
         if (!key || seen.has(key)) {
@@ -321,13 +450,19 @@ function collectNewsItems(items, limit) {
 
         seen.add(key)
         normalizedItems.push(normalizedItem)
-
-        if (normalizedItems.length >= limit) {
-            break
-        }
     }
 
     return normalizedItems
+        .map((item) => ({ item, score: scoreNewsItem(item) }))
+        .filter((entry) => entry.score >= 0)
+        .sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score
+            const aSummary = normalizeWhitespace(a.item.translatedSummary || a.item.summary)
+            const bSummary = normalizeWhitespace(b.item.translatedSummary || b.item.summary)
+            return bSummary.length - aSummary.length
+        })
+        .slice(0, limit)
+        .map((entry) => entry.item)
 }
 
 export function getIsoWeekKey(dateString) {

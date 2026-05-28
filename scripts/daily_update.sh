@@ -68,6 +68,7 @@ EXIT_CODE=$?
 echo ""
 
 echo -e "${GREEN}[4/4] Generating Daily News Fallbacks for $START_DATE -> $END_DATE...${NC}"
+echo "News generator prints quality diagnostics after build."
 $VENV_PYTHON scripts/generate_daily_news.py "$START_DATE" "$END_DATE"
 NEWS_EXIT_CODE=$?
 echo ""
