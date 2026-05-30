@@ -236,24 +236,17 @@ function _toggleCalendar() {
         max-width: 920px;
         margin: 0 auto;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.9);
+        background:
+            linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8) top / 100% 3px no-repeat,
+            rgba(255, 255, 255, 0.9);
+        background-clip: padding-box;
+        background-origin: padding-box;
         border: 1px solid rgba(16, 24, 40, 0.08);
         box-shadow:
             0 24px 70px rgba(16, 24, 40, 0.08),
             0 2px 6px rgba(16, 24, 40, 0.04),
             inset 0 1px 0 rgba(255, 255, 255, 0.75);
         backdrop-filter: blur(18px);
-    }
-
-    .date-controls__card::before {
-        content: "";
-        position: absolute;
-        inset: 0 0 auto;
-        height: 3px;
-        border-radius: 20px 20px 0 0;
-        background: linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8);
-        pointer-events: none;
-        z-index: 1;
     }
 
     .date-controls__label {
