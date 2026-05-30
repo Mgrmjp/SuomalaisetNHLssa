@@ -233,25 +233,68 @@ function _toggleCalendar() {
         position: relative;
         overflow: visible;
         z-index: 10;
-        background: linear-gradient(140deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
-        border: 1px solid #cbd5e1;
+        max-width: 920px;
+        margin: 0 auto;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(16, 24, 40, 0.08);
         box-shadow:
-            0 10px 22px rgba(15, 23, 42, 0.1),
+            0 24px 70px rgba(16, 24, 40, 0.08),
+            0 2px 6px rgba(16, 24, 40, 0.04),
             inset 0 1px 0 rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(18px);
+    }
+
+    .date-controls__card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 3px;
+        border-radius: 20px 20px 0 0;
+        background: linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .date-controls__label {
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .date-controls__value {
+        letter-spacing: 0;
+    }
+
+    .date-controls__today-btn {
+        border: 1px solid rgba(0, 53, 128, 0.18);
+        background: #003580;
+        color: #fff;
+        box-shadow:
+            0 10px 22px rgba(0, 53, 128, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .date-controls__today-btn:hover {
+        background: #002b66;
+        transform: translateY(-1px);
+        box-shadow:
+            0 14px 28px rgba(0, 53, 128, 0.24),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
     .nav-btn {
         padding: 0.5rem;
-        border-radius: 0.75rem;
-        border: 1px solid #cbd5e1;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(16, 24, 40, 0.1);
         background: white;
         cursor: pointer;
-        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+        color: #344054;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07);
         transition: all 0.15s ease;
     }
 
     .nav-btn:hover:not(:disabled) {
-        background: #f8fafc;
+        background: #f6f8fc;
         transform: translateY(-1px);
     }
 
@@ -264,9 +307,16 @@ function _toggleCalendar() {
     :global(.picker-input) {
         width: 100%;
         padding: 0.75rem 0.9rem;
-        border-radius: 0.75rem;
-        border: 1px solid #cbd5e1;
-        background: #fff;
+        border-radius: 0.9rem;
+        border: 1px solid rgba(16, 24, 40, 0.1);
+        background: rgba(248, 250, 252, 0.82);
+        color: #101828;
+        font-weight: 650;
         cursor: pointer;
+    }
+
+    :global(.picker-input:hover) {
+        background: #ffffff;
+        border-color: rgba(0, 53, 128, 0.22);
     }
 </style>

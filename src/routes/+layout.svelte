@@ -88,7 +88,7 @@ const _canonicalUrl = $derived(
     })}</script>`}
 </svelte:head>
 
-<div class="min-h-screen flex flex-col relative bg-gray-50" style="color-scheme: light;">
+<div class="app-shell min-h-screen flex flex-col relative" style="color-scheme: light;">
     <!-- Vertical Ad Sidebars -->
     <VerticalAd />
     <VerticalAdLeft />

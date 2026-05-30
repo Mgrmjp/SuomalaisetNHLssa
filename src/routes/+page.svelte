@@ -7,7 +7,6 @@ import PlayerList from '$lib/components/game/PlayerList.svelte'
 import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import {
     currentBreak,
@@ -23,16 +22,7 @@ import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 
 /** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number }, playoffStats: { season: string, skaters: Array<{ name: string, team: string, gamesPlayed: number, goals: number, assists: number, points: number }>, goalies: Array<{ name: string, team: string, gamesPlayed: number, wins: number, savePct: number }> } } }} */
 const { data } = $props()
-const playoffStats = data.playoffStats
-
-const _sparkles = Array.from({ length: 12 }, () => ({
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 90}%`,
-    delay: `${Math.random() * 2}s`,
-    duration: `${3.5 + Math.random() * 3}s`,
-    size: `${3 + Math.random() * 6}px`,
-    blur: `${Math.random() > 0.5 ? 0 : 1}px`,
-}))
+const playoffStats = $derived(data.playoffStats)
 
 // Reactive variables
 const _totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0)
@@ -154,18 +144,9 @@ onMount(() => {
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 </svelte:head>
 
-<div class="w-full max-w-6xl mx-auto px-4 py-8 relative" style="z-index: 1; position: relative;">
-    <div class="text-center mb-8 hero-header space-y-3 relative overflow-hidden">
-        <Snowfall />
-        <div class="sparkles pointer-events-none" aria-hidden="true">
-            {#each _sparkles as sparkle}
-                <span
-                    class="sparkle"
-                    style={`--spark-left:${sparkle.left};--spark-top:${sparkle.top};--spark-delay:${sparkle.delay};--spark-duration:${sparkle.duration};--spark-size:${sparkle.size};--spark-blur:${sparkle.blur};`}
-                ></span>
-            {/each}
-        </div>
-        <div class="relative space-y-3 p-6">
+<div class="page-shell">
+    <header class="hero-header">
+        <div class="hero-header__inner">
             <button
                 onclick={resetToDefault}
                 class="logo-button focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded-xl transition-all duration-300"
@@ -174,27 +155,27 @@ onMount(() => {
                 <img
                     src={base + "/logo.svg"}
                     alt="Suomalaiset NHL-pelaajat"
-                    class="w-16 h-16 mx-auto mb-4 logo-img"
+                    class="logo-img"
                 />
             </button>
-            <h1 class="text-3xl font-bold text-gray-900 hero-title">
+            <h1 class="hero-title">
                 Miten suomalaisilla kulkee NHL:ssä?
             </h1>
-            <p class="text-gray-700 hero-subtitle">Tutki päivän ottelut, pisteet ja onnistumiset</p>
+            <p class="hero-subtitle">Tutki päivän ottelut, pisteet ja onnistumiset</p>
             <button
                 onclick={() => document.getElementById('scoringList')?.scrollIntoView({ behavior: 'smooth' })}
-                class="hero-scroll-to-results md:hidden mt-4 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-sm transition-colors duration-200"
+                class="hero-scroll-to-results md:hidden"
             >
                 Tuloksiin
             </button>
         </div>
-    </div>
+    </header>
 
     <div class="space-y-8 main-content-wrapper">
         <!-- Controls Section -->
         <div>
             {#if $currentBreak}
-                <div class="w-full max-w-4xl mx-auto mb-6 p-4 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl shadow-sm text-center">
+                <div class="break-card feature-card">
                     <div class="flex flex-col items-center justify-center space-y-2">
                         <span class="text-2xl" role="img" aria-label="Break">🏒</span>
                         <h3 class="font-bold text-gray-800 text-lg">
@@ -219,7 +200,7 @@ onMount(() => {
         <AdContainer />
 
         <!-- Playoff Stat Tracker -->
-        <section class="playoff-tracker mx-auto w-full max-w-2xl border-y border-slate-200 bg-white">
+        <section class="playoff-tracker feature-card mx-auto w-full">
             <div class="flex items-center justify-between gap-3 px-3 py-2 sm:px-4">
                 <div class="min-w-0">
                     <h2 class="truncate text-sm font-semibold text-slate-900">
@@ -453,19 +434,22 @@ onMount(() => {
         {/if}
 
         <!-- SEO Content Section -->
-        <section class="mt-12 bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">
-                Suomi NHL
-            </h2>
-            <div class="space-y-4 text-gray-700 leading-relaxed">
+        <section class="info-card feature-card" aria-labelledby="data-source-title">
+            <div class="info-card__heading">
+                <p class="info-card__eyebrow">Suomi NHL</p>
+                <h2 id="data-source-title">
+                    Tietoa datasta
+                </h2>
+            </div>
+            <div class="info-card__copy">
                 <p>
-                    Seuraa kaikkia NHL:ssä pelaavia suomalaisia yhdestä paikasta. Sivusto näyttää ottelukohtaiset tilastot, kuten maalit, syötöt, pisteet ja peliajan. Tiedot päivittyvät myös pelien aikana.
+                    Sivusto kokoaa NHL:ssä pelaavien suomalaisten ottelukohtaiset tilastot yhteen näkymään: maalit, syötöt, pisteet, peliajan ja maalivahtien keskeiset luvut.
                 </p>
                 <p>
-                    Mukana ovat Suomen NHL-pelaajat läpi kauden, kuten Miro Heiskanen, Sebastian Aho, Oliver Kapanen ja monet muut.
+                    Mukana ovat suomalaispelaajat läpi kauden, ja tiedot päivittyvät myös otteluiden aikana.
                 </p>
                 <p>
-                    Tilastot tulevat NHL:n virallisista lähteistä.
+                    Tilastot perustuvat NHL:n virallisiin lähteisiin.
                 </p>
             </div>
         </section>
@@ -480,46 +464,153 @@ onMount(() => {
 </div>
 
 <style>
-    .sparkles {
-        position: absolute;
-        inset: 0;
+    .page-shell {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem 5rem;
+    }
+
+    .hero-header {
+        margin: 0 auto 2.5rem;
+        text-align: center;
+    }
+
+    .hero-header__inner {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 0.75rem 0 0.25rem;
+    }
+
+    .hero-title {
+        max-width: 780px;
+        margin: 0.9rem auto 0;
+        color: #101828;
+        font-size: clamp(2.4rem, 5.8vw, 4.4rem);
+        line-height: 0.98;
+        font-weight: 800;
+        letter-spacing: 0;
+    }
+
+    .hero-subtitle {
+        margin: 1.05rem auto 0;
+        max-width: 34rem;
+        color: #667085;
+        font-size: clamp(1rem, 2vw, 1.12rem);
+        line-height: 1.6;
+    }
+
+    .hero-scroll-to-results {
+        margin-top: 1rem;
+        border-radius: 999px;
+        background: #003580;
+        color: #fff;
+        padding: 0.72rem 1.25rem;
+        font-weight: 700;
+        box-shadow: 0 10px 22px rgba(0, 53, 128, 0.18);
+        transition:
+            background 0.15s ease,
+            transform 0.15s ease,
+            box-shadow 0.15s ease;
+    }
+
+    .hero-scroll-to-results:hover {
+        background: #002b66;
+        transform: translateY(-1px);
+        box-shadow: 0 14px 28px rgba(0, 53, 128, 0.22);
+    }
+
+    .main-content-wrapper {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .feature-card {
+        position: relative;
         overflow: hidden;
+        background: var(--color-panel, rgba(255, 255, 255, 0.88));
+        border: 1px solid var(--color-panel-border, rgba(16, 24, 40, 0.08));
+        border-radius: 20px;
+        box-shadow: var(--shadow-panel, 0 16px 44px rgba(16, 24, 40, 0.08));
+        backdrop-filter: blur(18px);
     }
 
-    .sparkle {
+    .feature-card::before {
+        content: "";
         position: absolute;
-        left: var(--spark-left);
-        top: var(--spark-top);
-        width: var(--spark-size);
-        height: var(--spark-size);
-        border-radius: 9999px;
-        background: radial-gradient(circle, #e5e7eb 0%, #e5e7eb 50%, transparent 100%);
-        opacity: 0.8;
-        filter: blur(var(--spark-blur));
-        animation: sparkle-float var(--spark-duration) ease-in-out infinite;
-        animation-delay: var(--spark-delay);
-        will-change: transform;
+        inset: 0 0 auto;
+        height: 3px;
+        background: linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8);
     }
 
-    /* GPU-composited animation - uses only transform for best performance */
-    @keyframes sparkle-float {
-        0% {
-            transform: translate3d(0, 0, 0) scale(0);
-        }
-        20% {
-            transform: translate3d(4px, -6px, 0) scale(1);
-        }
-        60% {
-            transform: translate3d(-4px, 6px, 0) scale(0.9);
-        }
-        100% {
-            transform: translate3d(0, 12px, 0) scale(0);
-        }
+    .break-card {
+        width: 100%;
+        max-width: 920px;
+        margin: 0 auto 1.5rem;
+        padding: 1.2rem 1.5rem;
+        text-align: center;
+    }
+
+    .playoff-tracker {
+        max-width: 920px;
+        color: #101828;
+    }
+
+    .playoff-tracker > div:first-child {
+        padding: 0.95rem 1.1rem;
+    }
+
+    .info-card {
+        display: grid;
+        grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+        gap: 2rem;
+        max-width: 920px;
+        margin: 3.75rem auto 0;
+        padding: 2rem;
+    }
+
+    .info-card__heading {
+        min-width: 0;
+    }
+
+    .info-card__eyebrow {
+        margin: 0 0 0.45rem;
+        color: #003580;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .info-card h2 {
+        margin: 0;
+        color: #101828;
+        font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: 0;
+    }
+
+    .info-card__copy {
+        display: grid;
+        gap: 0.9rem;
+        color: #475467;
+        line-height: 1.7;
+    }
+
+    .info-card__copy p {
+        margin: 0;
     }
 
     .hero-stat {
         position: relative;
         min-width: 110px;
+    }
+
+    .hero-stats {
+        row-gap: 1rem;
     }
 
     .hero-stat__icon {
@@ -590,13 +681,17 @@ onMount(() => {
     }
 
     .logo-img {
+        width: 4.5rem;
+        height: 4.5rem;
+        margin: 0 auto;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)); /* Static shadow */
+        filter: drop-shadow(0 10px 16px rgba(16, 24, 40, 0.12));
     }
 
     /* Hero Stats Mobile Toggle */
     .hero-stats-container {
-        margin-bottom: 1rem;
+        max-width: 920px;
+        margin: 0 auto 0.5rem;
     }
 
     .hero-stats-toggle {
@@ -606,10 +701,10 @@ onMount(() => {
         justify-content: space-between;
         padding: 0.75rem 1rem;
         margin-bottom: 0.5rem;
-        background: white;
-        border: 1px solid rgba(203, 213, 225, 0.95);
-        border-radius: 0.75rem;
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(16, 24, 40, 0.08);
+        border-radius: 1rem;
+        box-shadow: 0 8px 24px rgba(16, 24, 40, 0.07);
         cursor: pointer;
         transition: box-shadow 0.2s ease;
     }
@@ -620,8 +715,8 @@ onMount(() => {
 
     .hero-stats-toggle-text {
         font-size: 0.875rem;
-        font-weight: 500;
-        color: #374151;
+        font-weight: 700;
+        color: #344054;
     }
 
     .hero-stats-toggle-icon {
@@ -643,7 +738,11 @@ onMount(() => {
     .hero-stats-wrapper.expanded {
         display: block;
         animation: slide-down 0.2s ease-out;
-        padding-bottom: 1rem;
+        padding: 1rem;
+        border: 1px solid rgba(16, 24, 40, 0.08);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow: 0 16px 40px rgba(16, 24, 40, 0.07);
     }
 
     @keyframes slide-down {
@@ -665,14 +764,49 @@ onMount(() => {
 
         .hero-stats-wrapper {
             display: block;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(16, 24, 40, 0.08);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.86);
+            box-shadow:
+                0 16px 40px rgba(16, 24, 40, 0.07),
+                inset 0 1px 0 rgba(255, 255, 255, 0.75);
         }
 
         .hero-stats-wrapper.expanded {
-            padding-bottom: 0;
+            padding: 1rem 1.25rem;
         }
 
         .hero-stats-toggle {
             display: none;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .page-shell {
+            padding: 2rem 1rem 4rem;
+        }
+
+        .hero-header {
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.25rem, 12vw, 3.6rem);
+        }
+
+        .main-content-wrapper {
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            display: block;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .info-card__copy {
+            margin-top: 1rem;
         }
     }
 </style>

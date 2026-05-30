@@ -75,6 +75,33 @@ const showNoRelatedGamesNote = $derived(
 
 const showRelatedGameDates = $derived(relatedGamesLabel.toLowerCase().includes('viimeksi'))
 const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
+
+const emptyStateStats = $derived.by(() => {
+    const stats = []
+
+    if (variant === 'no-scorers') {
+        stats.push({
+            value: '0',
+            label: 'suomalaista pisteillä',
+        })
+    }
+
+    if (variant === 'no-scorers' && lineupCount > 0) {
+        stats.push({
+            value: lineupCount,
+            label: lineupCount === 1 ? 'suomalainen kokoonpanossa' : 'suomalaista kokoonpanossa',
+        })
+    }
+
+    if (hasRelatedGames) {
+        stats.push({
+            value: relatedGames.length,
+            label: showRelatedGameDates ? 'vertailuottelua' : 'tulevaa ottelua',
+        })
+    }
+
+    return stats
+})
 </script>
 
 <div class="empty-state-wrapper">
@@ -112,12 +139,14 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
                 <span class="empty-state-date">{$displayDate}</span>.
             </p>
 
-            {#if variant === 'no-scorers' && lineupCount > 0}
-                <div class="lineup-context">
-                    <span class="lineup-dot" aria-hidden="true"></span>
-                    {lineupCount}
-                    {lineupCount === 1 ? 'suomalainen' : 'suomalaista'}
-                    oli kokoonpanossa.
+            {#if emptyStateStats.length > 0}
+                <div class="empty-state-stats" role="list" aria-label="Päivän yhteenveto">
+                    {#each emptyStateStats as stat}
+                        <div class="empty-state-stat" role="listitem">
+                            <strong>{stat.value}</strong>
+                            <span>{stat.label}</span>
+                        </div>
+                    {/each}
                 </div>
             {/if}
 
@@ -205,22 +234,24 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 3rem 1rem;
-        min-height: 300px;
+        padding: 2.5rem 0 3.5rem;
+        min-height: 340px;
     }
 
     .empty-state-card {
-        max-width: 540px;
+        max-width: 760px;
         width: 100%;
-        background: #ffffff;
-        border-radius: 18px;
-        padding: 2.65rem 2.15rem 2.3rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 20px;
+        padding: 3.5rem 2.5rem 2.75rem;
         text-align: center;
-        border: 1px solid #e0e7ff;
+        border: 1px solid rgba(16, 24, 40, 0.08);
         box-shadow:
-            0 1px 3px rgba(15, 23, 42, 0.04),
-            0 14px 36px -10px rgba(15, 23, 42, 0.10);
+            0 24px 70px rgba(16, 24, 40, 0.08),
+            0 2px 6px rgba(16, 24, 40, 0.04);
+        backdrop-filter: blur(18px);
         position: relative;
+        overflow: hidden;
     }
 
     .empty-state-card::before {
@@ -230,9 +261,8 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(to right, #6366f1, #3b82f6);
-        border-radius: 18px 18px 0 0;
-        opacity: 0.85;
+        background: linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8);
+        border-radius: 20px 20px 0 0;
     }
 
     .empty-state-content {
@@ -243,19 +273,18 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 3.5rem;
-        height: 3.5rem;
-        margin: 0 auto 1.1rem;
+        width: 4.75rem;
+        height: 4.75rem;
+        margin: 0 auto 1.4rem;
         border-radius: 9999px;
         color: #fff;
         box-shadow:
             0 1px 2px rgba(0, 0, 0, 0.04),
-            0 6px 16px rgba(63, 66, 243, 0.14);
+            0 14px 34px rgba(0, 53, 128, 0.16);
     }
 
     .empty-state-icon--premium {
-        /* Brand gradient matching the purple-blue logo "F" */
-        background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
+        background: linear-gradient(135deg, #003580 0%, #2f6ec8 100%);
     }
 
     .empty-state-icon--break {
@@ -266,16 +295,16 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
     }
 
     .empty-state-icon svg {
-        width: 1.7rem;
-        height: 1.7rem;
+        width: 2.05rem;
+        height: 2.05rem;
     }
 
     .empty-state-title {
-        font-size: 1.45rem;
+        font-size: clamp(1.45rem, 3vw, 1.75rem);
         font-weight: 800;
-        letter-spacing: -0.028em;
+        letter-spacing: 0;
         color: #0f172a;
-        margin-bottom: 0.55rem;
+        margin-bottom: 0.65rem;
         line-height: 1.22;
     }
 
@@ -289,38 +318,50 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
 
     .empty-state-date {
         font-weight: 700;
-        color: #4338ca;
+        color: #003580;
         white-space: nowrap;
     }
 
-    .lineup-context {
-        margin-top: 0.7rem;
-        font-size: 0.82rem;
-        font-weight: 600;
-        color: #64748b;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.25rem 0.7rem;
-        background: #f8fafc;
-        border: 1px solid #e0e7ff;
-        border-radius: 999px;
-        white-space: nowrap;
+    .empty-state-stats {
+        display: flex;
+        justify-content: center;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+        max-width: 34rem;
+        margin: 1.35rem auto 0;
     }
 
-    .lineup-dot {
-        width: 0.45rem;
-        height: 0.45rem;
-        background: #6366f1;
-        border-radius: 999px;
-        flex-shrink: 0;
+    .empty-state-stat {
+        min-width: 8.5rem;
+        padding: 0.75rem 0.95rem;
+        border: 1px solid rgba(16, 24, 40, 0.08);
+        border-radius: 14px;
+        background: rgba(248, 250, 252, 0.82);
+    }
+
+    .empty-state-stat strong {
+        display: block;
+        color: #101828;
+        font-size: 1.2rem;
+        line-height: 1;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .empty-state-stat span {
+        display: block;
+        margin-top: 0.35rem;
+        color: #667085;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1.25;
     }
 
     /* Shared section styling */
     .empty-state-section {
         margin-top: 1.8rem;
         padding-top: 1.5rem;
-        border-top: 1px solid #eef2f7;
+        border-top: 1px solid rgba(16, 24, 40, 0.08);
         text-align: left;
     }
 
@@ -376,7 +417,7 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
         font-size: 0.93rem;
         font-weight: 700;
         color: #0f172a;
-        letter-spacing: -0.01em;
+        letter-spacing: 0;
     }
 
     .at-separator {
@@ -412,7 +453,7 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
         font-size: 0.725rem;
         font-weight: 700;
         letter-spacing: 0.02em;
-        color: #3730a3;
+        color: #003580;
         white-space: nowrap;
     }
 
@@ -516,30 +557,31 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
 
     @media (max-width: 640px) {
         .empty-state-wrapper {
-            padding: 1.75rem 1rem;
+            padding: 1.75rem 0;
             min-height: 240px;
         }
 
         .empty-state-card {
-            padding: 2.15rem 1.45rem 1.95rem;
+            padding: 2.4rem 1.25rem 2rem;
         }
 
         .empty-state-icon {
-            width: 3rem;
-            height: 3rem;
+            width: 3.75rem;
+            height: 3.75rem;
         }
 
         .empty-state-icon svg {
-            width: 1.45rem;
-            height: 1.45rem;
-        }
-
-        .empty-state-title {
-            font-size: 1.28rem;
+            width: 1.65rem;
+            height: 1.65rem;
         }
 
         .empty-state-text {
             font-size: 0.9rem;
+        }
+
+        .empty-state-stat {
+            min-width: min(100%, 9rem);
+            flex: 1 1 8rem;
         }
 
         .upcoming-game-row {

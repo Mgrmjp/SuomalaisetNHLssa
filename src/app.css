@@ -9,11 +9,44 @@ body {
 /* Ensure light theme colors are always used */
 :root {
     --color-finnish-blue: #003580;
+    --color-page-bg: #f6f7fb;
+    --color-ink: #101828;
+    --color-muted: #667085;
+    --color-panel: rgba(255, 255, 255, 0.88);
+    --color-panel-border: rgba(16, 24, 40, 0.08);
+    --shadow-panel: 0 24px 70px rgba(16, 24, 40, 0.08), 0 2px 6px rgba(16, 24, 40, 0.04);
+    --font-display: "Sora", "Inter", system-ui, sans-serif;
     --border-gray-200-strong: #cbd5e1;
     --border-gray-300-strong: #94a3b8;
     --border-slate-100-strong: #dbe4ee;
     --border-slate-200-strong: #cbd5e1;
     --border-slate-200-soft-strong: rgba(148, 163, 184, 0.45);
+}
+
+html {
+    background: var(--color-page-bg);
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(circle at 50% -10rem, rgba(0, 53, 128, 0.11), transparent 34rem),
+        linear-gradient(180deg, #f8f9fc 0%, #f2f5fa 48%, #eef2f7 100%);
+    color: var(--color-ink);
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    font-family: var(--font-display);
+    letter-spacing: 0;
+}
+
+.app-shell {
+    color: var(--color-ink);
+    background: transparent;
 }
 
 /* Custom utilities */
@@ -198,7 +231,7 @@ textarea {
 
 /* Modern Gradient Buttons */
 .gradient-button-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #003580 0%, #0f5fb8 55%, #6ca8e6 100%);
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
@@ -207,7 +240,7 @@ textarea {
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     box-shadow:
-        0 4px 12px rgba(59, 130, 246, 0.3),
+        0 4px 12px rgba(0, 53, 128, 0.28),
         0 2px 4px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
     font-weight: 500;
@@ -239,11 +272,11 @@ textarea {
 }
 
 .gradient-button-primary:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
+    background: linear-gradient(135deg, #002b66 0%, #0c4f9b 55%, #5d9bdc 100%);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
     box-shadow:
-        0 8px 20px rgba(37, 99, 235, 0.4),
+        0 8px 20px rgba(0, 53, 128, 0.36),
         0 4px 8px rgba(0, 0, 0, 0.15),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
@@ -251,7 +284,7 @@ textarea {
 .gradient-button-primary:active {
     transform: translateY(0) scale(0.98);
     box-shadow:
-        0 4px 12px rgba(37, 99, 235, 0.35),
+        0 4px 12px rgba(0, 53, 128, 0.32),
         0 2px 4px rgba(0, 0, 0, 0.12),
         inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
@@ -259,10 +292,10 @@ textarea {
 .gradient-button-primary:focus {
     outline: none;
     box-shadow:
-        0 4px 12px rgba(59, 130, 246, 0.3),
+        0 4px 12px rgba(0, 53, 128, 0.28),
         0 2px 4px rgba(0, 0, 0, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 0 3px rgba(59, 130, 246, 0.4);
+        0 0 0 3px rgba(0, 53, 128, 0.26);
 }
 
 /* Size variants */
@@ -287,10 +320,10 @@ textarea {
 
 .gradient-button-primary:hover.glow {
     box-shadow:
-        0 8px 20px rgba(37, 99, 235, 0.5),
+        0 8px 20px rgba(0, 53, 128, 0.42),
         0 4px 8px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        0 0 20px rgba(37, 99, 235, 0.2);
+        0 0 20px rgba(0, 53, 128, 0.16);
 }
 
 /* Modern Gradient Buttons - Secondary Variant */

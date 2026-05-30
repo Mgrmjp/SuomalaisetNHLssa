@@ -430,7 +430,7 @@ $effect(() => {
         lineupCount={dressedCount}
     />
 {:else}
-    <section id="scoringList" class="scoring-list py-12 bg-gray-50/50">
+    <section id="scoringList" class="scoring-list">
         <div class="scoring-list__container w-full">
             <div class="scoring-list__sections space-y-10">
                 {#if forwards.length}
@@ -534,8 +534,22 @@ $effect(() => {
 {/if}
 
 <style>
+    .scoring-list {
+        padding: 2.75rem 0 3.25rem;
+        background: transparent;
+    }
+
+    .scoring-list__section-title {
+        font-family: var(--font-display, "Sora", "Inter", system-ui, sans-serif);
+        letter-spacing: 0;
+    }
+
     /* Mobile-only styles for swiper - prevents affecting desktop layout */
     @media (max-width: 767px) {
+        .scoring-list {
+            padding: 2rem 0 2.4rem;
+        }
+
         /* Essential Swiper styles - only applied on mobile */
         .swiper {
             overflow: visible;
