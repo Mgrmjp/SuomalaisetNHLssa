@@ -19,6 +19,7 @@ import {
     setDate,
 } from '$lib/stores/gameData.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
+import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 
 /** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number }, playoffStats: { season: string, skaters: Array<{ name: string, team: string, gamesPlayed: number, goals: number, assists: number, points: number }>, goalies: Array<{ name: string, team: string, gamesPlayed: number, wins: number, savePct: number }> } } }} */
 const { data } = $props()
@@ -41,6 +42,29 @@ const _totalPenaltyMinutes = $derived(
     $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
 )
 const totalPlayers = $derived($players?.length || 0)
+
+// A goalie "counts" only if they actually played (mirrors PlayerList logic)
+function _goaliePlayed(player) {
+    const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0)
+    const saves = Number(player.saves ?? player.goalie_saves ?? 0)
+    const goalsAgainst = Number(player.goals_against ?? player.goalsAgainst ?? 0)
+    const toi = player.time_on_ice || player.toi || ''
+    return (
+        shotsAgainst > 0 ||
+        saves > 0 ||
+        goalsAgainst > 0 ||
+        (toi && toi !== '00:00' && toi !== '0:00')
+    )
+}
+
+// True when at least one player will be rendered as a card (scoring skater or
+// a goalie who played). Keeps the hero stats in sync with the player list, so
+// we never show a row of all-zero cards stacked above the empty state.
+const _hasScoringPlayers = $derived(
+    ($players || []).some((player) =>
+        isGoalie(player) ? _goaliePlayed(player) : hasPoints(player)
+    )
+)
 
 function buildDateLabel(value) {
     if (!value) {
@@ -283,7 +307,7 @@ onMount(() => {
                     {/each}
                 </div>
             </div>
-        {:else if $players && $players.length > 0}
+        {:else if _hasScoringPlayers}
             <div class="hero-stats-container">
                 <!-- Desktop header -->
                 <div class="text-center mb-4 hero-summary-header hidden md:block">
