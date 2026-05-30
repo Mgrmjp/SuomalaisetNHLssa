@@ -223,6 +223,8 @@ const goalies = $derived(sortGoalies(filteredPlayers.filter((p) => isGoalie(p)))
 
 const hasAnyPlayers = $derived(forwards.length + defenders.length + goalies.length > 0)
 
+const dressedCount = $derived($players?.length || 0)
+
 // Determine if there are no games today
 const hasNoGames = $derived(!$isLoading && (!$games || !$games.games || $games.games.length === 0))
 
@@ -425,6 +427,7 @@ $effect(() => {
         relatedGames={upcomingFinnishGames}
         relatedGamesLabel={relatedGamesLabel}
         newsItems={fallbackNews}
+        lineupCount={dressedCount}
     />
 {:else}
     <section id="scoringList" class="scoring-list py-12 bg-gray-50/50">

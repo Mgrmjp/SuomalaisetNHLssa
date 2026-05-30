@@ -9,23 +9,30 @@ import { displayDate } from '$lib/stores/gameData.js'
  *   variant?: 'no-games' | 'no-scorers' | 'break',
  *   relatedGames?: Array<{ gameId: number|string, homeTeam: string, awayTeam: string, startTime?: string, finnish_players_count?: number }>,
  *   relatedGamesLabel?: string,
- *   newsItems?: Array<{ translatedTitle?: string, translatedSummary?: string, title?: string, summary?: string, source?: string, url?: string }>
+ *   newsItems?: Array<{ translatedTitle?: string, translatedSummary?: string, title?: string, summary?: string, source?: string, url?: string }>,
+ *   lineupCount?: number
  * }}
  */
-let { variant = 'no-scorers', relatedGames = [], relatedGamesLabel = '', newsItems = [] } = $props()
+let {
+    variant = 'no-scorers',
+    relatedGames = [],
+    relatedGamesLabel = '',
+    newsItems = [],
+    lineupCount = 0,
+} = $props()
 
 const messages = {
     'no-games': {
         title: 'Ei otteluita tänään',
-        text: 'NHL:ssä ei pelata otteluita päivälle',
+        text: 'NHL:ssä ei pelata tähän päivään otteluita.',
     },
     'no-scorers': {
-        title: 'Ei suomalaista pisteidentekijää',
-        text: 'Kukaan suomalaispelaaja ei tehnyt pisteitä, tai dataa ei ole vielä saatavilla päivälle',
+        title: 'Suomalaiset pisteittä tänään',
+        text: 'Kukaan suomalaispelaaja ei yltänyt tehopisteille tai tilastot eivät ole vielä päivittyneet.',
     },
     break: {
         title: 'NHL-tauko',
-        text: 'NHL:ssä on meneillään tauko. Pelit jatkuvat pian!',
+        text: 'NHL:ssä on meneillään tauko. Uudet ottelut alkavat pian.',
     },
 }
 
@@ -76,6 +83,7 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
             <div
                 class="empty-state-icon"
                 class:empty-state-icon--break={iconVariant === 'break'}
+                class:empty-state-icon--premium={iconVariant === 'no-scorers'}
                 aria-hidden="true"
             >
                 {#if iconVariant === 'no-games'}
@@ -103,6 +111,15 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
                 {currentMessage.text}
                 <span class="empty-state-date">{$displayDate}</span>.
             </p>
+
+            {#if variant === 'no-scorers' && lineupCount > 0}
+                <div class="lineup-context">
+                    <span class="lineup-dot" aria-hidden="true"></span>
+                    {lineupCount}
+                    {lineupCount === 1 ? 'suomalainen' : 'suomalaista'}
+                    oli kokoonpanossa.
+                </div>
+            {/if}
 
             {#if hasRelatedGames}
                 <div class="empty-state-section upcoming-games">
@@ -193,16 +210,29 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
     }
 
     .empty-state-card {
-        max-width: 520px;
+        max-width: 540px;
         width: 100%;
         background: #ffffff;
-        border-radius: 16px;
-        padding: 2.5rem 2rem;
+        border-radius: 18px;
+        padding: 2.65rem 2.15rem 2.3rem;
         text-align: center;
-        border: 1px solid #e2e8f0;
+        border: 1px solid #e0e7ff;
         box-shadow:
-            0 1px 2px rgba(15, 23, 42, 0.04),
-            0 8px 24px rgba(15, 23, 42, 0.06);
+            0 1px 3px rgba(15, 23, 42, 0.04),
+            0 14px 36px -10px rgba(15, 23, 42, 0.10);
+        position: relative;
+    }
+
+    .empty-state-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(to right, #6366f1, #3b82f6);
+        border-radius: 18px 18px 0 0;
+        opacity: 0.85;
     }
 
     .empty-state-content {
@@ -213,97 +243,128 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 4rem;
-        height: 4rem;
-        margin: 0 auto 1.25rem;
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 0 auto 1.1rem;
         border-radius: 9999px;
-        background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
-        color: #1d4ed8;
-        border: 1px solid #bfdbfe;
+        color: #fff;
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.04),
+            0 6px 16px rgba(63, 66, 243, 0.14);
+    }
+
+    .empty-state-icon--premium {
+        /* Brand gradient matching the purple-blue logo "F" */
+        background: linear-gradient(135deg, #6366f1 0%, #3b82f6 100%);
     }
 
     .empty-state-icon--break {
-        background: linear-gradient(180deg, #fef3c7 0%, #fde68a 100%);
-        color: #b45309;
-        border-color: #fcd34d;
+        background: #f59e0b;
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.06),
+            0 6px 16px rgba(245, 158, 11, 0.18);
     }
 
     .empty-state-icon svg {
-        width: 1.875rem;
-        height: 1.875rem;
+        width: 1.7rem;
+        height: 1.7rem;
     }
 
     .empty-state-title {
-        font-size: 1.375rem;
+        font-size: 1.45rem;
         font-weight: 800;
+        letter-spacing: -0.028em;
         color: #0f172a;
-        margin-bottom: 0.5rem;
-        line-height: 1.25;
-        letter-spacing: -0.01em;
+        margin-bottom: 0.55rem;
+        line-height: 1.22;
     }
 
     .empty-state-text {
-        font-size: 0.9375rem;
+        font-size: 0.95rem;
         color: #475569;
-        line-height: 1.55;
-        max-width: 28rem;
+        line-height: 1.6;
+        max-width: 28.5rem;
         margin: 0 auto;
     }
 
     .empty-state-date {
         font-weight: 700;
-        color: #1d4ed8;
+        color: #4338ca;
         white-space: nowrap;
     }
 
-    /* Shared section styling for the related-games and news blocks */
+    .lineup-context {
+        margin-top: 0.7rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #64748b;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.7rem;
+        background: #f8fafc;
+        border: 1px solid #e0e7ff;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+
+    .lineup-dot {
+        width: 0.45rem;
+        height: 0.45rem;
+        background: #6366f1;
+        border-radius: 999px;
+        flex-shrink: 0;
+    }
+
+    /* Shared section styling */
     .empty-state-section {
-        margin-top: 1.75rem;
+        margin-top: 1.8rem;
         padding-top: 1.5rem;
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid #eef2f7;
         text-align: left;
     }
 
     .section-label {
-        font-size: 0.6875rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.012em;
         color: #64748b;
-        margin-bottom: 0.875rem;
+        margin-bottom: 0.95rem;
         text-align: center;
     }
 
-    /* Related games */
+    /* Related games – premium rows */
     .upcoming-games-list {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 0.45rem;
     }
 
     .upcoming-game-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.75rem;
+        gap: 0.9rem;
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        background: #f8fafc;
-        padding: 0.75rem 0.875rem;
+        border-radius: 14px;
+        background: #fdfdfe;
+        padding: 0.82rem 1rem;
         transition:
+            box-shadow 0.15s ease,
             border-color 0.15s ease,
-            background 0.15s ease;
+            transform 0.12s ease;
     }
 
     .upcoming-game-row:hover {
-        border-color: #cbd5e1;
-        background: #f1f5f9;
+        border-color: #c7d2fe;
+        box-shadow: 0 4px 18px -6px rgba(15, 23, 42, 0.12);
+        transform: translateY(-1px);
     }
 
     .team-pair {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.55rem;
         min-width: 0;
         flex-wrap: wrap;
     }
@@ -311,60 +372,63 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
     .team-chip {
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        font-size: 0.875rem;
+        gap: 0.42rem;
+        font-size: 0.93rem;
         font-weight: 700;
         color: #0f172a;
+        letter-spacing: -0.01em;
     }
 
     .at-separator {
         color: #94a3b8;
-        font-weight: 700;
-        font-size: 0.75rem;
+        font-weight: 600;
+        font-size: 0.78rem;
     }
 
     .upcoming-game-aside {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 0.3rem;
+        gap: 0.35rem;
         flex-shrink: 0;
     }
 
     .upcoming-game-time {
-        font-size: 0.8125rem;
-        font-weight: 700;
-        color: #334155;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: #64748b;
         white-space: nowrap;
+        letter-spacing: 0.01em;
     }
 
     .finn-count-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.25rem;
-        padding: 0.1rem 0.45rem;
-        border-radius: 9999px;
-        background: #eff6ff;
-        border: 1px solid #bfdbfe;
-        font-size: 0.75rem;
+        gap: 0.28rem;
+        padding: 0.08rem 0.6rem;
+        border-radius: 999px;
+        background: #f0f4ff;
+        border: 1px solid #dbeafe;
+        font-size: 0.725rem;
         font-weight: 700;
-        color: #1d4ed8;
+        letter-spacing: 0.02em;
+        color: #3730a3;
         white-space: nowrap;
     }
 
     .finn-flag {
-        font-size: 0.8125rem;
+        font-size: 0.78rem;
         line-height: 1;
     }
 
     .upcoming-games-empty-note {
-        margin-top: 1.5rem;
+        margin-top: 1.6rem;
         padding-top: 1.5rem;
-        border-top: 1px solid #e2e8f0;
-        font-size: 0.8125rem;
+        border-top: 1px solid #eef2f7;
+        font-size: 0.85rem;
         color: #64748b;
         line-height: 1.55;
-        max-width: 28rem;
+        max-width: 29rem;
         margin-left: auto;
         margin-right: auto;
     }
@@ -452,36 +516,37 @@ const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
 
     @media (max-width: 640px) {
         .empty-state-wrapper {
-            padding: 2rem 1rem;
-            min-height: 250px;
+            padding: 1.75rem 1rem;
+            min-height: 240px;
         }
 
         .empty-state-card {
-            padding: 2rem 1.25rem;
+            padding: 2.15rem 1.45rem 1.95rem;
         }
 
         .empty-state-icon {
-            width: 3.5rem;
-            height: 3.5rem;
+            width: 3rem;
+            height: 3rem;
         }
 
         .empty-state-icon svg {
-            width: 1.625rem;
-            height: 1.625rem;
+            width: 1.45rem;
+            height: 1.45rem;
         }
 
         .empty-state-title {
-            font-size: 1.1875rem;
+            font-size: 1.28rem;
         }
 
         .empty-state-text {
-            font-size: 0.875rem;
+            font-size: 0.9rem;
         }
 
         .upcoming-game-row {
             flex-direction: column;
             align-items: flex-start;
-            gap: 0.5rem;
+            gap: 0.55rem;
+            padding: 0.78rem 0.95rem;
         }
 
         .upcoming-game-aside {
