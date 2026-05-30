@@ -152,7 +152,7 @@ function generateCalendarDays(selectedDateStr) {
 
         <button
             class="calendar-month__title text-base sm:text-lg font-bold text-gray-900 tracking-tight hover:text-blue-600 transition-colors mx-auto flex items-center gap-1"
-            onclick={toggleView}
+            onclick={_toggleView}
         >
             {#if view === "calendar"}
                 {monthYearDisplay}
@@ -261,7 +261,7 @@ function generateCalendarDays(selectedDateStr) {
                         class:border-gray-100={year !== currentMonth.getFullYear()}
                         class:hover:border-blue-200={year !== currentMonth.getFullYear()}
                         class:hover:bg-blue-50={year !== currentMonth.getFullYear()}
-                        onclick={() => selectYear(year)}
+                        onclick={() => _selectYear(year)}
                     >
                         {year}
                     </button>
