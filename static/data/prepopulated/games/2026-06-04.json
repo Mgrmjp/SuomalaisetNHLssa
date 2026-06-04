@@ -1,8 +1,24 @@
 {
   "date": "2026-06-04",
-  "games": [],
+  "games": [
+    {
+      "gameId": 2025030412,
+      "homeTeam": "CAR",
+      "awayTeam": "VGK",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 3,
+      "startTime": "2026-06-05T00:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    }
+  ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-05-28T06:15:43.155047",
+  "generated_at": "2026-06-04T07:41:56.954001",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
