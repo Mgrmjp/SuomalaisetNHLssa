@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-06-04T08:27:53.343072",
+  "updatedAt": "2026-06-05T08:21:48.410366",
   "sources": [
     {
       "name": "EliteProspects.com",
@@ -148,8 +148,8 @@
           },
           "weight": {
             "__typename": "Weight",
-            "imperial": 220,
-            "metrics": 100
+            "imperial": 207,
+            "metrics": 94
           },
           "playerId": "924653"
         },
@@ -1036,8 +1036,8 @@
           },
           "weight": {
             "__typename": "Weight",
-            "imperial": 220,
-            "metrics": 100
+            "imperial": 207,
+            "metrics": 94
           },
           "playerId": "924653"
         },
@@ -1903,8 +1903,8 @@
           },
           "weight": {
             "__typename": "Weight",
-            "imperial": 220,
-            "metrics": 100
+            "imperial": 207,
+            "metrics": 94
           },
           "playerId": "924653"
         },
@@ -2770,8 +2770,8 @@
           },
           "weight": {
             "__typename": "Weight",
-            "imperial": 220,
-            "metrics": 100
+            "imperial": 207,
+            "metrics": 94
           },
           "playerId": "924653"
         },
@@ -3616,8 +3616,8 @@
           },
           "weight": {
             "__typename": "Weight",
-            "imperial": 220,
-            "metrics": 100
+            "imperial": 207,
+            "metrics": 94
           },
           "playerId": "924653"
         },
@@ -4363,7 +4363,7 @@
           "playerId": "927671"
         },
         {
-          "rank": 17,
+          "rank": 16,
           "name": "Oliver Suvanto",
           "firstName": null,
           "lastName": null,
@@ -4384,7 +4384,7 @@
           "playerId": "925061"
         },
         {
-          "rank": 21,
+          "rank": 20,
           "name": "Juho Piiparinen",
           "firstName": null,
           "lastName": null,
@@ -4405,7 +4405,7 @@
           "playerId": "925157"
         },
         {
-          "rank": 53,
+          "rank": 52,
           "name": "Samu Alalauri",
           "firstName": null,
           "lastName": null,
@@ -4426,28 +4426,7 @@
           "playerId": "959462"
         },
         {
-          "rank": 67,
-          "name": "Vertti Svensk",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2007-11-09",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'1\"",
-            "metrics": 185
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 168,
-            "metrics": 76
-          },
-          "playerId": "872901"
-        },
-        {
-          "rank": 81,
+          "rank": 66,
           "name": "Matias Vanhanen",
           "firstName": null,
           "lastName": null,
@@ -4468,25 +4447,25 @@
           "playerId": "865769"
         },
         {
-          "rank": 100,
-          "name": "Noel Pakarinen",
+          "rank": 76,
+          "name": "Vertti Svensk",
           "firstName": null,
           "lastName": null,
           "position": null,
           "team": null,
           "league": null,
-          "birthDate": "2008-07-09",
+          "birthDate": "2007-11-09",
           "height": {
             "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 188
+            "imperial": "6'1\"",
+            "metrics": 185
           },
           "weight": {
             "__typename": "Weight",
-            "imperial": 198,
-            "metrics": 90
+            "imperial": 168,
+            "metrics": 76
           },
-          "playerId": "1003492"
+          "playerId": "872901"
         },
         {
           "rank": null,
@@ -4567,8 +4546,8 @@
           },
           "weight": {
             "__typename": "Weight",
-            "imperial": 220,
-            "metrics": 100
+            "imperial": 207,
+            "metrics": 94
           },
           "playerId": "924653"
         },
@@ -4802,6 +4781,27 @@
             "metrics": 80
           },
           "playerId": "907664"
+        },
+        {
+          "rank": null,
+          "name": "Noel Pakarinen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-07-09",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 188
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 198,
+            "metrics": 90
+          },
+          "playerId": "1003492"
         },
         {
           "rank": null,
