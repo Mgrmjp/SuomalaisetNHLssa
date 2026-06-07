@@ -7,7 +7,7 @@ import { displayDate } from '$lib/stores/gameData.js'
 /**
  * @type {{
  *   variant?: 'no-games' | 'no-scorers' | 'break',
- *   relatedGames?: Array<{ gameId: number|string, homeTeam: string, awayTeam: string, startTime?: string, finnish_players_count?: number }>,
+ *   relatedGames?: Array<{ gameId: number|string, homeTeam: string, awayTeam: string, startTime?: string, finnish_players_count?: number, finnishPlayers?: string[] }>,
  *   relatedGamesLabel?: string,
  *   newsItems?: Array<{ translatedTitle?: string, translatedSummary?: string, title?: string, summary?: string, source?: string, url?: string }>,
  *   lineupCount?: number
@@ -178,6 +178,13 @@ const emptyStateStats = $derived.by(() => {
                                         {game.finnish_players_count || 0}
                                     </span>
                                 </div>
+
+                                {#if Array.isArray(game.finnishPlayers) && game.finnishPlayers.length > 0}
+                                    <div class="finnish-players-line">
+                                        <span class="finnish-players-flag" aria-hidden="true">🇫🇮</span>
+                                        <span class="finnish-players-names">{game.finnishPlayers.join(', ')}</span>
+                                    </div>
+                                {/if}
                             </div>
                         {/each}
                     </div>
@@ -231,24 +238,21 @@ const emptyStateStats = $derived.by(() => {
 
 <style>
     .empty-state-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 2.5rem 0 3.5rem;
-        min-height: 340px;
+        display: block;
+        padding: 0;
+        min-height: 0;
     }
 
     .empty-state-card {
-        max-width: 760px;
+        max-width: var(--rail-max, 920px);
         width: 100%;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 20px;
-        padding: 3.5rem 2.5rem 2.75rem;
+        margin: 0 auto;
+        background: var(--card-bg, rgba(255, 255, 255, 0.9));
+        border-radius: var(--card-radius, 20px);
+        padding: 2.25rem var(--card-padding-x, 1.5rem) 1.75rem;
         text-align: center;
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        box-shadow:
-            0 24px 70px rgba(16, 24, 40, 0.08),
-            0 2px 6px rgba(16, 24, 40, 0.04);
+        border: var(--card-border, 1px solid rgba(16, 24, 40, 0.08));
+        box-shadow: var(--card-shadow, 0 24px 70px rgba(16, 24, 40, 0.08));
         backdrop-filter: blur(18px);
         position: relative;
         overflow: hidden;
@@ -261,7 +265,7 @@ const emptyStateStats = $derived.by(() => {
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8);
+        background: var(--card-accent, linear-gradient(90deg, #003580, #4f7dd8, #b9cdf0));
         border-radius: 20px 20px 0 0;
     }
 
@@ -273,18 +277,18 @@ const emptyStateStats = $derived.by(() => {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 4.75rem;
-        height: 4.75rem;
-        margin: 0 auto 1.4rem;
+        width: 3.75rem;
+        height: 3.75rem;
+        margin: 0 auto 1rem;
         border-radius: 9999px;
         color: #fff;
         box-shadow:
             0 1px 2px rgba(0, 0, 0, 0.04),
-            0 14px 34px rgba(0, 53, 128, 0.16);
+            0 12px 28px rgba(0, 53, 128, 0.18);
     }
 
     .empty-state-icon--premium {
-        background: linear-gradient(135deg, #003580 0%, #2f6ec8 100%);
+        background: linear-gradient(135deg, var(--accent, #003580) 0%, var(--accent-soft, #4f7dd8) 100%);
     }
 
     .empty-state-icon--break {
@@ -295,53 +299,54 @@ const emptyStateStats = $derived.by(() => {
     }
 
     .empty-state-icon svg {
-        width: 2.05rem;
-        height: 2.05rem;
+        width: 1.85rem;
+        height: 1.85rem;
     }
 
     .empty-state-title {
-        font-size: clamp(1.45rem, 3vw, 1.75rem);
+        font-size: clamp(1.25rem, 2.4vw, 1.5rem);
         font-weight: 800;
         letter-spacing: 0;
-        color: #0f172a;
-        margin-bottom: 0.65rem;
+        color: var(--color-ink, #101828);
+        margin-bottom: 0.5rem;
         line-height: 1.22;
+        font-family: var(--font-display, "Sora", "Inter", system-ui, sans-serif);
     }
 
     .empty-state-text {
         font-size: 0.95rem;
-        color: #475569;
+        color: var(--color-muted, #667085);
         line-height: 1.6;
-        max-width: 28.5rem;
+        max-width: 32rem;
         margin: 0 auto;
     }
 
     .empty-state-date {
         font-weight: 700;
-        color: #003580;
+        color: var(--accent, #003580);
         white-space: nowrap;
     }
 
     .empty-state-stats {
         display: flex;
         justify-content: center;
-        gap: 0.65rem;
+        gap: 0.5rem;
         flex-wrap: wrap;
-        max-width: 34rem;
-        margin: 1.35rem auto 0;
+        max-width: 36rem;
+        margin: 1.1rem auto 0;
     }
 
     .empty-state-stat {
-        min-width: 8.5rem;
-        padding: 0.75rem 0.95rem;
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        border-radius: 14px;
-        background: rgba(248, 250, 252, 0.82);
+        min-width: 9rem;
+        padding: 0.75rem 1rem;
+        border: 1px solid rgba(0, 53, 128, 0.08);
+        border-radius: var(--card-radius-sm, 14px);
+        background: rgba(248, 250, 255, 0.7);
     }
 
     .empty-state-stat strong {
         display: block;
-        color: #101828;
+        color: var(--color-ink, #101828);
         font-size: 1.2rem;
         line-height: 1;
         font-weight: 800;
@@ -350,62 +355,64 @@ const emptyStateStats = $derived.by(() => {
 
     .empty-state-stat span {
         display: block;
-        margin-top: 0.35rem;
-        color: #667085;
+        margin-top: 0.3rem;
+        color: var(--color-muted, #667085);
         font-size: 0.72rem;
         font-weight: 700;
         line-height: 1.25;
     }
 
-    /* Shared section styling */
     .empty-state-section {
-        margin-top: 1.8rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(16, 24, 40, 0.08);
+        margin-top: 1.5rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(16, 24, 40, 0.06);
         text-align: left;
     }
 
     .section-label {
-        font-size: 0.75rem;
-        font-weight: 600;
-        letter-spacing: 0.012em;
-        color: #64748b;
-        margin-bottom: 0.95rem;
+        font-size: var(--eyebrow-size, 0.72rem);
+        font-weight: var(--eyebrow-weight, 800);
+        letter-spacing: var(--eyebrow-track, 0.1em);
+        text-transform: uppercase;
+        color: var(--accent, #003580);
+        margin-bottom: 0.85rem;
         text-align: center;
     }
 
-    /* Related games – premium rows */
     .upcoming-games-list {
         display: flex;
         flex-direction: column;
-        gap: 0.45rem;
+        gap: 0.4rem;
     }
 
     .upcoming-game-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.9rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 14px;
-        background: #fdfdfe;
-        padding: 0.82rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem 0.9rem;
+        border: 1px solid rgba(0, 53, 128, 0.08);
+        border-radius: var(--card-radius-sm, 14px);
+        background: rgba(248, 250, 255, 0.5);
+        padding: 0.7rem 0.95rem;
         transition:
             box-shadow 0.15s ease,
             border-color 0.15s ease,
-            transform 0.12s ease;
+            transform 0.12s ease,
+            background 0.15s ease;
     }
 
     .upcoming-game-row:hover {
-        border-color: #c7d2fe;
-        box-shadow: 0 4px 18px -6px rgba(15, 23, 42, 0.12);
+        border-color: rgba(0, 53, 128, 0.2);
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 18px -6px rgba(0, 53, 128, 0.15);
         transform: translateY(-1px);
     }
 
     .team-pair {
         display: flex;
         align-items: center;
-        gap: 0.55rem;
+        gap: 0.5rem;
         min-width: 0;
         flex-wrap: wrap;
     }
@@ -413,10 +420,10 @@ const emptyStateStats = $derived.by(() => {
     .team-chip {
         display: inline-flex;
         align-items: center;
-        gap: 0.42rem;
-        font-size: 0.93rem;
+        gap: 0.4rem;
+        font-size: 0.92rem;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--color-ink, #101828);
         letter-spacing: 0;
     }
 
@@ -430,14 +437,14 @@ const emptyStateStats = $derived.by(() => {
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 0.35rem;
+        gap: 0.3rem;
         flex-shrink: 0;
     }
 
     .upcoming-game-time {
         font-size: 0.78rem;
         font-weight: 600;
-        color: #64748b;
+        color: var(--color-muted, #667085);
         white-space: nowrap;
         letter-spacing: 0.01em;
     }
@@ -445,15 +452,15 @@ const emptyStateStats = $derived.by(() => {
     .finn-count-badge {
         display: inline-flex;
         align-items: center;
-        gap: 0.28rem;
+        gap: 0.25rem;
         padding: 0.08rem 0.6rem;
         border-radius: 999px;
-        background: #f0f4ff;
-        border: 1px solid #dbeafe;
-        font-size: 0.725rem;
+        background: var(--accent-ice, #eef3fb);
+        border: 1px solid rgba(0, 53, 128, 0.12);
+        font-size: 0.72rem;
         font-weight: 700;
         letter-spacing: 0.02em;
-        color: #003580;
+        color: var(--accent, #003580);
         white-space: nowrap;
     }
 
@@ -462,47 +469,70 @@ const emptyStateStats = $derived.by(() => {
         line-height: 1;
     }
 
-    .upcoming-games-empty-note {
-        margin-top: 1.6rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid #eef2f7;
+    .finnish-players-line {
+        display: flex;
+        align-items: baseline;
+        gap: 0.4rem;
+        width: 100%;
+        padding-top: 0.45rem;
+        margin-top: 0.15rem;
+        border-top: 1px dashed rgba(0, 53, 128, 0.1);
+        font-size: 0.78rem;
+        line-height: 1.4;
+        color: var(--color-muted, #475467);
+    }
+
+    .finnish-players-flag {
         font-size: 0.85rem;
-        color: #64748b;
+        line-height: 1;
+    }
+
+    .finnish-players-names {
+        font-weight: 600;
+        color: var(--color-ink, #101828);
+        word-break: break-word;
+    }
+
+    .upcoming-games-empty-note {
+        margin-top: 1.4rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(16, 24, 40, 0.06);
+        font-size: 0.85rem;
+        color: var(--color-muted, #667085);
         line-height: 1.55;
-        max-width: 29rem;
+        max-width: 32rem;
         margin-left: auto;
         margin-right: auto;
     }
 
-    /* News */
     .daily-news-list {
         display: flex;
         flex-direction: column;
-        gap: 0.625rem;
+        gap: 0.5rem;
     }
 
     .daily-news-item {
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(0, 53, 128, 0.08);
         border-radius: 12px;
         background: #ffffff;
-        padding: 0.95rem 1.05rem;
+        padding: 0.85rem 1rem;
         transition: border-color 0.15s ease;
     }
 
     .daily-news-item:hover {
-        border-color: #cbd5e1;
+        border-color: rgba(0, 53, 128, 0.2);
     }
 
     .daily-news-title {
-        font-size: 0.9375rem;
+        font-size: 0.92rem;
         font-weight: 700;
-        color: #0f172a;
-        margin: 0 0 0.4rem;
+        color: var(--color-ink, #101828);
+        margin: 0 0 0.35rem;
         line-height: 1.4;
     }
 
     .daily-news-summary {
-        font-size: 0.8125rem;
+        font-size: 0.8rem;
         color: #475569;
         margin: 0;
         line-height: 1.55;
@@ -518,16 +548,16 @@ const emptyStateStats = $derived.by(() => {
         align-items: center;
         justify-content: space-between;
         gap: 0.5rem;
-        margin-top: 0.7rem;
+        margin-top: 0.6rem;
     }
 
     .daily-news-source {
-        font-size: 0.6875rem;
+        font-size: 0.68rem;
         font-weight: 600;
-        color: #64748b;
+        color: var(--color-muted, #667085);
         padding: 0.1rem 0.45rem;
         border-radius: 6px;
-        background: #f1f5f9;
+        background: var(--accent-ice, #eef3fb);
         max-width: 60%;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -538,17 +568,17 @@ const emptyStateStats = $derived.by(() => {
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
-        font-size: 0.8125rem;
+        font-size: 0.8rem;
         font-weight: 700;
-        color: #1d4ed8;
+        color: var(--accent, #003580);
         text-decoration: none;
         margin-left: auto;
         white-space: nowrap;
     }
 
     .daily-news-link svg {
-        width: 0.875rem;
-        height: 0.875rem;
+        width: 0.85rem;
+        height: 0.85rem;
     }
 
     .daily-news-link:hover {
@@ -556,23 +586,18 @@ const emptyStateStats = $derived.by(() => {
     }
 
     @media (max-width: 640px) {
-        .empty-state-wrapper {
-            padding: 1.75rem 0;
-            min-height: 240px;
-        }
-
         .empty-state-card {
-            padding: 2.4rem 1.25rem 2rem;
+            padding: 1.5rem 1.25rem 1.25rem;
         }
 
         .empty-state-icon {
-            width: 3.75rem;
-            height: 3.75rem;
+            width: 3.25rem;
+            height: 3.25rem;
         }
 
         .empty-state-icon svg {
-            width: 1.65rem;
-            height: 1.65rem;
+            width: 1.55rem;
+            height: 1.55rem;
         }
 
         .empty-state-text {
@@ -587,8 +612,8 @@ const emptyStateStats = $derived.by(() => {
         .upcoming-game-row {
             flex-direction: column;
             align-items: flex-start;
-            gap: 0.55rem;
-            padding: 0.78rem 0.95rem;
+            gap: 0.5rem;
+            padding: 0.7rem 0.85rem;
         }
 
         .upcoming-game-aside {

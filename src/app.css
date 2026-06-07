@@ -21,6 +21,99 @@ body {
     --border-slate-100-strong: #dbe4ee;
     --border-slate-200-strong: #cbd5e1;
     --border-slate-200-soft-strong: rgba(148, 163, 184, 0.45);
+
+    /* ===== Unified Dashboard Design Tokens ===== */
+
+    /* Single rail width for the main centered dashboard content */
+    --rail-max: 920px;
+
+    /* Single card system — controls, data, info all share this base */
+    --card-radius: 20px;
+    --card-radius-sm: 14px;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-border: 1px solid rgba(16, 24, 40, 0.07);
+    --card-shadow:
+        0 24px 70px rgba(16, 24, 40, 0.07), 0 2px 6px rgba(16, 24, 40, 0.03), inset 0 1px 0
+        rgba(255, 255, 255, 0.75);
+    --card-shadow-soft:
+        0 12px 32px rgba(16, 24, 40, 0.05), 0 2px 6px rgba(16, 24, 40, 0.03), inset 0 1px 0
+        rgba(255, 255, 255, 0.7);
+    --card-padding-x: 1.5rem;
+    --card-padding-y: 1.25rem;
+
+    /* Top accent stripe for every card — hockey identity, not noise */
+    --card-accent: linear-gradient(90deg, #003580 0%, #4f7dd8 50%, #b9cdf0 100%);
+
+    /* Vertical rhythm — 4px base, related/section steps */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-7: 2rem;
+    --space-8: 2.5rem;
+    --space-9: 3rem;
+    --space-10: 4rem;
+
+    /* Accent system — one blue language */
+    --accent: #003580;
+    --accent-strong: #002b66;
+    --accent-soft: #4f7dd8;
+    --accent-tint: #d8e3f8;
+    --accent-ice: #eef3fb;
+    --accent-ink: #0a244d;
+    --accent-glow: rgba(0, 53, 128, 0.18);
+
+    /* Eyebrow / section header */
+    --eyebrow-color: var(--accent);
+    --eyebrow-size: 0.72rem;
+    --eyebrow-weight: 800;
+    --eyebrow-track: 0.1em;
+}
+
+/* Subtle icy background for the dashboard — calm, sharp, premium */
+.dashboard-bg {
+    position: relative;
+    isolation: isolate;
+}
+
+.dashboard-bg::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(1100px 540px at 50% -180px, rgba(0, 53, 128, 0.13), transparent 70%),
+        radial-gradient(700px 480px at 12% 28%, rgba(79, 125, 216, 0.08), transparent 70%),
+        radial-gradient(700px 480px at 88% 60%, rgba(79, 125, 216, 0.06), transparent 70%),
+        linear-gradient(180deg, #f8faff 0%, #f3f6fc 48%, #eef2f8 100%);
+}
+
+/* Rink-line divider — thin double lines, calm hockey reference */
+.rink-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.rink-divider::before,
+.rink-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 53, 128, 0.32), transparent);
+}
+
+.rink-divider::after {
+    background: linear-gradient(90deg, transparent, rgba(0, 53, 128, 0.32), transparent);
 }
 
 html {

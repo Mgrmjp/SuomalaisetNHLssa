@@ -202,19 +202,31 @@ function getLogoSrc(ad) {
         top: 0;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.55);
-        color: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: var(--accent-ice, #eef3fb);
+        color: var(--accent, #003580);
+        border: 1px solid rgba(0, 53, 128, 0.18);
         border-radius: 999px;
-        padding: 4px 10px;
+        padding: 3px 10px 3px 8px;
         font-size: 10px;
-        font-weight: 700;
+        font-weight: 800;
         line-height: 1.2;
         text-transform: uppercase;
-        letter-spacing: 0.07em;
-        backdrop-filter: blur(6px);
+        letter-spacing: 0.1em;
+        box-shadow: 0 1px 2px rgba(0, 53, 128, 0.08);
         pointer-events: none;
         z-index: 1;
+    }
+
+    .ad-disclaimer::before {
+        content: '';
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: var(--accent, #003580);
+        box-shadow: 0 0 0 2px rgba(0, 53, 128, 0.12);
     }
 
     @media (max-width: 639px) {

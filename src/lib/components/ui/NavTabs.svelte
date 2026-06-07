@@ -75,40 +75,31 @@ const currentPath = $derived($page.url.pathname)
 <style>
     .nav-tabs-container {
         display: flex;
-        justify-content: flex-start;
-        margin-bottom: 2.25rem;
-        overflow-x: auto;
-        padding: 0.2rem 0.25rem 0.45rem;
-        scrollbar-width: none;
-    }
-
-    .nav-tabs-container::-webkit-scrollbar {
-        display: none;
+        justify-content: safe flex-start;
+        padding: 0 0 0.5rem;
     }
 
     .nav-tabs-list {
         display: inline-flex;
-        gap: 0.2rem;
-        padding: 0.38rem;
-        border: 1px solid rgba(16, 24, 40, 0.06);
+        gap: 0.15rem;
+        padding: 0.25rem;
+        border: 1px solid rgba(0, 53, 128, 0.08);
         border-radius: 999px;
-        background: #eef1f7;
-        box-shadow:
-            inset 0 1px 2px rgba(16, 24, 40, 0.04),
-            0 8px 26px rgba(16, 24, 40, 0.05);
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
     }
 
     .nav-tab-item {
         position: relative;
         display: inline-flex;
         align-items: center;
-        gap: 0.55rem;
-        min-height: 2.75rem;
-        padding: 0.55rem 1rem;
+        gap: 0.5rem;
+        min-height: 2.4rem;
+        padding: 0.5rem 0.9rem;
         border-radius: 999px;
         color: #475467;
-        font-size: 0.9rem;
-        font-weight: 750;
+        font-size: 0.88rem;
+        font-weight: 700;
         line-height: 1;
         text-decoration: none;
         white-space: nowrap;
@@ -120,8 +111,8 @@ const currentPath = $derived($page.url.pathname)
     }
 
     .nav-tab-item:hover {
-        color: #101828;
-        background: rgba(255, 255, 255, 0.62);
+        color: var(--accent-strong);
+        background: var(--accent-ice);
     }
 
     .nav-tab-item:focus-visible {
@@ -130,16 +121,16 @@ const currentPath = $derived($page.url.pathname)
     }
 
     .nav-tab-item--active {
-        background: #ffffff;
-        color: #003580;
+        background: var(--accent);
+        color: #ffffff;
         box-shadow:
-            0 8px 18px rgba(16, 24, 40, 0.1),
-            0 0 0 1px rgba(0, 53, 128, 0.08);
+            0 6px 14px rgba(0, 53, 128, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
 
     .nav-tab-icon {
-        width: 1.12rem;
-        height: 1.12rem;
+        width: 1.05rem;
+        height: 1.05rem;
         color: #98a2b3;
         transition:
             color 0.16s ease,
@@ -147,28 +138,28 @@ const currentPath = $derived($page.url.pathname)
     }
 
     .nav-tab-item:hover .nav-tab-icon {
-        color: #667085;
+        color: var(--accent);
     }
 
     .nav-tab-item--active .nav-tab-icon {
-        color: #003580;
+        color: #ffffff;
         transform: scale(1.04);
     }
 
     @media (min-width: 768px) {
         .nav-tabs-container {
-            justify-content: center;
+            justify-content: safe center;
         }
 
         .nav-tab-item {
-            padding-inline: 1.15rem;
+            padding-inline: 1rem;
         }
     }
 
     @media (max-width: 480px) {
         .nav-tab-item {
-            padding-inline: 0.85rem;
-            font-size: 0.84rem;
+            padding-inline: 0.75rem;
+            font-size: 0.82rem;
         }
     }
 </style>

@@ -238,14 +238,27 @@ const emptyStateVariant = $derived.by(() => {
     return 'no-scorers'
 })
 
+function attachFinnishPlayers(games, allPlayers) {
+    if (!Array.isArray(games) || !Array.isArray(allPlayers)) return games
+    return games.map((game) => {
+        const names = allPlayers
+            .filter((p) => p?.game_id === game?.gameId)
+            .map((p) => p?.name)
+            .filter(Boolean)
+        return { ...game, finnishPlayers: names }
+    })
+}
+
 const upcomingFinnishGames = $derived.by(() => {
     const sameDayGames = $games?.games?.length
-        ? [...$games.games]
-              .filter(
+        ? attachFinnishPlayers(
+              [...$games.games].filter(
                   (game) =>
                       Number(game?.finnish_players_count || 0) > 0 &&
                       ['FUT', 'PRE'].includes(game?.gameState)
-              )
+              ),
+              $players
+          )
               .sort(
                   (a, b) =>
                       new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
@@ -300,16 +313,17 @@ async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesV
             if (!response.ok) continue
 
             const data = await response.json()
-            const gamesWithFinns = (data?.games || [])
-                .filter(
+            const gamesWithFinns = attachFinnishPlayers(
+                (data?.games || []).filter(
                     (game) =>
                         Number(game?.finnish_players_count || 0) > 0 &&
                         ['FUT', 'PRE'].includes(game?.gameState)
-                )
-                .sort(
-                    (a, b) =>
-                        new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
-                )
+                ),
+                data?.players || []
+            ).sort(
+                (a, b) =>
+                    new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
+            )
 
             upcomingGames.push(...gamesWithFinns)
 
@@ -329,11 +343,20 @@ async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesV
         return
     }
 
+    const hasFutureSchedule = availableDatesValue.some((date) => date > selectedDateValue)
+    if (!hasFutureSchedule) {
+        relatedFinnishGames = []
+        relatedFinnishGamesLabel = ''
+        return
+    }
+
     const pastDates = [...availableDatesValue]
         .filter((date) => date < selectedDateValue)
         .sort((a, b) => b.localeCompare(a))
         .slice(0, 10)
     const recentGames = []
+    const recencyCutoff =
+        new Date(`${selectedDateValue}T00:00:00Z`).getTime() - 3 * 24 * 60 * 60 * 1000
 
     for (const date of pastDates) {
         try {
@@ -341,12 +364,17 @@ async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesV
             if (!response.ok) continue
 
             const data = await response.json()
-            const gamesWithFinns = (data?.games || [])
-                .filter((game) => Number(game?.finnish_players_count || 0) > 0)
-                .sort(
-                    (a, b) =>
-                        new Date(b.startTime || 0).getTime() - new Date(a.startTime || 0).getTime()
-                )
+            const gamesWithFinns = attachFinnishPlayers(
+                (data?.games || []).filter(
+                    (game) =>
+                        Number(game?.finnish_players_count || 0) > 0 &&
+                        new Date(game?.startTime || 0).getTime() >= recencyCutoff
+                ),
+                data?.players || []
+            ).sort(
+                (a, b) =>
+                    new Date(b.startTime || 0).getTime() - new Date(a.startTime || 0).getTime()
+            )
 
             recentGames.push(...gamesWithFinns)
 

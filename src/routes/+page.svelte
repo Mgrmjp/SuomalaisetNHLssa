@@ -24,7 +24,6 @@ import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 const { data } = $props()
 const playoffStats = $derived(data.playoffStats)
 
-// Reactive variables
 const _totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0)
 const _totalAssists = $derived($players?.reduce((sum, player) => sum + player.assists, 0) || 0)
 const _totalPoints = $derived($players?.reduce((sum, player) => sum + player.points, 0) || 0)
@@ -33,7 +32,6 @@ const _totalPenaltyMinutes = $derived(
 )
 const totalPlayers = $derived($players?.length || 0)
 
-// A goalie "counts" only if they actually played (mirrors PlayerList logic)
 function _goaliePlayed(player) {
     const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0)
     const saves = Number(player.saves ?? player.goalie_saves ?? 0)
@@ -47,9 +45,6 @@ function _goaliePlayed(player) {
     )
 }
 
-// True when at least one player will be rendered as a card (scoring skater or
-// a goalie who played). Keeps the hero stats in sync with the player list, so
-// we never show a row of all-zero cards stacked above the empty state.
 const _hasScoringPlayers = $derived(
     ($players || []).some((player) =>
         isGoalie(player) ? _goaliePlayed(player) : hasPoints(player)
@@ -106,7 +101,6 @@ const _metaDescription = $derived.by(() => {
     return `${selectedDateSummary?.summary || 'Päivän ottelut'}. ${playerText} ${SEO_KEYWORDS}.`
 })
 
-// Mobile hero stats toggle
 let _showHeroStats = $state(false)
 let _showPlayoffStats = $state(false)
 
@@ -123,11 +117,8 @@ function formatSavePct(value) {
     return value.toFixed(3).replace(/^0/, '')
 }
 
-// Use the same local-data snapshot that generated initial SEO metadata.
 onMount(() => {
-    // Avoid reloading if user already selected a date
     if ($selectedDate) return
-
     if (data.initialDate) {
         setDate(data.initialDate)
     }
@@ -144,12 +135,12 @@ onMount(() => {
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 </svelte:head>
 
-<div class="page-shell">
+<div class="page-shell dashboard-bg">
     <header class="hero-header">
         <div class="hero-header__inner">
             <button
                 onclick={resetToDefault}
-                class="logo-button focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded-xl transition-all duration-300"
+                class="logo-button"
                 aria-label="Palaa etusivulle ja nollaa valinnat"
             >
                 <img
@@ -171,474 +162,491 @@ onMount(() => {
         </div>
     </header>
 
-    <div class="space-y-8 main-content-wrapper">
-        <!-- Controls Section -->
-        <div>
+    <div class="dashboard">
+        <div class="dashboard__rail">
+            <!-- Controls (date picker) -->
             {#if $currentBreak}
-                <div class="break-card feature-card">
-                    <div class="flex flex-col items-center justify-center space-y-2">
-                        <span class="text-2xl" role="img" aria-label="Break">🏒</span>
-                        <h3 class="font-bold text-gray-800 text-lg">
-                            {$currentBreak.description}
-                        </h3>
-                        <p class="text-sm text-gray-600">
+                <section class="panel panel--break">
+                    <div class="panel__inner flex flex-col items-center justify-center text-center">
+                        <span class="break-emoji" role="img" aria-label="Break">🏒</span>
+                        <h3 class="break-title">{$currentBreak.description}</h3>
+                        <p class="break-meta">
                             NHL on tauolla ({formatFinnishDateWithRelative($currentBreak.startDate).formatted} - {formatFinnishDateWithRelative($currentBreak.endDate).formatted})
                         </p>
                     </div>
-                </div>
+                </section>
             {/if}
             <DateControls />
-        </div>
 
-        <!-- Mobile ad under date controls (hidden on desktop) -->
-        <MobileAd />
+            <!-- Mobile ad under date controls -->
+            <MobileAd />
 
-        <!-- Navigation -->
-        <NavTabs />
+            <!-- Navigation: now visually anchored to the dashboard shell -->
+            <nav class="dashboard__tabs" aria-label="Päänavigaatio">
+                <NavTabs />
+            </nav>
 
-        <!-- Ad Container (desktop banner, hidden on mobile) -->
-        <AdContainer />
+            <!-- Ad Container (desktop banner) -->
+            <AdContainer />
 
-        <!-- Playoff Stat Tracker -->
-        <section class="playoff-tracker feature-card mx-auto w-full">
-            <div class="flex items-center justify-between gap-3 px-3 py-2 sm:px-4">
-                <div class="min-w-0">
-                    <h2 class="truncate text-sm font-semibold text-slate-900">
-                        Pudotuspelien suomalaiset
-                    </h2>
-                    <p class="text-xs text-slate-500">NHL {playoffStats.season}</p>
-                </div>
-                <button
-                    type="button"
-                    class="shrink-0 text-xs font-medium text-slate-600 underline-offset-4 hover:text-slate-900 hover:underline"
-                    onclick={togglePlayoffStats}
-                    aria-expanded={_showPlayoffStats}
-                    aria-controls="playoff-stats-panel"
-                >
-                    {_showPlayoffStats ? 'Piilota' : 'Näytä'}
-                </button>
-            </div>
+            <!-- Hero Stats — the "answer" of the page -->
+            {#if $isLoading}
+                <section class="panel panel--hero" aria-busy="true">
+                    <div class="panel__inner">
+                        <div class="panel__eyebrow rink-divider">Päivän yhteistilastot</div>
+                        <div class="hero-stats-skeleton">
+                            {#each [1,2,3,4,5] as _}
+                                <div class="hero-stat-skel">
+                                    <div class="hero-stat-skel__icon"></div>
+                                    <div class="hero-stat-skel__value"></div>
+                                    <div class="hero-stat-skel__label"></div>
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                </section>
+            {:else if _hasScoringPlayers}
+                <section class="panel panel--hero" aria-labelledby="hero-stats-title">
+                    <div class="panel__inner">
+                        <div class="panel__eyebrow rink-divider">Päivän yhteistilastot</div>
+                        <h2 id="hero-stats-title" class="panel__hero-heading">
+                            {selectedDateSummary?.label || 'Valittu päivä'}
+                        </h2>
+                        <p class="panel__hero-sub">{selectedDateSummary?.summary || ''}</p>
 
-            {#if _showPlayoffStats}
-                <div id="playoff-stats-panel">
-                    {#if playoffStats.skaters.length > 0 || playoffStats.goalies.length > 0}
-                        <div class="divide-y divide-slate-100 border-t border-slate-100">
-                            {#if playoffStats.skaters.length > 0}
-                                {#each playoffStats.skaters as player, index}
-                                    <div class="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-center gap-2 px-3 py-2 sm:px-4">
-                                        <div class="text-xs tabular-nums text-slate-400">{index + 1}</div>
-                                        <div class="min-w-0">
-                                            <div class="flex items-center gap-1.5">
-                                                <TeamLogo team={player.team} size="24" />
-                                                <span class="truncate text-sm text-slate-900">
-                                                    {player.name}
-                                                </span>
-                                            </div>
-                                            <div class="mt-0.5 text-xs text-slate-500">
-                                                {player.gamesPlayed} ott. · {player.goals}+{player.assists}
-                                            </div>
-                                        </div>
-                                        <div class="text-right text-sm font-semibold tabular-nums text-slate-900">
-                                            {player.points} P
-                                        </div>
+                        <!-- Mobile toggle -->
+                        <button
+                            class="hero-stats-toggle md:hidden"
+                            onclick={toggleHeroStats}
+                            aria-label="Näytä tilastot"
+                            aria-expanded={_showHeroStats}
+                        >
+                            <span class="hero-stats-toggle-text">Päivän tilastot</span>
+                            <svg
+                                class="hero-stats-toggle-icon"
+                                class:rotated={_showHeroStats}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <div class="hero-stats-wrapper" class:expanded={_showHeroStats}>
+                            <div class="hero-stats">
+                                <div class="hero-stat">
+                                    <div class="hero-stat__icon-wrap">
+                                        <svg class="hero-stat__icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill="currentColor" d="M0 160c0-53 114.6-96 256-96s256 43 256 96s-114.6 96-256 96S0 213 0 160m0 82.2V352c0 53 114.6 96 256 96s256-43 256-96V242.2c-113.4 82.3-398.5 82.4-512 0" />
+                                        </svg>
                                     </div>
-                                {/each}
-                            {/if}
+                                    <div class="hero-stat__value">{_totalGoals}</div>
+                                    <div class="hero-stat__label" data-full="Maalit (Goals)">Maalit</div>
+                                </div>
+                                <div class="hero-stat">
+                                    <div class="hero-stat__icon-wrap">
+                                        <svg class="hero-stat__icon" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill="currentColor" d="m323.4 85.2l-96.8 78.4c-16.1 13-19.2 36.4-7 53.1c12.9 17.8 38 21.3 55.3 7.8l99.3-77.2c7-5.4 17-4.2 22.5 2.8s4.2 17-2.8 22.5L373 188.8L550.2 352H592c26.5 0 48-21.5 48-48V176c0-26.5-21.5-48-48-48h-80.7l-3.9-2.5L434.8 79c-15.3-9.8-33.2-15-51.4-15c-21.8 0-43 7.5-60 21.2m22.8 124.4l-51.7 40.2c-31.5 24.6-77.2 18.2-100.8-14.2c-22.2-30.5-16.6-73.1 12.7-96.8l83.2-67.3c-11.6-4.9-24.1-7.4-36.8-7.4C234 64 215.7 69.6 200 80l-72 48H48c-26.5 0-48 21.5-48 48v128c0 26.5 21.5 48 48 48h108.2l91.4 83.4c19.6 17.9 49.9 16.5 67.8-3.1c5.5-6.1 9.2-13.2 11.1-20.6l17 15.6c19.5 17.9 49.9 16.6 67.8-2.9c4.5-4.9 7.8-10.6 9.9-16.5c19.4 13 45.8 10.3 62.1-7.5c17.9-19.5 16.6-49.9-2.9-67.8z" />
+                                        </svg>
+                                    </div>
+                                    <div class="hero-stat__value">{_totalAssists}</div>
+                                    <div class="hero-stat__label" data-full="Syötöt (Assists)">Syötöt</div>
+                                </div>
+                                <div class="hero-stat hero-stat--primary">
+                                    <div class="hero-stat__icon-wrap">
+                                        <svg class="hero-stat__icon hero-stat__icon--lg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill="currentColor" d="M20 12a2 2 0 0 0-.703.133l-2.398-1.963c.059-.214.101-.436.101-.67C17 8.114 15.886 7 14.5 7S12 8.114 12 9.5c0 .396.1.765.262 1.097l-2.909 3.438A2.06 2.06 0 0 0 9 14c-.179 0-.348.03-.512.074l-2.563-2.563C5.97 11.348 6 11.179 6 11c0-1.108-.892-2-2-2s-2 .892-2 2s.892 2 2 2c.179 0 .348-.03.512-.074l2.563 2.563A1.906 1.906 0 0 0 7 16c0 1.108.892 2 2 2s2-.892 2-2c0-.237-.048-.46-.123-.671l2.913-3.442c.227.066.462.113.71.113a2.48 2.48 0 0 0 1.133-.281l2.399 1.963A2.077 2.077 0 0 0 18 14c0 1.108.892 2 2 2s2-.892 2-2s-.892-2-2-2" />
+                                        </svg>
+                                    </div>
+                                    <div class="hero-stat__value hero-stat__value--lg">{_totalPoints}</div>
+                                    <div class="hero-stat__label" data-full="Pisteet (Points)">Pisteet</div>
+                                </div>
+                                <div class="hero-stat">
+                                    <div class="hero-stat__icon-wrap">
+                                        <svg class="hero-stat__icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
+                                                <path d="M10 5a2 2 0 0 0-2 2v3h2.4A7.48 7.48 0 0 0 8 15.5a7.48 7.48 0 0 0 2.4 5.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1V7a4 4 0 1 1 8 0v1.15a7.446 7.446 0 0 0-1.943.685A.999.999 0 0 1 12 8.5V7a2 2 0 0 0-2-2" />
+                                                <path d="M10 15.5a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0m6.5-1.5a1 1 0 1 0-2 0v1.5a1 1 0 0 0 .293.707l1 1a1 1 0 0 0 1.414-1.414l-.707-.707z" />
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div class="hero-stat__value">{_totalPenaltyMinutes}</div>
+                                    <div class="hero-stat__label" data-full="Rangaistusmin (PIM)">Rangaistusmin</div>
+                                </div>
+                                <div class="hero-stat">
+                                    <div class="hero-stat__icon-wrap">
+                                        <svg class="hero-stat__icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill="currentColor" d="M5 6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2m7-2a2 2 0 1 0 2 2c0-1.11-.89-2-2-2m7-2c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2M3.5 11c-.83 0-1.5.67-1.5 1.5V17h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2C9.67 9 9 9.67 9 10.5V15h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2c-.83 0-1.5.67-1.5 1.5V13h1v5h4v-5h1V8.5c0-.83-.67-1.5-1.5-1.5z" />
+                                        </svg>
+                                    </div>
+                                    <div class="hero-stat__value">{totalPlayers}</div>
+                                    <div class="hero-stat__label" data-full="Pelaajaa kokoonpanossa">Kokoonpanossa</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {/if}
 
-                            {#if playoffStats.goalies.length > 0}
-                                {#each playoffStats.goalies as goalie}
-                                    <div class="grid grid-cols-[1.25rem_minmax(0,1fr)_auto] items-center gap-2 px-3 py-2 sm:px-4">
-                                        <div class="text-xs text-slate-400">MV</div>
-                                        <div class="flex min-w-0 items-center gap-1.5">
-                                            <TeamLogo team={goalie.team} size="24" />
-                                            <div class="min-w-0">
-                                                <div class="truncate text-sm text-slate-900">
-                                                    {goalie.name}
+            <!-- Player List -->
+            {#if !$currentBreak}
+                <PlayerList />
+            {/if}
+
+            <!-- Playoff tracker — same card language -->
+            <section class="panel panel--playoff">
+                <div class="panel__inner">
+                    <div class="panel__eyebrow rink-divider">Pudotuspelit</div>
+                    <div class="playoff-tracker__head">
+                        <div class="min-w-0">
+                            <h2 class="playoff-tracker__title">Pudotuspelien suomalaiset</h2>
+                            <p class="playoff-tracker__sub">NHL {playoffStats.season}</p>
+                        </div>
+                        <button
+                            type="button"
+                            class="playoff-tracker__toggle"
+                            onclick={togglePlayoffStats}
+                            aria-expanded={_showPlayoffStats}
+                            aria-controls="playoff-stats-panel"
+                        >
+                            {_showPlayoffStats ? 'Piilota' : 'Näytä'}
+                        </button>
+                    </div>
+
+                    {#if _showPlayoffStats}
+                        <div id="playoff-stats-panel" class="playoff-tracker__panel">
+                            {#if playoffStats.skaters.length > 0 || playoffStats.goalies.length > 0}
+                                <div class="playoff-tracker__list">
+                                    {#if playoffStats.skaters.length > 0}
+                                        {#each playoffStats.skaters as player, index}
+                                            <div class="playoff-row">
+                                                <div class="playoff-row__rank">{index + 1}</div>
+                                                <div class="playoff-row__player min-w-0">
+                                                    <div class="playoff-row__player-line">
+                                                        <TeamLogo team={player.team} size="24" />
+                                                        <span class="playoff-row__name">{player.name}</span>
+                                                    </div>
+                                                    <div class="playoff-row__meta">
+                                                        {player.gamesPlayed} ott. · {player.goals}+{player.assists}
+                                                    </div>
+                                                </div>
+                                                <div class="playoff-row__stat">{player.points} P</div>
+                                            </div>
+                                        {/each}
+                                    {/if}
+
+                                    {#if playoffStats.goalies.length > 0}
+                                        {#each playoffStats.goalies as goalie}
+                                            <div class="playoff-row">
+                                                <div class="playoff-row__rank">MV</div>
+                                                <div class="playoff-row__player min-w-0">
+                                                    <div class="playoff-row__player-line">
+                                                        <TeamLogo team={goalie.team} size="24" />
+                                                        <span class="playoff-row__name">{goalie.name}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="playoff-row__stat playoff-row__stat--muted">
+                                                    {goalie.wins} W · {formatSavePct(goalie.savePct)} SV%
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="text-right text-xs tabular-nums text-slate-600">
-                                            {goalie.wins} W · {formatSavePct(goalie.savePct)} SV%
-                                        </div>
-                                    </div>
-                                {/each}
+                                        {/each}
+                                    {/if}
+                                </div>
+                            {:else}
+                                <div class="playoff-tracker__empty">
+                                    Pudotuspelitilastot päivittyvät tähän, kun suomalaispelaajille kertyy pelejä.
+                                </div>
                             {/if}
-                        </div>
-                    {:else}
-                        <div class="border-t border-slate-100 px-3 py-2 text-sm text-slate-600 sm:px-4">
-                            Pudotuspelitilastot päivittyvät tähän, kun suomalaispelaajille kertyy pelejä.
                         </div>
                     {/if}
                 </div>
-            {/if}
-        </section>
+            </section>
 
-        <!-- Hero Stats -->
-        {#if $isLoading}
-            <div class="hero-stats-container py-6">
-                <div class="flex flex-wrap justify-center gap-8 hero-stats">
-                    {#each [1,2,3,4,5] as _}
-                        <div class="w-24 animate-pulse">
-                            <div class="flex justify-center mb-2">
-                                <div class="w-8 h-8 bg-gray-200 rounded-full"></div>
-                            </div>
-                            <div class="h-7 bg-gray-200 rounded mb-1"></div>
-                            <div class="h-4 bg-gray-200 rounded w-16 mx-auto"></div>
+            <!-- Info card — same card language as the rest -->
+            <section class="panel panel--info" aria-labelledby="data-source-title">
+                <div class="panel__inner panel__inner--info">
+                    <div class="info-grid">
+                        <div class="info-heading">
+                            <p class="info-card__eyebrow">Suomi NHL</p>
+                            <h2 id="data-source-title" class="info-card__title">Tietoa datasta</h2>
                         </div>
-                    {/each}
-                </div>
-            </div>
-        {:else if _hasScoringPlayers}
-            <div class="hero-stats-container">
-                <!-- Desktop header -->
-                <div class="text-center mb-4 hero-summary-header hidden md:block">
-                    <p class="text-sm text-gray-600 hero-summary-text">Valitun päivän yhteistilastot</p>
-                </div>
-
-                <!-- Mobile toggle button -->
-                <button
-                    class="hero-stats-toggle md:hidden"
-                    onclick={toggleHeroStats}
-                    aria-label="Näytä tilastot"
-                    aria-expanded={_showHeroStats}
-                >
-                    <span class="hero-stats-toggle-text">Valitun päivän yhteistilastot</span>
-                    <svg
-                        class="hero-stats-toggle-icon"
-                        class:rotated={_showHeroStats}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                </button>
-
-                <!-- Stats wrapper (hidden on mobile by default, always visible on desktop) -->
-                <div class="hero-stats-wrapper" class:expanded={_showHeroStats}>
-                    <div class="flex flex-wrap justify-center gap-8 hero-stats">
-                <div class="text-center hero-stat hero-stat--goals">
-                    <div class="flex justify-center mb-1 hero-stat__icon-wrap">
-                        <svg
-                            class="text-gray-600 hero-stat__icon hero-stat__icon--goals"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 512 512"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M0 160c0-53 114.6-96 256-96s256 43 256 96s-114.6 96-256 96S0 213 0 160m0 82.2V352c0 53 114.6 96 256 96s256-43 256-96V242.2c-113.4 82.3-398.5 82.4-512 0"
-                            />
-                        </svg>
-                    </div>
-                    <div class="text-xl font-bold text-gray-800">{_totalGoals}</div>
-                    <div class="text-xs text-gray-600 hero-stat__label" data-full="Maalit (Goals)">
-                        Maalit
+                        <div class="info-card__copy">
+                            <p>
+                                Sivusto kokoaa NHL:ssä pelaavien suomalaisten ottelukohtaiset tilastot yhteen näkymään: maalit, syötöt, pisteet, peliajan ja maalivahtien keskeiset luvut.
+                            </p>
+                            <p>
+                                Mukana ovat suomalaispelaajat läpi kauden, ja tiedot päivittyvät myös otteluiden aikana.
+                            </p>
+                            <p>
+                                Tilastot perustuvat NHL:n virallisiin lähteisiin.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <div class="text-center hero-stat hero-stat--assists">
-                    <div class="flex justify-center mb-1 hero-stat__icon-wrap">
-                        <svg
-                            class="text-gray-600 hero-stat__icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 640 512"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="m323.4 85.2l-96.8 78.4c-16.1 13-19.2 36.4-7 53.1c12.9 17.8 38 21.3 55.3 7.8l99.3-77.2c7-5.4 17-4.2 22.5 2.8s4.2 17-2.8 22.5L373 188.8L550.2 352H592c26.5 0 48-21.5 48-48V176c0-26.5-21.5-48-48-48h-80.7l-3.9-2.5L434.8 79c-15.3-9.8-33.2-15-51.4-15c-21.8 0-43 7.5-60 21.2m22.8 124.4l-51.7 40.2c-31.5 24.6-77.2 18.2-100.8-14.2c-22.2-30.5-16.6-73.1 12.7-96.8l83.2-67.3c-11.6-4.9-24.1-7.4-36.8-7.4C234 64 215.7 69.6 200 80l-72 48H48c-26.5 0-48 21.5-48 48v128c0 26.5 21.5 48 48 48h108.2l91.4 83.4c19.6 17.9 49.9 16.5 67.8-3.1c5.5-6.1 9.2-13.2 11.1-20.6l17 15.6c19.5 17.9 49.9 16.6 67.8-2.9c4.5-4.9 7.8-10.6 9.9-16.5c19.4 13 45.8 10.3 62.1-7.5c17.9-19.5 16.6-49.9-2.9-67.8z"
-                            />
-                        </svg>
-                    </div>
-                    <div class="text-xl font-bold text-gray-800">{_totalAssists}</div>
-                    <div
-                        class="text-xs text-gray-600 hero-stat__label"
-                        data-full="Syötöt (Assists)"
-                    >
-                        Syötöt
-                    </div>
-                </div>
-                <div class="text-center hero-stat hero-stat--points">
-                    <div class="flex justify-center mb-1 hero-stat__icon-wrap">
-                        <svg
-                            class="text-gray-600 hero-stat__icon hero-stat__icon--points"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M20 12a2 2 0 0 0-.703.133l-2.398-1.963c.059-.214.101-.436.101-.67C17 8.114 15.886 7 14.5 7S12 8.114 12 9.5c0 .396.1.765.262 1.097l-2.909 3.438A2.06 2.06 0 0 0 9 14c-.179 0-.348.03-.512.074l-2.563-2.563C5.97 11.348 6 11.179 6 11c0-1.108-.892-2-2-2s-2 .892-2 2s.892 2 2 2c.179 0 .348-.03.512-.074l2.563 2.563A1.906 1.906 0 0 0 7 16c0 1.108.892 2 2 2s2-.892 2-2c0-.237-.048-.46-.123-.671l2.913-3.442c.227.066.462.113.71.113a2.48 2.48 0 0 0 1.133-.281l2.399 1.963A2.077 2.077 0 0 0 18 14c0 1.108.892 2 2 2s2-.892 2-2s-.892-2-2-2"
-                            />
-                        </svg>
-                    </div>
-                    <div class="text-xl font-bold text-gray-900">{_totalPoints}</div>
-                    <div
-                        class="text-xs text-gray-600 hero-stat__label"
-                        data-full="Pisteet (Points)"
-                    >
-                        Pisteet
-                    </div>
-                </div>
-                <div class="text-center hero-stat hero-stat--pims">
-                    <div class="flex justify-center mb-1 hero-stat__icon-wrap">
-                        <svg
-                            class="text-gray-600 hero-stat__icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                        >
-                            <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
-                                <path
-                                    d="M10 5a2 2 0 0 0-2 2v3h2.4A7.48 7.48 0 0 0 8 15.5a7.48 7.48 0 0 0 2.4 5.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1V7a4 4 0 1 1 8 0v1.15a7.446 7.446 0 0 0-1.943.685A.999.999 0 0 1 12 8.5V7a2 2 0 0 0-2-2"
-                                />
-                                <path
-                                    d="M10 15.5a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0m6.5-1.5a1 1 0 1 0-2 0v1.5a1 1 0 0 0 .293.707l1 1a1 1 0 0 0 1.414-1.414l-.707-.707z"
-                                />
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="text-xl font-bold text-gray-700">{_totalPenaltyMinutes}</div>
-                    <div
-                        class="text-xs text-gray-600 hero-stat__label"
-                        data-full="Rangaistusmin (PIM)"
-                    >
-                        Rangaistusmin
-                    </div>
-                </div>
-                <div class="text-center hero-stat hero-stat--onboard">
-                    <div class="flex justify-center mb-1 hero-stat__icon-wrap">
-                        <svg
-                            class="text-gray-600 hero-stat__icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M5 6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2m7-2a2 2 0 1 0 2 2c0-1.11-.89-2-2-2m7-2c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2M3.5 11c-.83 0-1.5.67-1.5 1.5V17h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2C9.67 9 9 9.67 9 10.5V15h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2c-.83 0-1.5.67-1.5 1.5V13h1v5h4v-5h1V8.5c0-.83-.67-1.5-1.5-1.5z"
-                            />
-                        </svg>
-                    </div>
-                    <div class="text-xl font-bold text-gray-800">{totalPlayers}</div>
-                    <div
-                        class="text-xs text-gray-600 hero-stat__label"
-                        data-full="Pelaajaa kokoonpanossa (Players in lineup)"
-                    >
-                        Kokoonpanossa
-                    </div>
-                </div>
-            </div>
-                </div>
-            </div>
-        {/if}
-
-        <!-- Player List (Default View) -->
-        {#if !$currentBreak}
-            <PlayerList />
-        {/if}
-
-        <!-- SEO Content Section -->
-        <section class="info-card feature-card" aria-labelledby="data-source-title">
-            <div class="info-card__heading">
-                <p class="info-card__eyebrow">Suomi NHL</p>
-                <h2 id="data-source-title">
-                    Tietoa datasta
-                </h2>
-            </div>
-            <div class="info-card__copy">
-                <p>
-                    Sivusto kokoaa NHL:ssä pelaavien suomalaisten ottelukohtaiset tilastot yhteen näkymään: maalit, syötöt, pisteet, peliajan ja maalivahtien keskeiset luvut.
-                </p>
-                <p>
-                    Mukana ovat suomalaispelaajat läpi kauden, ja tiedot päivittyvät myös otteluiden aikana.
-                </p>
-                <p>
-                    Tilastot perustuvat NHL:n virallisiin lähteisiin.
-                </p>
-            </div>
-        </section>
+            </section>
+        </div>
     </div>
 
-    <!-- Footer link -->
-    <footer class="text-center py-4 text-sm text-gray-500">
-        <a href={base + "/tietoa"} class="hover:text-gray-700 transition-colors"
-            >Tietoa sivustosta</a
-        >
+    <footer class="page-footer">
+        <a href={base + "/tietoa"} class="page-footer__link">Tietoa sivustosta</a>
     </footer>
 </div>
 
 <style>
+    /* ============================================
+       Dashboard shell — single centered product
+       ============================================ */
     .page-shell {
         position: relative;
         z-index: 1;
         width: 100%;
-        max-width: 1120px;
+        max-width: var(--rail-max);
         margin: 0 auto;
-        padding: 3rem 1.5rem 5rem;
+        padding: 2.5rem 1.25rem 4rem;
     }
 
+    .dashboard {
+        display: block;
+    }
+
+    .dashboard__rail {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    /* ============================================
+       Hero header
+       ============================================ */
     .hero-header {
-        margin: 0 auto 2.5rem;
+        margin: 0 auto 2rem;
         text-align: center;
     }
 
     .hero-header__inner {
         max-width: 820px;
         margin: 0 auto;
-        padding: 0.75rem 0 0.25rem;
+        padding: 0.5rem 0 0;
     }
 
     .hero-title {
         max-width: 780px;
-        margin: 0.9rem auto 0;
-        color: #101828;
-        font-size: clamp(2.4rem, 5.8vw, 4.4rem);
-        line-height: 0.98;
+        margin: 0.75rem auto 0;
+        color: var(--color-ink);
+        font-size: clamp(2.2rem, 5.2vw, 3.8rem);
+        line-height: 1;
         font-weight: 800;
-        letter-spacing: 0;
+        letter-spacing: -0.01em;
     }
 
     .hero-subtitle {
-        margin: 1.05rem auto 0;
+        margin: 0.9rem auto 0;
         max-width: 34rem;
-        color: #667085;
-        font-size: clamp(1rem, 2vw, 1.12rem);
+        color: var(--color-muted);
+        font-size: clamp(0.98rem, 1.8vw, 1.08rem);
         line-height: 1.6;
     }
 
     .hero-scroll-to-results {
         margin-top: 1rem;
         border-radius: 999px;
-        background: #003580;
+        background: var(--accent);
         color: #fff;
-        padding: 0.72rem 1.25rem;
+        padding: 0.7rem 1.25rem;
         font-weight: 700;
-        box-shadow: 0 10px 22px rgba(0, 53, 128, 0.18);
-        transition:
-            background 0.15s ease,
-            transform 0.15s ease,
-            box-shadow 0.15s ease;
+        box-shadow: 0 10px 22px var(--accent-glow);
+        transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
     }
 
     .hero-scroll-to-results:hover {
-        background: #002b66;
+        background: var(--accent-strong);
         transform: translateY(-1px);
-        box-shadow: 0 14px 28px rgba(0, 53, 128, 0.22);
     }
 
-    .main-content-wrapper {
-        display: grid;
-        gap: 2rem;
+    .logo-button {
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
     }
 
-    .feature-card {
+    .logo-img {
+        width: 4rem;
+        height: 4rem;
+        margin: 0 auto;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 8px 14px rgba(16, 24, 40, 0.1));
+    }
+
+    .logo-button:hover .logo-img {
+        transform: scale(1.05) rotate(-2deg);
+    }
+
+    /* ============================================
+       Card — one base, four uses (controls, hero,
+       playoff, info). All share radius, top accent,
+       border, shadow, padding scale.
+       ============================================ */
+    .panel {
         position: relative;
         overflow: hidden;
-        background: var(--color-panel, rgba(255, 255, 255, 0.88));
-        border: 1px solid var(--color-panel-border, rgba(16, 24, 40, 0.08));
-        border-radius: 20px;
-        box-shadow: var(--shadow-panel, 0 16px 44px rgba(16, 24, 40, 0.08));
+        background: var(--card-bg);
+        border: var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
         backdrop-filter: blur(18px);
+        max-width: var(--rail-max);
+        margin: 0 auto;
+        width: 100%;
     }
 
-    .feature-card::before {
+    .panel::before {
         content: "";
         position: absolute;
         inset: 0 0 auto;
         height: 3px;
-        background: linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8);
+        background: var(--card-accent);
+        opacity: 0.95;
     }
 
-    .break-card {
-        width: 100%;
-        max-width: 920px;
-        margin: 0 auto 1.5rem;
-        padding: 1.2rem 1.5rem;
+    .panel__inner {
+        padding: var(--card-padding-y) var(--card-padding-x);
+    }
+
+    .panel__eyebrow {
+        margin-bottom: 0.75rem;
+    }
+
+    /* Hero card — the page's "answer" */
+    .panel--hero {
+        box-shadow:
+            0 32px 80px rgba(0, 53, 128, 0.1),
+            0 4px 12px rgba(16, 24, 40, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        background:
+            linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.86));
+    }
+
+    .panel--hero::before {
+        height: 4px;
+    }
+
+    .panel__hero-heading {
+        margin: 0 0 0.25rem;
+        color: var(--color-ink);
+        font-size: clamp(1.4rem, 2.6vw, 1.75rem);
+        line-height: 1.2;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+    }
+
+    .panel__hero-sub {
+        margin: 0 0 1.25rem;
+        color: var(--color-muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* Break card — same family, just compact */
+    .panel--break {
         text-align: center;
     }
 
-    .playoff-tracker {
-        max-width: 920px;
-        color: #101828;
+    .break-emoji {
+        font-size: 1.75rem;
+        line-height: 1;
     }
 
-    .playoff-tracker > div:first-child {
-        padding: 0.95rem 1.1rem;
-    }
-
-    .info-card {
-        display: grid;
-        grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
-        gap: 2rem;
-        max-width: 920px;
-        margin: 3.75rem auto 0;
-        padding: 2rem;
-    }
-
-    .info-card__heading {
-        min-width: 0;
-    }
-
-    .info-card__eyebrow {
-        margin: 0 0 0.45rem;
-        color: #003580;
-        font-size: 0.78rem;
+    .break-title {
+        margin: 0.5rem 0 0.25rem;
+        color: var(--color-ink);
+        font-size: 1.1rem;
         font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
     }
 
-    .info-card h2 {
+    .break-meta {
         margin: 0;
-        color: #101828;
-        font-size: clamp(1.35rem, 2.4vw, 1.7rem);
-        line-height: 1.2;
-        font-weight: 800;
-        letter-spacing: 0;
+        color: var(--color-muted);
+        font-size: 0.9rem;
     }
 
-    .info-card__copy {
+    /* ============================================
+       Hero stats — the central "answer"
+       ============================================ */
+    .hero-stats-wrapper {
+        margin-top: 0.5rem;
+    }
+
+    .hero-stats {
         display: grid;
-        gap: 0.9rem;
-        color: #475467;
-        line-height: 1.7;
-    }
-
-    .info-card__copy p {
-        margin: 0;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.5rem;
+        align-items: stretch;
     }
 
     .hero-stat {
         position: relative;
-        min-width: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        padding: 1rem 0.5rem;
+        border-radius: var(--card-radius-sm);
+        background: rgba(248, 250, 255, 0.6);
+        border: 1px solid rgba(0, 53, 128, 0.06);
+        min-height: 96px;
     }
 
-    .hero-stats {
-        row-gap: 1rem;
+    .hero-stat--primary {
+        background: linear-gradient(180deg, var(--accent-ice), #ffffff);
+        border-color: rgba(0, 53, 128, 0.16);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .hero-stat__icon-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 1.75rem;
     }
 
     .hero-stat__icon {
         width: 1.5rem;
         height: 1.5rem;
+        color: var(--accent-soft);
     }
 
-    .hero-stat__icon-wrap {
-        min-height: 1.75rem;
-        align-items: center;
+    .hero-stat--primary .hero-stat__icon {
+        color: var(--accent);
     }
 
-    .hero-stat__icon--goals {
-        width: 1.25rem;
-        height: 1.25rem;
+    .hero-stat__icon--lg {
+        width: 1.85rem;
+        height: 1.85rem;
     }
 
-    .hero-stat__icon--points {
-        width: 1.75rem;
-        height: 1.75rem;
+    .hero-stat__value {
+        color: var(--color-ink);
+        font-size: 1.4rem;
+        font-weight: 800;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .hero-stat__value--lg {
+        font-size: 2rem;
+        color: var(--accent);
     }
 
     .hero-stat__label {
-        max-width: 80px;
-        margin: 0.25rem auto 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        color: var(--color-muted);
+        font-size: 0.78rem;
+        font-weight: 600;
+        line-height: 1.1;
+        text-align: center;
     }
 
     .hero-stat__label::after {
@@ -658,7 +666,6 @@ onMount(() => {
         pointer-events: none;
         transition: opacity 0.12s ease;
         z-index: 10;
-        transition-delay: 0s;
     }
 
     .hero-stat:hover .hero-stat__label::after {
@@ -666,147 +673,317 @@ onMount(() => {
         transition-delay: 0.25s;
     }
 
-    .logo-button {
-        background: transparent;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        display: block;
-        margin: 0 auto;
+    .hero-stats-skeleton {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.5rem;
+        margin-top: 0.5rem;
     }
 
-    .logo-button:hover .logo-img {
-        transform: scale(1.05) rotate(-2deg);
-        /* Removed expensive filter transition to improve performance */
+    .hero-stat-skel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 0.5rem;
+        min-height: 96px;
+        border-radius: var(--card-radius-sm);
+        background: rgba(248, 250, 255, 0.6);
     }
 
-    .logo-img {
-        width: 4.5rem;
-        height: 4.5rem;
-        margin: 0 auto;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        filter: drop-shadow(0 10px 16px rgba(16, 24, 40, 0.12));
+    .hero-stat-skel__icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        background: rgba(0, 53, 128, 0.08);
     }
 
-    /* Hero Stats Mobile Toggle */
-    .hero-stats-container {
-        max-width: 920px;
-        margin: 0 auto 0.5rem;
+    .hero-stat-skel__value {
+        width: 3rem;
+        height: 1.4rem;
+        border-radius: 6px;
+        background: rgba(0, 53, 128, 0.08);
     }
 
+    .hero-stat-skel__label {
+        width: 4rem;
+        height: 0.7rem;
+        border-radius: 4px;
+        background: rgba(0, 53, 128, 0.06);
+    }
+
+    .hero-stat-skel__icon,
+    .hero-stat-skel__value,
+    .hero-stat-skel__label {
+        animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 0.55; }
+        50% { opacity: 1; }
+    }
+
+    /* Mobile toggle (compact) */
     .hero-stats-toggle {
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.75rem 1rem;
-        margin-bottom: 0.5rem;
-        background: rgba(255, 255, 255, 0.88);
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        border-radius: 1rem;
-        box-shadow: 0 8px 24px rgba(16, 24, 40, 0.07);
+        padding: 0.6rem 0.85rem;
+        margin-top: 0.25rem;
+        background: var(--card-bg);
+        border: var(--card-border);
+        border-radius: var(--card-radius-sm);
+        color: var(--color-ink);
         cursor: pointer;
-        transition: box-shadow 0.2s ease;
-    }
-
-    .hero-stats-toggle:hover {
-        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
-    }
-
-    .hero-stats-toggle-text {
-        font-size: 0.875rem;
+        font-size: 0.9rem;
         font-weight: 700;
-        color: #344054;
     }
 
     .hero-stats-toggle-icon {
-        width: 1.25rem;
-        height: 1.25rem;
+        width: 1.1rem;
+        height: 1.1rem;
         transition: transform 0.2s ease;
-        flex-shrink: 0;
     }
 
     .hero-stats-toggle-icon.rotated {
         transform: rotate(180deg);
     }
 
-    /* Mobile: hidden by default, shown when expanded */
-    .hero-stats-wrapper {
-        display: none;
-    }
-
     .hero-stats-wrapper.expanded {
-        display: block;
-        animation: slide-down 0.2s ease-out;
-        padding: 1rem;
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        border-radius: 18px;
-        background: rgba(255, 255, 255, 0.86);
-        box-shadow: 0 16px 40px rgba(16, 24, 40, 0.07);
+        margin-top: 0.5rem;
     }
 
-    @keyframes slide-down {
-        from {
-            opacity: 0;
-            transform: translateY(-0.5rem);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* ============================================
+       Dashboard tabs — anchored to the rail
+       ============================================ */
+    .dashboard__tabs {
+        display: flex;
+        justify-content: flex-start;
+        max-width: var(--rail-max);
+        margin: 0 auto;
+        padding: 0.5rem 0 0.75rem;
     }
 
-    /* Desktop: always show hero stats without toggle */
-    @media (min-width: 768px) {
-        .hero-stats-container {
-            margin-bottom: 0;
-        }
-
-        .hero-stats-wrapper {
-            display: block;
-            padding: 1rem 1.25rem;
-            border: 1px solid rgba(16, 24, 40, 0.08);
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.86);
-            box-shadow:
-                0 16px 40px rgba(16, 24, 40, 0.07),
-                inset 0 1px 0 rgba(255, 255, 255, 0.75);
-        }
-
-        .hero-stats-wrapper.expanded {
-            padding: 1rem 1.25rem;
-        }
-
-        .hero-stats-toggle {
-            display: none;
-        }
+    /* ============================================
+       Playoff tracker — same card language
+       ============================================ */
+    .playoff-tracker__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
     }
 
+    .playoff-tracker__title {
+        margin: 0;
+        color: var(--color-ink);
+        font-size: 1.05rem;
+        font-weight: 800;
+        line-height: 1.25;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .playoff-tracker__sub {
+        margin: 0.15rem 0 0;
+        color: var(--color-muted);
+        font-size: 0.82rem;
+    }
+
+    .playoff-tracker__toggle {
+        flex-shrink: 0;
+        color: var(--accent);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-decoration: none;
+        background: transparent;
+        border: 1px solid rgba(0, 53, 128, 0.16);
+        border-radius: 999px;
+        padding: 0.35rem 0.75rem;
+        cursor: pointer;
+        transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .playoff-tracker__toggle:hover {
+        background: var(--accent-ice);
+        color: var(--accent-strong);
+    }
+
+    .playoff-tracker__panel {
+        margin-top: 0.85rem;
+        border-top: 1px solid rgba(16, 24, 40, 0.06);
+        padding-top: 0.5rem;
+    }
+
+    .playoff-tracker__list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .playoff-row {
+        display: grid;
+        grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 0.25rem;
+        border-bottom: 1px solid rgba(16, 24, 40, 0.05);
+    }
+
+    .playoff-row:last-child {
+        border-bottom: none;
+    }
+
+    .playoff-row__rank {
+        color: var(--color-muted);
+        font-size: 0.78rem;
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+    }
+
+    .playoff-row__player-line {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        min-width: 0;
+    }
+
+    .playoff-row__name {
+        color: var(--color-ink);
+        font-size: 0.92rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .playoff-row__meta {
+        margin-top: 0.15rem;
+        color: var(--color-muted);
+        font-size: 0.78rem;
+    }
+
+    .playoff-row__stat {
+        color: var(--color-ink);
+        font-size: 0.95rem;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .playoff-row__stat--muted {
+        color: var(--color-muted);
+        font-weight: 700;
+        font-size: 0.82rem;
+    }
+
+    .playoff-tracker__empty {
+        margin-top: 0.5rem;
+        color: var(--color-muted);
+        font-size: 0.9rem;
+    }
+
+    /* ============================================
+       Info card — same card language
+       ============================================ */
+    .panel--info::before {
+        background: linear-gradient(90deg, #003580 0%, #4f7dd8 60%, #b9cdf0 100%);
+    }
+
+    .panel__inner--info {
+        padding: 1.5rem 1.5rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+        gap: 1.5rem;
+    }
+
+    .info-card__eyebrow {
+        margin: 0 0 0.4rem;
+        color: var(--accent);
+        font-size: var(--eyebrow-size);
+        font-weight: var(--eyebrow-weight);
+        letter-spacing: var(--eyebrow-track);
+        text-transform: uppercase;
+    }
+
+    .info-card__title {
+        margin: 0;
+        color: var(--color-ink);
+        font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+        line-height: 1.2;
+        font-weight: 800;
+    }
+
+    .info-card__copy {
+        display: grid;
+        gap: 0.6rem;
+        color: #475467;
+        font-size: 0.95rem;
+        line-height: 1.65;
+    }
+
+    .info-card__copy p {
+        margin: 0;
+    }
+
+    /* ============================================
+       Footer
+       ============================================ */
+    .page-footer {
+        margin-top: 2.5rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--color-muted);
+    }
+
+    .page-footer__link {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.15s ease;
+    }
+
+    .page-footer__link:hover {
+        color: var(--accent);
+    }
+
+    /* ============================================
+       Mobile / narrow
+       ============================================ */
     @media (max-width: 767px) {
         .page-shell {
-            padding: 2rem 1rem 4rem;
+            padding: 1.5rem 1rem 3rem;
         }
 
         .hero-header {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .hero-title {
-            font-size: clamp(2.25rem, 12vw, 3.6rem);
+            font-size: clamp(2.1rem, 11vw, 3.4rem);
         }
 
-        .main-content-wrapper {
-            gap: 1.5rem;
+        .dashboard__rail {
+            gap: 1.1rem;
         }
 
-        .info-card {
+        .hero-stats,
+        .hero-stats-skeleton {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .hero-stats-wrapper {
+            display: none;
+        }
+
+        .hero-stats-wrapper.expanded {
             display: block;
-            padding: 1.5rem;
-            margin-top: 2.5rem;
         }
 
-        .info-card__copy {
-            margin-top: 1rem;
+        .info-grid {
+            grid-template-columns: 1fr;
+            gap: 0.85rem;
         }
     }
 </style>

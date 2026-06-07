@@ -94,42 +94,49 @@ onDestroy(() => {
     }
 
     /* Hide on tablet */
-    @media (max-width: 1399px) {
+    @media (max-width: 1535px) {
         .vertical-ad-container-left {
             display: none !important;
         }
     }
 
-    @media (min-width: 1400px) {
+    @media (min-width: 1536px) {
         .vertical-ad-container-left {
             display: block;
             position: fixed;
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            width: 160px;
-            height: 600px;
+            width: 110px;
             max-height: 100vh;
             max-height: 100dvh;
             overflow: visible;
         }
 
         .ad-wrapper {
-            width: 160px;
-            height: 600px;
+            width: 110px;
+            height: 400px;
+            max-height: 400px;
         }
 
         .ad-link {
             position: absolute;
-            width: 160px;
-            height: 600px;
+            width: 110px;
+            max-height: 400px;
         }
     }
 
     .ad-wrapper {
         position: relative;
-        width: 160px;
-        height: 600px;
+        width: 110px;
+        height: 400px;
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 53, 128, 0.12);
+        box-shadow:
+            0 8px 22px rgba(0, 53, 128, 0.1),
+            0 1px 4px rgba(16, 24, 40, 0.04);
+        overflow: hidden;
     }
 
     .ad-link {
@@ -143,7 +150,7 @@ onDestroy(() => {
         justify-content: center;
         border: none;
         opacity: 0;
-        transition: opacity 1s ease-in-out;
+        transition: opacity 0.8s ease-in-out;
         pointer-events: none;
     }
 
@@ -152,13 +159,11 @@ onDestroy(() => {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 160px;
-        height: 600px;
+        width: 100%;
+        height: 100%;
         line-height: 0;
-        border-radius: 12px;
-        box-shadow:
-            0 0 0 4px rgba(15, 23, 42, 0.16),
-            0 14px 32px rgba(15, 23, 42, 0.18);
+        border-radius: 0;
+        box-shadow: none;
         isolation: isolate;
     }
 
@@ -171,33 +176,13 @@ onDestroy(() => {
         opacity: 0;
     }
 
-    .ad-content-wrapper::before {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: inherit;
-        background: linear-gradient(
-            110deg,
-            rgba(255, 255, 255, 0) 0%,
-            rgba(255, 255, 255, 0) 42%,
-            rgba(255, 255, 255, 0.38) 50%,
-            rgba(255, 255, 255, 0) 58%,
-            rgba(255, 255, 255, 0) 100%
-        );
-        background-size: 250% 100%;
-        animation: border-shimmer 7s ease-in-out infinite;
-        opacity: 0.8;
-        pointer-events: none;
-        z-index: 0;
-    }
-
     .ad-img {
-        width: 160px;
-        height: 600px;
-        object-fit: cover;
-        border: 1px solid rgba(15, 23, 42, 0.85);
+        width: 110px;
+        height: 400px;
+        object-fit: contain;
+        border: none;
         box-shadow: none;
-        border-radius: 10px;
+        border-radius: 0;
         display: block;
         position: relative;
         z-index: 1;
@@ -205,33 +190,39 @@ onDestroy(() => {
 
     .ad-disclaimer {
         position: absolute;
-        top: 0;
+        top: 6px;
         left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.55);
-        color: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        transform: translateX(-50%);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: var(--accent-ice, #eef3fb);
+        color: var(--accent, #003580);
+        border: 1px solid rgba(0, 53, 128, 0.18);
         border-radius: 999px;
-        padding: 4px 10px;
-        font-size: 10px;
-        font-weight: 700;
+        padding: 2px 7px 2px 5px;
+        font-size: 8px;
+        font-weight: 800;
         line-height: 1.2;
         text-transform: uppercase;
-        letter-spacing: 0.07em;
-        backdrop-filter: blur(6px);
+        letter-spacing: 0.1em;
+        box-shadow: 0 1px 2px rgba(0, 53, 128, 0.08);
         pointer-events: none;
         z-index: 1;
+    }
+
+    .ad-disclaimer::before {
+        content: '';
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--accent, #003580);
+        box-shadow: 0 0 0 2px rgba(0, 53, 128, 0.12);
     }
 
     @media (prefers-reduced-motion: reduce) {
         .ad-link {
             transition: none;
         }
-    }
-
-    @keyframes border-shimmer {
-        0%, 72%, 100% { background-position: 140% 50%; opacity: 0; }
-        78% { background-position: 60% 50%; opacity: 0.8; }
-        84% { background-position: -20% 50%; opacity: 0; }
     }
 </style>

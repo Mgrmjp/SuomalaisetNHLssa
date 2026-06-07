@@ -40,12 +40,50 @@ const teamFullNames = {
     VGK: 'Vegas Golden Knights',
 }
 
+const NHL_TEAM_CODES = new Set([
+    'ANA',
+    'ARI',
+    'BOS',
+    'BUF',
+    'CAR',
+    'CBJ',
+    'CGY',
+    'CHI',
+    'COL',
+    'DAL',
+    'DET',
+    'EDM',
+    'FLA',
+    'LAK',
+    'MIN',
+    'MTL',
+    'NJD',
+    'NSH',
+    'NYI',
+    'NYR',
+    'OTT',
+    'PHI',
+    'PIT',
+    'SEA',
+    'SJS',
+    'STL',
+    'TBL',
+    'TOR',
+    'UTA',
+    'VAN',
+    'VGK',
+    'WPG',
+    'WSH',
+])
+
 function getTeamLogoUrl(teamAbbrev) {
-    const normalizedTeam = normalizeTeamAbbreviation(teamAbbrev).toLowerCase()
-    if (!normalizedTeam) return `${base}/nhl-logos/placeholder.svg`
+    const normalizedTeam = normalizeTeamAbbreviation(teamAbbrev)
+    if (!normalizedTeam || !NHL_TEAM_CODES.has(normalizedTeam)) {
+        return `${base}/nhl-logos/placeholder.svg`
+    }
 
     const pathPrefix = base === '' || base === '.' ? '' : base
-    return `${pathPrefix}/nhl-logos/${normalizedTeam}.svg`
+    return `${pathPrefix}/nhl-logos/${normalizedTeam.toLowerCase()}.svg`
 }
 
 const _logoUrl = $derived(getTeamLogoUrl(team))

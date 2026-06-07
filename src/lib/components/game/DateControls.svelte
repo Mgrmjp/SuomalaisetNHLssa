@@ -101,9 +101,9 @@ function _toggleCalendar() {
 }
 </script>
 
-<div class="date-controls w-full max-w-4xl mx-auto space-y-4">
+<div class="date-controls w-full mx-auto space-y-4">
     <div
-        class="date-controls__card w-full bg-white border border-gray-200 rounded-xl shadow-lg p-4 md:p-5"
+        class="date-controls__card"
     >
         <div class="date-controls__navigation-row flex items-center gap-2 md:gap-4">
             <button
@@ -233,20 +233,18 @@ function _toggleCalendar() {
         position: relative;
         overflow: visible;
         z-index: 10;
-        max-width: 920px;
+        max-width: var(--rail-max, 920px);
         margin: 0 auto;
-        border-radius: 20px;
+        border-radius: var(--card-radius, 20px);
         background:
-            linear-gradient(90deg, #003580, #4f7dd8, #d8e3f8) top / 100% 3px no-repeat,
-            rgba(255, 255, 255, 0.9);
+            linear-gradient(90deg, #003580, #4f7dd8, #b9cdf0) top / 100% 3px no-repeat,
+            var(--card-bg, rgba(255, 255, 255, 0.9));
         background-clip: padding-box;
         background-origin: padding-box;
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        box-shadow:
-            0 24px 70px rgba(16, 24, 40, 0.08),
-            0 2px 6px rgba(16, 24, 40, 0.04),
-            inset 0 1px 0 rgba(255, 255, 255, 0.75);
+        border: var(--card-border, 1px solid rgba(16, 24, 40, 0.08));
+        box-shadow: var(--card-shadow, 0 24px 70px rgba(16, 24, 40, 0.08));
         backdrop-filter: blur(18px);
+        padding: 1rem 1.25rem;
     }
 
     .date-controls__label {
