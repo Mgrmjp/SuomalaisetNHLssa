@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-06-11T08:32:29.819226",
+  "updatedAt": "2026-06-12T08:30:33.267102",
   "sources": [
     {
       "name": "EliteProspects.com",
@@ -1589,6 +1589,27 @@
         },
         {
           "rank": null,
+          "name": "Atte Vuori",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2008-01-23",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'10\"",
+            "metrics": 179
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 163,
+            "metrics": 74
+          },
+          "playerId": "1003493"
+        },
+        {
+          "rank": null,
           "name": "Vilmeri Väänänen",
           "firstName": null,
           "lastName": null,
@@ -1712,27 +1733,6 @@
             "metrics": 85
           },
           "playerId": "864166"
-        },
-        {
-          "rank": null,
-          "name": "Atte Vuori",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2008-01-23",
-          "height": {
-            "__typename": "Height",
-            "imperial": "5'10\"",
-            "metrics": 179
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 163,
-            "metrics": 74
-          },
-          "playerId": "1003493"
         }
       ]
     },
