@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-06-18T08:32:56.532169",
+  "updatedAt": "2026-06-19T08:46:46.758367",
   "sources": [
     {
       "name": "EliteProspects.com",
@@ -1804,6 +1804,27 @@
           "playerId": "925157"
         },
         {
+          "rank": 28,
+          "name": "Matias Vanhanen",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2007-09-11",
+          "height": {
+            "__typename": "Height",
+            "imperial": "5'11\"",
+            "metrics": 180
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 176,
+            "metrics": 80
+          },
+          "playerId": "865769"
+        },
+        {
           "rank": null,
           "name": "Juuso Ainasto",
           "firstName": null,
@@ -2390,27 +2411,6 @@
             "metrics": 91
           },
           "playerId": "959433"
-        },
-        {
-          "rank": null,
-          "name": "Matias Vanhanen",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2007-09-11",
-          "height": {
-            "__typename": "Height",
-            "imperial": "5'11\"",
-            "metrics": 180
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 176,
-            "metrics": 80
-          },
-          "playerId": "865769"
         },
         {
           "rank": null,
@@ -4405,7 +4405,7 @@
           "playerId": "925157"
         },
         {
-          "rank": 49,
+          "rank": 47,
           "name": "Samu Alalauri",
           "firstName": null,
           "lastName": null,
