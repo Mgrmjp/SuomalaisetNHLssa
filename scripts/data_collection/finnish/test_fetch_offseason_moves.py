@@ -1,0 +1,449 @@
+#!/usr/bin/env python3
+"""
+Tests for fetch_offseason_moves.py
+
+Verifies trade/free-agent parsing, Finnish player matching,
+deduplication, exclusion rules, and offseason boundaries.
+
+Run: python scripts/data_collection/finnish/test_fetch_offseason_moves.py
+"""
+
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from fetch_offseason_moves import (
+    strip_diacritics,
+    normalize_name_key,
+    team_full_to_abbrev,
+    match_player_to_roster,
+    is_re_signing,
+    is_non_nhl_destination,
+    generate_move_id,
+    parse_trade_entries,
+    parse_free_agent_entries,
+    parse_free_agent_old_teams,
+    parse_signing_line,
+    merge_moves,
+    build_output,
+    parse_date_prefix,
+)
+
+
+def make_roster():
+    return {
+        "8471234": {
+            "playerId": 8471234,
+            "name": "Joonas Korpisalo",
+            "firstName": {"default": "Joonas"},
+            "lastName": {"default": "Korpisalo"},
+            "position": "G",
+            "currentTeam": "BOS",
+            "isActive": True,
+        },
+        "8478123": {
+            "playerId": 8478123,
+            "name": "Joel Kiviranta",
+            "firstName": {"default": "Joel"},
+            "lastName": {"default": "Kiviranta"},
+            "position": "LW",
+            "currentTeam": "COL",
+            "isActive": True,
+        },
+        "8480456": {
+            "playerId": 8480456,
+            "name": "Kasperi Kapanen",
+            "firstName": {"default": "Kasperi"},
+            "lastName": {"default": "Kapanen"},
+            "position": "RW",
+            "currentTeam": "EDM",
+            "isActive": True,
+        },
+        "8475798": {
+            "playerId": 8475798,
+            "name": "Mikael Granlund",
+            "firstName": {"default": "Mikael"},
+            "lastName": {"default": "Granlund"},
+            "position": "C",
+            "currentTeam": "ANA",
+            "isActive": True,
+        },
+        "8480999": {
+            "playerId": 8480999,
+            "name": "Eeli Tolvanen",
+            "firstName": {"default": "Eeli"},
+            "lastName": {"default": "Tolvanen"},
+            "position": "RW",
+            "currentTeam": "SEA",
+            "isActive": True,
+        },
+        "8479000": {
+            "playerId": 8479000,
+            "name": "Patrik Laine",
+            "firstName": {"default": "Patrik"},
+            "lastName": {"default": "Laine"},
+            "position": "RW",
+            "currentTeam": "MTL",
+            "isActive": True,
+        },
+    }
+
+
+def build_lookups(roster):
+    by_last = {}
+    by_full = {}
+    for pid_str, player in roster.items():
+        first = player.get("firstName", {}).get("default", "")
+        last = player.get("lastName", {}).get("default", "")
+        name = player.get("name", "")
+        info = {
+            "playerId": player["playerId"],
+            "name": name,
+            "firstName": first,
+            "lastName": last,
+            "position": player.get("position", ""),
+            "currentTeam": player.get("currentTeam", ""),
+            "isActive": player.get("isActive", True),
+        }
+        last_key = normalize_name_key(last)
+        if last_key not in by_last:
+            by_last[last_key] = []
+        by_last[last_key].append(info)
+        full_key = normalize_name_key(name)
+        by_full[full_key] = info
+    return by_last, by_full
+
+
+def test_strip_diacritics():
+    assert strip_diacritics("Mäkinen") == "Makinen"
+    assert strip_diacritics("Hämäläinen") == "Hamalainen"
+    assert strip_diacritics("Jokinen") == "Jokinen"
+    print("PASSED: strip_diacritics")
+
+
+def test_normalize_name_key():
+    assert normalize_name_key("Korpisalo") == "korpisalo"
+    assert normalize_name_key("Joonas Korpisalo") == "joonas korpisalo"
+    assert normalize_name_key("Kapanen") == "kapanen"
+    assert normalize_name_key("  Smith  ") == "smith"
+    print("PASSED: normalize_name_key")
+
+
+def test_team_full_to_abbrev():
+    assert team_full_to_abbrev("New York Rangers") == "NYR"
+    assert team_full_to_abbrev("Boston Bruins") == "BOS"
+    assert team_full_to_abbrev("Dallas Stars") == "DAL"
+    assert team_full_to_abbrev("Utah Mammoth") == "UTA"
+    assert team_full_to_abbrev("Unknown Team") is None
+    print("PASSED: team_full_to_abbrev")
+
+
+def test_match_player_exact():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    result = match_player_to_roster("Joonas Korpisalo", by_last, by_full)
+    assert result is not None
+    assert result["playerId"] == 8471234
+    print("PASSED: match_player_exact")
+
+
+def test_match_player_last_name_only():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    result = match_player_to_roster("Kiviranta", by_last, by_full)
+    assert result is not None
+    assert result["playerId"] == 8478123
+    print("PASSED: match_player_last_name_only")
+
+
+def test_match_player_non_finnish_returns_none():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    result = match_player_to_roster("Connor McDavid", by_last, by_full)
+    assert result is None
+    print("PASSED: match_player_non_finnish_returns_none")
+
+
+def test_match_player_diacritics():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    result = match_player_to_roster("Kapanen", by_last, by_full)
+    assert result is not None
+    assert result["playerId"] == 8480456
+    print("PASSED: match_player_diacritics")
+
+
+def test_is_re_signing():
+    player = {"currentTeam": "EDM", "name": "Kasperi Kapanen"}
+    assert is_re_signing(player, "EDM") is True
+    assert is_re_signing(player, "TOR") is False
+    print("PASSED: is_re_signing")
+
+
+def test_is_non_nhl_destination():
+    assert is_non_nhl_destination("signed: HV71, Sweden") is True
+    assert is_non_nhl_destination("signs with Dallas Stars") is False
+    assert is_non_nhl_destination("signed: AHL") is True
+    print("PASSED: is_non_nhl_destination")
+
+
+def test_parse_date_prefix():
+    month, day = parse_date_prefix("JULY 1: Some trade text")
+    assert month == 7
+    assert day == 1
+    month, day = parse_date_prefix("JUNE 28: Another entry")
+    assert month == 6
+    assert day == 28
+    month, day = parse_date_prefix("No date here")
+    assert month is None
+    assert day is None
+    print("PASSED: parse_date_prefix")
+
+
+def test_parse_trade_korpisalo():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "JULY 1: New York Rangers acquire goalie Joonas Korpisalo from the Boston Bruins for forward Kalle Vaisanen. | Korpisalo traded to Rangers by Bruins"
+    ]
+    moves = parse_trade_entries(paragraphs, by_last, by_full, "2026-07-02")
+    finnish_moves = [m for m in moves if m["player"]["playerId"] == 8471234]
+    assert len(finnish_moves) == 1
+    move = finnish_moves[0]
+    assert move["oldTeam"] == "BOS"
+    assert move["newTeam"] == "NYR"
+    assert move["moveType"] == "trade"
+    assert move["date"] == "2026-07-01"
+    print("PASSED: parse_trade_korpisalo")
+
+
+def test_parse_trade_excludes_non_finnish():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "JULY 1: Detroit Red Wings acquire forward Keegan Kolesar from the Vegas Golden Knights for a 3rd-round pick in the 2029 NHL Draft."
+    ]
+    moves = parse_trade_entries(paragraphs, by_last, by_full, "2026-07-02")
+    assert len(moves) == 0
+    print("PASSED: parse_trade_excludes_non_finnish")
+
+
+def test_parse_signing_line_single():
+    names = parse_signing_line(
+        "Kiviranta signs 1-year contract with Stars", "DAL"
+    )
+    assert "Kiviranta" in names
+    print("PASSED: parse_signing_line_single")
+
+
+def test_parse_signing_line_grouped():
+    names = parse_signing_line(
+        "Hyry, Shlaine, Halverson each signs contract with Stars", "DAL"
+    )
+    assert "Hyry" in names
+    assert "Shlaine" in names
+    assert "Halverson" in names
+    print("PASSED: parse_signing_line_grouped")
+
+
+def test_parse_free_agent_kiviranta():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "DALLAS STARS",
+        "Signings",
+        "Kiviranta signs 1-year contract with Stars",
+        "Hyry, Shlaine, Halverson each signs contract with Stars",
+        "Free agents",
+        "Group 3 Unrestricted Free Agents: Nathan Bastian, Jamie Benn",
+    ]
+    moves = parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-02")
+    finnish_moves = [m for m in moves if m["player"]["playerId"] == 8478123]
+    assert len(finnish_moves) == 1
+    move = finnish_moves[0]
+    assert move["oldTeam"] == "COL"
+    assert move["newTeam"] == "DAL"
+    assert move["moveType"] == "free_agent"
+    print("PASSED: parse_free_agent_kiviranta")
+
+
+def test_parse_free_agent_excludes_re_signing():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "EDMONTON OILERS",
+        "Signings",
+        "Kapanen signs 1-year contract with Oilers",
+        "Free agents",
+        "Group 3 Unrestricted Free Agents: Kasperi Kapanen (re-signed)",
+    ]
+    moves = parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-02")
+    finnish_moves = [m for m in moves if m["player"]["playerId"] == 8480456]
+    assert len(finnish_moves) == 0
+    print("PASSED: parse_free_agent_excludes_re_signing")
+
+
+def test_parse_free_agent_excludes_non_nhl():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "SOME TEAM",
+        "Signings",
+        "Kiviranta signs contract with team in Sweden",
+        "Free agents",
+    ]
+    moves = parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-02")
+    assert len(moves) == 0
+    print("PASSED: parse_free_agent_excludes_non_nhl")
+
+
+def test_parse_free_agent_old_teams():
+    paragraphs = [
+        "COLORADO AVALANCHE",
+        "Free agents",
+        "Group 3 Unrestricted Free Agents: Joel Kiviranta (signed: DAL), Jacob MacDonald",
+    ]
+    lookup = parse_free_agent_old_teams(paragraphs)
+    key = normalize_name_key("Joel Kiviranta")
+    assert lookup.get(key) == "COL"
+    print("PASSED: parse_free_agent_old_teams")
+
+
+def test_generate_move_id_stable():
+    id1 = generate_move_id("8471234", "2026-07-01", "trade", "NYR")
+    id2 = generate_move_id("8471234", "2026-07-01", "trade", "NYR")
+    assert id1 == id2
+    id3 = generate_move_id("8471234", "2026-07-02", "trade", "NYR")
+    assert id1 != id3
+    print("PASSED: generate_move_id_stable")
+
+
+def test_merge_moves_deduplication():
+    existing = {
+        "offseasonYear": 2026,
+        "moves": [
+            {
+                "moveId": "abc123",
+                "playerId": "8471234",
+                "playerName": "Joonas Korpisalo",
+                "oldTeam": "BOS",
+                "newTeam": "NYR",
+                "moveType": "trade",
+                "date": "2026-07-01",
+            }
+        ],
+    }
+    new_moves = [
+        {
+            "moveId": "abc123",
+            "playerId": "8471234",
+            "playerName": "Joonas Korpisalo",
+            "oldTeam": "BOS",
+            "newTeam": "NYR",
+            "moveType": "trade",
+            "date": "2026-07-01",
+            "sourceUrl": "https://nhl.com",
+        }
+    ]
+    merged = merge_moves(existing, new_moves, 2026)
+    assert len(merged) == 1
+    assert merged[0].get("sourceUrl") == "https://nhl.com"
+    print("PASSED: merge_moves_deduplication")
+
+
+def test_merge_moves_adds_new():
+    existing = {
+        "offseasonYear": 2026,
+        "moves": [
+            {
+                "moveId": "abc123",
+                "playerId": "8471234",
+                "playerName": "Joonas Korpisalo",
+                "oldTeam": "BOS",
+                "newTeam": "NYR",
+                "moveType": "trade",
+                "date": "2026-07-01",
+            }
+        ],
+    }
+    new_moves = [
+        {
+            "moveId": "def456",
+            "playerId": "8478123",
+            "playerName": "Joel Kiviranta",
+            "oldTeam": "COL",
+            "newTeam": "DAL",
+            "moveType": "free_agent",
+            "date": "2026-07-01",
+        }
+    ]
+    merged = merge_moves(existing, new_moves, 2026)
+    assert len(merged) == 2
+    print("PASSED: merge_moves_adds_new")
+
+
+def test_build_output_structure():
+    moves = [
+        {
+            "moveId": "abc123",
+            "playerId": "8471234",
+            "playerName": "Joonas Korpisalo",
+            "moveType": "trade",
+            "date": "2026-07-01",
+        }
+    ]
+    output = build_output(2026, moves, {"tradeTracker": "ok", "freeAgentTracker": "ok"})
+    assert output["offseasonYear"] == 2026
+    assert "window" in output
+    assert "start" in output["window"]
+    assert "end" in output["window"]
+    assert "updatedAt" in output
+    assert output["sourceStatus"]["tradeTracker"] == "ok"
+    assert len(output["moves"]) == 1
+    print("PASSED: build_output_structure")
+
+
+def test_source_date_fallback():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "Some text without a date prefix: New York Rangers acquire goalie Joonas Korpisalo from the Boston Bruins for forward Kalle Vaisanen."
+    ]
+    moves = parse_trade_entries(paragraphs, by_last, by_full, "2026-07-02")
+    finnish_moves = [m for m in moves if m["player"]["playerId"] == 8471234]
+    assert len(finnish_moves) == 1
+    assert finnish_moves[0]["date"] == "2026-07-02"
+    print("PASSED: source_date_fallback")
+
+
+if __name__ == "__main__":
+    print("Running fetch_offseason_moves tests...")
+    print()
+    test_strip_diacritics()
+    test_normalize_name_key()
+    test_team_full_to_abbrev()
+    test_match_player_exact()
+    test_match_player_last_name_only()
+    test_match_player_non_finnish_returns_none()
+    test_match_player_diacritics()
+    test_is_re_signing()
+    test_is_non_nhl_destination()
+    test_parse_date_prefix()
+    test_parse_trade_korpisalo()
+    test_parse_trade_excludes_non_finnish()
+    test_parse_signing_line_single()
+    test_parse_signing_line_grouped()
+    test_parse_free_agent_kiviranta()
+    test_parse_free_agent_excludes_re_signing()
+    test_parse_free_agent_excludes_non_nhl()
+    test_parse_free_agent_old_teams()
+    test_generate_move_id_stable()
+    test_merge_moves_deduplication()
+    test_merge_moves_adds_new()
+    test_build_output_structure()
+    test_source_date_fallback()
+    print()
+    print("All tests passed!")

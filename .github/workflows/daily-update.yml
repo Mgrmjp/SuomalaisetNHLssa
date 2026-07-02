@@ -59,11 +59,16 @@ jobs:
           source .venv/bin/activate
           python scripts/data_collection/finnish/sync_roster.py
 
+      - name: Fetch offseason moves
+        run: |
+          source .venv/bin/activate
+          python scripts/data_collection/finnish/fetch_offseason_moves.py || echo "::warning::Offseason moves fetch failed, retaining last valid data"
+
       - name: Commit and push updated data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json static/data/offseason-moves.json
           git diff --cached --quiet || git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git push
 

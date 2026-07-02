@@ -233,6 +233,7 @@ const isBreak = $derived($currentBreak !== null)
 
 // Determine which empty state to show
 const emptyStateVariant = $derived.by(() => {
+    if (isBreak && $currentBreak?.type === 'offseason') return 'offseason'
     if (isBreak) return 'break'
     if (hasNoGames) return 'no-games'
     return 'no-scorers'
