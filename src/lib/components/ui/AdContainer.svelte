@@ -422,7 +422,7 @@ function getLogoSrc(ad) {
     }
 
     /* =====================
-       Custom banner styles (shared with AdBanner)
+       Custom banner styles
        ===================== */
     .custom-banner {
         position: relative;

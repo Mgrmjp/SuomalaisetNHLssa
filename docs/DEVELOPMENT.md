@@ -134,10 +134,7 @@ src/
 │   │   │   ├── Card.svelte
 │   │   │   ├── Loading.svelte
 │   │   │   └── index.ts     # Barrel exports
-│   │   ├── layout/          # Layout components
-│   │   │   ├── Header.svelte
-│   │   │   ├── Footer.svelte
-│   │   │   └── Navigation.svelte
+│   │   ├── standings/       # Standings components
 │   │   └── features/        # Feature-specific components
 │   │       ├── PlayerCard.svelte
 │   │       ├── DateControls.svelte

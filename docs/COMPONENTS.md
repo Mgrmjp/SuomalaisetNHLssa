@@ -18,27 +18,9 @@ This document provides comprehensive documentation for all components in the Fin
 
 ```
 src/lib/components/
-├── ui/                    # Base UI components
-│   ├── Button.svelte
-│   ├── Card.svelte
-│   ├── Loading.svelte
-│   ├── Modal.svelte
-│   └── index.ts
-├── layout/               # Layout components
-│   ├── Header.svelte
-│   ├── Footer.svelte
-│   ├── Navigation.svelte
-│   └── Container.svelte
-├── features/             # Feature-specific components
-│   ├── PlayerCard.svelte
-│   ├── DateControls.svelte
-│   ├── GameList.svelte
-│   ├── PlayerStats.svelte
-│   └── CacheMonitor.svelte
-└── forms/               # Form components
-    ├── DatePicker.svelte
-    ├── SearchBox.svelte
-    └── ThemeToggle.svelte
+├── game/                 # Game, player, and date components
+├── standings/            # Conference and division standings
+└── ui/                   # Shared controls, ads, logos, and feedback
 ```
 
 ## Base UI Components
@@ -289,43 +271,6 @@ interface ContainerProps {
 - Mobile-first approach
 - Finnish spacing system
 - Centered content option
-
-### Header (`Header.svelte`)
-
-Main application header with navigation, branding, and controls.
-
-#### Props
-
-```typescript
-interface HeaderProps {
-  sticky?: boolean;
-  transparent?: boolean;
-  showSearch?: boolean;
-  showThemeToggle?: boolean;
-}
-```
-
-#### Usage
-
-```svelte
-<script>
-  import Header from '$lib/components/layout/Header.svelte';
-</script>
-
-<Header
-  sticky={true}
-  showSearch={true}
-  showThemeToggle={true}
-/>
-```
-
-#### Features
-
-- Finnish flag branding
-- Responsive navigation menu
-- Search functionality
-- Theme toggle integration
-- Accessibility navigation
 
 ## Feature Components
 
@@ -754,7 +699,6 @@ describe('PlayerCard', () => {
 ```svelte
 <script>
   import Container from '$lib/components/layout/Container.svelte';
-  import Header from '$lib/components/layout/Header.svelte';
   import PlayerCard from '$lib/components/features/PlayerCard.svelte';
   import DateControls from '$lib/components/features/DateControls.svelte';
   import Loading from '$lib/components/ui/Loading.svelte';
@@ -763,8 +707,6 @@ describe('PlayerCard', () => {
   export let loading = false;
   export let selectedDate = new Date();
 </script>
-
-<Header sticky={true} showThemeToggle={true} />
 
 <Container size="lg" padding="md">
   <DateControls bind:selectedDate />

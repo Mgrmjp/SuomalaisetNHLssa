@@ -1,96 +1,24 @@
-# Data Directory Structure
+# Application data
 
-This directory contains all data for the Finnish NHL Player Tracker.
+This directory contains the datasets served by the static SvelteKit application.
 
-## 📁 Directory Structure
+## Primary locations
 
-```
-data/
-├── games/                    # 🎯 PRIMARY: Game data by date (SOURCE OF TRUTH)
-│   ├── 2024-10-04.json      # Game data for 2024-10-04
-│   ├── 2024-10-05.json      # Game data for 2024-10-05
-│   └── ...
-├── players/                  # 👥 Player-related data
-│   ├── finnish-roster.json   # Master list of Finnish NHL players
-│   └── player-changes.json   # Track player roster changes
-├── reports/                  # 📊 Processing and maintenance reports
-│   ├── cleaning-report.json # Data cleaning logs
-│   └── refresh-report.json  # Data refresh logs
-└── backups/                  # 💾 Version history and backups
-    └── finnish-nhl-players-*.json
-```
+- `prepopulated/games/` — daily game and Finnish-player data keyed by date
+- `players/finnish-roster.json` — master Finnish NHL roster
+- `player-stats/` — season-level skater and goalie statistics
+- `leagues/league_prospects_official.json` — official league prospect data
+- `leagues/league_prospects_advanced.json` — supplemental prospect data
+- `leagues/league_prospects_na.json` — North American prospect data
+- `finnish_prospects.json` — application-ready prospect cache
+- `finnish_draft_rankings.json` — merged draft rankings
+- `games_manifest.json` — dates available under `prepopulated/games/`
 
-## 🎯 Single Source of Truth
+## Data flow
 
-- **`data/games/`** - The ONLY location for game data by date
-- All other directories reference this data
-- Build process copies from here to `static/data/`
-- No duplicate data maintenance needed
+1. Collectors write daily games to `prepopulated/games/` and source-specific data files.
+2. Cache builders merge source data into the application-ready datasets.
+3. `generate_manifest.py` updates `games_manifest.json` from the daily game files.
+4. SvelteKit copies this directory into the static production build.
 
-## 📋 File Formats
-
-### Game Data (`games/YYYY-MM-DD.json`)
-```json
-[
-  {
-    "name": "Mikael Granlund",
-    "team": "ANA",
-    "team_full": "Anaheim Ducks",
-    "position": "C",
-    "goals": 1,
-    "assists": 1,
-    "points": 2,
-    "opponent": "EDM",
-    "opponent_full": "Edmonton Oilers",
-    "game_score": "4-3",
-    "game_result": "W"
-  }
-]
-```
-
-### Player Roster (`players/finnish-roster.json`)
-```json
-[
-  {
-    "id": 8475798,
-    "name": "Mikael Granlund",
-    "firstName": "Mikael",
-    "lastName": "Granlund",
-    "position": "C",
-    "team": "ANA",
-    "teamName": "Anaheim Ducks",
-    "sweaterNumber": 64,
-    "birthDate": "1992-02-26",
-    "birthCity": "Oulu",
-    "birthCountry": "FIN",
-    "nationality": "FIN",
-    "shoots": "L",
-    "height": "5'10\"",
-    "weight": 179,
-    "isActive": true
-  }
-]
-```
-
-## 🔄 Data Flow
-
-1. **Source**: Raw NHL data → `data/games/`
-2. **Processing**: Game data → Finnish player extraction → Game files
-3. **Build**: `data/games/` → `static/data/` (for serving)
-4. **Runtime**: `static/data/` → Browser cache → User
-
-## 🛠️ Maintenance
-
-- Add new game data to `data/games/`
-- Update player roster in `data/players/finnish-roster.json`
-- Run build to update `static/data/`
-- Backup important data to `data/backups/`
-
-## 📈 Benefits
-
-✅ Single source of truth for game data
-✅ No duplicate data maintenance
-✅ Clear separation of concerns
-✅ Easy backup and version control
-✅ Simplified build process
-✅ Better organization and findability
+Timestamped season exports, backups, debugging captures, and one-off expanded datasets are generated artifacts and intentionally excluded from Git and production builds.

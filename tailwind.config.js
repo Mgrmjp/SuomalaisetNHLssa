@@ -1,9 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,svelte}",
-    "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}"
+    "./src/**/*.{html,js,ts,svelte}"
   ],
   theme: {
     extend: {

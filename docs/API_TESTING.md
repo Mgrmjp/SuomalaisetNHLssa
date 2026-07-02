@@ -153,7 +153,7 @@ GET /api/scores?startDate=2025-10-01&endDate=2025-10-15 → 400 + range error
 ```javascript
 // File validation
 /static/data/2025-10-25.json exists + valid JSON
-/data/games/2025-10-25.json matches static version
+/data/prepopulated/games/2025-10-25.json matches static version
 
 // Error handling
 Non-existent file → graceful error handling

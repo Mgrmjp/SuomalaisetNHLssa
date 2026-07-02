@@ -252,8 +252,5 @@ export default defineConfig({
   optimizeDeps: {
     // Let the SvelteKit plugin handle framework deps to avoid bundling the server runtime in the browser
     exclude: ["svelte", "@sveltejs/kit"],
-  },
-  ssr: {
-    noExternal: ['flowbite-svelte']
   }
 });
