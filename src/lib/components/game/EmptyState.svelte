@@ -6,7 +6,7 @@ import { displayDate } from '$lib/stores/gameData.js'
 
 /**
  * @type {{
- *   variant?: 'no-games' | 'no-scorers' | 'break',
+ *   variant?: 'no-games' | 'no-scorers' | 'break' | 'offseason',
  *   relatedGames?: Array<{ gameId: number|string, homeTeam: string, awayTeam: string, startTime?: string, finnish_players_count?: number, finnishPlayers?: string[] }>,
  *   relatedGamesLabel?: string,
  *   newsItems?: Array<{ translatedTitle?: string, translatedSummary?: string, title?: string, summary?: string, source?: string, url?: string }>,
@@ -34,11 +34,17 @@ const messages = {
         title: 'NHL-tauko',
         text: 'NHL:ssä on meneillään tauko. Uudet ottelut alkavat pian.',
     },
+    offseason: {
+        title: 'Nähdään ensi kaudella!',
+        text: 'NHL-kausi on päättynyt. Uusi kausi alkaa lokakuussa – siihen asti voit seurata suomalaispelaajien siirtoja ja sopimuksia alta.',
+    },
 }
 
 const currentMessage = $derived(messages[variant] || messages['no-scorers'])
 
 const iconVariant = $derived(messages[variant] ? variant : 'no-scorers')
+
+const isOffseason = $derived(variant === 'offseason')
 
 function formatStartTime(startTime, includeDate = false) {
     if (!startTime) return ''
@@ -110,6 +116,7 @@ const emptyStateStats = $derived.by(() => {
             <div
                 class="empty-state-icon"
                 class:empty-state-icon--break={iconVariant === 'break'}
+                class:empty-state-icon--offseason={iconVariant === 'offseason'}
                 class:empty-state-icon--premium={iconVariant === 'no-scorers'}
                 aria-hidden="true"
             >
@@ -125,6 +132,12 @@ const emptyStateStats = $derived.by(() => {
                         <rect x="6" y="5" width="4" height="14" rx="1" />
                         <rect x="14" y="5" width="4" height="14" rx="1" />
                     </svg>
+                {:else if iconVariant === 'offseason'}
+                    <!-- Sun / offseason -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5" />
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+                    </svg>
                 {:else}
                     <!-- Puck / no scorers -->
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -136,10 +149,12 @@ const emptyStateStats = $derived.by(() => {
             <h3 class="empty-state-title">{currentMessage.title}</h3>
             <p class="empty-state-text">
                 {currentMessage.text}
-                <span class="empty-state-date">{$displayDate}</span>.
+                {#if !isOffseason}
+                    <span class="empty-state-date">{$displayDate}</span>.
+                {/if}
             </p>
 
-            {#if emptyStateStats.length > 0}
+            {#if emptyStateStats.length > 0 && !isOffseason}
                 <div class="empty-state-stats" role="list" aria-label="Päivän yhteenveto">
                     {#each emptyStateStats as stat}
                         <div class="empty-state-stat" role="listitem">
@@ -189,7 +204,7 @@ const emptyStateStats = $derived.by(() => {
                         {/each}
                     </div>
                 </div>
-            {:else if showNoRelatedGamesNote}
+            {:else if showNoRelatedGamesNote && !isOffseason}
                 <p class="upcoming-games-empty-note">
                     Tulevia tai viimeisimpiä suomalaispelaajien otteluita ei löytynyt paikallisesta
                     datasta.
@@ -296,6 +311,13 @@ const emptyStateStats = $derived.by(() => {
         box-shadow:
             0 1px 2px rgba(0, 0, 0, 0.06),
             0 6px 16px rgba(245, 158, 11, 0.18);
+    }
+
+    .empty-state-icon--offseason {
+        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+        box-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.06),
+            0 8px 20px rgba(249, 115, 22, 0.2);
     }
 
     .empty-state-icon svg {

@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { loadOffseasonMovesFromDisk } from '$lib/server/offseasonMoves.js'
 import { loadPlayoffStatsFromDisk } from '$lib/server/playerStats.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 
@@ -73,7 +74,21 @@ function buildSeo(data, date) {
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
     const gamesDir = join(process.cwd(), 'static', 'data', 'prepopulated', 'games')
-    const playoffStats = await loadPlayoffStatsFromDisk()
+    const [playoffStats, offseasonMoves] = await Promise.all([
+        loadPlayoffStatsFromDisk(),
+        loadOffseasonMovesFromDisk(),
+    ])
+
+    let breaks = []
+    try {
+        const breaksContent = await readFile(
+            join(process.cwd(), 'static', 'data', 'breaks.json'),
+            'utf-8'
+        )
+        breaks = JSON.parse(breaksContent)
+    } catch {
+        // breaks.json may not exist yet
+    }
 
     try {
         const dates = await getGameDates(gamesDir)
@@ -92,6 +107,8 @@ export async function load() {
             initialDate,
             seo: buildSeo(gameData, initialDate),
             playoffStats,
+            offseasonMoves,
+            breaks,
         }
     } catch (error) {
         console.warn('Could not load homepage SEO data:', error)
@@ -99,6 +116,8 @@ export async function load() {
             initialDate: '',
             seo: buildSeo(null, ''),
             playoffStats,
+            offseasonMoves,
+            breaks,
         }
     }
 }

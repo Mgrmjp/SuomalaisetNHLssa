@@ -1,0 +1,74 @@
+{
+  "offseasonYear": 2026,
+  "window": {
+    "start": "2026-06-20",
+    "end": "2026-10-06"
+  },
+  "updatedAt": "2026-07-02T15:16:27Z",
+  "sourceStatus": {
+    "tradeTracker": "ok",
+    "freeAgentTracker": "ok"
+  },
+  "moves": [
+    {
+      "moveId": "66067a50e1fd72d1",
+      "playerId": "8481641",
+      "playerName": "Joel Kiviranta",
+      "playerSlug": "joel-kiviranta",
+      "position": "L",
+      "oldTeam": "COL",
+      "newTeam": "DAL",
+      "moveType": "free_agent",
+      "date": "2026-07-02",
+      "sourceUrl": "https://www.nhl.com/news/topic/free-agency/free-agency-signings-nhl-2026-27"
+    },
+    {
+      "moveId": "971e2225c5acc2dd",
+      "playerId": "8475287",
+      "playerName": "Erik Haula",
+      "playerSlug": "erik-haula",
+      "position": "L",
+      "oldTeam": "NSH",
+      "newTeam": "LAK",
+      "moveType": "free_agent",
+      "date": "2026-07-02",
+      "sourceUrl": "https://www.nhl.com/news/topic/free-agency/free-agency-signings-nhl-2026-27"
+    },
+    {
+      "moveId": "b44af9db505135e6",
+      "playerId": "8481711",
+      "playerName": "Matias Maccelli",
+      "playerSlug": "matias-maccelli",
+      "position": "L",
+      "oldTeam": "TOR",
+      "newTeam": "NYI",
+      "moveType": "free_agent",
+      "date": "2026-07-02",
+      "sourceUrl": "https://www.nhl.com/news/topic/free-agency/free-agency-signings-nhl-2026-27"
+    },
+    {
+      "moveId": "eceab9eefb3fd5a1",
+      "playerId": "8481572",
+      "playerName": "Ville Heinola",
+      "playerSlug": "ville-heinola",
+      "position": "D",
+      "oldTeam": "WPG",
+      "newTeam": "VGK",
+      "moveType": "free_agent",
+      "date": "2026-07-02",
+      "sourceUrl": "https://www.nhl.com/news/topic/free-agency/free-agency-signings-nhl-2026-27"
+    },
+    {
+      "moveId": "7516b65ee2072a45",
+      "playerId": "8476914",
+      "playerName": "Joonas Korpisalo",
+      "playerSlug": "joonas-korpisalo",
+      "position": "G",
+      "oldTeam": "BOS",
+      "newTeam": "NYR",
+      "moveType": "trade",
+      "date": "2026-07-01",
+      "sourceUrl": "https://www.nhl.com/news/2026-27-nhl-trades"
+    }
+  ]
+}

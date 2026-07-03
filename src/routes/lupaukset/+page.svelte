@@ -923,25 +923,30 @@ function _dedupeProspects(players) {
             </p>
 
             <!-- Filter Buttons -->
-            <div class="flex justify-center gap-2 flex-wrap">
-                <button 
-                    class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {activeFilter === 'all' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200'}"
-                    onclick={() => activeFilter = 'all'}
-                >
-                    Kaikki ({allPlayers().length})
-                </button>
-                <button 
-                    class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {activeFilter === 'prospects' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200'}"
-                    onclick={() => activeFilter = 'prospects'}
-                >
-                    NHL-varaukset
-                </button>
-                <button 
-                    class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {activeFilter === 'draft2026' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-slate-200'}"
-                    onclick={() => activeFilter = 'draft2026'}
-                >
-                    Draft 2026
-                </button>
+            <div class="filter-tabs-container">
+                <div class="filter-tabs-list">
+                    <button
+                        class="filter-tab-item"
+                        class:filter-tab-item--active={activeFilter === 'all'}
+                        onclick={() => activeFilter = 'all'}
+                    >
+                        Kaikki ({allPlayers().length})
+                    </button>
+                    <button
+                        class="filter-tab-item"
+                        class:filter-tab-item--active={activeFilter === 'prospects'}
+                        onclick={() => activeFilter = 'prospects'}
+                    >
+                        NHL-varaukset
+                    </button>
+                    <button
+                        class="filter-tab-item"
+                        class:filter-tab-item--active={activeFilter === 'draft2026'}
+                        onclick={() => activeFilter = 'draft2026'}
+                    >
+                        Draft 2026
+                    </button>
+                </div>
             </div>
 
             <!-- Ranking Source Selector (only visible when Draft 2026 is active) -->
@@ -968,38 +973,40 @@ function _dedupeProspects(players) {
         {:else}
             <div in:fade={{ duration: 300 }}>
                     <!-- Controls -->
-                    <div class="flex justify-center gap-3 mb-8 flex-wrap">
-                        <button 
-                            class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm
-                            {sortBy === 'points' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-300 hover:bg-slate-50'}"
-                            onclick={() => _setSort('points')}
-                        >
-                            Pisteet {getSortIcon('points')}
-                        </button>
-                        <button 
-                            class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm
-                            {sortBy === 'goals' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-300 hover:bg-slate-50'}"
-                            onclick={() => _setSort('goals')}
-                        >
-                            Maalit {getSortIcon('goals')}
-                        </button>
-                        <button 
-                            class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm
-                            {sortBy === 'league' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-300 hover:bg-slate-50'}"
-                            onclick={() => _setSort('league')}
-                        >
-                            Liiga {getSortIcon('league')}
-                        </button>
-                        <button 
-                            class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm
-                            {sortBy === 'age' ? 'bg-blue-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:border-blue-300 hover:bg-slate-50'}"
-                            onclick={() => {
-                                sortBy = 'age';
-                                sortDirection = 'asc';
-                            }}
-                        >
-                            Ikä {getSortIcon('age')}
-                        </button>
+                    <div class="sort-tabs-container">
+                        <div class="sort-tabs-list">
+                            <button
+                                class="sort-tab-item"
+                                class:sort-tab-item--active={sortBy === 'points'}
+                                onclick={() => _setSort('points')}
+                            >
+                                Pisteet {getSortIcon('points')}
+                            </button>
+                            <button
+                                class="sort-tab-item"
+                                class:sort-tab-item--active={sortBy === 'goals'}
+                                onclick={() => _setSort('goals')}
+                            >
+                                Maalit {getSortIcon('goals')}
+                            </button>
+                            <button
+                                class="sort-tab-item"
+                                class:sort-tab-item--active={sortBy === 'league'}
+                                onclick={() => _setSort('league')}
+                            >
+                                Liiga {getSortIcon('league')}
+                            </button>
+                            <button
+                                class="sort-tab-item"
+                                class:sort-tab-item--active={sortBy === 'age'}
+                                onclick={() => {
+                                    sortBy = 'age';
+                                    sortDirection = 'asc';
+                                }}
+                            >
+                                Ikä {getSortIcon('age')}
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Active prospects count -->
@@ -1146,28 +1153,30 @@ function _dedupeProspects(players) {
                             <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Maalivahdit</h2>
                             
                             <!-- Goalie Sort Controls -->
-                            <div class="flex justify-center gap-3 mb-6 flex-wrap">
-                                <button 
-                                    class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm
-                                    {goalieSortBy === 'savePct' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:border-emerald-300 hover:bg-slate-50'}"
-                                    onclick={() => _setGoalieSort('savePct')}
-                                >
-                                    Torjunta-% {getGoalieSortIcon('savePct')}
-                                </button>
-                                <button 
-                                    class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm
-                                    {goalieSortBy === 'gaa' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:border-emerald-300 hover:bg-slate-50'}"
-                                    onclick={() => _setGoalieSort('gaa')}
-                                >
-                                    Päästettyjen keskiarvo {getGoalieSortIcon('gaa')}
-                                </button>
-                                <button 
-                                    class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm
-                                    {goalieSortBy === 'gp' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-700 border border-slate-200 hover:border-emerald-300 hover:bg-slate-50'}"
-                                    onclick={() => _setGoalieSort('gp')}
-                                >
-                                    Ottelut {getGoalieSortIcon('gp')}
-                                </button>
+                            <div class="sort-tabs-container">
+                                <div class="sort-tabs-list sort-tabs-list--goalie">
+                                    <button
+                                        class="sort-tab-item sort-tab-item--goalie"
+                                        class:sort-tab-item--active={goalieSortBy === 'savePct'}
+                                        onclick={() => _setGoalieSort('savePct')}
+                                    >
+                                        Torjunta-% {getGoalieSortIcon('savePct')}
+                                    </button>
+                                    <button
+                                        class="sort-tab-item sort-tab-item--goalie"
+                                        class:sort-tab-item--active={goalieSortBy === 'gaa'}
+                                        onclick={() => _setGoalieSort('gaa')}
+                                    >
+                                        Päästettyjen keskiarvo {getGoalieSortIcon('gaa')}
+                                    </button>
+                                    <button
+                                        class="sort-tab-item sort-tab-item--goalie"
+                                        class:sort-tab-item--active={goalieSortBy === 'gp'}
+                                        onclick={() => _setGoalieSort('gp')}
+                                    >
+                                        Ottelut {getGoalieSortIcon('gp')}
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Goalies Grid -->
@@ -1357,3 +1366,145 @@ function _dedupeProspects(players) {
             </div>
         </div>
     </div>
+
+<style>
+    .filter-tabs-container {
+        display: flex;
+        justify-content: center;
+        padding: 0 0 0.5rem;
+    }
+
+    .filter-tabs-list {
+        display: inline-flex;
+        gap: 0.15rem;
+        padding: 0.25rem;
+        border: 1px solid rgba(0, 53, 128, 0.08);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
+    }
+
+    .filter-tab-item {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 2.4rem;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        color: #475467;
+        font-size: 0.88rem;
+        font-weight: 700;
+        line-height: 1;
+        text-decoration: none;
+        white-space: nowrap;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition:
+            background 0.16s ease,
+            color 0.16s ease,
+            box-shadow 0.16s ease,
+            transform 0.16s ease;
+    }
+
+    .filter-tab-item:hover {
+        color: var(--accent-strong);
+        background: var(--accent-ice);
+    }
+
+    .filter-tab-item:focus-visible {
+        outline: 3px solid rgba(0, 53, 128, 0.2);
+        outline-offset: 2px;
+    }
+
+    .filter-tab-item--active {
+        background: var(--accent);
+        color: #ffffff;
+        box-shadow:
+            0 6px 14px rgba(0, 53, 128, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .sort-tabs-container {
+        display: flex;
+        justify-content: center;
+        padding: 0 0 2rem;
+    }
+
+    .sort-tabs-list {
+        display: inline-flex;
+        gap: 0.15rem;
+        padding: 0.25rem;
+        border: 1px solid rgba(0, 53, 128, 0.08);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.7);
+        box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
+    }
+
+    .sort-tabs-list--goalie {
+        border-color: rgba(16, 185, 129, 0.12);
+    }
+
+    .sort-tab-item {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 2.4rem;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        color: #475467;
+        font-size: 0.88rem;
+        font-weight: 700;
+        line-height: 1;
+        text-decoration: none;
+        white-space: nowrap;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition:
+            background 0.16s ease,
+            color 0.16s ease,
+            box-shadow 0.16s ease,
+            transform 0.16s ease;
+    }
+
+    .sort-tab-item:hover {
+        color: var(--accent-strong);
+        background: var(--accent-ice);
+    }
+
+    .sort-tab-item--goalie:hover {
+        color: #065f46;
+        background: rgba(16, 185, 129, 0.08);
+    }
+
+    .sort-tab-item:focus-visible {
+        outline: 3px solid rgba(0, 53, 128, 0.2);
+        outline-offset: 2px;
+    }
+
+    .sort-tab-item--active {
+        background: var(--accent);
+        color: #ffffff;
+        box-shadow:
+            0 6px 14px rgba(0, 53, 128, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    .sort-tab-item--goalie.sort-tab-item--active {
+        background: #10b981;
+        box-shadow:
+            0 6px 14px rgba(16, 185, 129, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    @media (max-width: 480px) {
+        .filter-tab-item,
+        .sort-tab-item {
+            padding-inline: 0.75rem;
+            font-size: 0.82rem;
+        }
+    }
+</style>

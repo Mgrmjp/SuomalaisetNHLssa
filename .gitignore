@@ -114,4 +114,19 @@ scripts/find_undrafted.py
 scripts/deep_probe_*.py
 static/data/tavily_news_cache.json
 
+# Generated and archival data not used by the application
+scripts/data/
+scripts/data_collection/scripts/static/
+scripts/static/data/leagues/
+static/data/api-games/
+static/data/backups/
+static/data/games/
+static/data/leagues/debug_network.json
+static/data/leagues/league_prospects_20*.json
+static/data/leagues/league_prospects_apihockey.json
+static/data/leagues/league_prospects_demo.json
+static/data/leagues/league_prospects_v2.json
+static/data/prepopulated/all-players/
+static/data/prepopulated/season/
+
 .codex

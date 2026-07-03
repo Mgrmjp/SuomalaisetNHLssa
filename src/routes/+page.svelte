@@ -3,13 +3,13 @@
 import { onMount } from 'svelte'
 import { base } from '$app/paths'
 import DateControls from '$lib/components/game/DateControls.svelte'
+import OffseasonMoves from '$lib/components/game/OffseasonMoves.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
 import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import {
-    currentBreak,
     games,
     isLoading,
     players,
@@ -23,6 +23,14 @@ import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 /** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number }, playoffStats: { season: string, skaters: Array<{ name: string, team: string, gamesPlayed: number, goals: number, assists: number, points: number }>, goalies: Array<{ name: string, team: string, gamesPlayed: number, wins: number, savePct: number }> } } }} */
 const { data } = $props()
 const playoffStats = $derived(data.playoffStats)
+const offseasonMoves = $derived(data.offseasonMoves)
+
+const activeBreak = $derived.by(() => {
+    const breaks = data.breaks || []
+    const date = $selectedDate || data.initialDate
+    if (!date || !breaks.length) return null
+    return breaks.find((b) => date >= b.startDate && date <= b.endDate) || null
+})
 
 const _totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0)
 const _totalAssists = $derived($players?.reduce((sum, player) => sum + player.assists, 0) || 0)
@@ -165,17 +173,31 @@ onMount(() => {
     <div class="dashboard">
         <div class="dashboard__rail">
             <!-- Controls (date picker) -->
-            {#if $currentBreak}
+            {#if activeBreak}
                 <section class="panel panel--break">
                     <div class="panel__inner flex flex-col items-center justify-center text-center">
-                        <span class="break-emoji" role="img" aria-label="Break">🏒</span>
-                        <h3 class="break-title">{$currentBreak.description}</h3>
-                        <p class="break-meta">
-                            NHL on tauolla ({formatFinnishDateWithRelative($currentBreak.startDate).formatted} - {formatFinnishDateWithRelative($currentBreak.endDate).formatted})
-                        </p>
+                        {#if activeBreak.type === 'offseason'}
+                            <span class="break-emoji" role="img" aria-label="Offseason">☀️</span>
+                            <h3 class="break-title">Nähdään ensi kaudella!</h3>
+                            <p class="break-meta">
+                                NHL-kausi on päättynyt. Uusi kausi alkaa lokakuussa.
+                            </p>
+                        {:else}
+                            <span class="break-emoji" role="img" aria-label="Break">🏒</span>
+                            <h3 class="break-title">{activeBreak.description}</h3>
+                            <p class="break-meta">
+                                NHL on tauolla ({formatFinnishDateWithRelative(activeBreak.startDate).formatted} - {formatFinnishDateWithRelative(activeBreak.endDate).formatted})
+                            </p>
+                        {/if}
                     </div>
                 </section>
             {/if}
+
+            <!-- Offseason moves tracker -->
+            {#if offseasonMoves}
+                <OffseasonMoves movesData={offseasonMoves} />
+            {/if}
+
             <DateControls />
 
             <!-- Mobile ad under date controls -->
@@ -290,7 +312,7 @@ onMount(() => {
             {/if}
 
             <!-- Player List -->
-            {#if !$currentBreak}
+            {#if !activeBreak}
                 <PlayerList />
             {/if}
 

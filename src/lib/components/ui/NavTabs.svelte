@@ -76,7 +76,8 @@ const currentPath = $derived($page.url.pathname)
     .nav-tabs-container {
         display: flex;
         justify-content: safe flex-start;
-        padding: 0 0 0.5rem;
+        padding: 0;
+        margin-bottom: 1.5rem;
     }
 
     .nav-tabs-list {
