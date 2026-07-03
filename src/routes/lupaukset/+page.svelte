@@ -1087,7 +1087,7 @@ function _dedupeProspects(players) {
                                         <div class="mb-3 flex flex-wrap gap-2">
                                             {#each _getSeasonSelectorEntries(player) as { entry, index }}
                                                 <button
-                                                    class={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
+                                                    class={`border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
                                                         _getSelectedSeasonIndex(player) === index
                                                             ? 'border-blue-200 bg-blue-50 text-blue-700'
                                                             : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
@@ -1246,7 +1246,7 @@ function _dedupeProspects(players) {
                                             <div class="mb-3 flex flex-wrap gap-2">
                                                 {#each _getSeasonSelectorEntries(goalie) as { entry, index }}
                                                     <button
-                                                        class={`rounded-full border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
+                                                        class={`border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
                                                             _getSelectedSeasonIndex(goalie) === index
                                                                 ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
                                                                 : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
@@ -1378,8 +1378,8 @@ function _dedupeProspects(players) {
         display: inline-flex;
         gap: 0.15rem;
         padding: 0.25rem;
-        border: 1px solid rgba(0, 53, 128, 0.08);
-        border-radius: 999px;
+        border: 1px solid rgba(16, 24, 40, 0.1);
+        border-radius: 0;
         background: rgba(255, 255, 255, 0.7);
         box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
     }
@@ -1391,7 +1391,7 @@ function _dedupeProspects(players) {
         gap: 0.5rem;
         min-height: 2.4rem;
         padding: 0.5rem 1rem;
-        border-radius: 999px;
+        border-radius: 0;
         color: #475467;
         font-size: 0.88rem;
         font-weight: 700;
@@ -1414,7 +1414,7 @@ function _dedupeProspects(players) {
     }
 
     .filter-tab-item:focus-visible {
-        outline: 3px solid rgba(0, 53, 128, 0.2);
+        outline: 3px solid rgba(16, 24, 40, 0.18);
         outline-offset: 2px;
     }
 
@@ -1436,8 +1436,8 @@ function _dedupeProspects(players) {
         display: inline-flex;
         gap: 0.15rem;
         padding: 0.25rem;
-        border: 1px solid rgba(0, 53, 128, 0.08);
-        border-radius: 999px;
+        border: 1px solid rgba(16, 24, 40, 0.1);
+        border-radius: 0;
         background: rgba(255, 255, 255, 0.7);
         box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
     }
@@ -1453,7 +1453,7 @@ function _dedupeProspects(players) {
         gap: 0.5rem;
         min-height: 2.4rem;
         padding: 0.5rem 1rem;
-        border-radius: 999px;
+        border-radius: 0;
         color: #475467;
         font-size: 0.88rem;
         font-weight: 700;
@@ -1481,7 +1481,7 @@ function _dedupeProspects(players) {
     }
 
     .sort-tab-item:focus-visible {
-        outline: 3px solid rgba(0, 53, 128, 0.2);
+        outline: 3px solid rgba(16, 24, 40, 0.18);
         outline-offset: 2px;
     }
 
@@ -1498,6 +1498,15 @@ function _dedupeProspects(players) {
         box-shadow:
             0 6px 14px rgba(16, 185, 129, 0.25),
             inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+
+    :global(.page-background button),
+    :global(.page-background select),
+    :global(.page-background a),
+    :global(.page-background .rounded-full),
+    :global(.page-background .rounded-lg),
+    :global(.page-background .rounded-xl) {
+        border-radius: 0 !important;
     }
 
     @media (max-width: 480px) {

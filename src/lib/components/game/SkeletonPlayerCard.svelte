@@ -49,16 +49,16 @@
     .card {
         position: relative;
         overflow: hidden;
-        border-radius: 20px;
+        border-radius: 0;
         padding: 1rem;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 252, 0.94));
         border: 1px solid rgba(226, 232, 240, 0.8);
-        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+        box-shadow: none;
         min-height: 260px;
     }
 
     @media (max-width: 767px) {
-        .card { padding: 0.85rem; border-radius: 16px; }
+        .card { padding: 0.85rem; border-radius: 0; }
     }
 
     .card__stripe--skeleton {
@@ -80,7 +80,7 @@
         height: 16px;
         width: 70%;
         background: #e5e7eb;
-        border-radius: 6px;
+        border-radius: 0;
         margin-bottom: 0.35rem;
     }
 
@@ -88,14 +88,14 @@
         height: 10px;
         width: 40%;
         background: #e5e7eb;
-        border-radius: 6px;
+        border-radius: 0;
     }
 
     .card__badge-skeleton {
         width: 44px;
         height: 24px;
         background: #e5e7eb;
-        border-radius: 999px;
+        border-radius: 0;
         flex-shrink: 0;
     }
 
@@ -122,12 +122,12 @@
         height: 12px;
         width: 50%;
         background: #f3f4f6;
-        border-radius: 6px;
+        border-radius: 0;
     }
 
     .card__matchup-skeleton {
         height: 28px;
-        border-radius: 999px;
+        border-radius: 0;
         background: #f3f4f6;
         margin-top: 0.5rem;
     }
@@ -156,14 +156,14 @@
         height: 10px;
         width: 60px;
         background: #e5e7eb;
-        border-radius: 4px;
+        border-radius: 0;
     }
 
     .card__stat-meta-context-skeleton {
         height: 10px;
         width: 80px;
         background: #e5e7eb;
-        border-radius: 4px;
+        border-radius: 0;
     }
 
     .card__sub-stats-skeleton {
@@ -185,14 +185,14 @@
         height: 14px;
         width: 18px;
         background: #e5e7eb;
-        border-radius: 4px;
+        border-radius: 0;
     }
 
     .card__sub-stat-label-skeleton {
         height: 8px;
         width: 32px;
         background: #e5e7eb;
-        border-radius: 4px;
+        border-radius: 0;
     }
 
     .card__footer {
@@ -206,13 +206,13 @@
         height: 8px;
         width: 80px;
         background: #f3f4f6;
-        border-radius: 4px;
+        border-radius: 0;
     }
 
     .card__footer-btn-skeleton {
         width: 44px;
         height: 22px;
         background: #e5e7eb;
-        border-radius: 6px;
+        border-radius: 0;
     }
 </style>

@@ -168,7 +168,7 @@ onDestroy(() => {
         height: 400px;
         background: #ffffff;
         border-radius: 10px;
-        border: 1px solid rgba(0, 53, 128, 0.12);
+        border: 1px solid rgba(16, 24, 40, 0.12);
         box-shadow:
             0 8px 22px rgba(0, 53, 128, 0.1),
             0 1px 4px rgba(16, 24, 40, 0.04);
@@ -234,7 +234,7 @@ onDestroy(() => {
         gap: 0.3rem;
         background: var(--accent-ice, #eef3fb);
         color: var(--accent, #003580);
-        border: 1px solid rgba(0, 53, 128, 0.18);
+        border: 1px solid rgba(16, 24, 40, 0.14);
         border-radius: 999px;
         padding: 2px 7px 2px 5px;
         font-size: 8px;

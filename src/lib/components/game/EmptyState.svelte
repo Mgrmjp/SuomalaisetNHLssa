@@ -263,12 +263,12 @@ const emptyStateStats = $derived.by(() => {
         width: 100%;
         margin: 0 auto;
         background: var(--card-bg, rgba(255, 255, 255, 0.9));
-        border-radius: var(--card-radius, 20px);
-        padding: 2.25rem var(--card-padding-x, 1.5rem) 1.75rem;
+        border-radius: 0;
+        padding: var(--card-padding-y, 1.25rem) var(--card-padding-x, 1.5rem);
         text-align: center;
         border: var(--card-border, 1px solid rgba(16, 24, 40, 0.08));
-        box-shadow: var(--card-shadow, 0 24px 70px rgba(16, 24, 40, 0.08));
-        backdrop-filter: blur(18px);
+        box-shadow: none;
+        backdrop-filter: none;
         position: relative;
         overflow: hidden;
     }
@@ -280,8 +280,8 @@ const emptyStateStats = $derived.by(() => {
         left: 0;
         right: 0;
         height: 3px;
-        background: var(--card-accent, linear-gradient(90deg, #003580, #4f7dd8, #b9cdf0));
-        border-radius: 20px 20px 0 0;
+        background: var(--accent, #003580);
+        border-radius: 0;
     }
 
     .empty-state-content {
@@ -297,9 +297,6 @@ const emptyStateStats = $derived.by(() => {
         margin: 0 auto 1rem;
         border-radius: 9999px;
         color: #fff;
-        box-shadow:
-            0 1px 2px rgba(0, 0, 0, 0.04),
-            0 12px 28px rgba(0, 53, 128, 0.18);
     }
 
     .empty-state-icon--premium {
@@ -308,16 +305,10 @@ const emptyStateStats = $derived.by(() => {
 
     .empty-state-icon--break {
         background: #f59e0b;
-        box-shadow:
-            0 1px 2px rgba(0, 0, 0, 0.06),
-            0 6px 16px rgba(245, 158, 11, 0.18);
     }
 
     .empty-state-icon--offseason {
         background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-        box-shadow:
-            0 1px 2px rgba(0, 0, 0, 0.06),
-            0 8px 20px rgba(249, 115, 22, 0.2);
     }
 
     .empty-state-icon svg {
@@ -361,8 +352,8 @@ const emptyStateStats = $derived.by(() => {
     .empty-state-stat {
         min-width: 9rem;
         padding: 0.75rem 1rem;
-        border: 1px solid rgba(0, 53, 128, 0.08);
-        border-radius: var(--card-radius-sm, 14px);
+        border: 1px solid rgba(16, 24, 40, 0.08);
+        border-radius: 0;
         background: rgba(248, 250, 255, 0.7);
     }
 
@@ -396,7 +387,7 @@ const emptyStateStats = $derived.by(() => {
         font-weight: var(--eyebrow-weight, 800);
         letter-spacing: var(--eyebrow-track, 0.1em);
         text-transform: uppercase;
-        color: var(--accent, #003580);
+        color: var(--eyebrow-color, #667085);
         margin-bottom: 0.85rem;
         text-align: center;
     }
@@ -413,21 +404,19 @@ const emptyStateStats = $derived.by(() => {
         justify-content: space-between;
         flex-wrap: wrap;
         gap: 0.5rem 0.9rem;
-        border: 1px solid rgba(0, 53, 128, 0.08);
-        border-radius: var(--card-radius-sm, 14px);
+        border: 1px solid rgba(16, 24, 40, 0.08);
+        border-radius: 0;
         background: rgba(248, 250, 255, 0.5);
         padding: 0.7rem 0.95rem;
         transition:
-            box-shadow 0.15s ease,
             border-color 0.15s ease,
             transform 0.12s ease,
             background 0.15s ease;
     }
 
     .upcoming-game-row:hover {
-        border-color: rgba(0, 53, 128, 0.2);
+        border-color: rgba(16, 24, 40, 0.18);
         background: rgba(255, 255, 255, 0.9);
-        box-shadow: 0 4px 18px -6px rgba(0, 53, 128, 0.15);
         transform: translateY(-1px);
     }
 
@@ -476,9 +465,9 @@ const emptyStateStats = $derived.by(() => {
         align-items: center;
         gap: 0.25rem;
         padding: 0.08rem 0.6rem;
-        border-radius: 999px;
+        border-radius: 0;
         background: var(--accent-ice, #eef3fb);
-        border: 1px solid rgba(0, 53, 128, 0.12);
+        border: 1px solid rgba(16, 24, 40, 0.12);
         font-size: 0.72rem;
         font-weight: 700;
         letter-spacing: 0.02em;
@@ -498,7 +487,7 @@ const emptyStateStats = $derived.by(() => {
         width: 100%;
         padding-top: 0.45rem;
         margin-top: 0.15rem;
-        border-top: 1px dashed rgba(0, 53, 128, 0.1);
+        border-top: 1px dashed rgba(16, 24, 40, 0.1);
         font-size: 0.78rem;
         line-height: 1.4;
         color: var(--color-muted, #475467);
@@ -534,15 +523,15 @@ const emptyStateStats = $derived.by(() => {
     }
 
     .daily-news-item {
-        border: 1px solid rgba(0, 53, 128, 0.08);
-        border-radius: 12px;
+        border: 1px solid rgba(16, 24, 40, 0.08);
+        border-radius: 0;
         background: #ffffff;
         padding: 0.85rem 1rem;
         transition: border-color 0.15s ease;
     }
 
     .daily-news-item:hover {
-        border-color: rgba(0, 53, 128, 0.2);
+        border-color: rgba(16, 24, 40, 0.18);
     }
 
     .daily-news-title {
@@ -578,7 +567,7 @@ const emptyStateStats = $derived.by(() => {
         font-weight: 600;
         color: var(--color-muted, #667085);
         padding: 0.1rem 0.45rem;
-        border-radius: 6px;
+        border-radius: 0;
         background: var(--accent-ice, #eef3fb);
         max-width: 60%;
         overflow: hidden;

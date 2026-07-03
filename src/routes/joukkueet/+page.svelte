@@ -62,7 +62,9 @@ import { resetToDefault } from '$lib/stores/gameData.js'
     </div>
 
     <!-- Navigation -->
-    <NavTabs />
+    <div class="page-nav">
+        <NavTabs />
+    </div>
 
     <!-- Content -->
     <div class="bg-white/50 rounded-xl">
@@ -71,6 +73,10 @@ import { resetToDefault } from '$lib/stores/gameData.js'
 </div>
 
 <style>
+    .page-nav {
+        margin-bottom: 1.5rem;
+    }
+
     .logo-button:hover .logo-img {
         transform: scale(1.05) rotate(-2deg);
         filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));

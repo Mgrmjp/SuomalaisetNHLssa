@@ -75,29 +75,43 @@ const currentPath = $derived($page.url.pathname)
 <style>
     .nav-tabs-container {
         display: flex;
-        justify-content: safe flex-start;
+        justify-content: stretch;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow: hidden;
         padding: 0;
-        margin-bottom: 1.5rem;
+        margin: 0;
     }
 
     .nav-tabs-list {
-        display: inline-flex;
-        gap: 0.15rem;
+        display: flex;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        gap: 0.2rem;
         padding: 0.25rem;
-        border: 1px solid rgba(0, 53, 128, 0.08);
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.7);
-        box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
+        border: var(--card-border);
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.76);
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .nav-tabs-list::-webkit-scrollbar {
+        display: none;
     }
 
     .nav-tab-item {
         position: relative;
         display: inline-flex;
+        flex: 1 0 auto;
         align-items: center;
+        justify-content: center;
         gap: 0.5rem;
         min-height: 2.4rem;
         padding: 0.5rem 0.9rem;
-        border-radius: 999px;
+        border-radius: 0;
         color: #475467;
         font-size: 0.88rem;
         font-weight: 700;
@@ -107,26 +121,22 @@ const currentPath = $derived($page.url.pathname)
         transition:
             background 0.16s ease,
             color 0.16s ease,
-            box-shadow 0.16s ease,
             transform 0.16s ease;
     }
 
     .nav-tab-item:hover {
-        color: var(--accent-strong);
-        background: var(--accent-ice);
+        color: var(--color-ink);
+        background: rgba(16, 24, 40, 0.04);
     }
 
     .nav-tab-item:focus-visible {
-        outline: 3px solid rgba(0, 53, 128, 0.2);
+        outline: 3px solid rgba(16, 24, 40, 0.18);
         outline-offset: 2px;
     }
 
     .nav-tab-item--active {
         background: var(--accent);
         color: #ffffff;
-        box-shadow:
-            0 6px 14px rgba(0, 53, 128, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
 
     .nav-tab-icon {
@@ -148,10 +158,6 @@ const currentPath = $derived($page.url.pathname)
     }
 
     @media (min-width: 768px) {
-        .nav-tabs-container {
-            justify-content: safe center;
-        }
-
         .nav-tab-item {
             padding-inline: 1rem;
         }
@@ -159,6 +165,7 @@ const currentPath = $derived($page.url.pathname)
 
     @media (max-width: 480px) {
         .nav-tab-item {
+            flex-grow: 0;
             padding-inline: 0.75rem;
             font-size: 0.82rem;
         }

@@ -18,6 +18,7 @@ const defaultCorrections = {
     Parssinen: 'Pärssinen',
     Puljujarvi: 'Puljujärvi',
     Maatta: 'Määttä',
+    Määtä: 'Määttä',
     Niemelainen: 'Niemeläinen',
     Hameenaho: 'Hämeenaho',
     Jamsen: 'Jämsén',

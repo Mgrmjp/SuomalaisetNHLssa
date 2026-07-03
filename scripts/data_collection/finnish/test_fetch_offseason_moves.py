@@ -30,6 +30,9 @@ from fetch_offseason_moves import (
     merge_moves,
     build_output,
     parse_date_prefix,
+    extract_signing_links,
+    extract_move_date_from_article,
+    enrich_free_agent_dates,
 )
 
 
@@ -313,10 +316,10 @@ def test_parse_free_agent_old_teams():
 
 
 def test_generate_move_id_stable():
-    id1 = generate_move_id("8471234", "2026-07-01", "trade", "NYR")
-    id2 = generate_move_id("8471234", "2026-07-01", "trade", "NYR")
+    id1 = generate_move_id("8471234", "trade", "BOS", "NYR")
+    id2 = generate_move_id("8471234", "trade", "BOS", "NYR")
     assert id1 == id2
-    id3 = generate_move_id("8471234", "2026-07-02", "trade", "NYR")
+    id3 = generate_move_id("8471234", "trade", "BOS", "DAL")
     assert id1 != id3
     print("PASSED: generate_move_id_stable")
 
@@ -326,19 +329,19 @@ def test_merge_moves_deduplication():
         "offseasonYear": 2026,
         "moves": [
             {
-                "moveId": "abc123",
+                "moveId": "old-date-based-id",
                 "playerId": "8471234",
                 "playerName": "Joonas Korpisalo",
                 "oldTeam": "BOS",
                 "newTeam": "NYR",
                 "moveType": "trade",
-                "date": "2026-07-01",
+                "date": "2026-07-03",
             }
         ],
     }
     new_moves = [
         {
-            "moveId": "abc123",
+            "moveId": "stable-id",
             "playerId": "8471234",
             "playerName": "Joonas Korpisalo",
             "oldTeam": "BOS",
@@ -351,7 +354,78 @@ def test_merge_moves_deduplication():
     merged = merge_moves(existing, new_moves, 2026)
     assert len(merged) == 1
     assert merged[0].get("sourceUrl") == "https://nhl.com"
+    assert merged[0]["date"] == "2026-07-01"
     print("PASSED: merge_moves_deduplication")
+
+
+def test_extract_signing_links():
+    html = """
+    <a href="/news/joel-kiviranta-signs-with-stars">
+      Kiviranta signs 1-year contract with Stars
+    </a>
+    """
+    links = extract_signing_links(html)
+    assert links["kiviranta signs 1-year contract with stars"] == (
+        "https://www.nhl.com/news/joel-kiviranta-signs-with-stars"
+    )
+    print("PASSED: extract_signing_links")
+
+
+def test_article_date_uses_weekday_before_publish_date():
+    html = """
+    <article>
+      <p>Joel Kiviranta signed a one-year contract with Dallas on Wednesday.</p>
+    </article>
+    """
+    date = extract_move_date_from_article(
+        html, "Joel Kiviranta", "2026-07-02", 2026
+    )
+    assert date == "2026-07-01"
+    print("PASSED: article_date_uses_weekday_before_publish_date")
+
+
+def test_article_date_uses_explicit_transaction_date():
+    html = """
+    <article>
+      <p>VEGAS (July 1, 2026): The team announced today, July 1, the following roster transactions.</p>
+      <p>The team agreed to terms with defenseman Ville Heinola.</p>
+    </article>
+    """
+    date = extract_move_date_from_article(
+        html, "Ville Heinola", "2026-07-02", 2026
+    )
+    assert date == "2026-07-01"
+    print("PASSED: article_date_uses_explicit_transaction_date")
+
+
+def test_enrich_free_agent_dates_uses_linked_article():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    tracker_html = """
+    <h2>DALLAS STARS</h2>
+    <h5>Signings</h5>
+    <a href="/news/joel-kiviranta-signs-with-stars">Kiviranta signs 1-year contract with Stars</a>
+    """
+    paragraphs = [
+        "DALLAS STARS",
+        "Signings",
+        "Kiviranta signs 1-year contract with Stars",
+    ]
+    moves = parse_free_agent_entries(
+        paragraphs, by_last, by_full, "2026-07-03"
+    )
+    article_html = """
+    <script type="application/ld+json">{"datePublished":"2026-07-02T12:00:00Z"}</script>
+    <p>Joel Kiviranta signed a one-year contract with Dallas on Wednesday.</p>
+    """
+    enriched = enrich_free_agent_dates(
+        moves, tracker_html, 2026, fetcher=lambda _url: article_html
+    )
+    assert enriched[0]["date"] == "2026-07-01"
+    assert enriched[0]["sourceUrl"].endswith(
+        "/news/joel-kiviranta-signs-with-stars"
+    )
+    print("PASSED: enrich_free_agent_dates_uses_linked_article")
 
 
 def test_merge_moves_adds_new():
@@ -442,6 +516,10 @@ if __name__ == "__main__":
     test_parse_free_agent_old_teams()
     test_generate_move_id_stable()
     test_merge_moves_deduplication()
+    test_extract_signing_links()
+    test_article_date_uses_weekday_before_publish_date()
+    test_article_date_uses_explicit_transaction_date()
+    test_enrich_free_agent_dates_uses_linked_article()
     test_merge_moves_adds_new()
     test_build_output_structure()
     test_source_date_fallback()

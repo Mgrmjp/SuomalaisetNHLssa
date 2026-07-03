@@ -8,12 +8,15 @@ const { movesData } = $props()
 
 let _expanded = $state(false)
 
+const COLLAPSED_MOVE_LIMIT = 5
+
 const moves = $derived(movesData?.moves || [])
 const totalMoves = $derived(moves.length)
 const tradeCount = $derived(moves.filter((m) => m.moveType === 'trade').length)
 const faCount = $derived(moves.filter((m) => m.moveType === 'free_agent').length)
-const visibleMoves = $derived(_expanded ? moves : moves.slice(0, 5))
-const hasMore = $derived(moves.length > 5)
+const visibleMoves = $derived(_expanded ? moves : moves.slice(0, COLLAPSED_MOVE_LIMIT))
+const hasMore = $derived(moves.length > COLLAPSED_MOVE_LIMIT)
+const hiddenMoveCount = $derived(_expanded ? 0 : Math.max(0, totalMoves - COLLAPSED_MOVE_LIMIT))
 const offseasonYear = $derived(movesData?.offseasonYear || 2026)
 const updatedAt = $derived(movesData?.updatedAt || '')
 const windowEnd = $derived(movesData?.window?.end || '')
@@ -65,7 +68,7 @@ function toggleExpand() {
     <div class="panel__inner">
         <div class="panel__eyebrow rink-divider">Siirrot</div>
         <div class="moves-header">
-            <div class="min-w-0">
+            <div class="moves-header__copy">
                 <h2 id="moves-title" class="moves-header__title">
                     Suomalaisten NHL-siirrot {offseasonYear}
                 </h2>
@@ -75,7 +78,7 @@ function toggleExpand() {
                     {countLabel(faCount, 'vapaan agentin siirto', 'vapaan agentin siirtoa')}
                 </p>
             </div>
-            {#if hasMore}
+            {#if hasMore && _expanded}
                 <button
                     type="button"
                     class="moves-header__toggle"
@@ -131,6 +134,17 @@ function toggleExpand() {
                         </div>
                     </div>
                 {/each}
+                {#if hiddenMoveCount > 0}
+                    <button
+                        type="button"
+                        class="moves-more"
+                        onclick={toggleExpand}
+                        aria-expanded={_expanded}
+                        aria-controls="moves-list"
+                    >
+                        ja {hiddenMoveCount} lisää
+                    </button>
+                {/if}
             </div>
         {/if}
 
@@ -149,18 +163,11 @@ function toggleExpand() {
         background: var(--card-bg);
         border: var(--card-border);
         border-radius: var(--card-radius);
-        box-shadow: var(--card-shadow);
-        backdrop-filter: blur(18px);
+        box-shadow: none;
+        backdrop-filter: none;
         width: 100%;
-    }
-
-    .panel--moves::before {
-        content: "";
-        position: absolute;
-        inset: 0 0 auto;
-        height: 3px;
-        background: linear-gradient(90deg, #003580 0%, #4f7dd8 60%, #b9cdf0 100%);
-        opacity: 0.95;
+        max-width: var(--rail-max);
+        margin: 0 auto;
     }
 
     .panel__inner {
@@ -173,10 +180,14 @@ function toggleExpand() {
     }
 
     .moves-header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
+        display: grid;
+        justify-items: center;
+        gap: 0.6rem;
+    }
+
+    .moves-header__copy {
+        min-width: 0;
+        max-width: 34rem;
     }
 
     .moves-header__title {
@@ -194,21 +205,20 @@ function toggleExpand() {
     }
 
     .moves-header__toggle {
-        flex-shrink: 0;
-        color: var(--accent);
-        font-size: 0.82rem;
+        color: #475467;
+        font-size: 0.78rem;
         font-weight: 700;
         background: transparent;
-        border: 1px solid rgba(0, 53, 128, 0.16);
-        border-radius: 999px;
-        padding: 0.35rem 0.75rem;
+        border: 1px solid rgba(16, 24, 40, 0.12);
+        border-radius: 0;
+        padding: 0.3rem 0.7rem;
         cursor: pointer;
         transition: background 0.15s ease, color 0.15s ease;
     }
 
     .moves-header__toggle:hover {
-        background: var(--accent-ice);
-        color: var(--accent-strong);
+        background: #f7f8fa;
+        color: var(--accent);
     }
 
     .moves-stale {
@@ -216,7 +226,7 @@ function toggleExpand() {
         padding: 0.5rem 0.75rem;
         background: rgba(234, 179, 8, 0.1);
         border: 1px solid rgba(234, 179, 8, 0.3);
-        border-radius: var(--card-radius-sm);
+        border-radius: 0;
         color: #92400e;
         font-size: 0.82rem;
     }
@@ -247,6 +257,21 @@ function toggleExpand() {
 
     .move-row:last-child {
         border-bottom: none;
+    }
+
+    .moves-more {
+        appearance: none;
+        border: 0;
+        background: transparent;
+        padding: 0.6rem 0.25rem 0.15rem;
+        color: var(--color-muted);
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .moves-more:hover {
+        color: var(--accent);
     }
 
     .move-row__date {
@@ -291,7 +316,7 @@ function toggleExpand() {
         display: inline-flex;
         align-items: center;
         padding: 0.15rem 0.5rem;
-        border-radius: 999px;
+        border-radius: 0;
         font-size: 0.7rem;
         font-weight: 700;
         background: rgba(16, 185, 129, 0.12);
@@ -299,8 +324,8 @@ function toggleExpand() {
     }
 
     .move-row__badge--trade {
-        background: rgba(59, 130, 246, 0.12);
-        color: #1e40af;
+        background: rgba(71, 84, 103, 0.1);
+        color: #344054;
     }
 
     .move-row__teams {

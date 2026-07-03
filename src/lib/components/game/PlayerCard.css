@@ -69,36 +69,28 @@
     width: 100%;
     min-height: 100%;
     overflow: hidden;
-    border-radius: 20px;
+    border-radius: 0;
     padding: 1.25rem 1.25rem 1rem;
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(16, 24, 40, 0.08);
-    border-top: 3px solid var(--accent, #3b82f6);
-    box-shadow:
-        0 18px 52px rgba(16, 24, 40, 0.08),
-        0 2px 6px rgba(16, 24, 40, 0.04);
-    backdrop-filter: blur(16px);
+    border-top: 3px solid rgba(16, 24, 40, 0.14);
+    box-shadow: none;
+    backdrop-filter: none;
     transition:
         transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
         border-color 180ms ease;
-    will-change: transform, box-shadow;
+    will-change: transform;
     cursor: pointer;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
 .card:hover {
-    box-shadow:
-        0 24px 62px rgba(16, 24, 40, 0.12),
-        0 4px 10px rgba(16, 24, 40, 0.05);
-    border-color: color-mix(in srgb, var(--accent, #3b82f6) 30%, rgba(226, 232, 240, 0.8));
+    border-color: rgba(16, 24, 40, 0.16);
 }
 
 .card:active {
-    box-shadow:
-        0 1px 4px rgba(15, 23, 42, 0.06),
-        0 6px 16px rgba(15, 23, 42, 0.08);
+    border-color: rgba(16, 24, 40, 0.22);
 }
 
 .card.pressed {
@@ -108,7 +100,7 @@
 @media (max-width: 767px) {
     .card {
         padding: 1rem;
-        border-radius: 16px;
+        border-radius: 0;
     }
 }
 
@@ -313,7 +305,7 @@
     justify-content: space-between;
     gap: 0.75rem;
     padding: 0.58rem 0.7rem;
-    border-radius: 14px;
+    border-radius: 0;
     background: rgba(248, 250, 252, 0.9);
     border: 1px solid rgba(226, 232, 240, 0.75);
 }
@@ -341,7 +333,7 @@
 
 .card__gamebar-status {
     padding: 0.24rem 0.55rem;
-    border-radius: 999px;
+    border-radius: 0;
     border: 1px solid transparent;
     font-size: 0.6rem;
     font-weight: 600;
@@ -370,7 +362,7 @@
     min-width: 1.2rem;
     height: 1.2rem;
     padding: 0 0.28rem;
-    border-radius: 999px;
+    border-radius: 0;
     border: 1px solid transparent;
     font-size: 0.62rem;
     font-weight: 700;
@@ -473,6 +465,7 @@
 }
 
 .card__ring {
+    box-sizing: border-box;
     width: 84px;
     height: 84px;
     border-radius: 999px;
@@ -485,16 +478,7 @@
             var(--accent, #3b82f6) 0deg var(--progress, 0deg),
             rgba(0, 0, 0, 0.06) var(--progress, 0deg) 360deg
         );
-    box-shadow:
-        0 0 0 8px color-mix(in srgb, var(--accent, #3b82f6) 8%, white),
-        0 0 20px color-mix(in srgb, var(--accent, #3b82f6) 15%, transparent);
-    transition: box-shadow 300ms ease;
-}
-
-.card:hover .card__ring {
-    box-shadow:
-        0 0 0 8px color-mix(in srgb, var(--accent, #3b82f6) 12%, white),
-        0 0 28px color-mix(in srgb, var(--accent, #3b82f6) 25%, transparent);
+    border: 8px solid rgba(16, 24, 40, 0.06);
 }
 
 .card__ring span {
@@ -508,7 +492,7 @@
     background:
         radial-gradient(closest-side, white 78%, transparent 79% 100%),
         conic-gradient(#d1d5db 0deg 0deg, rgba(0, 0, 0, 0.06) 0deg 360deg);
-    box-shadow: 0 0 0 8px rgba(209, 213, 219, 0.15);
+    border-color: rgba(209, 213, 219, 0.22);
 }
 
 .card__ring--empty span {
@@ -603,8 +587,8 @@
 
 .card__detail-btn {
     padding: 0.35rem 0.75rem;
-    border-radius: 8px;
-    border: 1px solid var(--accent, #3b82f6);
+    border-radius: 0;
+    border: 1px solid rgba(16, 24, 40, 0.14);
     background: transparent;
     color: var(--accent, #3b82f6);
     font-size: 0.75rem;
@@ -635,7 +619,7 @@
 
 .card__footer-btn {
     padding: 0.25rem 0.6rem;
-    border-radius: 6px;
+    border-radius: 0;
     border: none;
     background: var(--accent, #003580);
     color: white;
@@ -647,7 +631,6 @@
 
 .card__footer-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 8px 18px color-mix(in srgb, var(--accent, #003580) 24%, transparent);
 }
 
 /* ==============================
@@ -670,7 +653,7 @@
     align-items: center;
     gap: 0.2rem;
     padding: 0.5rem;
-    border-radius: 12px;
+    border-radius: 0;
     background: rgba(243, 244, 246, 0.5);
 }
 
@@ -692,7 +675,7 @@
     font-size: 0.85rem;
     color: #6b7280;
     padding: 0.5rem;
-    border-radius: 10px;
+    border-radius: 0;
     background: rgba(243, 244, 246, 0.5);
 }
 
@@ -708,9 +691,6 @@
     height: 56px;
     border-radius: 9999px;
     background: linear-gradient(135deg, #e2e8f0, #f8fafc);
-    box-shadow:
-        0 6px 16px rgba(15, 23, 42, 0.12),
-        inset 0 1px 0 rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(148, 163, 184, 0.4);
     display: flex;
     align-items: center;
@@ -758,7 +738,7 @@
 @media (max-width: 767px) {
     .card {
         padding: 1.05rem 1rem 0.95rem;
-        border-radius: 16px;
+        border-radius: 0;
     }
 
     .card__content {

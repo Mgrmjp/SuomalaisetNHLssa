@@ -333,7 +333,7 @@ function getLogoSrc(ad) {
         gap: 0.35rem;
         background: var(--accent-ice, #eef3fb);
         color: var(--accent, #003580);
-        border: 1px solid rgba(0, 53, 128, 0.18);
+        border: 1px solid rgba(16, 24, 40, 0.14);
         border-radius: 999px;
         padding: 3px 10px 3px 8px;
         font-size: 10px;

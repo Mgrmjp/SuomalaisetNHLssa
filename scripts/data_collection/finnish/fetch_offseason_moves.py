@@ -17,6 +17,7 @@ import sys
 import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -81,6 +82,17 @@ NON_NHL_KEYWORDS = [
 ]
 
 NAME_SUFFIX_RE = re.compile(r"\b(Jr|Sr|II|III|IV)\.?\b", re.IGNORECASE)
+
+MONTHS = {
+    "JANUARY": 1, "FEBRUARY": 2, "MARCH": 3, "APRIL": 4,
+    "MAY": 5, "JUNE": 6, "JULY": 7, "AUGUST": 8,
+    "SEPTEMBER": 9, "OCTOBER": 10, "NOVEMBER": 11, "DECEMBER": 12,
+}
+
+WEEKDAYS = {
+    "monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3,
+    "friday": 4, "saturday": 5, "sunday": 6,
+}
 
 
 def strip_diacritics(text):
@@ -166,10 +178,157 @@ def extract_article_text(html):
     return paragraphs
 
 
+def extract_signing_links(html):
+    """Map normalized signing headlines to their linked NHL article URL."""
+    soup = BeautifulSoup(html, "html.parser")
+    links = {}
+    for anchor in soup.find_all("a", href=True):
+        text = re.sub(r"\s+", " ", anchor.get_text(" ", strip=True)).strip()
+        if not text or not re.search(r"\bsigns?\b", text, re.IGNORECASE):
+            continue
+        links[text.lower()] = urljoin(FREE_AGENT_TRACKER_URL, anchor["href"])
+    return links
+
+
+def find_signing_source_url(source_text, signing_links):
+    key = re.sub(r"\s+", " ", (source_text or "").strip()).lower()
+    if key in signing_links:
+        return signing_links[key]
+    for headline, url in signing_links.items():
+        if headline in key or key in headline:
+            return url
+    return None
+
+
+def parse_calendar_date(text, default_year):
+    match = re.search(
+        r"\b(JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|"
+        r"SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\s+(\d{1,2})(?:,\s*(\d{4}))?\b",
+        text,
+        re.IGNORECASE,
+    )
+    if not match:
+        return None
+    month = MONTHS[match.group(1).upper()]
+    day = int(match.group(2))
+    year = int(match.group(3) or default_year)
+    try:
+        return datetime(year, month, day).strftime("%Y-%m-%d")
+    except ValueError:
+        return None
+
+
+def date_for_weekday_on_or_before(weekday_name, published_date):
+    try:
+        published = datetime.strptime(published_date, "%Y-%m-%d")
+    except (TypeError, ValueError):
+        return None
+    target_weekday = WEEKDAYS.get(weekday_name.lower())
+    if target_weekday is None:
+        return None
+    days_back = (published.weekday() - target_weekday) % 7
+    return (published - timedelta(days=days_back)).strftime("%Y-%m-%d")
+
+
+def extract_move_date_from_article(html, player_name, published_date, offseason_year):
+    """Extract the transaction date, which can precede the article publish date."""
+    soup = BeautifulSoup(html, "html.parser")
+    player_key = normalize_name_key(player_name)
+    paragraphs = [
+        re.sub(r"\s+", " ", el.get_text(" ", strip=True)).strip()
+        for el in soup.find_all(["p", "li"])
+    ]
+
+    move_language = re.compile(
+        r"\b(announced|transaction|agreed to terms|signed|signing|acquired|traded)\b",
+        re.IGNORECASE,
+    )
+    player_paragraphs = [
+        text
+        for text in paragraphs
+        if player_key in normalize_name_key(text) and move_language.search(text)
+    ]
+    contextual_paragraphs = [
+        text
+        for text in paragraphs
+        if re.search(
+            r"\b(announced today|following roster transactions|agreed to terms)\b",
+            text,
+            re.IGNORECASE,
+        )
+    ]
+    weekday_paragraphs = [
+        text
+        for text in paragraphs
+        if re.search(r"\bsigned\b", text, re.IGNORECASE)
+        and re.search(
+            r"\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b",
+            text,
+            re.IGNORECASE,
+        )
+    ]
+
+    for text in player_paragraphs + contextual_paragraphs:
+        explicit_date = parse_calendar_date(text, offseason_year)
+        if explicit_date:
+            return explicit_date
+
+    for text in player_paragraphs + contextual_paragraphs + weekday_paragraphs:
+        weekday_match = re.search(
+            r"\b(?:on\s+)?(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b",
+            text,
+            re.IGNORECASE,
+        )
+        if weekday_match:
+            weekday_date = date_for_weekday_on_or_before(
+                weekday_match.group(1), published_date
+            )
+            if weekday_date:
+                return weekday_date
+
+    return published_date
+
+
+def enrich_free_agent_dates(moves, tracker_html, offseason_year, fetcher=fetch_page_html):
+    signing_links = extract_signing_links(tracker_html)
+    article_cache = {}
+
+    for move in moves:
+        source_url = find_signing_source_url(move.get("sourceText", ""), signing_links)
+        if not source_url:
+            continue
+
+        if source_url not in article_cache:
+            article_html = fetcher(source_url)
+            if article_html:
+                article_date = extract_article_date(
+                    article_html, parse_json_ld(article_html)
+                )
+                article_cache[source_url] = (article_html, article_date)
+            else:
+                article_cache[source_url] = (None, None)
+
+        article_html, published_date = article_cache[source_url]
+        if not article_html:
+            continue
+
+        move_date = extract_move_date_from_article(
+            article_html,
+            move["player"].get("name", ""),
+            published_date,
+            offseason_year,
+        )
+        if move_date:
+            move["date"] = move_date
+        move["sourceUrl"] = source_url
+
+    return moves
+
+
 def parse_date_prefix(text):
     m = re.match(
         r"(JANUARY|FEBRUARY|MARCH|APRIL|MAY|JUNE|JULY|AUGUST|"
-        r"SEPTEMBER|OCTOBER|NOVEMBER|DEMBER)\s+(\d{1,2})",
+        r"SEPTEMBER|OCTOBER|NOVEMBER|DECEMBER)\s+(\d{1,2})",
         text,
         re.IGNORECASE,
     )
@@ -177,12 +336,7 @@ def parse_date_prefix(text):
         return None, None
     month_str = m.group(1).upper()
     day = int(m.group(2))
-    months = {
-        "JANUARY": 1, "FEBRUARY": 2, "MARCH": 3, "APRIL": 4,
-        "MAY": 5, "JUNE": 6, "JULY": 7, "AUGUST": 8,
-        "SEPTEMBER": 9, "OCTOBER": 10, "NOVEMBER": 11, "DECEMBER": 12,
-    }
-    return months.get(month_str), day
+    return MONTHS.get(month_str), day
 
 
 def build_roster_lookup():
@@ -284,9 +438,18 @@ def is_non_nhl_destination(text):
     return False
 
 
-def generate_move_id(player_id, date, move_type, new_team):
-    raw = f"{player_id}|{date}|{move_type}|{new_team}"
+def generate_move_id(player_id, move_type, old_team, new_team):
+    raw = f"{player_id}|{move_type}|{old_team}|{new_team}"
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
+
+
+def move_identity(move):
+    return "|".join([
+        str(move.get("playerId", "")),
+        str(move.get("moveType", "")),
+        str(move.get("oldTeam", "")),
+        str(move.get("newTeam", "")),
+    ])
 
 
 def parse_trade_entries(paragraphs, roster_by_last, roster_by_full, page_date):
@@ -461,6 +624,7 @@ def parse_free_agent_entries(paragraphs, roster_by_last, roster_by_full, page_da
                 "newTeam": current_team_abbrev,
                 "moveType": "free_agent",
                 "date": page_date,
+                "sourceText": normalized,
             })
 
     return moves
@@ -549,16 +713,14 @@ def load_existing_moves():
 
 def merge_moves(existing, new_moves_list, offseason_year):
     if existing and existing.get("offseasonYear") == offseason_year:
-        existing_moves = {m["moveId"]: m for m in existing.get("moves", [])}
+        existing_moves = {
+            move_identity(move): move for move in existing.get("moves", [])
+        }
     else:
         existing_moves = {}
 
     for move in new_moves_list:
-        mid = move["moveId"]
-        if mid in existing_moves:
-            existing_moves[mid] = move
-        else:
-            existing_moves[mid] = move
+        existing_moves[move_identity(move)] = move
 
     return list(existing_moves.values())
 
@@ -626,6 +788,7 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
             fa_paragraphs, roster_by_last, roster_by_full, fa_page_date
         )
         fa_moves = enrich_old_teams(fa_moves, old_team_lookup)
+        fa_moves = enrich_free_agent_dates(fa_moves, fa_html, offseason_year)
         print(f"  Found {len(fa_moves)} Finnish free-agent signing(s)")
         all_moves.extend(fa_moves)
         source_status["freeAgentTracker"] = "ok"
@@ -643,7 +806,7 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
 
         formatted_moves.append({
             "moveId": generate_move_id(
-                pid, move["date"], move["moveType"], move["newTeam"]
+                pid, move["moveType"], move["oldTeam"], move["newTeam"]
             ),
             "playerId": pid,
             "playerName": name,
@@ -653,9 +816,8 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
             "newTeam": move["newTeam"],
             "moveType": move["moveType"],
             "date": move["date"],
-            "sourceUrl": (
-                TRADE_TRACKER_URL
-                if move["moveType"] == "trade"
+            "sourceUrl": move.get("sourceUrl") or (
+                TRADE_TRACKER_URL if move["moveType"] == "trade"
                 else FREE_AGENT_TRACKER_URL
             ),
         })

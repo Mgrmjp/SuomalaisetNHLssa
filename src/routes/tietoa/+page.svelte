@@ -183,6 +183,6 @@ onMount(() => {
     }
 
     section:hover {
-        border-left-color: #3b82f6;
+        border-left-color: #94a3b8;
     }
 </style>

@@ -101,20 +101,19 @@ function _toggleCalendar() {
 }
 </script>
 
-<div class="date-controls w-full mx-auto space-y-4">
-    <div
-        class="date-controls__card"
-    >
-        <div class="date-controls__navigation-row flex items-center gap-2 md:gap-4">
+<div class="date-controls">
+    <div class="date-controls__card">
+        <div class="date-controls__label">Valittu päivämäärä</div>
+        <div class="date-controls__navigation-row">
             <button
                 type="button"
                 onclick={_goToPreviousDay}
-                class="date-controls__nav-btn nav-btn flex items-center justify-center min-w-[44px] min-h-[44px]"
+                class="date-controls__nav-btn nav-btn"
                 disabled={isPrevDisabled}
                 aria-label="Edellinen päivä"
                 title="Edellinen päivä"
             >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -124,90 +123,46 @@ function _toggleCalendar() {
                 </svg>
             </button>
 
-            <div class="date-controls__main-content flex-1 flex flex-col gap-3">
-                <div
-                    class="date-controls__header-row flex flex-col sm:flex-row items-center justify-between gap-3"
-                >
-                    <div class="date-controls__selected-info text-center sm:text-left">
-                        <div
-                            class="date-controls__label text-xs sm:text-sm font-semibold text-blue-800"
-                        >
-                            Valittu päivämäärä
-                        </div>
-                        <div
-                            class="date-controls__value text-lg sm:text-xl font-bold text-gray-900"
-                        >
-                            {currentDateValue ? _formatDotted(currentDateValue) : "-"}
-                        </div>
-                    </div>
-                    <div class="date-controls__actions flex gap-2 w-full sm:w-auto">
-                        <button
-                            type="button"
-                            onclick={_toggleCalendar}
-                            class="date-controls__toggle-btn flex-1 sm:flex-initial p-2.5 text-gray-600 hover:text-blue-600 hover:bg-blue-50 bg-gray-50 rounded-lg transition-all duration-200 border border-gray-200 flex items-center justify-center min-h-[44px]"
-                            title="Näytä kalenteri"
-                        >
-                            <svg
-                                class="w-6 h-6"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                            </svg>
-                        </button>
-                        <button
-                            type="button"
-                            onclick={_goToToday}
-                            class="date-controls__today-btn flex-[2] sm:flex-initial px-6 py-2.5 text-sm font-semibold text-white rounded-lg gradient-button-primary gradient-button-primary--hover:scale cursor-pointer shadow-sm min-h-[44px]"
-                        >
-                            Tänään
-                        </button>
-                    </div>
-                </div>
+            <button
+                type="button"
+                onclick={_toggleCalendar}
+                class="date-controls__picker-input picker-input"
+                aria-label="Avaa kalenteri"
+            >
+                <span>
+                    {#if currentDateValue}
+                        {_formatDotted(currentDateValue)}
+                    {:else}
+                        Valitse päivämäärä
+                    {/if}
+                </span>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                </svg>
+            </button>
 
-                <div class="date-controls__picker-wrapper relative">
-                    <button
-                        type="button"
-                        onclick={_toggleCalendar}
-                        class="date-controls__picker-input picker-input w-full py-3 text-left flex items-center"
-                        aria-label="Avaa kalenteri"
-                    >
-                        {#if currentDateValue}
-                            {_formatDotted(currentDateValue)}
-                        {:else}
-                            Valitse päivämäärä
-                        {/if}
-                    </button>
-                    <div
-                        class="date-controls__picker-icon absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400"
-                    >
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                            />
-                        </svg>
-                    </div>
-                </div>
-            </div>
+            <button
+                type="button"
+                onclick={_goToToday}
+                class="date-controls__today-btn"
+            >
+                Tänään
+            </button>
 
             <button
                 type="button"
                 onclick={_goToNextDay}
-                class="date-controls__nav-btn date-controls__nav-btn--next nav-btn flex items-center justify-center min-w-[44px] min-h-[44px]"
+                class="date-controls__nav-btn date-controls__nav-btn--next nav-btn"
                 disabled={isNextDisabled}
                 aria-label="Seuraava päivä"
                 title="Seuraava päivä"
             >
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -219,9 +174,7 @@ function _toggleCalendar() {
         </div>
 
         {#if $showCalendarView}
-            <div
-                class="mt-4 animate-in fade-in slide-in-from-top-4 duration-300 flex justify-center"
-            >
+            <div class="date-controls__calendar">
                 <MonthView />
             </div>
         {/if}
@@ -229,64 +182,87 @@ function _toggleCalendar() {
 </div>
 
 <style>
+    .date-controls {
+        width: 100%;
+        max-width: var(--rail-max, 920px);
+        margin: 0 auto;
+    }
+
     .date-controls__card {
         position: relative;
         overflow: visible;
         z-index: 10;
-        max-width: var(--rail-max, 920px);
-        margin: 0 auto;
         border-radius: var(--card-radius, 20px);
-        background:
-            linear-gradient(90deg, #003580, #4f7dd8, #b9cdf0) top / 100% 3px no-repeat,
-            var(--card-bg, rgba(255, 255, 255, 0.9));
-        background-clip: padding-box;
-        background-origin: padding-box;
+        background: var(--card-bg, rgba(255, 255, 255, 0.94));
         border: var(--card-border, 1px solid rgba(16, 24, 40, 0.08));
-        box-shadow: var(--card-shadow, 0 24px 70px rgba(16, 24, 40, 0.08));
-        backdrop-filter: blur(18px);
-        padding: 1rem 1.25rem;
+        box-shadow: none;
+        backdrop-filter: none;
+        clip-path: none;
+        padding: var(--card-padding-y, 1.25rem) var(--card-padding-x, 1.5rem);
+    }
+
+    .date-controls__card::after {
+        display: none;
     }
 
     .date-controls__label {
-        letter-spacing: 0.05em;
+        margin: 0 0 0.4rem 3.25rem;
+        color: var(--eyebrow-color, #667085);
+        font-size: var(--eyebrow-size, 0.68rem);
+        font-weight: var(--eyebrow-weight, 700);
+        letter-spacing: var(--eyebrow-track, 0.12em);
         text-transform: uppercase;
     }
 
-    .date-controls__value {
-        letter-spacing: 0;
+    .date-controls__navigation-row {
+        display: grid;
+        grid-template-columns: 2.75rem minmax(0, 1fr) auto 2.75rem;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .date-controls__today-btn {
-        border: 1px solid rgba(0, 53, 128, 0.18);
-        background: #003580;
+        min-height: 2.75rem;
+        padding: 0.65rem 1.15rem;
+        border: 1px solid rgba(16, 24, 40, 0.14);
+        border-radius: 0;
+        background: var(--accent);
         color: #fff;
-        box-shadow:
-            0 10px 22px rgba(0, 53, 128, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.15s ease, transform 0.15s ease;
     }
 
     .date-controls__today-btn:hover {
-        background: #002b66;
+        background: var(--accent-strong);
         transform: translateY(-1px);
-        box-shadow:
-            0 14px 28px rgba(0, 53, 128, 0.24),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
     .nav-btn {
-        padding: 0.5rem;
-        border-radius: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        padding: 0;
+        border-radius: 0;
         border: 1px solid rgba(16, 24, 40, 0.1);
-        background: white;
+        background: rgba(248, 250, 252, 0.9);
         cursor: pointer;
         color: #344054;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07);
-        transition: all 0.15s ease;
+        box-shadow: none;
+        transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-btn svg {
+        width: 1.2rem;
+        height: 1.2rem;
     }
 
     .nav-btn:hover:not(:disabled) {
-        background: #f6f8fc;
-        transform: translateY(-1px);
+        background: #ffffff;
+        color: var(--accent);
     }
 
     .nav-btn:disabled {
@@ -297,17 +273,73 @@ function _toggleCalendar() {
 
     :global(.picker-input) {
         width: 100%;
-        padding: 0.75rem 0.9rem;
-        border-radius: 0.9rem;
+        min-height: 2.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.65rem 0.85rem;
+        border-radius: 0;
         border: 1px solid rgba(16, 24, 40, 0.1);
         background: rgba(248, 250, 252, 0.82);
         color: #101828;
-        font-weight: 650;
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-align: left;
         cursor: pointer;
+    }
+
+    :global(.picker-input svg) {
+        width: 1.2rem;
+        height: 1.2rem;
+        flex: 0 0 auto;
+        color: #98a2b3;
     }
 
     :global(.picker-input:hover) {
         background: #ffffff;
-        border-color: rgba(0, 53, 128, 0.22);
+        border-color: rgba(16, 24, 40, 0.18);
+    }
+
+    .date-controls__calendar {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 480px) {
+        .date-controls__card {
+            padding: 1rem;
+        }
+
+        .date-controls__label {
+            margin-left: 2.9rem;
+            font-size: 0.64rem;
+        }
+
+        .date-controls__navigation-row {
+            grid-template-columns: 2.5rem minmax(0, 1fr) auto 2.5rem;
+            gap: 0.375rem;
+        }
+
+        .nav-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        :global(.picker-input),
+        .date-controls__today-btn {
+            min-height: 2.5rem;
+        }
+
+        :global(.picker-input) {
+            padding-inline: 0.7rem;
+            font-size: 0.88rem;
+        }
+
+        .date-controls__today-btn {
+            padding-inline: 0.75rem;
+            font-size: 0.8rem;
+        }
     }
 </style>

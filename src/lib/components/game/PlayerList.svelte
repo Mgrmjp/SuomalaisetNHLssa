@@ -564,7 +564,7 @@ $effect(() => {
 
 <style>
     .scoring-list {
-        padding: 2.75rem 0 3.25rem;
+        padding: 0;
         background: transparent;
     }
 
@@ -576,7 +576,7 @@ $effect(() => {
     /* Mobile-only styles for swiper - prevents affecting desktop layout */
     @media (max-width: 767px) {
         .scoring-list {
-            padding: 2rem 0 2.4rem;
+            padding: 0;
         }
 
         /* Essential Swiper styles - only applied on mobile */

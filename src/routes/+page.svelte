@@ -111,6 +111,7 @@ const _metaDescription = $derived.by(() => {
 
 let _showHeroStats = $state(false)
 let _showPlayoffStats = $state(false)
+let _hideFloatingHeader = $state(false)
 
 function toggleHeroStats() {
     _showHeroStats = !_showHeroStats
@@ -118,6 +119,10 @@ function toggleHeroStats() {
 
 function togglePlayoffStats() {
     _showPlayoffStats = !_showPlayoffStats
+}
+
+function toggleFloatingHeader() {
+    _hideFloatingHeader = !_hideFloatingHeader
 }
 
 function formatSavePct(value) {
@@ -143,7 +148,41 @@ onMount(() => {
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 </svelte:head>
 
-<div class="page-shell dashboard-bg">
+<div class="page-shell dashboard-bg" class:page-shell--compact-header={_hideFloatingHeader}>
+    <div class="dashboard__floating-header" class:dashboard__floating-header--hidden={_hideFloatingHeader} aria-label="Päivämäärä ja päänavigaatio">
+        {#if !_hideFloatingHeader}
+            <div id="floating-header-content" class="dashboard__floating-content">
+                <div class="dashboard__floating-topline">
+                    <div class="dashboard__floating-date">
+                        <DateControls />
+                    </div>
+                    <button
+                        type="button"
+                        class="dashboard__floating-toggle"
+                        onclick={toggleFloatingHeader}
+                        aria-expanded={!_hideFloatingHeader}
+                        aria-controls="floating-header-content"
+                    >
+                        Piilota
+                    </button>
+                </div>
+                <div class="dashboard__tabs" aria-label="Päänavigaatio">
+                    <NavTabs />
+                </div>
+            </div>
+        {:else}
+            <button
+                type="button"
+                class="dashboard__floating-toggle"
+                onclick={toggleFloatingHeader}
+                aria-expanded={!_hideFloatingHeader}
+                aria-controls="floating-header-content"
+            >
+                Näytä valikko
+            </button>
+        {/if}
+    </div>
+
     <header class="hero-header">
         <div class="hero-header__inner">
             <button
@@ -174,42 +213,37 @@ onMount(() => {
         <div class="dashboard__rail">
             <!-- Controls (date picker) -->
             {#if activeBreak}
-                <section class="panel panel--break">
-                    <div class="panel__inner flex flex-col items-center justify-center text-center">
-                        {#if activeBreak.type === 'offseason'}
-                            <span class="break-emoji" role="img" aria-label="Offseason">☀️</span>
-                            <h3 class="break-title">Nähdään ensi kaudella!</h3>
-                            <p class="break-meta">
-                                NHL-kausi on päättynyt. Uusi kausi alkaa lokakuussa.
-                            </p>
-                        {:else}
-                            <span class="break-emoji" role="img" aria-label="Break">🏒</span>
-                            <h3 class="break-title">{activeBreak.description}</h3>
-                            <p class="break-meta">
-                                NHL on tauolla ({formatFinnishDateWithRelative(activeBreak.startDate).formatted} - {formatFinnishDateWithRelative(activeBreak.endDate).formatted})
-                            </p>
-                        {/if}
-                    </div>
-                </section>
+                <div class="dashboard__notice">
+                    <section class="panel panel--break">
+                        <div class="panel__inner flex flex-col items-center justify-center text-center">
+                            {#if activeBreak.type === 'offseason'}
+                                <span class="break-emoji" role="img" aria-label="Offseason">☀️</span>
+                                <h3 class="break-title">Nähdään ensi kaudella!</h3>
+                                <p class="break-meta">
+                                    NHL-kausi on päättynyt. Uusi kausi alkaa lokakuussa.
+                                </p>
+                            {:else}
+                                <span class="break-emoji" role="img" aria-label="Break">🏒</span>
+                                <h3 class="break-title">{activeBreak.description}</h3>
+                                <p class="break-meta">
+                                    NHL on tauolla ({formatFinnishDateWithRelative(activeBreak.startDate).formatted} - {formatFinnishDateWithRelative(activeBreak.endDate).formatted})
+                                </p>
+                            {/if}
+                        </div>
+                    </section>
+                </div>
             {/if}
 
             <!-- Offseason moves tracker -->
             {#if offseasonMoves}
-                <OffseasonMoves movesData={offseasonMoves} />
+                <div class="dashboard__moves">
+                    <OffseasonMoves movesData={offseasonMoves} />
+                </div>
             {/if}
 
-            <DateControls />
-
-            <!-- Mobile ad under date controls -->
-            <MobileAd />
-
-            <!-- Navigation: now visually anchored to the dashboard shell -->
-            <nav class="dashboard__tabs" aria-label="Päänavigaatio">
-                <NavTabs />
-            </nav>
-
-            <!-- Ad Container (desktop banner) -->
-            <AdContainer />
+            <!-- Navigation and its active content form one section. -->
+            <section class="dashboard__results" aria-label="Tulokset ja tilastot">
+                <div class="dashboard__active-stack">
 
             <!-- Hero Stats — the "answer" of the page -->
             {#if $isLoading}
@@ -317,7 +351,7 @@ onMount(() => {
             {/if}
 
             <!-- Playoff tracker — same card language -->
-            <section class="panel panel--playoff">
+            <section class="panel panel--playoff" class:panel--active={activeBreak}>
                 <div class="panel__inner">
                     <div class="panel__eyebrow rink-divider">Pudotuspelit</div>
                     <div class="playoff-tracker__head">
@@ -384,6 +418,8 @@ onMount(() => {
                     {/if}
                 </div>
             </section>
+                </div>
+            </section>
 
             <!-- Info card — same card language as the rest -->
             <section class="panel panel--info" aria-labelledby="data-source-title">
@@ -407,6 +443,12 @@ onMount(() => {
                     </div>
                 </div>
             </section>
+
+            <!-- Ads follow the product content so navigation stays attached to its section. -->
+            <div class="dashboard__ads">
+                <MobileAd />
+                <AdContainer />
+            </div>
         </div>
     </div>
 
@@ -425,7 +467,115 @@ onMount(() => {
         width: 100%;
         max-width: var(--rail-max);
         margin: 0 auto;
-        padding: 2.5rem 1.25rem 4rem;
+        padding: 7.75rem 1.25rem 4rem;
+    }
+
+    .page-shell--compact-header {
+        padding-top: 3.75rem;
+    }
+
+    .dashboard__floating-header {
+        position: fixed;
+        top: 0.75rem;
+        left: 50%;
+        z-index: 100;
+        width: min(calc(100% - 2rem), var(--rail-max));
+        transform: translateX(-50%);
+    }
+
+    .dashboard__floating-header--hidden {
+        width: auto;
+    }
+
+    .dashboard__floating-content {
+        display: grid;
+        gap: 0.3rem;
+    }
+
+    .dashboard__floating-topline {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: stretch;
+        gap: 0.35rem;
+    }
+
+    .dashboard__floating-toggle {
+        padding: 0 0.5rem;
+        border: 1px solid rgba(16, 24, 40, 0.14);
+        background: rgba(255, 255, 255, 0.92);
+        color: #475467;
+        font-size: 0.66rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    .dashboard__floating-toggle:hover {
+        background: #ffffff;
+        color: var(--color-ink);
+    }
+
+    .dashboard__floating-header--hidden .dashboard__floating-toggle {
+        margin: 0;
+        min-height: 2rem;
+    }
+
+    .dashboard__floating-date {
+        min-width: 0;
+    }
+
+    :global(.dashboard__floating-header .date-controls__card) {
+        padding: 0.35rem;
+        background: rgba(255, 255, 255, 0.92);
+        border-color: rgba(16, 24, 40, 0.14);
+    }
+
+    :global(.dashboard__floating-header .date-controls__label) {
+        display: none;
+    }
+
+    :global(.dashboard__floating-header .date-controls__navigation-row) {
+        grid-template-columns: 2rem minmax(0, 1fr) auto 2rem;
+        gap: 0.25rem;
+    }
+
+    :global(.dashboard__floating-header .date-controls__nav-btn),
+    :global(.dashboard__floating-header .date-controls__picker-input),
+    :global(.dashboard__floating-header .date-controls__today-btn) {
+        min-height: 2rem;
+    }
+
+    :global(.dashboard__floating-header .date-controls__nav-btn) {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    :global(.dashboard__floating-header .date-controls__picker-input) {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.86rem;
+    }
+
+    :global(.dashboard__floating-header .date-controls__today-btn) {
+        padding: 0.35rem 0.65rem;
+        font-size: 0.78rem;
+    }
+
+    :global(.dashboard__floating-header .nav-tabs-list) {
+        padding: 0.15rem;
+        background: rgba(255, 255, 255, 0.92);
+        border-color: rgba(16, 24, 40, 0.14);
+    }
+
+    :global(.dashboard__floating-header .nav-tab-item) {
+        min-height: 1.9rem;
+        padding: 0.35rem 0.65rem;
+        font-size: 0.78rem;
+    }
+
+    :global(.dashboard__floating-header .nav-tab-icon) {
+        width: 0.92rem;
+        height: 0.92rem;
     }
 
     .dashboard {
@@ -433,51 +583,75 @@ onMount(() => {
     }
 
     .dashboard__rail {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .dashboard__notice,
+    .dashboard__moves {
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard__results {
         display: grid;
         gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        min-width: 0;
+    }
+
+    .dashboard__active-stack {
+        display: grid;
+        gap: 1.5rem;
+        min-width: 0;
+    }
+
+    .dashboard__ads {
+        display: grid;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
     }
 
     /* ============================================
        Hero header
        ============================================ */
     .hero-header {
-        margin: 0 auto 2rem;
+        margin: 0 auto 1.5rem;
         text-align: center;
     }
 
     .hero-header__inner {
         max-width: 820px;
         margin: 0 auto;
-        padding: 0.5rem 0 0;
+        padding: 0;
     }
 
     .hero-title {
         max-width: 780px;
-        margin: 0.75rem auto 0;
+        margin: 0.55rem auto 0;
         color: var(--color-ink);
-        font-size: clamp(2.2rem, 5.2vw, 3.8rem);
-        line-height: 1;
+        font-size: clamp(2.2rem, 4.7vw, 3.35rem);
+        line-height: 1.03;
         font-weight: 800;
         letter-spacing: -0.01em;
     }
 
     .hero-subtitle {
-        margin: 0.9rem auto 0;
+        margin: 0.65rem auto 0;
         max-width: 34rem;
         color: var(--color-muted);
         font-size: clamp(0.98rem, 1.8vw, 1.08rem);
-        line-height: 1.6;
+        line-height: 1.5;
     }
 
     .hero-scroll-to-results {
-        margin-top: 1rem;
-        border-radius: 999px;
+        margin-top: 0.75rem;
+        border-radius: 0;
         background: var(--accent);
         color: #fff;
-        padding: 0.7rem 1.25rem;
+        padding: 0.55rem 1rem;
+        font-size: 0.9rem;
         font-weight: 700;
-        box-shadow: 0 10px 22px var(--accent-glow);
-        transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+        transition: background 0.15s ease, transform 0.15s ease;
     }
 
     .hero-scroll-to-results:hover {
@@ -495,11 +669,10 @@ onMount(() => {
     }
 
     .logo-img {
-        width: 4rem;
-        height: 4rem;
+        width: 3.25rem;
+        height: 3.25rem;
         margin: 0 auto;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        filter: drop-shadow(0 8px 14px rgba(16, 24, 40, 0.1));
     }
 
     .logo-button:hover .logo-img {
@@ -508,8 +681,8 @@ onMount(() => {
 
     /* ============================================
        Card — one base, four uses (controls, hero,
-       playoff, info). All share radius, top accent,
-       border, shadow, padding scale.
+       playoff, info). Flat sections with shared border,
+       radius, top accent, and padding scale.
        ============================================ */
     .panel {
         position: relative;
@@ -517,8 +690,8 @@ onMount(() => {
         background: var(--card-bg);
         border: var(--card-border);
         border-radius: var(--card-radius);
-        box-shadow: var(--card-shadow);
-        backdrop-filter: blur(18px);
+        box-shadow: none;
+        backdrop-filter: none;
         max-width: var(--rail-max);
         margin: 0 auto;
         width: 100%;
@@ -529,8 +702,9 @@ onMount(() => {
         position: absolute;
         inset: 0 0 auto;
         height: 3px;
-        background: var(--card-accent);
-        opacity: 0.95;
+        display: none;
+        background: var(--accent);
+        opacity: 1;
     }
 
     .panel__inner {
@@ -543,16 +717,11 @@ onMount(() => {
 
     /* Hero card — the page's "answer" */
     .panel--hero {
-        box-shadow:
-            0 32px 80px rgba(0, 53, 128, 0.1),
-            0 4px 12px rgba(16, 24, 40, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.8);
-        background:
-            linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.86));
+        background: var(--card-bg);
     }
 
     .panel--hero::before {
-        height: 4px;
+        display: block;
     }
 
     .panel__hero-heading {
@@ -618,14 +787,13 @@ onMount(() => {
         padding: 1rem 0.5rem;
         border-radius: var(--card-radius-sm);
         background: rgba(248, 250, 255, 0.6);
-        border: 1px solid rgba(0, 53, 128, 0.06);
+        border: 1px solid rgba(16, 24, 40, 0.08);
         min-height: 96px;
     }
 
     .hero-stat--primary {
         background: linear-gradient(180deg, var(--accent-ice), #ffffff);
-        border-color: rgba(0, 53, 128, 0.16);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: rgba(16, 24, 40, 0.12);
     }
 
     .hero-stat__icon-wrap {
@@ -681,7 +849,7 @@ onMount(() => {
         background: rgba(17, 24, 39, 0.92);
         color: #e5e7eb;
         font-size: 0.75rem;
-        border-radius: 0.375rem;
+        border-radius: 0;
         box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
         white-space: nowrap;
         opacity: 0;
@@ -723,14 +891,14 @@ onMount(() => {
     .hero-stat-skel__value {
         width: 3rem;
         height: 1.4rem;
-        border-radius: 6px;
+        border-radius: 0;
         background: rgba(0, 53, 128, 0.08);
     }
 
     .hero-stat-skel__label {
         width: 4rem;
         height: 0.7rem;
-        border-radius: 4px;
+        border-radius: 0;
         background: rgba(0, 53, 128, 0.06);
     }
 
@@ -781,10 +949,12 @@ onMount(() => {
        ============================================ */
     .dashboard__tabs {
         display: flex;
-        justify-content: flex-start;
+        justify-content: center;
         max-width: var(--rail-max);
         margin: 0 auto;
-        padding: 0.5rem 0 0.75rem;
+        padding: 0;
+        width: 100%;
+        min-width: 0;
     }
 
     /* ============================================
@@ -816,21 +986,21 @@ onMount(() => {
 
     .playoff-tracker__toggle {
         flex-shrink: 0;
-        color: var(--accent);
+        color: #475467;
         font-size: 0.82rem;
         font-weight: 700;
         text-decoration: none;
         background: transparent;
-        border: 1px solid rgba(0, 53, 128, 0.16);
-        border-radius: 999px;
+        border: 1px solid rgba(16, 24, 40, 0.12);
+        border-radius: 0;
         padding: 0.35rem 0.75rem;
         cursor: pointer;
         transition: background 0.15s ease, color 0.15s ease;
     }
 
     .playoff-tracker__toggle:hover {
-        background: var(--accent-ice);
-        color: var(--accent-strong);
+        background: #f7f8fa;
+        color: var(--accent);
     }
 
     .playoff-tracker__panel {
@@ -907,12 +1077,8 @@ onMount(() => {
     /* ============================================
        Info card — same card language
        ============================================ */
-    .panel--info::before {
-        background: linear-gradient(90deg, #003580 0%, #4f7dd8 60%, #b9cdf0 100%);
-    }
-
     .panel__inner--info {
-        padding: 1.5rem 1.5rem;
+        padding: var(--card-padding-y) var(--card-padding-x);
     }
 
     .info-grid {
@@ -923,7 +1089,7 @@ onMount(() => {
 
     .info-card__eyebrow {
         margin: 0 0 0.4rem;
-        color: var(--accent);
+        color: var(--eyebrow-color);
         font-size: var(--eyebrow-size);
         font-weight: var(--eyebrow-weight);
         letter-spacing: var(--eyebrow-track);
@@ -975,7 +1141,60 @@ onMount(() => {
        ============================================ */
     @media (max-width: 767px) {
         .page-shell {
-            padding: 1.5rem 1rem 3rem;
+            padding: 7rem 1rem 3rem;
+        }
+
+        .page-shell--compact-header {
+            padding-top: 3.25rem;
+        }
+
+        .dashboard__floating-header {
+            top: 0.5rem;
+            width: calc(100% - 1rem);
+        }
+
+        .dashboard__floating-content {
+            gap: 0.25rem;
+        }
+
+        .dashboard__floating-topline {
+            gap: 0.25rem;
+        }
+
+        .dashboard__floating-toggle {
+            padding-inline: 0.4rem;
+            font-size: 0.6rem;
+        }
+
+        :global(.dashboard__floating-header .date-controls__navigation-row) {
+            grid-template-columns: 1.85rem minmax(0, 1fr) auto 1.85rem;
+        }
+
+        :global(.dashboard__floating-header .date-controls__nav-btn) {
+            width: 1.85rem;
+            height: 1.85rem;
+        }
+
+        :global(.dashboard__floating-header .date-controls__nav-btn),
+        :global(.dashboard__floating-header .date-controls__picker-input),
+        :global(.dashboard__floating-header .date-controls__today-btn) {
+            min-height: 1.85rem;
+        }
+
+        :global(.dashboard__floating-header .date-controls__picker-input) {
+            padding-inline: 0.45rem;
+            font-size: 0.8rem;
+        }
+
+        :global(.dashboard__floating-header .date-controls__today-btn) {
+            padding-inline: 0.5rem;
+            font-size: 0.72rem;
+        }
+
+        :global(.dashboard__floating-header .nav-tab-item) {
+            min-height: 1.8rem;
+            padding: 0.32rem 0.55rem;
+            font-size: 0.74rem;
         }
 
         .hero-header {
@@ -983,11 +1202,8 @@ onMount(() => {
         }
 
         .hero-title {
-            font-size: clamp(2.1rem, 11vw, 3.4rem);
-        }
-
-        .dashboard__rail {
-            gap: 1.1rem;
+            font-size: clamp(2.2rem, 10vw, 2.65rem);
+            line-height: 1.02;
         }
 
         .hero-stats,

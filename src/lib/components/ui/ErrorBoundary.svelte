@@ -290,7 +290,7 @@ function _toggleDetails() {
   .action-btn.secondary {
     background: #3b82f6;
     color: white;
-    border-color: #3b82f6;
+    border-color: #94a3b8;
   }
 
   .action-btn.secondary:hover {
