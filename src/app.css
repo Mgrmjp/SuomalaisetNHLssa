@@ -77,7 +77,8 @@ body {
     }
 }
 
-/* Subtle icy background for the dashboard — calm, sharp, premium */
+/* Distinct dashboard background — frosted Finnish-blue that clearly
+   separates the dashboard from neighbouring pages. */
 .dashboard-bg {
     position: relative;
     isolation: isolate;
@@ -90,10 +91,10 @@ body {
     z-index: -1;
     pointer-events: none;
     background:
-        radial-gradient(1050px 480px at 50% -220px, rgba(0, 53, 128, 0.075), transparent 72%),
-        radial-gradient(760px 560px at -12% 34%, rgba(79, 125, 216, 0.035), transparent 74%),
-        radial-gradient(760px 560px at 112% 76%, rgba(79, 125, 216, 0.03), transparent 74%),
-        linear-gradient(180deg, #f8faff 0%, #f4f6fa 50%, #f1f4f8 100%);
+        radial-gradient(1100px 520px at 50% -260px, rgba(0, 53, 128, 0.18), transparent 70%),
+        radial-gradient(820px 620px at -14% 36%, rgba(79, 125, 216, 0.1), transparent 74%),
+        radial-gradient(820px 620px at 114% 78%, rgba(79, 125, 216, 0.09), transparent 74%),
+        linear-gradient(180deg, #e3edf9 0%, #dde7f5 45%, #d8e2f1 100%);
 }
 
 /* Rink-line divider — thin double lines, calm hockey reference */
