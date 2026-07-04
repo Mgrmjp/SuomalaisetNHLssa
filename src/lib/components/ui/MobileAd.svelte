@@ -57,6 +57,10 @@ onDestroy(() => {
         role="region"
         aria-label="Mainos"
     >
+        <div class="support-message" aria-hidden="true">
+            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+            lisäät sivuston sallittujen listalle.
+        </div>
         {#each ads as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -92,6 +96,24 @@ onDestroy(() => {
         width: 300px;
         height: 250px;
         overflow: visible;
+    }
+
+    .support-message {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        border: 1px dashed rgba(0, 53, 128, 0.24);
+        border-radius: 10px;
+        background: rgba(238, 243, 251, 0.72);
+        color: rgba(15, 23, 42, 0.72);
+        font-size: 0.8rem;
+        font-weight: 700;
+        line-height: 1.35;
+        text-align: center;
+        pointer-events: none;
     }
 
     .mobile-ad-link {

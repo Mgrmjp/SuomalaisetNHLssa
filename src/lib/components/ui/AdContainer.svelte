@@ -134,6 +134,10 @@ function getLogoSrc(ad) {
 >
     <!-- Desktop banner (hidden on mobile) -->
     <div class="ad-slot ad-slot--desktop">
+        <div class="support-message" aria-hidden="true">
+            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+            lisäät sivuston sallittujen listalle.
+        </div>
         {#each bannerAds as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -213,6 +217,10 @@ function getLogoSrc(ad) {
 
     <!-- Mobile square/rectangle ad (hidden on desktop) -->
     <div class="ad-slot ad-slot--mobile-square">
+        <div class="support-message" aria-hidden="true">
+            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+            lisäät sivuston sallittujen listalle.
+        </div>
         {#each mobileAds as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -230,6 +238,10 @@ function getLogoSrc(ad) {
 
     <!-- Mobile horizontal banner (hidden on desktop) -->
     <div class="ad-slot ad-slot--mobile-banner">
+        <div class="support-message" aria-hidden="true">
+            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+            lisäät sivuston sallittujen listalle.
+        </div>
         {#each mobileBannerAds as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -262,6 +274,24 @@ function getLogoSrc(ad) {
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .support-message {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        border: 1px dashed rgba(0, 53, 128, 0.24);
+        border-radius: 10px;
+        background: rgba(238, 243, 251, 0.72);
+        color: rgba(15, 23, 42, 0.72);
+        font-size: 0.8rem;
+        font-weight: 700;
+        line-height: 1.35;
+        text-align: center;
+        pointer-events: none;
     }
 
     /* Ad link base — absolute positioning for crossfade */
