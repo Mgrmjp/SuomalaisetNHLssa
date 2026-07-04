@@ -493,10 +493,11 @@ onMount(() => {
 
     .dashboard__floating-content {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) var(--floating-header-control);
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
         width: 100%;
         gap: var(--floating-header-gap);
-        align-items: stretch;
+        position: relative;
     }
 
     .dashboard__floating-topline {
@@ -542,12 +543,6 @@ onMount(() => {
         min-width: 0;
     }
 
-    .dashboard__floating-topline > .dashboard__floating-toggle {
-        grid-column: 2;
-        grid-row: 1;
-        width: 100%;
-    }
-
     .dashboard__floating-content > .dashboard__tabs {
         grid-column: 1;
         grid-row: 2;
@@ -555,6 +550,43 @@ onMount(() => {
         width: 100%;
         max-width: none;
         margin: 0;
+        min-width: 0;
+    }
+
+    .dashboard__floating-topline > .dashboard__floating-toggle {
+        position: absolute;
+        top: 0.25rem;
+        right: 0.25rem;
+        height: var(--floating-row-control-height);
+        padding: 0 0.6rem;
+        font-size: 0;
+        border-radius: 0;
+        background: transparent;
+        color: #475467;
+        box-shadow: none;
+    }
+
+    .dashboard__floating-topline > .dashboard__floating-toggle::after {
+        content: "×";
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    .dashboard__floating-topline > .dashboard__floating-toggle:hover {
+        background: rgba(16, 24, 40, 0.06);
+        color: var(--color-ink);
+    }
+
+    :global(.dashboard__floating-header) {
+        --floating-row-font-size: 0.86rem;
+        --floating-row-line-height: 1.2;
+        --floating-row-inner-padding-y: 0.3rem;
+        --floating-row-inner-padding-x: 0.5rem;
+        --floating-row-control-height: 2.35rem;
+        font-family:
+            var(--font-sans, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
     }
 
     :global(.dashboard__floating-header .date-controls) {
@@ -564,7 +596,7 @@ onMount(() => {
     :global(.dashboard__floating-header .date-controls__card) {
         width: 100%;
         box-sizing: border-box;
-        padding: 0.35rem;
+        padding: 0.25rem 3rem 0.25rem 0.25rem;
         background: rgba(255, 255, 255, 0.92);
         border-color: rgba(16, 24, 40, 0.14);
     }
@@ -574,47 +606,52 @@ onMount(() => {
     }
 
     :global(.dashboard__floating-header .date-controls__navigation-row) {
-        grid-template-columns: 2rem minmax(0, 1fr) auto 2rem;
+        grid-template-columns: var(--floating-row-control-height) minmax(0, 1fr) auto var(--floating-row-control-height);
         gap: 0.25rem;
     }
 
     :global(.dashboard__floating-header .date-controls__nav-btn),
     :global(.dashboard__floating-header .date-controls__picker-input),
     :global(.dashboard__floating-header .date-controls__today-btn) {
-        min-height: 2rem;
+        min-height: var(--floating-row-control-height);
+        font-size: var(--floating-row-font-size);
+        line-height: var(--floating-row-line-height);
+        font-variant-numeric: tabular-nums;
     }
 
     :global(.dashboard__floating-header .date-controls__nav-btn) {
-        width: 2rem;
-        height: 2rem;
+        width: var(--floating-row-control-height);
+        height: var(--floating-row-control-height);
     }
 
     :global(.dashboard__floating-header .date-controls__picker-input) {
-        padding: 0.35rem 0.5rem;
-        font-size: 0.86rem;
+        padding: var(--floating-row-inner-padding-y) var(--floating-row-inner-padding-x);
     }
 
     :global(.dashboard__floating-header .date-controls__today-btn) {
-        padding: 0.35rem 0.65rem;
-        font-size: 0.78rem;
+        padding: var(--floating-row-inner-padding-y) 0.65rem;
     }
 
     :global(.dashboard__floating-header .nav-tabs-list) {
         box-sizing: border-box;
-        padding: 0.15rem;
+        padding: 0.25rem;
         background: rgba(255, 255, 255, 0.92);
         border-color: rgba(16, 24, 40, 0.14);
+        font-size: var(--floating-row-font-size);
+        line-height: var(--floating-row-line-height);
     }
 
     :global(.dashboard__floating-header .nav-tab-item) {
-        min-height: 1.9rem;
-        padding: 0.35rem 0.65rem;
-        font-size: 0.78rem;
+        min-height: var(--floating-row-control-height);
+        padding: var(--floating-row-inner-padding-y) 0.65rem;
+        font-size: var(--floating-row-font-size);
+        line-height: var(--floating-row-line-height);
     }
 
     :global(.dashboard__floating-header .nav-tab-icon) {
-        width: 0.92rem;
-        height: 0.92rem;
+        width: 1rem;
+        height: 1rem;
+        flex: 0 0 auto;
     }
 
     .dashboard {
@@ -1192,6 +1229,9 @@ onMount(() => {
             width: calc(100% - 0.75rem);
             --floating-header-gap: 0.2rem;
             --floating-header-control: 2rem;
+            --floating-row-font-size: 0.78rem;
+            --floating-row-control-height: 2rem;
+            --floating-row-inner-padding-y: 0.28rem;
         }
 
         .dashboard__floating-header--hidden {
@@ -1202,19 +1242,13 @@ onMount(() => {
             gap: var(--floating-header-gap);
         }
 
-        .dashboard__floating-toggle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .dashboard__floating-topline > .dashboard__floating-toggle {
             min-width: 2rem;
-            padding: 0;
-            font-size: 0;
+            padding: 0 0.6rem;
         }
 
-        .dashboard__floating-toggle::after {
-            content: "×";
+        .dashboard__floating-topline > .dashboard__floating-toggle::after {
             font-size: 1.05rem;
-            line-height: 1;
         }
 
         .dashboard__floating-header--hidden .dashboard__floating-toggle::after {
@@ -1224,8 +1258,21 @@ onMount(() => {
             letter-spacing: 0.04em;
         }
 
+        .dashboard__floating-header--hidden .dashboard__floating-toggle {
+            position: static;
+            height: auto;
+            min-height: 2.35rem;
+            padding: 0.55rem 1rem;
+            border-radius: 0;
+            background: rgba(0, 53, 128, 0.94);
+            color: #ffffff;
+            box-shadow:
+                0 10px 24px rgba(0, 53, 128, 0.18),
+                0 1px 3px rgba(16, 24, 40, 0.12);
+        }
+
         :global(.dashboard__floating-header .date-controls__card) {
-            padding: 0.25rem;
+            padding: 0.25rem 2.5rem 0.25rem 0.25rem;
         }
 
         :global(.dashboard__floating-header .date-controls__navigation-row) {
@@ -1251,7 +1298,7 @@ onMount(() => {
         :global(.dashboard__floating-header .date-controls__picker-input) {
             justify-content: center;
             padding-inline: 0.35rem;
-            font-size: 0.82rem;
+            font-size: var(--floating-row-font-size);
             text-align: center;
         }
 
@@ -1270,10 +1317,10 @@ onMount(() => {
         :global(.dashboard__floating-header .nav-tab-item) {
             flex: none;
             min-width: 0;
-            min-height: 1.9rem;
-            padding: 0.32rem 0.2rem;
-            font-size: 0.68rem;
-            line-height: 1.05;
+            min-height: var(--floating-row-control-height);
+            padding: 0.3rem 0.25rem;
+            font-size: var(--floating-row-font-size);
+            line-height: 1.1;
             white-space: normal;
         }
 

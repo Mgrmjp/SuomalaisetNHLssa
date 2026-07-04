@@ -128,30 +128,34 @@ function generateCalendarDays(selectedDateStr) {
 </script>
 
 <div
-    class="calendar-month bg-white rounded-2xl shadow-xl p-2 sm:p-4 border border-gray-100 mx-auto max-w-md"
+    class="calendar-month bg-white rounded-2xl shadow-xl p-2 sm:p-4 border border-gray-100 w-full mx-auto max-w-md box-border"
 >
-    <div class="calendar-month__header flex items-center justify-between mb-4 px-1">
-        {#if view === "calendar"}
-            <button
-                class="calendar-month__nav-btn calendar-month__nav-btn--prev w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
-                onclick={() => _navigateMonth("prev")}
-                disabled={isSameMonth(currentMonth, new Date(1900, 0, 1))}
-                data-dashlane-label="true"
-                aria-label="Edellinen kuukausi"
-            >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    ><path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2.5"
-                        d="M15 19l-7-7 7-7"
-                    /></svg
+    <div
+        class="calendar-month__header grid grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-2 mb-4 px-1"
+    >
+        <span class="calendar-month__header-slot flex justify-start">
+            {#if view === "calendar"}
+                <button
+                    class="calendar-month__nav-btn calendar-month__nav-btn--prev w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
+                    onclick={() => _navigateMonth("prev")}
+                    disabled={isSameMonth(currentMonth, new Date(1900, 0, 1))}
+                    data-dashlane-label="true"
+                    aria-label="Edellinen kuukausi"
                 >
-            </button>
-        {/if}
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2.5"
+                            d="M15 19l-7-7 7-7"
+                        /></svg
+                    >
+                </button>
+            {/if}
+        </span>
 
         <button
-            class="calendar-month__title text-base sm:text-lg font-bold text-gray-900 tracking-tight hover:text-blue-600 transition-colors mx-auto flex items-center gap-1"
+            class="calendar-month__title text-base sm:text-lg font-bold text-gray-900 tracking-tight hover:text-blue-600 transition-colors flex items-center justify-center gap-1 w-full min-w-0 truncate"
             onclick={_toggleView}
         >
             {#if view === "calendar"}
@@ -175,27 +179,29 @@ function generateCalendarDays(selectedDateStr) {
             {/if}
         </button>
 
-        {#if view === "calendar"}
-            <button
-                class="calendar-month__nav-btn calendar-month__nav-btn--next w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
-                onclick={() => _navigateMonth("next")}
-                disabled={isSameMonth(currentMonth, $currentDateReadOnly)}
-                data-dashlane-label="true"
-                aria-label="Seuraava kuukausi"
-            >
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    ><path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2.5"
-                        d="M9 5l7 7-7 7"
-                    /></svg
+        <span class="calendar-month__header-slot flex justify-end">
+            {#if view === "calendar"}
+                <button
+                    class="calendar-month__nav-btn calendar-month__nav-btn--next w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
+                    onclick={() => _navigateMonth("next")}
+                    disabled={isSameMonth(currentMonth, $currentDateReadOnly)}
+                    data-dashlane-label="true"
+                    aria-label="Seuraava kuukausi"
                 >
-            </button>
-        {/if}
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2.5"
+                            d="M9 5l7 7-7 7"
+                        /></svg
+                    >
+                </button>
+            {/if}
+        </span>
     </div>
 
-    <div class="calendar-month__body space-y-2 min-h-[300px]">
+    <div class="calendar-month__body space-y-2 min-h-[18.75rem]">
         {#if view === "calendar"}
             <div
                 class="calendar-month__grid-labels grid grid-cols-7 text-center text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wide"
@@ -212,7 +218,7 @@ function generateCalendarDays(selectedDateStr) {
             <div class="calendar-month__grid-days grid grid-cols-7 gap-1 sm:gap-2">
                 {#each calendarDays as day}
                     <button
-                        class="calendar-month__day relative aspect-square rounded-full text-center transition-all duration-200 text-sm font-medium flex flex-col items-center justify-center border-2 border-transparent min-w-[44px] min-h-[44px]"
+                        class="calendar-month__day relative w-full aspect-square rounded-full text-center transition-all duration-200 text-sm font-medium flex flex-col items-center justify-center border-2 border-transparent"
                         class:calendar-month__day--other-month={!day.isCurrentMonth}
                         class:calendar-month__day--today={day.isToday}
                         class:calendar-month__day--selected={day.isSelected}
