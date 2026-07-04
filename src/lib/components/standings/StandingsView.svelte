@@ -184,7 +184,7 @@ async function _refreshStandingsData() {
         </p>
         {#if _lastGameDate}
             <p class="text-xs text-gray-400 mt-2">
-                Tiedot through {_lastGameDate}
+                Tiedot {_lastGameDate} asti
                 {#if _manifestLastUpdated}
                     • Päivitetty {new Date(_manifestLastUpdated).toLocaleDateString("fi-FI")}
                 {/if}
