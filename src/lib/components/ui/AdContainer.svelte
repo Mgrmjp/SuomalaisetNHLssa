@@ -413,35 +413,37 @@ function getLogoSrc(ad) {
 
         .ad-slot--mobile-square {
             position: relative;
-            width: 300px;
+            width: min(300px, 100%);
             height: 250px;
             margin: 0 auto;
             padding: 0;
+            overflow: hidden;
         }
 
         .ad-link--square {
             position: absolute;
-            width: 300px;
+            width: 100%;
             height: 250px;
         }
 
         .ad-img--square {
-            width: 300px;
+            width: 100%;
             height: 250px;
             object-fit: cover;
         }
 
         .ad-slot--mobile-banner {
             position: relative;
-            width: 300px;
+            width: min(300px, 100%);
             height: 250px;
             margin: 0 auto;
             padding: 0;
+            overflow: hidden;
         }
 
         .ad-link--mbanner {
             position: absolute;
-            width: 300px;
+            width: 100%;
             height: 250px;
         }
     }

@@ -176,7 +176,7 @@ function getPlayerSlug(p) {
 <div class="min-h-screen bg-slate-50 relative overflow-hidden">
     <Snowfall count={8} />
 
-    <div class="max-w-4xl mx-auto px-4 py-12 relative z-10">
+    <div class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 relative z-10">
         <!-- Back link -->
         <div class="mb-6">
             <a
@@ -196,10 +196,10 @@ function getPlayerSlug(p) {
         </div>
 
         <!-- Player Header -->
-        <div class="bg-white overflow-hidden border border-slate-200 mb-8">
-            <div class="bg-slate-950 p-8 text-white border-b border-slate-800">
-                <div class="flex items-center gap-6">
-                    <div class="w-32 h-32 bg-slate-900 flex items-center justify-center border border-slate-700">
+        <div class="bg-white overflow-hidden border border-slate-200 mb-6 sm:mb-8">
+            <div class="bg-slate-950 p-5 sm:p-8 text-white border-b border-slate-800">
+                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-slate-900 flex items-center justify-center border border-slate-700">
                         <PlayerHeadshot
                             playerId={player.playerId}
                             explicitUrl={player.headshot}
@@ -212,9 +212,9 @@ function getPlayerSlug(p) {
                             loading="eager"
                         />
                     </div>
-                    <div>
-                        <h1 class="text-3xl font-bold mb-2">{displayName}</h1>
-                        <div class="flex flex-wrap items-center gap-3 text-slate-300">
+                    <div class="min-w-0">
+                        <h1 class="text-2xl sm:text-3xl font-bold mb-2">{displayName}</h1>
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm sm:text-base text-slate-300">
                             <span class="font-semibold">{teamFullName}</span>
                             <span>•</span>
                             <span>{position}</span>
@@ -226,7 +226,7 @@ function getPlayerSlug(p) {
                             {/if}
                         </div>
                         {#if player.latestMove}
-                            <div class="mt-3 inline-flex border border-slate-700 px-3 py-1 text-xs uppercase tracking-[0.18em] text-slate-300">
+                            <div class="mt-3 inline-flex max-w-full border border-slate-700 px-3 py-1 text-[0.65rem] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em] text-slate-300">
                                 Siirtyi: {player.latestMove.oldTeam} → {player.latestMove.newTeam}
                             </div>
                         {/if}
@@ -235,85 +235,85 @@ function getPlayerSlug(p) {
             </div>
 
             <!-- Stats Grid -->
-            <div class="p-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-6">
+            <div class="p-4 sm:p-8">
+                <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
                     {hasSeasonStats ? `Kauden ${formattedSeason} tilastot` : 'NHL-profiili'}
                 </h2>
                 {#if hasSeasonStats}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-3xl font-bold text-gray-900">{player.gamesPlayed}</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.gamesPlayed}</div>
                             <div class="text-sm text-gray-500 mt-1">Ottelut</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-3xl font-bold text-gray-900">{player.goals}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.goals}</div>
                             <div class="text-sm text-gray-500 mt-1">Maalit</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-3xl font-bold text-gray-900">{player.assists}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.assists}</div>
                             <div class="text-sm text-gray-500 mt-1">Syötöt</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-900 border border-slate-800">
-                            <div class="text-3xl font-bold text-white">{player.points}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-900 border border-slate-800">
+                            <div class="text-2xl sm:text-3xl font-bold text-white">{player.points}</div>
                             <div class="text-sm text-slate-300 mt-1 font-medium">Pisteet</div>
                         </div>
                     </div>
                 {:else}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-3xl font-bold text-gray-900">{profileGamesPlayed ?? '-'}</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{profileGamesPlayed ?? '-'}</div>
                             <div class="text-sm text-gray-500 mt-1">NHL-ottelut</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-3xl font-bold text-gray-900">{teamName}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{teamName}</div>
                             <div class="text-sm text-gray-500 mt-1">Joukkue</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-3xl font-bold text-gray-900">{position}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{position}</div>
                             <div class="text-sm text-gray-500 mt-1">Pelipaikka</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-900 border border-slate-800">
-                            <div class="text-xl font-bold text-white">{player.birthplace || 'Suomi'}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-900 border border-slate-800">
+                            <div class="text-base sm:text-xl font-bold text-white">{player.birthplace || 'Suomi'}</div>
                             <div class="text-sm text-slate-300 mt-1 font-medium">Syntymäpaikka</div>
                         </div>
                     </div>
                 {/if}
 
                 {#if hasSeasonStats && !isGoalie}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.plusMinus > 0 ? '+' : ''}{player.plusMinus}</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.plusMinus > 0 ? '+' : ''}{player.plusMinus}</div>
                             <div class="text-sm text-gray-500 mt-1">+/-</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.penaltyMinutes || 0}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.penaltyMinutes || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">R.min</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.pointsPerGame?.toFixed(2) || '0.00'}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.pointsPerGame?.toFixed(2) || '0.00'}</div>
                             <div class="text-sm text-gray-500 mt-1">Pisteka.</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.shootingPct ? (player.shootingPct * 100).toFixed(1) + '%' : '-'}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.shootingPct ? (player.shootingPct * 100).toFixed(1) + '%' : '-'}</div>
                             <div class="text-sm text-gray-500 mt-1">Laukais-%</div>
                         </div>
                     </div>
                 {:else if hasSeasonStats}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-4">
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.saves || 0}</div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.saves || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">Torjunnat</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.goalsAgainst || 0}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.goalsAgainst || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">Päästetyt</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.savePercentage ? (player.savePercentage * 100).toFixed(2) + '%' : '-'}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.savePercentage ? (player.savePercentage * 100).toFixed(2) + '%' : '-'}</div>
                             <div class="text-sm text-gray-500 mt-1">Torjunta-%</div>
                         </div>
-                        <div class="text-center p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl font-bold text-gray-900">{player.gamesStarted || 0}</div>
+                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.gamesStarted || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">Aloitukset</div>
                         </div>
                     </div>
@@ -323,16 +323,16 @@ function getPlayerSlug(p) {
 
         <!-- Same Team Players (Internal Linking) -->
         {#if sameTeamPlayers.length > 0}
-            <div class="bg-white border border-slate-200 p-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-4">Samassa joukkueessa pelaavat</h2>
-                <p class="text-gray-600 mb-6">Muut suomalaispelaajat joukkueessa {teamFullName}:</p>
+            <div class="bg-white border border-slate-200 p-4 sm:p-8">
+                <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Samassa joukkueessa pelaavat</h2>
+                <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Muut suomalaispelaajat joukkueessa {teamFullName}:</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {#each sameTeamPlayers as teammate}
                         <a
                             href={`${base}/pelaajat/${getPlayerSlug(teammate)}`}
-                            class="flex items-center gap-4 p-4 border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all group"
+                            class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all group"
                         >
-                            <div class="w-14 h-14 bg-slate-100 flex-shrink-0 overflow-hidden">
+                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-100 flex-shrink-0 overflow-hidden">
                                 <PlayerHeadshot
                                     playerId={teammate.playerId}
                                     teamAbbrev={teammate.teamAbbrevs}

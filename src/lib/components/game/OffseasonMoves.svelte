@@ -363,9 +363,34 @@ function toggleExpand() {
     }
 
     @media (max-width: 767px) {
+        .panel__inner {
+            padding: 0.9rem;
+        }
+
         .move-row {
             grid-template-columns: 3.5rem 1fr;
             gap: 0.5rem;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .move-row {
+            grid-template-columns: 1fr;
+            justify-items: center;
+            padding: 0.75rem 0.25rem;
+        }
+
+        .move-row__date {
+            font-size: 0.72rem;
+        }
+
+        .move-row__player-line,
+        .move-row__teams {
+            max-width: 100%;
+        }
+
+        .move-row__name {
+            max-width: 13rem;
         }
     }
 </style>

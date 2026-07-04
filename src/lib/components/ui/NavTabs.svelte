@@ -163,11 +163,44 @@ const currentPath = $derived($page.url.pathname)
         }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 767px) {
+        .nav-tabs-container {
+            overflow: visible;
+        }
+
+        .nav-tabs-list {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.25rem;
+            padding: 0.25rem;
+            overflow: visible;
+        }
+
         .nav-tab-item {
-            flex-grow: 0;
-            padding-inline: 0.75rem;
-            font-size: 0.82rem;
+            flex: none;
+            min-width: 0;
+            gap: 0.25rem;
+            min-height: 2.25rem;
+            padding: 0.35rem 0.25rem;
+            font-size: 0.72rem;
+            line-height: 1.05;
+            white-space: normal;
+        }
+
+        .nav-tab-icon {
+            width: 0.82rem;
+            height: 0.82rem;
+            flex: 0 0 auto;
+        }
+    }
+
+    @media (max-width: 360px) {
+        .nav-tabs-list {
+            gap: 0.2rem;
+        }
+
+        .nav-tab-item {
+            font-size: 0.68rem;
         }
     }
 </style>

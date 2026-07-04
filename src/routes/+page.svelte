@@ -485,6 +485,8 @@ onMount(() => {
 
     .dashboard__floating-header--hidden {
         width: auto;
+        display: flex;
+        justify-content: center;
     }
 
     .dashboard__floating-content {
@@ -518,7 +520,14 @@ onMount(() => {
 
     .dashboard__floating-header--hidden .dashboard__floating-toggle {
         margin: 0;
-        min-height: 2rem;
+        min-height: 2.35rem;
+        padding: 0.55rem 1rem;
+        border-radius: 0;
+        background: rgba(0, 53, 128, 0.94);
+        color: #ffffff;
+        box-shadow:
+            0 10px 24px rgba(0, 53, 128, 0.18),
+            0 1px 3px rgba(16, 24, 40, 0.12);
     }
 
     .dashboard__floating-date {
@@ -1141,7 +1150,7 @@ onMount(() => {
        ============================================ */
     @media (max-width: 767px) {
         .page-shell {
-            padding: 7rem 1rem 3rem;
+            padding: 6rem 1rem 3rem;
         }
 
         .page-shell--compact-header {
@@ -1149,61 +1158,135 @@ onMount(() => {
         }
 
         .dashboard__floating-header {
-            top: 0.5rem;
-            width: calc(100% - 1rem);
+            top: 0.35rem;
+            width: calc(100% - 0.75rem);
+        }
+
+        .dashboard__floating-header--hidden {
+            width: auto;
         }
 
         .dashboard__floating-content {
-            gap: 0.25rem;
+            gap: 0.2rem;
         }
 
         .dashboard__floating-topline {
-            gap: 0.25rem;
+            grid-template-columns: minmax(0, 1fr) 2rem;
+            gap: 0.2rem;
         }
 
         .dashboard__floating-toggle {
-            padding-inline: 0.4rem;
-            font-size: 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2rem;
+            padding: 0;
+            font-size: 0;
+        }
+
+        .dashboard__floating-toggle::after {
+            content: "×";
+            font-size: 1.05rem;
+            line-height: 1;
+        }
+
+        .dashboard__floating-header--hidden .dashboard__floating-toggle::after {
+            content: "Näytä valikko";
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+
+        :global(.dashboard__floating-header .date-controls__card) {
+            padding: 0.25rem;
         }
 
         :global(.dashboard__floating-header .date-controls__navigation-row) {
-            grid-template-columns: 1.85rem minmax(0, 1fr) auto 1.85rem;
+            grid-template-columns: 2rem minmax(0, 1fr) 2rem;
+            gap: 0.2rem;
+        }
+
+        :global(.dashboard__floating-header .date-controls__today-btn) {
+            display: none !important;
         }
 
         :global(.dashboard__floating-header .date-controls__nav-btn) {
-            width: 1.85rem;
-            height: 1.85rem;
+            width: 2rem;
+            height: 2rem;
         }
 
         :global(.dashboard__floating-header .date-controls__nav-btn),
         :global(.dashboard__floating-header .date-controls__picker-input),
         :global(.dashboard__floating-header .date-controls__today-btn) {
-            min-height: 1.85rem;
+            min-height: 2rem;
         }
 
         :global(.dashboard__floating-header .date-controls__picker-input) {
-            padding-inline: 0.45rem;
-            font-size: 0.8rem;
+            justify-content: center;
+            padding-inline: 0.35rem;
+            font-size: 0.82rem;
+            text-align: center;
         }
 
-        :global(.dashboard__floating-header .date-controls__today-btn) {
-            padding-inline: 0.5rem;
-            font-size: 0.72rem;
+        :global(.dashboard__floating-header .date-controls__picker-input svg) {
+            display: none;
+        }
+
+        :global(.dashboard__floating-header .nav-tabs-list) {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 0.12rem;
+            padding: 0.12rem;
+            overflow: visible;
         }
 
         :global(.dashboard__floating-header .nav-tab-item) {
-            min-height: 1.8rem;
-            padding: 0.32rem 0.55rem;
-            font-size: 0.74rem;
+            flex: none;
+            min-width: 0;
+            min-height: 1.9rem;
+            padding: 0.32rem 0.2rem;
+            font-size: 0.68rem;
+            line-height: 1.05;
+            white-space: normal;
+        }
+
+        :global(.dashboard__floating-header .nav-tab-icon) {
+            display: none;
         }
 
         .hero-header {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .hero-header__inner {
+            max-width: 22rem;
+        }
+
+        .logo-img {
+            width: 2.75rem;
+            height: 2.75rem;
         }
 
         .hero-title {
-            font-size: clamp(2.2rem, 10vw, 2.65rem);
-            line-height: 1.02;
+            margin-top: 0.45rem;
+            font-size: clamp(1.65rem, 7.8vw, 2.05rem);
+            line-height: 1.06;
+        }
+
+        .hero-subtitle {
+            margin-top: 0.55rem;
+            font-size: 0.9rem;
+            line-height: 1.45;
+        }
+
+        .hero-scroll-to-results {
+            margin-top: 0.65rem;
+            padding: 0.5rem 0.9rem;
+            font-size: 0.86rem;
+        }
+
+        .panel__inner {
+            padding: 0.9rem;
         }
 
         .hero-stats,
@@ -1222,6 +1305,12 @@ onMount(() => {
         .info-grid {
             grid-template-columns: 1fr;
             gap: 0.85rem;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .page-shell {
+            padding-inline: 0.75rem;
         }
     }
 </style>

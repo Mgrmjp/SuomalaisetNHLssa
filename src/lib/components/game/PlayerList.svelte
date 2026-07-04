@@ -583,9 +583,9 @@ $effect(() => {
         .swiper {
             overflow: visible;
             position: relative;
-            margin-left: -1rem;
-            margin-right: -1rem;
-            padding: 0.5rem 1rem 1.5rem;
+            margin-left: -0.75rem;
+            margin-right: -0.75rem;
+            padding: 0.35rem 0.75rem 1.25rem;
         }
 
         .swiper-wrapper {
@@ -603,7 +603,7 @@ $effect(() => {
 
         /* Mobile swiper card slides - narrower for more breathing room, taller spacer to prevent cutoff */
         .mobile-card-slide {
-            width: min(17rem, calc(100vw - 6.5rem)) !important;
+            width: min(20rem, calc(100vw - 1.5rem)) !important;
             flex-shrink: 0;
         }
 

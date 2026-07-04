@@ -93,9 +93,9 @@ onDestroy(() => {
 
     .ad-wrapper {
         position: relative;
-        width: 300px;
+        width: min(300px, 100%);
         height: 250px;
-        overflow: visible;
+        overflow: hidden;
     }
 
     .support-message {
@@ -120,14 +120,14 @@ onDestroy(() => {
         position: absolute;
         top: 0;
         left: 0;
-        width: 300px;
+        width: 100%;
         height: 250px;
         display: block;
         border: none;
         opacity: 0;
         transition: opacity 1s ease-in-out;
         pointer-events: none;
-        overflow: visible;
+        overflow: hidden;
         border-radius: 8px;
         isolation: isolate;
     }
@@ -162,7 +162,7 @@ onDestroy(() => {
     }
 
     .mobile-ad-img {
-        width: 300px;
+        width: 100%;
         height: 250px;
         object-fit: cover;
         border: 1px solid rgba(15, 23, 42, 0.85);

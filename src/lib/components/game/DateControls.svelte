@@ -309,7 +309,7 @@ function _toggleCalendar() {
 
     @media (max-width: 480px) {
         .date-controls__card {
-            padding: 1rem;
+            padding: 0.75rem;
         }
 
         .date-controls__label {
@@ -318,18 +318,18 @@ function _toggleCalendar() {
         }
 
         .date-controls__navigation-row {
-            grid-template-columns: 2.5rem minmax(0, 1fr) auto 2.5rem;
-            gap: 0.375rem;
+            grid-template-columns: 2.35rem minmax(0, 1fr) auto 2.35rem;
+            gap: 0.3rem;
         }
 
         .nav-btn {
-            width: 2.5rem;
-            height: 2.5rem;
+            width: 2.35rem;
+            height: 2.35rem;
         }
 
         :global(.picker-input),
         .date-controls__today-btn {
-            min-height: 2.5rem;
+            min-height: 2.35rem;
         }
 
         :global(.picker-input) {
