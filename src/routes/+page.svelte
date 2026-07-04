@@ -158,12 +158,26 @@ onMount(() => {
                     </div>
                     <button
                         type="button"
-                        class="dashboard__floating-toggle"
+                        class="dashboard__floating-toggle dashboard__floating-toggle--close"
                         onclick={toggleFloatingHeader}
                         aria-expanded={!_hideFloatingHeader}
                         aria-controls="floating-header-content"
+                        aria-label="Piilota valikko"
+                        title="Piilota valikko"
                     >
-                        Piilota
+                        <svg
+                            class="dashboard__floating-toggle-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            aria-hidden="true"
+                        >
+                            <path d="M6 6L18 18" />
+                            <path d="M6 18L18 6" />
+                        </svg>
                     </button>
                 </div>
                 <div class="dashboard__tabs" aria-label="Päänavigaatio">
@@ -173,12 +187,28 @@ onMount(() => {
         {:else}
             <button
                 type="button"
-                class="dashboard__floating-toggle"
+                class="dashboard__floating-toggle dashboard__floating-toggle--open"
                 onclick={toggleFloatingHeader}
                 aria-expanded={!_hideFloatingHeader}
                 aria-controls="floating-header-content"
+                aria-label="Näytä valikko"
+                title="Näytä valikko"
             >
-                Näytä valikko
+                <svg
+                    class="dashboard__floating-toggle-icon dashboard__floating-toggle-icon--left"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M3 6h18" />
+                    <path d="M3 12h18" />
+                    <path d="M3 18h18" />
+                </svg>
+                <span class="dashboard__floating-toggle-label">Näytä valikko</span>
             </button>
         {/if}
     </div>
@@ -556,24 +586,36 @@ onMount(() => {
     .dashboard__floating-topline > .dashboard__floating-toggle {
         position: absolute;
         top: 0.25rem;
-        right: 0.25rem;
+        right: 0;
+        width: 3rem;
         height: var(--floating-row-control-height);
-        padding: 0 0.6rem;
-        font-size: 0;
+        padding: 0;
+        border: 0;
         border-radius: 0;
         background: transparent;
         color: #475467;
         box-shadow: none;
+        z-index: 20;
     }
 
-    .dashboard__floating-topline > .dashboard__floating-toggle::after {
-        content: "×";
-        font-size: 1.25rem;
-        line-height: 1;
+    .dashboard__floating-toggle-icon {
+        width: 1.1rem;
+        height: 1.1rem;
+        flex: 0 0 auto;
+    }
+
+    .dashboard__floating-toggle--open {
+        gap: 0.5rem;
+    }
+
+    .dashboard__floating-toggle--open .dashboard__floating-toggle-label {
+        font-size: var(--floating-row-font-size);
+        font-weight: 800;
+        letter-spacing: 0.02em;
     }
 
     .dashboard__floating-topline > .dashboard__floating-toggle:hover {
-        background: rgba(16, 24, 40, 0.06);
+        background: rgba(16, 24, 40, 0.04);
         color: var(--color-ink);
     }
 
@@ -599,6 +641,11 @@ onMount(() => {
         padding: 0.25rem 3rem 0.25rem 0.25rem;
         background: rgba(255, 255, 255, 0.92);
         border-color: rgba(16, 24, 40, 0.14);
+    }
+
+    :global(.dashboard__floating-header .date-controls__navigation-row) {
+        height: 100%;
+        align-items: center;
     }
 
     :global(.dashboard__floating-header .date-controls__label) {
@@ -1243,26 +1290,23 @@ onMount(() => {
         }
 
         .dashboard__floating-topline > .dashboard__floating-toggle {
-            min-width: 2rem;
-            padding: 0 0.6rem;
+            width: 2.5rem;
+            height: var(--floating-row-control-height);
+            padding: 0;
         }
 
-        .dashboard__floating-topline > .dashboard__floating-toggle::after {
-            font-size: 1.05rem;
-        }
-
-        .dashboard__floating-header--hidden .dashboard__floating-toggle::after {
-            content: "Näytä valikko";
-            font-size: 0.72rem;
-            font-weight: 800;
-            letter-spacing: 0.04em;
+        .dashboard__floating-toggle-icon {
+            width: 0.95rem;
+            height: 0.95rem;
         }
 
         .dashboard__floating-header--hidden .dashboard__floating-toggle {
             position: static;
             height: auto;
+            width: auto;
             min-height: 2.35rem;
             padding: 0.55rem 1rem;
+            gap: 0.4rem;
             border-radius: 0;
             background: rgba(0, 53, 128, 0.94);
             color: #ffffff;
@@ -1271,8 +1315,18 @@ onMount(() => {
                 0 1px 3px rgba(16, 24, 40, 0.12);
         }
 
+        .dashboard__floating-header--hidden .dashboard__floating-toggle-label {
+            font-size: 0.78rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+
         :global(.dashboard__floating-header .date-controls__card) {
             padding: 0.25rem 2.5rem 0.25rem 0.25rem;
+        }
+
+        :global(.dashboard__floating-header .date-controls__navigation-row) {
+            height: 100%;
         }
 
         :global(.dashboard__floating-header .date-controls__navigation-row) {
