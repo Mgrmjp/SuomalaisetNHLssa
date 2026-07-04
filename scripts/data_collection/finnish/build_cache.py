@@ -335,14 +335,19 @@ def main():
                 new_team = player_teams[player_id]
                 if old_team != new_team:
                     existing["currentTeam"] = new_team
+                    existing["teamAbbrev"] = new_team
+                    existing["team"] = new_team
                     updated_players_count += 1
 
         if updated_players_count > 0:
             print(f"🔄 Updated team info for {updated_players_count} existing players")
             save_json(finnish_players, FINNISH_CACHE_FILE)
-            from sync_roster import sync_roster
 
-            sync_roster()
+        # Always sync — sync_roster applies offseason-moves overrides that
+        # the NHL API rosters may not reflect yet
+        from sync_roster import sync_roster
+
+        sync_roster()
         return
 
     # Fetch missing players using concurrent requests with rate limiting

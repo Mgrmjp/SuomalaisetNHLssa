@@ -82,6 +82,41 @@ def sync_roster():
     if merged_count:
         print(f"   Preserved {merged_count} extra field(s) from existing roster")
 
+    # Apply offseason moves overrides (trades/free-agent signings that the
+    # NHL API rosters may not reflect yet)
+    moves_file = DATA_DIR / "offseason-moves.json"
+    if moves_file.exists():
+        try:
+            with open(moves_file, "r", encoding="utf-8") as f:
+                moves_data = json.load(f)
+            moves = moves_data.get("moves", [])
+            overridden = 0
+            for move in moves:
+                pid = str(move.get("playerId", ""))
+                new_team = move.get("newTeam", "")
+                if not pid or not new_team or pid not in cache_data:
+                    continue
+                player = cache_data[pid]
+                current = (
+                    player.get("teamAbbrev")
+                    or player.get("team")
+                    or player.get("currentTeam")
+                    or ""
+                )
+                if current != new_team:
+                    player["teamAbbrev"] = new_team
+                    player["team"] = new_team
+                    player["currentTeam"] = new_team
+                    overridden += 1
+                    print(
+                        f"   🔄 {player.get('name', pid)}: "
+                        f"{current or '?'} -> {new_team}"
+                    )
+            if overridden:
+                print(f"   Applied {overridden} team override(s) from offseason moves")
+        except Exception as e:
+            print(f"   ⚠️ Could not apply offseason moves: {e}")
+
     # Ensure output directory exists
     roster_file.parent.mkdir(parents=True, exist_ok=True)
 
