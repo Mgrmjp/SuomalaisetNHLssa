@@ -1,5 +1,19 @@
 <script>
 // @ts-nocheck
+
+import {
+    Activity as ActivityIcon,
+    CheckCircle,
+    ChevronDown as ChevronDownIcon,
+    CircleDot,
+    Database,
+    Goal,
+    HandHeart,
+    Menu,
+    Trophy,
+    Users,
+    X,
+} from 'lucide-svelte'
 import { onMount } from 'svelte'
 import { base } from '$app/paths'
 import DateControls from '$lib/components/game/DateControls.svelte'
@@ -165,19 +179,7 @@ onMount(() => {
                         aria-label="Piilota valikko"
                         title="Piilota valikko"
                     >
-                        <svg
-                            class="dashboard__floating-toggle-icon"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            aria-hidden="true"
-                        >
-                            <path d="M6 6L18 18" />
-                            <path d="M6 18L18 6" />
-                        </svg>
+                        <X class="dashboard__floating-toggle-icon" aria-hidden="true" />
                     </button>
                 </div>
                 <div class="dashboard__tabs" aria-label="Päänavigaatio">
@@ -194,20 +196,7 @@ onMount(() => {
                 aria-label="Näytä valikko"
                 title="Näytä valikko"
             >
-                <svg
-                    class="dashboard__floating-toggle-icon dashboard__floating-toggle-icon--left"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                >
-                    <path d="M3 6h18" />
-                    <path d="M3 12h18" />
-                    <path d="M3 18h18" />
-                </svg>
+                <Menu class="dashboard__floating-toggle-icon dashboard__floating-toggle-icon--left" aria-hidden="true" />
                 <span class="dashboard__floating-toggle-label">Näytä valikko</span>
             </button>
         {/if}
@@ -332,39 +321,28 @@ onMount(() => {
                                 </div>
                                 <div class="hero-stat">
                                     <div class="hero-stat__icon-wrap">
-                                        <svg class="hero-stat__icon" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill="currentColor" d="m323.4 85.2l-96.8 78.4c-16.1 13-19.2 36.4-7 53.1c12.9 17.8 38 21.3 55.3 7.8l99.3-77.2c7-5.4 17-4.2 22.5 2.8s4.2 17-2.8 22.5L373 188.8L550.2 352H592c26.5 0 48-21.5 48-48V176c0-26.5-21.5-48-48-48h-80.7l-3.9-2.5L434.8 79c-15.3-9.8-33.2-15-51.4-15c-21.8 0-43 7.5-60 21.2m22.8 124.4l-51.7 40.2c-31.5 24.6-77.2 18.2-100.8-14.2c-22.2-30.5-16.6-73.1 12.7-96.8l83.2-67.3c-11.6-4.9-24.1-7.4-36.8-7.4C234 64 215.7 69.6 200 80l-72 48H48c-26.5 0-48 21.5-48 48v128c0 26.5 21.5 48 48 48h108.2l91.4 83.4c19.6 17.9 49.9 16.5 67.8-3.1c5.5-6.1 9.2-13.2 11.1-20.6l17 15.6c19.5 17.9 49.9 16.6 67.8-2.9c4.5-4.9 7.8-10.6 9.9-16.5c19.4 13 45.8 10.3 62.1-7.5c17.9-19.5 16.6-49.9-2.9-67.8z" />
-                                        </svg>
+                                        <HandHeart class="hero-stat__icon" aria-hidden="true" />
                                     </div>
                                     <div class="hero-stat__value">{_totalAssists}</div>
                                     <div class="hero-stat__label" data-full="Syötöt (Assists)">Syötöt</div>
                                 </div>
                                 <div class="hero-stat hero-stat--primary">
                                     <div class="hero-stat__icon-wrap">
-                                        <svg class="hero-stat__icon hero-stat__icon--lg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill="currentColor" d="M20 12a2 2 0 0 0-.703.133l-2.398-1.963c.059-.214.101-.436.101-.67C17 8.114 15.886 7 14.5 7S12 8.114 12 9.5c0 .396.1.765.262 1.097l-2.909 3.438A2.06 2.06 0 0 0 9 14c-.179 0-.348.03-.512.074l-2.563-2.563C5.97 11.348 6 11.179 6 11c0-1.108-.892-2-2-2s-2 .892-2 2s.892 2 2 2c.179 0 .348-.03.512-.074l2.563 2.563A1.906 1.906 0 0 0 7 16c0 1.108.892 2 2 2s2-.892 2-2c0-.237-.048-.46-.123-.671l2.913-3.442c.227.066.462.113.71.113a2.48 2.48 0 0 0 1.133-.281l2.399 1.963A2.077 2.077 0 0 0 18 14c0 1.108.892 2 2 2s2-.892 2-2s-.892-2-2-2" />
-                                        </svg>
+                                        <CircleDot class="hero-stat__icon hero-stat__icon--lg" aria-hidden="true" />
                                     </div>
                                     <div class="hero-stat__value hero-stat__value--lg">{_totalPoints}</div>
                                     <div class="hero-stat__label" data-full="Pisteet (Points)">Pisteet</div>
                                 </div>
                                 <div class="hero-stat">
                                     <div class="hero-stat__icon-wrap">
-                                        <svg class="hero-stat__icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
-                                                <path d="M10 5a2 2 0 0 0-2 2v3h2.4A7.48 7.48 0 0 0 8 15.5a7.48 7.48 0 0 0 2.4 5.5H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h1V7a4 4 0 1 1 8 0v1.15a7.446 7.446 0 0 0-1.943.685A.999.999 0 0 1 12 8.5V7a2 2 0 0 0-2-2" />
-                                                <path d="M10 15.5a5.5 5.5 0 1 1 11 0a5.5 5.5 0 0 1-11 0m6.5-1.5a1 1 0 1 0-2 0v1.5a1 1 0 0 0 .293.707l1 1a1 1 0 0 0 1.414-1.414l-.707-.707z" />
-                                            </g>
-                                        </svg>
+                                        <Goal class="hero-stat__icon" aria-hidden="true" />
                                     </div>
                                     <div class="hero-stat__value">{_totalPenaltyMinutes}</div>
                                     <div class="hero-stat__label" data-full="Rangaistusmin (PIM)">Rangaistusmin</div>
                                 </div>
                                 <div class="hero-stat">
                                     <div class="hero-stat__icon-wrap">
-                                        <svg class="hero-stat__icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill="currentColor" d="M5 6c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2m7-2a2 2 0 1 0 2 2c0-1.11-.89-2-2-2m7-2c-1.1 0-2 .9-2 2s.9 2 2 2s2-.89 2-2s-.89-2-2-2M3.5 11c-.83 0-1.5.67-1.5 1.5V17h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2C9.67 9 9 9.67 9 10.5V15h1v5h4v-5h1v-4.5c0-.83-.67-1.5-1.5-1.5zm7-2c-.83 0-1.5.67-1.5 1.5V13h1v5h4v-5h1V8.5c0-.83-.67-1.5-1.5-1.5z" />
-                                        </svg>
+                                        <Users class="hero-stat__icon" aria-hidden="true" />
                                     </div>
                                     <div class="hero-stat__value">{totalPlayers}</div>
                                     <div class="hero-stat__label" data-full="Pelaajaa kokoonpanossa">Kokoonpanossa</div>

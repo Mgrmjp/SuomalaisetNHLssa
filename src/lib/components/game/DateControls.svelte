@@ -1,5 +1,7 @@
 <script>
 // @ts-nocheck
+
+import { Calendar, ChevronLeft, ChevronRight } from 'lucide-svelte'
 import {
     availableDates,
     currentDateReadOnly,
@@ -113,14 +115,7 @@ function _toggleCalendar() {
                 aria-label="Edellinen päivä"
                 title="Edellinen päivä"
             >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7"
-                    />
-                </svg>
+                <ChevronLeft aria-hidden="true" />
             </button>
 
             <button
@@ -136,14 +131,7 @@ function _toggleCalendar() {
                         Valitse päivämäärä
                     {/if}
                 </span>
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                </svg>
+                <Calendar aria-hidden="true" />
             </button>
 
             <button
@@ -162,14 +150,7 @@ function _toggleCalendar() {
                 aria-label="Seuraava päivä"
                 title="Seuraava päivä"
             >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                    />
-                </svg>
+                <ChevronRight aria-hidden="true" />
             </button>
         </div>
 

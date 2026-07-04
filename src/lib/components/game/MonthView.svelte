@@ -1,5 +1,7 @@
 <script>
 // @ts-nocheck
+
+import { ChevronDown, ChevronLeft, ChevronRight } from 'lucide-svelte'
 import {
     availableDates,
     currentDateReadOnly,
@@ -142,14 +144,7 @@ function generateCalendarDays(selectedDateStr) {
                     data-dashlane-label="true"
                     aria-label="Edellinen kuukausi"
                 >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2.5"
-                            d="M15 19l-7-7 7-7"
-                        /></svg
-                    >
+                    <ChevronLeft class="w-5 h-5" aria-hidden="true" />
                 </button>
             {/if}
         </span>
@@ -164,18 +159,7 @@ function generateCalendarDays(selectedDateStr) {
                 Valitse vuosi
             {/if}
             {#if view === "calendar"}
-                <svg
-                    class="w-4 h-4 opacity-50"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    ><path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                    ></path></svg
-                >
+                <ChevronDown class="w-4 h-4 opacity-50" aria-hidden="true" />
             {/if}
         </button>
 
@@ -188,14 +172,7 @@ function generateCalendarDays(selectedDateStr) {
                     data-dashlane-label="true"
                     aria-label="Seuraava kuukausi"
                 >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2.5"
-                            d="M9 5l7 7-7 7"
-                        /></svg
-                    >
+                    <ChevronRight class="w-5 h-5" aria-hidden="true" />
                 </button>
             {/if}
         </span>
