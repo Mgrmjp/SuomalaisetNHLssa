@@ -270,7 +270,7 @@ function _formatBirthDate(dateStr) {
 
     .team-card {
         background: white;
-        border-radius: 0.75rem;
+        border-radius: 0;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         overflow: hidden;
         transition: box-shadow 0.2s ease;
@@ -298,7 +298,7 @@ function _formatBirthDate(dateStr) {
         width: 56px;
         height: 56px;
         background: white;
-        border-radius: 0.5rem;
+        border-radius: 0;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
@@ -383,7 +383,7 @@ function _formatBirthDate(dateStr) {
 
     .inactive-list {
         background: #f9fafb;
-        border-radius: 0.75rem;
+        border-radius: 0;
         border: 1px solid #e5e7eb;
         overflow: hidden;
         display: grid;
