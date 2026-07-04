@@ -481,6 +481,8 @@ onMount(() => {
         z-index: 100;
         width: min(calc(100% - 2rem), var(--rail-max));
         transform: translateX(-50%);
+        --floating-header-gap: 0.35rem;
+        --floating-header-control: 4.5rem;
     }
 
     .dashboard__floating-header--hidden {
@@ -491,17 +493,20 @@ onMount(() => {
 
     .dashboard__floating-content {
         display: grid;
-        gap: 0.3rem;
+        grid-template-columns: minmax(0, 1fr) var(--floating-header-control);
+        width: 100%;
+        gap: var(--floating-header-gap);
+        align-items: stretch;
     }
 
     .dashboard__floating-topline {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        align-items: stretch;
-        gap: 0.35rem;
+        display: contents;
     }
 
     .dashboard__floating-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         padding: 0 0.5rem;
         border: 1px solid rgba(16, 24, 40, 0.14);
         background: rgba(255, 255, 255, 0.92);
@@ -531,10 +536,34 @@ onMount(() => {
     }
 
     .dashboard__floating-date {
+        grid-column: 1;
+        grid-row: 1;
+        width: 100%;
         min-width: 0;
     }
 
+    .dashboard__floating-topline > .dashboard__floating-toggle {
+        grid-column: 2;
+        grid-row: 1;
+        width: 100%;
+    }
+
+    .dashboard__floating-content > .dashboard__tabs {
+        grid-column: 1;
+        grid-row: 2;
+        display: block;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+    }
+
+    :global(.dashboard__floating-header .date-controls) {
+        max-width: none;
+    }
+
     :global(.dashboard__floating-header .date-controls__card) {
+        width: 100%;
+        box-sizing: border-box;
         padding: 0.35rem;
         background: rgba(255, 255, 255, 0.92);
         border-color: rgba(16, 24, 40, 0.14);
@@ -571,6 +600,7 @@ onMount(() => {
     }
 
     :global(.dashboard__floating-header .nav-tabs-list) {
+        box-sizing: border-box;
         padding: 0.15rem;
         background: rgba(255, 255, 255, 0.92);
         border-color: rgba(16, 24, 40, 0.14);
@@ -1160,6 +1190,8 @@ onMount(() => {
         .dashboard__floating-header {
             top: 0.35rem;
             width: calc(100% - 0.75rem);
+            --floating-header-gap: 0.2rem;
+            --floating-header-control: 2rem;
         }
 
         .dashboard__floating-header--hidden {
@@ -1167,12 +1199,7 @@ onMount(() => {
         }
 
         .dashboard__floating-content {
-            gap: 0.2rem;
-        }
-
-        .dashboard__floating-topline {
-            grid-template-columns: minmax(0, 1fr) 2rem;
-            gap: 0.2rem;
+            gap: var(--floating-header-gap);
         }
 
         .dashboard__floating-toggle {
