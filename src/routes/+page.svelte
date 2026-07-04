@@ -169,18 +169,18 @@ onMount(() => {
                 <div class="dashboard__floating-topline">
                     <div class="dashboard__floating-date">
                         <DateControls />
+                        <button
+                            type="button"
+                            class="dashboard__floating-toggle dashboard__floating-toggle--close"
+                            onclick={toggleFloatingHeader}
+                            aria-expanded={!_hideFloatingHeader}
+                            aria-controls="floating-header-content"
+                            aria-label="Piilota valikko"
+                            title="Piilota valikko"
+                        >
+                            <X class="dashboard__floating-toggle-icon" aria-hidden="true" />
+                        </button>
                     </div>
-                    <button
-                        type="button"
-                        class="dashboard__floating-toggle dashboard__floating-toggle--close"
-                        onclick={toggleFloatingHeader}
-                        aria-expanded={!_hideFloatingHeader}
-                        aria-controls="floating-header-content"
-                        aria-label="Piilota valikko"
-                        title="Piilota valikko"
-                    >
-                        <X class="dashboard__floating-toggle-icon" aria-hidden="true" />
-                    </button>
                 </div>
                 <div class="dashboard__tabs" aria-label="Päänavigaatio">
                     <NavTabs />
@@ -539,6 +539,7 @@ onMount(() => {
         grid-row: 1;
         width: 100%;
         min-width: 0;
+        position: relative;
     }
 
     .dashboard__floating-content > .dashboard__tabs {
@@ -551,9 +552,9 @@ onMount(() => {
         min-width: 0;
     }
 
-    .dashboard__floating-topline > .dashboard__floating-toggle {
+    .dashboard__floating-date > .dashboard__floating-toggle {
         position: absolute;
-        top: 0.25rem;
+        top: 50%;
         right: 0;
         width: 3rem;
         height: var(--floating-row-control-height);
@@ -564,6 +565,7 @@ onMount(() => {
         color: #475467;
         box-shadow: none;
         z-index: 20;
+        transform: translateY(-50%);
     }
 
     .dashboard__floating-toggle-icon {
@@ -582,7 +584,7 @@ onMount(() => {
         letter-spacing: 0.02em;
     }
 
-    .dashboard__floating-topline > .dashboard__floating-toggle:hover {
+    .dashboard__floating-date > .dashboard__floating-toggle:hover {
         background: rgba(16, 24, 40, 0.04);
         color: var(--color-ink);
     }
@@ -1257,7 +1259,7 @@ onMount(() => {
             gap: var(--floating-header-gap);
         }
 
-        .dashboard__floating-topline > .dashboard__floating-toggle {
+        .dashboard__floating-date > .dashboard__floating-toggle {
             width: 2.5rem;
             height: var(--floating-row-control-height);
             padding: 0;
