@@ -708,41 +708,41 @@ onMount(() => {
        Hero header
        ============================================ */
     .hero-header {
-        margin: 0 auto 1.5rem;
+        margin: 0 auto 1rem;
         text-align: center;
     }
 
     .hero-header__inner {
-        max-width: 820px;
+        max-width: 620px;
         margin: 0 auto;
         padding: 0;
     }
 
     .hero-title {
-        max-width: 780px;
-        margin: 0.55rem auto 0;
+        max-width: 580px;
+        margin: 0.4rem auto 0;
         color: var(--color-ink);
-        font-size: clamp(2.2rem, 4.7vw, 3.35rem);
-        line-height: 1.03;
+        font-size: clamp(1.55rem, 3.2vw, 2.15rem);
+        line-height: 1.1;
         font-weight: 800;
         letter-spacing: -0.01em;
     }
 
     .hero-subtitle {
-        margin: 0.65rem auto 0;
-        max-width: 34rem;
+        margin: 0.45rem auto 0;
+        max-width: 32rem;
         color: var(--color-muted);
-        font-size: clamp(0.98rem, 1.8vw, 1.08rem);
+        font-size: clamp(0.9rem, 1.3vw, 1rem);
         line-height: 1.5;
     }
 
     .hero-scroll-to-results {
-        margin-top: 0.75rem;
+        margin-top: 0.6rem;
         border-radius: 0;
         background: var(--accent);
         color: #fff;
-        padding: 0.55rem 1rem;
-        font-size: 0.9rem;
+        padding: 0.45rem 0.9rem;
+        font-size: 0.85rem;
         font-weight: 700;
         transition: background 0.15s ease, transform 0.15s ease;
     }
@@ -762,8 +762,8 @@ onMount(() => {
     }
 
     .logo-img {
-        width: 3.25rem;
-        height: 3.25rem;
+        width: 2.25rem;
+        height: 2.25rem;
         margin: 0 auto;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -1353,7 +1353,7 @@ onMount(() => {
         }
 
         .hero-header {
-            margin-bottom: 1.1rem;
+            margin-bottom: 0.85rem;
         }
 
         .hero-header__inner {
@@ -1361,26 +1361,26 @@ onMount(() => {
         }
 
         .logo-img {
-            width: 2.75rem;
-            height: 2.75rem;
+            width: 1.75rem;
+            height: 1.75rem;
         }
 
         .hero-title {
-            margin-top: 0.45rem;
-            font-size: clamp(1.65rem, 7.8vw, 2.05rem);
-            line-height: 1.06;
+            margin-top: 0.35rem;
+            font-size: clamp(1.3rem, 6.4vw, 1.65rem);
+            line-height: 1.1;
         }
 
         .hero-subtitle {
-            margin-top: 0.55rem;
-            font-size: 0.9rem;
-            line-height: 1.45;
+            margin-top: 0.35rem;
+            font-size: 0.82rem;
+            line-height: 1.4;
         }
 
         .hero-scroll-to-results {
-            margin-top: 0.65rem;
-            padding: 0.5rem 0.9rem;
-            font-size: 0.86rem;
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
         }
 
         .panel__inner {
