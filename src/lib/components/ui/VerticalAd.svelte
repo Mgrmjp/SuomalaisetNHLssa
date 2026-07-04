@@ -171,7 +171,7 @@ onDestroy(() => {
         width: 110px;
         height: 400px;
         background: #ffffff;
-        border-radius: 10px;
+        border-radius: 0;
         border: 1px solid rgba(16, 24, 40, 0.12);
         box-shadow:
             0 8px 22px rgba(0, 53, 128, 0.1),

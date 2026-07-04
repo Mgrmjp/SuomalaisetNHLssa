@@ -120,7 +120,7 @@ function getLogoSrc(id) {
         align-items: center;
         gap: 1rem;
         padding: 1.75rem 1.25rem;
-        border-radius: 6px;
+        border-radius: 0;
         overflow: hidden;
         transition: transform 0.2s ease;
     }
@@ -138,7 +138,7 @@ function getLogoSrc(id) {
     .logo.on-dark {
         background: #fff;
         padding: 4px;
-        border-radius: 4px;
+        border-radius: 0;
     }
 
     .content {

@@ -96,6 +96,7 @@ onDestroy(() => {
         width: min(300px, 100%);
         height: 250px;
         overflow: hidden;
+        border-radius: 0;
     }
 
     .support-message {
@@ -128,7 +129,7 @@ onDestroy(() => {
         transition: opacity 1s ease-in-out;
         pointer-events: none;
         overflow: hidden;
-        border-radius: 8px;
+        border-radius: 0;
         isolation: isolate;
     }
 
@@ -166,10 +167,7 @@ onDestroy(() => {
         height: 250px;
         object-fit: cover;
         border: 1px solid rgba(15, 23, 42, 0.85);
-        border-radius: 10px;
-        box-shadow:
-            0 0 0 4px rgba(15, 23, 42, 0.16),
-            0 14px 32px rgba(15, 23, 42, 0.18);
+        border-radius: 0;
         position: relative;
         z-index: 1;
     }

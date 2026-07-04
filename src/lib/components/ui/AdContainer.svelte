@@ -284,7 +284,7 @@ function getLogoSrc(ad) {
         justify-content: center;
         padding: 1rem;
         border: 1px dashed rgba(0, 53, 128, 0.24);
-        border-radius: 10px;
+        border-radius: 0;
         background: rgba(238, 243, 251, 0.72);
         color: rgba(15, 23, 42, 0.72);
         font-size: 0.8rem;
@@ -307,7 +307,7 @@ function getLogoSrc(ad) {
         transition: opacity 0.8s ease-in-out;
         pointer-events: none;
         overflow: visible;
-        border-radius: 6px;
+        border-radius: 0;
         isolation: isolate;
     }
 
@@ -344,10 +344,7 @@ function getLogoSrc(ad) {
         height: 100%;
         object-fit: cover;
         border: 1px solid rgba(15, 23, 42, 0.85);
-        border-radius: 10px;
-        box-shadow:
-            0 0 0 4px rgba(15, 23, 42, 0.16),
-            0 14px 32px rgba(15, 23, 42, 0.18);
+        border-radius: 0;
         display: block;
         position: relative;
         z-index: 1;
@@ -463,11 +460,8 @@ function getLogoSrc(ad) {
         justify-content: center;
         gap: 0.75rem;
         padding: 0 1rem;
-        border-radius: 6px;
+        border-radius: 0;
         overflow: visible;
-        box-shadow:
-            0 0 0 4px rgba(15, 23, 42, 0.16),
-            0 14px 32px rgba(15, 23, 42, 0.18);
         transition: transform 0.2s ease;
         isolation: isolate;
         z-index: 1;
@@ -482,7 +476,7 @@ function getLogoSrc(ad) {
     .custom-banner:hover { transform: translateY(-2px); }
 
     .logo { height: 48px; width: auto; object-fit: contain; }
-    .logo.on-dark { background: #fff; padding: 4px; border-radius: 4px; }
+    .logo.on-dark { background: #fff; padding: 4px; border-radius: 0; }
     .content { font-size: 0.9rem; line-height: 1.2; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .cta {
         font-size: 0.75rem;
