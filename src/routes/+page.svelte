@@ -297,24 +297,14 @@ onMount(() => {
                             aria-expanded={_showHeroStats}
                         >
                             <span class="hero-stats-toggle-text">Päivän tilastot</span>
-                            <svg
-                                class="hero-stats-toggle-icon"
-                                class:rotated={_showHeroStats}
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <ChevronDown class="hero-stats-toggle-icon" aria-hidden="true" />
                         </button>
 
                         <div class="hero-stats-wrapper" class:expanded={_showHeroStats}>
                             <div class="hero-stats">
                                 <div class="hero-stat">
                                     <div class="hero-stat__icon-wrap">
-                                        <svg class="hero-stat__icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill="currentColor" d="M0 160c0-53 114.6-96 256-96s256 43 256 96s-114.6 96-256 96S0 213 0 160m0 82.2V352c0 53 114.6 96 256 96s256-43 256-96V242.2c-113.4 82.3-398.5 82.4-512 0" />
-                                        </svg>
+                                        <ActivityIcon class="hero-stat__icon" aria-hidden="true" />
                                     </div>
                                     <div class="hero-stat__value">{_totalGoals}</div>
                                     <div class="hero-stat__label" data-full="Maalit (Goals)">Maalit</div>

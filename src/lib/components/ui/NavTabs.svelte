@@ -55,7 +55,7 @@ const currentPath = $derived($page.url.pathname)
                 class:nav-tab-item--active={isActive}
                 aria-current={isActive ? "page" : undefined}
             >
-                <svelte:component this={item.Icon} class="nav-tab-icon" aria-hidden="true" />
+                <item.Icon class="nav-tab-icon" aria-hidden="true" />
                 {item.label}
             </a>
         {/each}

@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
 
+import { ArrowUpRight, Calendar, Disc3, Pause, Sun } from 'lucide-svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { displayDate } from '$lib/stores/gameData.js'
 
@@ -121,29 +122,13 @@ const emptyStateStats = $derived.by(() => {
                 aria-hidden="true"
             >
                 {#if iconVariant === 'no-games'}
-                    <!-- Calendar -->
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" />
-                        <path d="M16 2v4M8 2v4M3 10h18" />
-                    </svg>
+                    <Calendar aria-hidden="true" />
                 {:else if iconVariant === 'break'}
-                    <!-- Pause -->
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="6" y="5" width="4" height="14" rx="1" />
-                        <rect x="14" y="5" width="4" height="14" rx="1" />
-                    </svg>
+                    <Pause aria-hidden="true" />
                 {:else if iconVariant === 'offseason'}
-                    <!-- Sun / offseason -->
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5" />
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
-                    </svg>
+                    <Sun aria-hidden="true" />
                 {:else}
-                    <!-- Puck / no scorers -->
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <ellipse cx="12" cy="8" rx="8" ry="3" />
-                        <path d="M4 8v8c0 1.66 3.58 3 8 3s8-1.34 8-3V8" />
-                    </svg>
+                    <Disc3 aria-hidden="true" />
                 {/if}
             </div>
             <h3 class="empty-state-title">{currentMessage.title}</h3>
@@ -236,9 +221,7 @@ const emptyStateStats = $derived.by(() => {
                                             rel="noreferrer"
                                         >
                                             Lue lisää
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                                <path d="M7 17L17 7M9 7h8v8" />
-                                            </svg>
+                                            <ArrowUpRight aria-hidden="true" />
                                         </a>
                                     {/if}
                                 </div>

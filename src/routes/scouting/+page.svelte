@@ -1,5 +1,7 @@
 <script>
 // @ts-nocheck
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-svelte'
+
 import { base } from '$app/paths'
 
 const scoutingReports = [
@@ -108,9 +110,7 @@ const draftRankings = [
                         class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
                     >
                         Näytä historia
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
+                        <ChevronRight class="w-4 h-4 ml-1" aria-hidden="true" />
                     </a>
                 </div>
             </div>
@@ -147,14 +147,7 @@ const draftRankings = [
                                             <span>{report.height}</span>
                                         </div>
                                     </div>
-                                    <svg 
-                                        class="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-1"
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                    </svg>
+                                    <ChevronRight class="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-1" aria-hidden="true" />
                                 </div>
                             </div>
                         </a>
@@ -165,9 +158,7 @@ const draftRankings = [
                 <div class="mt-8 p-6 bg-slate-100 rounded-xl border border-slate-200">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
-                            <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
+                            <Plus class="w-5 h-5 text-slate-500" aria-hidden="true" />
                         </div>
                         <div>
                             <h3 class="font-semibold text-slate-900">Lisää raportteja tulossa</h3>
@@ -186,9 +177,7 @@ const draftRankings = [
                 href="{base}/lupaukset"
                 class="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors"
             >
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
+                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
                 Takaisin lupaukset-sivulle
             </a>
         </div>

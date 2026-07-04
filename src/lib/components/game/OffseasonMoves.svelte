@@ -1,5 +1,6 @@
 <script>
 // @ts-nocheck
+import { ArrowRight } from 'lucide-svelte'
 import { base } from '$app/paths'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { formatFinnishDate } from '$lib/utils/dateUtils.js'
@@ -123,9 +124,7 @@ function toggleExpand() {
                                     <TeamLogo team={move.oldTeam} size="28" />
                                     <span class="move-row__abbrev">{move.oldTeam}</span>
                                 </div>
-                                <svg class="move-row__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
+                                <ArrowRight class="move-row__arrow" aria-hidden="true" />
                                 <div class="move-row__team">
                                     <TeamLogo team={move.newTeam} size="28" />
                                     <span class="move-row__abbrev">{move.newTeam}</span>

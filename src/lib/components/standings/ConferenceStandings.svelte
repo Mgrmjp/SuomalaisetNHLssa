@@ -1,5 +1,6 @@
 <script>
 // @ts-nocheck
+import { AlertCircle, TableProperties } from 'lucide-svelte'
 import DivisionStandings from '$lib/components/standings/DivisionStandings.svelte'
 import { CONFERENCE_NAMES, calculateWildCardTeams } from '$lib/utils/nhlStructure.js'
 
@@ -36,20 +37,7 @@ const _hasError = $derived(error !== null)
     {#if _hasError}
         <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
             <div class="flex items-center space-x-3">
-                <svg
-                    class="w-5 h-5 text-red-600 flex-shrink-0"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="8" x2="12" y2="12" />
-                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                </svg>
+                <AlertCircle class="w-5 h-5 text-red-600 flex-shrink-0" aria-hidden="true" />
                 <div>
                     <h3 class="text-sm font-medium text-red-800">
                         Virhe ladattaessa sarjataulukkoa
@@ -124,21 +112,7 @@ const _hasError = $derived(error !== null)
     {:else if !isLoading && !_hasError}
         <!-- Empty State -->
         <div class="text-center py-12">
-            <svg
-                class="mx-auto h-12 w-12 text-gray-400 mb-4"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <path d="M9 9h6v6h-6z" />
-                <path d="M3 3h18v18H3z" />
-                <path d="M3 9h18" />
-                <path d="M9 3v18" />
-            </svg>
+            <TableProperties class="mx-auto h-12 w-12 text-gray-400 mb-4" aria-hidden="true" />
             <h3 class="text-lg font-medium text-gray-900 mb-2">Ei sarjataulukkoa saatavilla</h3>
             <p class="text-gray-600 max-w-md mx-auto">
                 Sarjataulukko ladataan hetken kuluttua, kun ottelutiedot ovat saatavilla.

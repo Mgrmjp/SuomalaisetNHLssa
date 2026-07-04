@@ -1,5 +1,7 @@
 <script>
 // @ts-nocheck
+import { ChevronLeft } from 'lucide-svelte'
+
 import { base } from '$app/paths'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import Snowfall from '$lib/components/ui/Snowfall.svelte'
@@ -183,14 +185,7 @@ function getPlayerSlug(p) {
                 href={base + "/pelaajat"}
                 class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 19l-7-7 7-7"
-                    />
-                </svg>
+                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
                 Takaisin pelaajiin
             </a>
         </div>

@@ -1,5 +1,6 @@
 <script>
 // @ts-nocheck
+import { TableProperties } from 'lucide-svelte'
 import TeamStandingRow from '$lib/components/standings/TeamStandingRow.svelte'
 import { DIVISION_NAMES } from '$lib/utils/nhlStructure.js'
 import { getTeamColorVariables } from '$lib/utils/teamColors.js'
@@ -127,21 +128,7 @@ const _headers = $derived(_showAdvancedStats ? [...baseHeaders, ...advancedHeade
             <div
                 class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 mb-4"
             >
-                <svg
-                    class="w-6 h-6 text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
-                    <path d="M9 9h6v6h-6z" />
-                    <path d="M3 3h18v18H3z" />
-                    <path d="M3 9h18" />
-                    <path d="M9 3v18" />
-                </svg>
+                <TableProperties class="w-6 h-6 text-gray-400" aria-hidden="true" />
             </div>
             <h4 class="text-sm font-medium text-gray-900 mb-1">Ei sarjataulukkoa saatavilla</h4>
             <p class="text-xs text-gray-500">Odottaa ottelutietojen lataamista...</p>
