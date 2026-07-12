@@ -26,6 +26,7 @@ body {
 
     /* Single rail width for the main centered dashboard content */
     --rail-max: 920px;
+    --page-gutter: clamp(1rem, 3vw, 2rem);
 
     /* Single card system — controls, data, info all share this base */
     --card-radius: 0;
@@ -146,6 +147,13 @@ h3 {
     background: transparent;
 }
 
+/* The public site is intentionally flat and rectilinear. Campaign previews
+   under /ads retain advertiser-specific artwork and geometry. */
+.app-shell:not(.design-system-exempt) :where(*) {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
 /* Custom utilities */
 .finnish-blue {
     color: var(--color-finnish-blue);
@@ -260,50 +268,6 @@ body::before {
 
 .shadow-medium {
     box-shadow: none;
-}
-
-.shadow,
-.shadow-sm,
-.shadow-md,
-.shadow-lg,
-.shadow-xl,
-.shadow-2xl {
-    box-shadow: none !important;
-}
-
-.rounded,
-.rounded-sm,
-.rounded-md,
-.rounded-lg,
-.rounded-xl,
-.rounded-2xl,
-.rounded-3xl,
-.rounded-full,
-.sm\:rounded,
-.sm\:rounded-sm,
-.sm\:rounded-md,
-.sm\:rounded-lg,
-.sm\:rounded-xl,
-.sm\:rounded-2xl,
-.sm\:rounded-3xl,
-.sm\:rounded-full,
-.md\:rounded,
-.md\:rounded-sm,
-.md\:rounded-md,
-.md\:rounded-lg,
-.md\:rounded-xl,
-.md\:rounded-2xl,
-.md\:rounded-3xl,
-.md\:rounded-full,
-.lg\:rounded,
-.lg\:rounded-sm,
-.lg\:rounded-md,
-.lg\:rounded-lg,
-.lg\:rounded-xl,
-.lg\:rounded-2xl,
-.lg\:rounded-3xl,
-.lg\:rounded-full {
-    border-radius: 0 !important;
 }
 
 /* Subtle angular border language: one small chamfer on major surfaces. */

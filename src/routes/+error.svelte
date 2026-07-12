@@ -1,11 +1,13 @@
 <script>
 // @ts-nocheck
 
-import { Home, Users } from 'lucide-svelte'
+import { ChevronLeft, Home, Users } from 'lucide-svelte'
 import { onMount } from 'svelte'
 import { base } from '$app/paths'
 import { page } from '$app/stores'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 
 const status = page.status || 404
 let _message = 'Sivua ei löytynyt'
@@ -40,85 +42,162 @@ onMount(() => {
     <title>{status} - {_message} | Suomalaiset NHL:ssä</title>
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50 relative overflow-hidden flex items-center justify-center">
-    <Snowfall count={12} />
+<PageShell width="content" compact>
+    <div class="error-page">
+        <a href={base + "/"} class="back-link">
+            <ChevronLeft size={16} aria-hidden="true" />
+            Takaisin etusivulle
+        </a>
 
-    <div class="max-w-2xl mx-auto px-4 py-16 text-center relative z-10">
-        <!-- Animated Puck -->
-        <div class="mb-8 flex justify-center">
-            <div class="relative">
-                <div
-                    class="w-32 h-32 rounded-full bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl flex items-center justify-center animate-bounce"
-                >
-                    <div
-                        class="w-24 h-24 rounded-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center border-4 border-gray-600"
-                    >
-                        <span class="text-5xl font-bold text-white">{status}</span>
-                    </div>
+        <PageHeader
+            title={_message}
+            subtitle={status === 404
+                ? 'Peli on keskeytetty - etsimääsi sivua ei löytynyt. Kenties pelaaja on vaihdossa tai sivu on siirretty.'
+                : 'Jään pinta on epätasainen - jotain odottamatonta tapahtui. Yritä uudelleen hetken kuluttua.'}
+            align="left"
+            size="compact"
+        />
+
+        <div class="error-surface">
+            <Card accent>
+                <div class="error-code" aria-hidden="true">{status}</div>
+
+                <div class="error-actions">
+                    <a href={base + "/"} class="error-action error-action--primary">
+                        <Home size={20} aria-hidden="true" />
+                        Etusivulle
+                    </a>
+                    <a href={base + "/pelaajat"} class="error-action error-action--secondary">
+                        <Users size={20} aria-hidden="true" />
+                        Pelaajiin
+                    </a>
                 </div>
-                <div
-                    class="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-black/20 rounded-full blur-sm"
-                ></div>
-            </div>
-        </div>
 
-        <!-- Error Message -->
-        <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            {_message}
-        </h1>
-        <p class="text-lg text-slate-600 mb-8 max-w-md mx-auto">
-            {#if status === 404}
-                Peli on keskeytetty - etsimääsi sivua ei löytynyt. Kenties pelaaja on vaihdossa tai
-                sivu on siirretty.
-            {:else}
-                Jään pinta on epätasainen - jotain odottamatonta tapahtui. Yritä uudelleen hetken
-                kuluttua.
-            {/if}
-        </p>
-
-        <!-- Action Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a
-                href={base + "/"}
-                class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
-            >
-                <Home class="w-5 h-5" aria-hidden="true" />
-                Etusivulle
-            </a>
-            <a
-                href={base + "/pelaajat"}
-                class="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-slate-700 font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-slate-200"
-            >
-                <Users class="w-5 h-5" aria-hidden="true" />
-                Pelaajiin
-            </a>
-        </div>
-
-        <!-- Fun Hockey Facts -->
-        <div
-            class="mt-12 p-6 bg-white rounded-2xl shadow-lg border border-slate-100 max-w-md mx-auto"
-        >
-            <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                Tiesitkö?
-            </p>
-            <p class="text-slate-700">
-                {_randomTrivia}
-            </p>
+                <div class="trivia">
+                    <p class="trivia__label">Tiesitkö?</p>
+                    <p>{_randomTrivia}</p>
+                </div>
+            </Card>
         </div>
     </div>
-</div>
+</PageShell>
 
 <style>
-    @keyframes bounce {
-        0%,
-        100% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-10px);
-        }
+    .error-page {
+        display: grid;
+        gap: var(--space-6);
     }
-    .animate-bounce {
-        animation: bounce 2s infinite;
+
+    .back-link {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.16s ease;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+
+    .back-link:focus-visible,
+    .error-action:focus-visible {
+        outline: 3px solid var(--accent-glow);
+        outline-offset: 3px;
+    }
+
+    .error-surface :global(.card) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .error-code {
+        width: fit-content;
+        margin-bottom: var(--space-6);
+        padding: var(--space-3) var(--space-4);
+        border: 1px solid var(--color-panel-border);
+        border-radius: 0;
+        background: var(--accent-ice);
+        box-shadow: none;
+        color: var(--accent);
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 6vw, 3.5rem);
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .error-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+    }
+
+    .error-action {
+        display: inline-flex;
+        min-height: 2.75rem;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        padding: 0.65rem 1rem;
+        border: 1px solid var(--accent);
+        border-radius: 0;
+        box-shadow: none;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background-color 0.16s ease, color 0.16s ease;
+    }
+
+    .error-action--primary {
+        background: var(--accent);
+        color: #fff;
+    }
+
+    .error-action--primary:hover {
+        background: var(--accent-strong);
+    }
+
+    .error-action--secondary {
+        background: transparent;
+        color: var(--accent);
+    }
+
+    .error-action--secondary:hover {
+        background: var(--accent-ice);
+    }
+
+    .trivia {
+        margin-top: var(--space-7);
+        padding-top: var(--space-5);
+        border-top: 1px solid var(--color-panel-border);
+    }
+
+    .trivia p {
+        margin: 0;
+        color: #344054;
+        line-height: 1.65;
+    }
+
+    .trivia .trivia__label {
+        margin-bottom: var(--space-2);
+        color: var(--color-muted);
+        font-size: var(--eyebrow-size);
+        font-weight: var(--eyebrow-weight);
+        letter-spacing: var(--eyebrow-track);
+        text-transform: uppercase;
+    }
+
+    @media (max-width: 480px) {
+        .error-actions {
+            display: grid;
+        }
+
+        .error-action {
+            width: 100%;
+        }
     }
 </style>

@@ -529,9 +529,6 @@ onMount(() => {
         border-radius: 0;
         background: rgba(0, 53, 128, 0.94);
         color: #ffffff;
-        box-shadow:
-            0 10px 24px rgba(0, 53, 128, 0.18),
-            0 1px 3px rgba(16, 24, 40, 0.12);
     }
 
     .dashboard__floating-date {
@@ -943,7 +940,6 @@ onMount(() => {
         color: #e5e7eb;
         font-size: 0.75rem;
         border-radius: 0;
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
@@ -1280,9 +1276,6 @@ onMount(() => {
             border-radius: 0;
             background: rgba(0, 53, 128, 0.94);
             color: #ffffff;
-            box-shadow:
-                0 10px 24px rgba(0, 53, 128, 0.18),
-                0 1px 3px rgba(16, 24, 40, 0.12);
         }
 
         .dashboard__floating-header--hidden .dashboard__floating-toggle-label {

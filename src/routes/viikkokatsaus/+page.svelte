@@ -3,6 +3,9 @@
 import { ChevronLeft, ChevronRight } from 'lucide-svelte'
 
 import { base } from '$app/paths'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 
 /** @type {{ data: { articles: Array<{slug: string, title: string, date: string, week: number, year: number, excerpt: string}> } }} */
@@ -63,73 +66,184 @@ function formatDate(dateStr) {
     })}</script>`}
 </svelte:head>
 
-<div class="w-full max-w-3xl mx-auto px-4 py-8">
-    <div class="space-y-6">
-        <!-- Back link -->
-        <div class="mb-6">
-            <a
-                href={base + "/"}
-                class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
-            >
-                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
-                Takaisin etusivulle
-            </a>
-        </div>
+<PageShell width="content" compact>
+    <div class="editorial-page">
+        <a href={base + "/"} class="back-link">
+            <ChevronLeft size={16} aria-hidden="true" />
+            Takaisin etusivulle
+        </a>
 
-        <!-- Main title -->
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Viikkokatsaus</h1>
+        <PageHeader
+            title="Viikkokatsaus"
+            subtitle="Suomalaisten NHL-pelaajien viikon tärkeimmät tapahtumat ja tilastot."
+            align="left"
+            size="compact"
+        />
 
-        <!-- Article list -->
         {#if data.articles.length === 0}
-            <p class="text-gray-600">Ei vielä artikkeleita.</p>
+            <Card>
+                <p class="empty-state">Ei vielä artikkeleita.</p>
+            </Card>
         {:else}
-            <div class="space-y-4">
+            <div class="article-list">
                 {#each data.articles as article}
-                    <a
-                        href={`${base}/viikkokatsaus/${article.slug}`}
-                        class="block bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 group"
-                    >
-                        <div class="flex items-start justify-between gap-4">
-                            <div class="flex items-start gap-4 flex-1">
+                    <a href={`${base}/viikkokatsaus/${article.slug}`} class="article-link">
+                        <Card>
+                            <div class="article-row">
                                 {#if article.featured_player_id}
-                                    <div class="w-16 h-16 rounded-full bg-gray-100 flex-shrink-0 overflow-hidden">
+                                    <div class="article-thumbnail">
                                         <PlayerHeadshot
                                             playerId={article.featured_player_id}
                                             alt="Viikon tähti"
-                                            imageClass="w-full h-full object-cover"
+                                            imageClass="article-thumbnail__image"
                                             loading="lazy"
                                         />
                                     </div>
                                 {/if}
-                                <div class="flex-1 min-w-0">
-                                    <h2
-                                        class="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2"
-                                    >
-                                        {article.title}
-                                    </h2>
-                                    <p class="text-gray-600 text-sm mb-3">
+                                <div class="article-copy">
+                                    <h2>{article.title}</h2>
+                                    <p class="article-meta">
                                         {formatDate(article.date)} · Viikko {article.week}
                                     </p>
-                                    <p class="text-gray-700 leading-relaxed">
-                                        {article.excerpt}
-                                    </p>
+                                    <p class="article-excerpt">{article.excerpt}</p>
                                 </div>
+                                <ChevronRight
+                                    class="article-arrow"
+                                    size={20}
+                                    aria-hidden="true"
+                                />
                             </div>
-                            <ChevronRight class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-1" aria-hidden="true" />
-                        </div>
+                        </Card>
                     </a>
                 {/each}
             </div>
         {/if}
     </div>
-</div>
+</PageShell>
 
 <style>
-    a.block {
-        border-left: 4px solid transparent;
+    .editorial-page {
+        display: grid;
+        gap: var(--space-6);
     }
 
-    a.block:hover {
-        border-left-color: #94a3b8;
+    .back-link {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.16s ease;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+
+    .back-link:focus-visible,
+    .article-link:focus-visible {
+        outline: 3px solid var(--accent-glow);
+        outline-offset: 3px;
+    }
+
+    .article-list {
+        display: grid;
+        gap: var(--space-4);
+    }
+
+    .article-link {
+        display: block;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .article-link :global(.card) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        transition: border-color 0.16s ease;
+    }
+
+    .article-link:hover :global(.card) {
+        border-color: var(--accent-soft);
+    }
+
+    .article-row {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: start;
+        gap: var(--space-4);
+    }
+
+    .article-thumbnail {
+        width: 4rem;
+        height: 4rem;
+        overflow: hidden;
+        flex: none;
+        border: 1px solid var(--color-panel-border);
+        border-radius: 0;
+        background: var(--accent-ice);
+        box-shadow: none;
+    }
+
+    .article-thumbnail :global(.article-thumbnail__image) {
+        width: 100%;
+        height: 100%;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        object-fit: cover;
+    }
+
+    .article-copy {
+        min-width: 0;
+    }
+
+    h2 {
+        margin: 0 0 var(--space-2);
+        color: var(--color-ink);
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 1.3;
+        transition: color 0.16s ease;
+    }
+
+    .article-link:hover h2 {
+        color: var(--accent);
+    }
+
+    .article-meta {
+        margin: 0 0 var(--space-3);
+        color: var(--color-muted);
+        font-size: 0.82rem;
+    }
+
+    .article-excerpt,
+    .empty-state {
+        margin: 0;
+        color: #344054;
+        line-height: 1.65;
+    }
+
+    .article-row :global(.article-arrow) {
+        margin-top: 0.15rem;
+        color: var(--color-muted);
+        transition: color 0.16s ease, transform 0.16s ease;
+    }
+
+    .article-link:hover :global(.article-arrow) {
+        color: var(--accent);
+        transform: translateX(2px);
+    }
+
+    @media (max-width: 520px) {
+        .article-row {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+
+        .article-thumbnail {
+            display: none;
+        }
     }
 </style>

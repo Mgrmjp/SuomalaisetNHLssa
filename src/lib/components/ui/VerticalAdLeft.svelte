@@ -20,9 +20,9 @@ const ads = [
 ]
 
 let currentAdIndex = 0
-let _isTransitioning = false
 let _isPaused = false
 let interval
+let failedAds = {}
 
 function pauseAds() {
     _isPaused = true
@@ -34,13 +34,11 @@ function resumeAds() {
 
 function nextAd() {
     if (_isPaused) return
-    _isTransitioning = true
-    setTimeout(() => {
-        currentAdIndex = (currentAdIndex + 1) % ads.length
-        setTimeout(() => {
-            _isTransitioning = false
-        }, 500)
-    }, 500)
+    currentAdIndex = (currentAdIndex + 1) % ads.length
+}
+
+function setAdFailed(index, failed) {
+    failedAds = { ...failedAds, [index]: failed }
 }
 
 onMount(() => {
@@ -57,15 +55,17 @@ onDestroy(() => {
 <div class="vertical-ad-container-left">
     <div 
         class="ad-wrapper"
-        on:mouseenter={pauseAds}
-        on:mouseleave={resumeAds}
+        onmouseenter={pauseAds}
+        onmouseleave={resumeAds}
         role="region"
         aria-label="Mainos"
     >
-        <div class="support-message" aria-hidden="true">
-            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
-            lisäät sivuston sallittujen listalle.
-        </div>
+        {#if failedAds[currentAdIndex]}
+            <div class="support-message" aria-hidden="true">
+                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+                lisäät sivuston sallittujen listalle.
+            </div>
+        {/if}
         {#each ads as ad, index (index)}
             <a
                 href={ad.href}
@@ -73,10 +73,16 @@ onDestroy(() => {
                 rel="noopener noreferrer"
                 class="ad-link"
                 class:active={index === currentAdIndex}
-                class:fade-out={index !== currentAdIndex || _isTransitioning}
+                class:fade-out={index !== currentAdIndex}
             >
                 <div class="ad-content-wrapper">
-                    <img src={ad.src} alt={ad.alt} class="ad-img" />
+                    <img
+                        src={ad.src}
+                        alt={ad.alt}
+                        class="ad-img"
+                        onload={() => setAdFailed(index, false)}
+                        onerror={() => setAdFailed(index, true)}
+                    />
                     <span class="ad-disclaimer">Mainos</span>
                 </div>
             </a>

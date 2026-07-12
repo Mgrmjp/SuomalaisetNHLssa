@@ -3,8 +3,10 @@
 import { ChevronLeft } from 'lucide-svelte'
 
 import { base } from '$app/paths'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
@@ -175,23 +177,22 @@ function getPlayerSlug(p) {
     })}
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50 relative overflow-hidden">
-    <Snowfall count={8} />
-
-    <div class="max-w-4xl mx-auto px-3 sm:px-4 py-8 sm:py-12 relative z-10">
-        <!-- Back link -->
-        <div class="mb-6">
-            <a
-                href={base + "/pelaajat"}
-                class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
-            >
-                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
-                Takaisin pelaajiin
-            </a>
-        </div>
+<div class="flat-view min-h-screen">
+    <PageShell width="medium">
+        <a class="back-link" href={base + "/pelaajat"}>
+            <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+            Takaisin pelaajiin
+        </a>
+        <PageHeader
+            title={displayName}
+            subtitle={hasSeasonStats
+                ? `Kauden ${formattedSeason} pelaajaprofiili`
+                : "NHL-pelaajaprofiili"}
+        />
 
         <!-- Player Header -->
-        <div class="bg-white overflow-hidden border border-slate-200 mb-6 sm:mb-8">
+        <div class="mb-6 sm:mb-8">
+            <Card padding="none" accent>
             <div class="bg-slate-950 p-5 sm:p-8 text-white border-b border-slate-800">
                 <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
                     <div class="w-24 h-24 sm:w-32 sm:h-32 bg-slate-900 flex items-center justify-center border border-slate-700">
@@ -208,10 +209,8 @@ function getPlayerSlug(p) {
                         />
                     </div>
                     <div class="min-w-0">
-                        <h1 class="text-2xl sm:text-3xl font-bold mb-2">{displayName}</h1>
+                        <p class="mb-2 text-2xl font-bold sm:text-3xl">{teamFullName}</p>
                         <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm sm:text-base text-slate-300">
-                            <span class="font-semibold">{teamFullName}</span>
-                            <span>•</span>
                             <span>{position}</span>
                             <span>•</span>
                             <span>#{player.jerseyNumber || player.sweaterNumber || player.playerId}</span>
@@ -314,11 +313,12 @@ function getPlayerSlug(p) {
                     </div>
                 {/if}
             </div>
+            </Card>
         </div>
 
         <!-- Same Team Players (Internal Linking) -->
         {#if sameTeamPlayers.length > 0}
-            <div class="bg-white border border-slate-200 p-4 sm:p-8">
+            <Card>
                 <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Samassa joukkueessa pelaavat</h2>
                 <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Muut suomalaispelaajat joukkueessa {teamFullName}:</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -350,12 +350,45 @@ function getPlayerSlug(p) {
                         </a>
                     {/each}
                 </div>
-            </div>
+            </Card>
         {/if}
 
         <!-- Updated timestamp -->
         <div class="mt-8 text-center text-sm text-gray-400">
             Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}
         </div>
-    </div>
+    </PageShell>
 </div>
+
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+
+    .flat-view :global(*) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .flat-view :global(.page-header__logo) {
+        filter: none !important;
+    }
+
+    .flat-view :global(a:focus-visible),
+    .flat-view :global(button:focus-visible),
+    .flat-view :global(input:focus-visible) {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px;
+    }
+</style>

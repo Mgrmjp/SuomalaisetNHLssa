@@ -1,8 +1,10 @@
 <script>
 // @ts-nocheck
-import { BadgeCheck } from 'lucide-svelte'
+import { BadgeCheck, ChevronLeft } from 'lucide-svelte'
 import { base } from '$app/paths'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 
 /** @type {import('./$types').PageData} */
 export let data
@@ -45,27 +47,18 @@ const winners = _winners
     })}</script>`}
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50 relative overflow-hidden">
-    <Snowfall count={8} />
+<div class="flat-view min-h-screen">
+    <PageShell width="medium">
+        <a class="back-link" href={base + "/"}>
+            <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+            Takaisin etusivulle
+        </a>
+        <PageHeader
+            title="Suomalaiset Stanley Cup -voittajat"
+            subtitle={`Yhteensä ${winners.length} suomalaista pelaajaa on voittanut himoitun Stanley Cupin.`}
+        />
 
-    <div class="max-w-4xl mx-auto px-4 py-12 relative z-10">
-        <div class="text-center mb-12">
-            <a href="{base}/" class="inline-block mb-6 hover:opacity-80 transition-opacity">
-                <img
-                    src={base + "/logo.svg"}
-                    alt="Suomalaiset NHL-pelaajat"
-                    class="w-16 h-16 mx-auto"
-                />
-            </a>
-            <h1 class="text-4xl font-bold text-slate-900 mb-4">
-                Suomalaiset Stanley Cup -voittajat
-            </h1>
-            <p class="text-lg text-slate-600">
-                Yhteensä {winners.length} suomalaista pelaajaa on voittanut himoitun Stanley Cupin.
-            </p>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+        <Card padding="none" accent>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -88,12 +81,12 @@ const winners = _winners
                                 <td class="px-6 py-4 text-center">
                                     <div class="flex flex-col items-center">
                                         <span
-                                            class="inline-flex items-center justify-center w-8 h-8 rounded-full
+                                            class="inline-flex h-8 w-8 items-center justify-center border
                                             {winner.wins >= 5
-                                                ? 'bg-yellow-100 text-yellow-700 ring-2 ring-yellow-200'
+                                                ? 'border-yellow-200 bg-yellow-100 text-yellow-700'
                                                 : winner.wins > 1
-                                                  ? 'bg-blue-100 text-blue-700 ring-2 ring-blue-200'
-                                                  : 'bg-slate-100 text-slate-600'}"
+                                                  ? 'border-blue-200 bg-blue-100 text-blue-700'
+                                                  : 'border-slate-200 bg-slate-100 text-slate-600'}"
                                         >
                                             {winner.wins}
                                         </span>
@@ -126,7 +119,7 @@ const winners = _winners
                     </tbody>
                 </table>
             </div>
-        </div>
+        </Card>
 
         <div class="mt-8 text-center text-sm text-slate-500">
             <p>
@@ -134,5 +127,38 @@ const winners = _winners
                 huoltotehtävissä.
             </p>
         </div>
-    </div>
+    </PageShell>
 </div>
+
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+
+    .flat-view :global(*) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .flat-view :global(.page-header__logo) {
+        filter: none !important;
+    }
+
+    .flat-view :global(a:focus-visible),
+    .flat-view :global(button:focus-visible),
+    .flat-view :global(input:focus-visible) {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px;
+    }
+</style>

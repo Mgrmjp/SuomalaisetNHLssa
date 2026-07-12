@@ -16,6 +16,7 @@ const _defaultDescription =
 const _canonicalUrl = $derived(
     `${_siteUrl}${$page.url.pathname === '/' ? '/' : $page.url.pathname.replace(/\/$/, '')}`
 )
+const _isDesignSystemExempt = $derived($page.route.id === '/ads')
 </script>
 
 <svelte:head>
@@ -88,7 +89,11 @@ const _canonicalUrl = $derived(
     })}</script>`}
 </svelte:head>
 
-<div class="app-shell min-h-screen flex flex-col relative" style="color-scheme: light;">
+<div
+    class="app-shell min-h-screen flex flex-col relative"
+    class:design-system-exempt={_isDesignSystemExempt}
+    style="color-scheme: light;"
+>
     <!-- Vertical Ad Sidebars -->
     <VerticalAd />
     <VerticalAdLeft />

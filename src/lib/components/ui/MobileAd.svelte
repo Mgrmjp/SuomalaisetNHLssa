@@ -11,9 +11,9 @@ import {
 
 const ads = getMobileAds()
 let currentAdIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, ads)
-let _isTransitioning = false
 let _isPaused = false
 let interval
+let failedAds = {}
 
 // Mark this spot as active
 setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
@@ -28,14 +28,12 @@ function resumeAds() {
 
 function nextAd() {
     if (_isPaused) return
-    _isTransitioning = true
-    setTimeout(() => {
-        currentAdIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex, ads)
-        setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
-        setTimeout(() => {
-            _isTransitioning = false
-        }, 500)
-    }, 500)
+    currentAdIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex, ads)
+    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
+}
+
+function setAdFailed(id, failed) {
+    failedAds = { ...failedAds, [id]: failed }
 }
 
 onMount(() => {
@@ -52,15 +50,17 @@ onDestroy(() => {
 <div class="mobile-ad-container">
     <div 
         class="ad-wrapper"
-        on:mouseenter={pauseAds}
-        on:mouseleave={resumeAds}
+        onmouseenter={pauseAds}
+        onmouseleave={resumeAds}
         role="region"
         aria-label="Mainos"
     >
-        <div class="support-message" aria-hidden="true">
-            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
-            lisäät sivuston sallittujen listalle.
-        </div>
+        {#if failedAds[ads[currentAdIndex]?.id]}
+            <div class="support-message" aria-hidden="true">
+                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+                lisäät sivuston sallittujen listalle.
+            </div>
+        {/if}
         {#each ads as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -68,9 +68,15 @@ onDestroy(() => {
                 rel="noopener noreferrer"
                 class="mobile-ad-link"
                 class:active={index === currentAdIndex}
-                class:fade-out={index !== currentAdIndex || _isTransitioning}
+                class:fade-out={index !== currentAdIndex}
             >
-                <img src={ad.src} alt="Mainos" class="mobile-ad-img" />
+                <img
+                    src={ad.src}
+                    alt="Mainos"
+                    class="mobile-ad-img"
+                    onload={() => setAdFailed(ad.id, false)}
+                    onerror={() => setAdFailed(ad.id, true)}
+                />
                 <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}

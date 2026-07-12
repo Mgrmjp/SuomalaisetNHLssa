@@ -3,6 +3,9 @@
 import { ChevronLeft, ChevronRight } from 'lucide-svelte'
 
 import { base } from '$app/paths'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
@@ -98,174 +101,236 @@ function formatDate(dateStr) {
     })}
 </svelte:head>
 
-<div class="w-full max-w-3xl mx-auto px-4 py-8">
-    <div class="space-y-6">
-        <!-- Back link -->
-        <div class="mb-6">
-            <a
-                href={base + "/viikkokatsaus"}
-                class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
-            >
-                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
-                Takaisin viikkokatsauksiin
-            </a>
+<PageShell width="content" compact>
+    <div class="article-page">
+        <a href={base + "/viikkokatsaus"} class="back-link">
+            <ChevronLeft size={16} aria-hidden="true" />
+            Takaisin viikkokatsauksiin
+        </a>
+
+        <PageHeader
+            title={data.article.title}
+            subtitle={`${formatDate(data.article.date)} · Viikko ${data.article.week}, ${data.article.year}`}
+            align="left"
+            size="compact"
+        >
+            {#if data.article.featured_player_id}
+                <div class="featured-player">
+                    <div class="featured-player__image">
+                        <PlayerHeadshot
+                            playerId={data.article.featured_player_id}
+                            alt="Viikon tähti"
+                            imageClass="featured-player__photo"
+                            loading="eager"
+                        />
+                    </div>
+                    <p class="featured-player__label">Viikon tähti</p>
+                </div>
+            {/if}
+        </PageHeader>
+
+        <div class="article-surface">
+            <Card>
+                <article class="article-content">
+                    {@html data.article.content}
+                </article>
+            </Card>
         </div>
 
-        <!-- Featured player hero -->
-        {#if data.article.featured_player_id}
-            <div
-                class="mb-8 flex items-center gap-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100"
-            >
-                <div
-                    class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white shadow-lg border-4 border-white flex-shrink-0 overflow-hidden"
-                >
-                    <PlayerHeadshot
-                        playerId={data.article.featured_player_id}
-                        alt="Viikon tähti"
-                        imageClass="w-full h-full object-cover"
-                        loading="eager"
-                    />
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-blue-600 uppercase tracking-wide mb-1">
-                        Viikon tähti
-                    </p>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                        {data.article.title}
-                    </h1>
-                    <p class="text-gray-600 text-sm">
-                        {formatDate(data.article.date)} · Viikko {data.article.week}, {data.article
-                            .year}
-                    </p>
-                </div>
-            </div>
-        {:else}
-            <!-- Article header (fallback without featured player) -->
-            <header class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-3">{data.article.title}</h1>
-                <p class="text-gray-500 text-sm">
-                    {formatDate(data.article.date)} · Viikko {data.article.week}, {data.article
-                        .year}
-                </p>
-            </header>
-        {/if}
-
-        <!-- Article content -->
-        <article
-            class="article-content bg-white border border-gray-200 rounded-xl p-6 sm:p-8 shadow-sm"
-        >
-            {@html data.article.content}
-        </article>
-
-        <!-- Navigation -->
-        <nav class="flex justify-between items-center pt-6 border-t border-gray-200">
+        <nav class="article-nav" aria-label="Viikkokatsausten selaus">
             {#if data.prevArticle}
                 <a
                     href={`${base}/viikkokatsaus/${data.prevArticle.slug}`}
-                    class="inline-flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                    class="article-nav__link article-nav__link--previous"
                 >
-                    <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
-                    <span class="hidden sm:inline">{data.prevArticle.title}</span>
-                    <span class="sm:hidden">Edellinen</span>
+                    <ChevronLeft size={16} aria-hidden="true" />
+                    <span class="article-nav__desktop">{data.prevArticle.title}</span>
+                    <span class="article-nav__mobile">Edellinen</span>
                 </a>
             {:else}
-                <div></div>
+                <div aria-hidden="true"></div>
             {/if}
 
             {#if data.nextArticle}
                 <a
                     href={`${base}/viikkokatsaus/${data.nextArticle.slug}`}
-                    class="inline-flex items-center text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                    class="article-nav__link article-nav__link--next"
                 >
-                    <span class="hidden sm:inline">{data.nextArticle.title}</span>
-                    <span class="sm:hidden">Seuraava</span>
-                    <ChevronRight class="w-4 h-4 ml-1" aria-hidden="true" />
+                    <span class="article-nav__desktop">{data.nextArticle.title}</span>
+                    <span class="article-nav__mobile">Seuraava</span>
+                    <ChevronRight size={16} aria-hidden="true" />
                 </a>
             {:else}
-                <div></div>
+                <div aria-hidden="true"></div>
             {/if}
         </nav>
     </div>
-</div>
+</PageShell>
 
 <style>
+    .article-page {
+        display: grid;
+        min-width: 0;
+        gap: var(--space-6);
+    }
+
+    .article-page > :global(*) {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .back-link,
+    .article-nav__link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.16s ease;
+    }
+
+    .back-link {
+        width: fit-content;
+    }
+
+    .back-link:hover,
+    .article-nav__link:hover {
+        color: var(--accent);
+    }
+
+    .back-link:focus-visible,
+    .article-nav__link:focus-visible {
+        outline: 3px solid var(--accent-glow);
+        outline-offset: 3px;
+    }
+
+    .featured-player {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-3);
+    }
+
+    .featured-player__image {
+        width: 5rem;
+        height: 5rem;
+        overflow: hidden;
+        border: 1px solid var(--color-panel-border);
+        border-radius: 0;
+        background: var(--accent-ice);
+        box-shadow: none;
+    }
+
+    .featured-player__image :global(.featured-player__photo) {
+        width: 100%;
+        height: 100%;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        object-fit: cover;
+    }
+
+    .featured-player__label {
+        margin: 0;
+        color: var(--accent);
+        font-size: var(--eyebrow-size);
+        font-weight: var(--eyebrow-weight);
+        letter-spacing: var(--eyebrow-track);
+        text-transform: uppercase;
+    }
+
+    .article-surface :global(.card) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .article-surface {
+        min-width: 0;
+    }
+
+    .article-content {
+        min-width: 0;
+        overflow-x: auto;
+    }
+
     .article-content :global(h2) {
+        margin: 2.5rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid var(--accent-ice);
+        color: var(--color-ink);
         font-size: 1.75rem;
         font-weight: 700;
-        color: #111827;
-        margin-top: 2.5rem;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #f3f4f6;
+        line-height: 1.25;
+    }
+
+    .article-content :global(h2:first-child) {
+        margin-top: 0;
     }
 
     .article-content :global(h3) {
+        margin: 1.5rem 0 0.5rem;
+        color: #1d2939;
         font-size: 1.25rem;
         font-weight: 600;
-        color: #1f2937;
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
+        line-height: 1.35;
     }
 
     .article-content :global(p) {
-        color: #374151;
+        margin: 0 0 1.25rem;
+        color: #344054;
         line-height: 1.8;
-        margin-bottom: 1.25rem;
     }
 
-    /* Table styling */
     .article-content :global(table) {
         width: 100%;
-        border-collapse: collapse;
         margin: 1.5rem 0;
-        font-size: 0.95rem;
-        border-radius: 0.5rem;
         overflow: hidden;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--color-panel-border);
+        border-collapse: collapse;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        font-size: 0.95rem;
     }
 
     .article-content :global(th) {
-        background-color: #f9fafb;
-        color: #111827;
+        padding: 0.75rem 1rem;
+        border-bottom: 2px solid #d0d5dd;
+        background: var(--accent-ice);
+        color: var(--color-ink);
         font-weight: 600;
         text-align: left;
-        padding: 0.75rem 1rem;
-        border-bottom: 2px solid #e5e7eb;
     }
 
     .article-content :global(td) {
         padding: 0.75rem 1rem;
-        border-bottom: 1px solid #f3f4f6;
-        color: #4b5563;
+        border-bottom: 1px solid #eaecf0;
+        color: #475467;
     }
 
     .article-content :global(tr:last-child td) {
-        border-bottom: none;
+        border-bottom: 0;
     }
 
     .article-content :global(tr:hover td) {
-        background-color: #f9fafb;
+        background: #f9fafb;
     }
 
-    /* Horizontal rules */
     .article-content :global(hr) {
-        border: 0;
-        border-top: 1px solid #e5e7eb;
         margin: 2rem 0;
+        border: 0;
+        border-top: 1px solid #d0d5dd;
     }
 
-    /* Source citations */
     .article-content :global(em) {
-        font-style: italic;
-        color: #6b7280;
+        color: var(--color-muted);
         font-size: 0.875rem;
+        font-style: italic;
     }
 
     .article-content :global(ul),
     .article-content :global(ol) {
-        margin-left: 1.5rem;
-        margin-bottom: 1.5rem;
-        color: #374151;
+        margin: 0 0 1.5rem 1.5rem;
+        color: #344054;
     }
 
     .article-content :global(ul) {
@@ -278,11 +343,11 @@ function formatDate(dateStr) {
     }
 
     .article-content :global(ul li::before) {
-        content: "•";
         position: absolute;
         left: 0;
-        color: #3b82f6;
-        font-weight: bold;
+        color: var(--accent);
+        content: "•";
+        font-weight: 700;
     }
 
     .article-content :global(ol) {
@@ -295,7 +360,53 @@ function formatDate(dateStr) {
     }
 
     .article-content :global(strong) {
+        color: var(--color-ink);
         font-weight: 600;
-        color: #111827;
+    }
+
+    .article-content :global(img),
+    .article-content :global(video),
+    .article-content :global(iframe),
+    .article-content :global(button) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .article-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        align-items: start;
+        gap: var(--space-4);
+        padding-top: var(--space-6);
+        border-top: 1px solid #d0d5dd;
+    }
+
+    .article-nav__link--next {
+        justify-self: end;
+        text-align: right;
+    }
+
+    .article-nav__mobile {
+        display: none;
+    }
+
+    @media (max-width: 640px) {
+        .article-nav__desktop {
+            display: none;
+        }
+
+        .article-nav__mobile {
+            display: inline;
+        }
+
+        .article-content :global(table) {
+            font-size: 0.82rem;
+        }
+
+        .article-content :global(th),
+        .article-content :global(td) {
+            padding: 0.6rem 0.7rem;
+            white-space: nowrap;
+        }
     }
 </style>

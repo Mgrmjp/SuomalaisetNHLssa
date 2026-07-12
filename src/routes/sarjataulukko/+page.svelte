@@ -1,9 +1,10 @@
 <script>
 // @ts-nocheck
+import { ChevronLeft } from 'lucide-svelte'
 import { base } from '$app/paths'
 import StandingsView from '$lib/components/standings/StandingsView.svelte'
-import NavTabs from '$lib/components/ui/NavTabs.svelte'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import { resetToDefault } from '$lib/stores/gameData.js'
 </script>
 
@@ -41,52 +42,53 @@ import { resetToDefault } from '$lib/stores/gameData.js'
     })}</script>`}
 </svelte:head>
 
-<div
-    class="page-container w-full max-w-6xl mx-auto px-4 py-8 relative"
-    style="z-index: 1; position: relative;"
->
-    <div class="text-center mb-8 hero-header space-y-3 relative overflow-hidden">
-        <Snowfall />
-        <div class="relative space-y-3 p-6">
-            <a
-                href="{base}/"
-                onclick={resetToDefault}
-                class="logo-button focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded-xl transition-all duration-300 inline-block"
-                aria-label="Palaa etusivulle"
-            >
-                <img
-                    src={base + "/logo.svg"}
-                    alt="Suomalaiset NHL-pelaajat"
-                    class="w-12 h-12 mx-auto mb-4 logo-img"
-                />
-            </a>
-            <h1 class="text-3xl font-bold text-gray-900 hero-title">NHL Sarjataulukko</h1>
-        </div>
-    </div>
+<div class="flat-view min-h-screen">
+    <PageShell width="wide">
+        <a class="back-link" href={base + "/"} onclick={resetToDefault}>
+            <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+            Takaisin etusivulle
+        </a>
+        <PageHeader title="NHL Sarjataulukko" subtitle="Konferenssit ja divisioonat" />
 
-    <!-- Navigation -->
-    <div class="page-nav">
-        <NavTabs />
-    </div>
-
-    <!-- Content -->
-    <div
-        class="standings-content-card bg-white rounded-xl shadow-sm border border-gray-100 p-3 md:p-6"
-    >
+        <section class="standings-content" aria-label="NHL-sarjataulukot">
         <StandingsView />
-    </div>
+        </section>
+    </PageShell>
 </div>
 
 <style>
-    .page-nav {
-        margin-bottom: 1.5rem;
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
     }
 
-    .logo-button:hover .logo-img {
-        transform: scale(1.05) rotate(-2deg);
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    .back-link:hover {
+        color: var(--accent);
     }
-    .logo-img {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    .standings-content {
+        min-width: 0;
+    }
+
+    .flat-view :global(*) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .flat-view :global(.page-header__logo) {
+        filter: none !important;
+    }
+
+    .flat-view :global(a:focus-visible),
+    .flat-view :global(button:focus-visible),
+    .flat-view :global(input:focus-visible) {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px;
     }
 </style>

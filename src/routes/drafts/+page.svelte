@@ -3,6 +3,9 @@
 import { ChevronLeft } from 'lucide-svelte'
 
 import { base } from '$app/paths'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 
 const topPicks = [
     { year: 2016, rank: 2, name: 'Patrik Laine', team: 'Winnipeg', points: 367, games: 537 },
@@ -38,23 +41,25 @@ const yearlyStats = [
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <a href="{base}/" class="inline-block mb-6 hover:opacity-80 transition-opacity">
-                <img src="{base}/logo.svg" alt="Suomalaiset NHL-pelaajat" class="w-16 h-16 mx-auto" />
-            </a>
-            <h1 class="text-4xl font-bold text-slate-900 mb-4">Draft-historia</h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                Suomalaisten pelaajien matka NHL:ään vuosikymmenten varrella.
-            </p>
-        </div>
+    <PageShell width="medium">
+        <a
+            href={base + "/lupaukset"}
+            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+        >
+            <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
+            Takaisin lupaukset-sivulle
+        </a>
+
+        <PageHeader
+            title="Draft-historia"
+            subtitle="Suomalaisten pelaajien matka NHL:ään vuosikymmenten varrella."
+        />
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left column: Stats -->
             <div class="lg:col-span-1 space-y-6">
                 <!-- Summary card -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <Card>
                     <h2 class="text-lg font-bold text-slate-900 mb-4">Yhteenveto</h2>
                     <div class="space-y-3">
                         <div class="flex justify-between items-center">
@@ -70,14 +75,14 @@ const yearlyStats = [
                             <span class="font-bold text-slate-900">-</span>
                         </div>
                     </div>
-                </div>
+                </Card>
 
                 <!-- Yearly stats -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <Card>
                     <h2 class="text-lg font-bold text-slate-900 mb-4">Varaukset vuosittain</h2>
                     <div class="space-y-2 max-h-80 overflow-y-auto">
                         {#each yearlyStats as stat}
-                            <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                            <div class="flex items-center justify-between p-2 transition-colors hover:bg-slate-50">
                                 <span class="font-medium text-slate-900">{stat.year}</span>
                                 <div class="flex items-center gap-4">
                                     <span class="text-sm text-slate-500">Top {stat.top}</span>
@@ -86,14 +91,14 @@ const yearlyStats = [
                             </div>
                         {/each}
                     </div>
-                </div>
+                </Card>
             </div>
 
             <!-- Right column: Top picks -->
             <div class="lg:col-span-2">
                 <h2 class="text-2xl font-bold text-slate-900 mb-6">Menestyneimmät top-varaukset</h2>
                 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <Card padding="none">
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead class="bg-slate-50 border-b border-slate-200">
@@ -111,7 +116,7 @@ const yearlyStats = [
                                     <tr class="hover:bg-slate-50 transition-colors">
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{pick.year}</td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <span class="inline-flex items-center bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
                                                 #{pick.rank}
                                             </span>
                                         </td>
@@ -124,18 +129,18 @@ const yearlyStats = [
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </Card>
 
                 <!-- Fun facts -->
                 <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-blue-50 rounded-xl p-6 border border-blue-100">
+                    <div class="border border-blue-100 bg-blue-50 p-6">
                         <h3 class="font-bold text-blue-900 mb-2">Paras varausvuosi</h3>
                         <p class="text-sm text-blue-800">
                             <strong>2016</strong> tuotti eniten NHL-pelaajia: Patrik Laine, Jesse Puljujärvi, 
                             Mikko Rantanen, Sebastian Aho, Henri Jokiharju...
                         </p>
                     </div>
-                    <div class="bg-emerald-50 rounded-xl p-6 border border-emerald-100">
+                    <div class="border border-emerald-100 bg-emerald-50 p-6">
                         <h3 class="font-bold text-emerald-900 mb-2">Eniten pisteitä</h3>
                         <p class="text-sm text-emerald-800">
                             <strong>Mikko Rantanen</strong> (2015, #9) on kerännyt eniten pisteitä 
@@ -146,15 +151,5 @@ const yearlyStats = [
             </div>
         </div>
 
-        <!-- Back link -->
-        <div class="mt-12 text-center">
-            <a 
-                href="{base}/lupaukset"
-                class="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors"
-            >
-                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
-                Takaisin lupaukset-sivulle
-            </a>
-        </div>
-    </div>
+    </PageShell>
 </div>

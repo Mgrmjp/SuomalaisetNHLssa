@@ -3,6 +3,9 @@
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-svelte'
 
 import { base } from '$app/paths'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 
 const scoutingReports = [
     {
@@ -59,29 +62,31 @@ const draftRankings = [
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <a href="{base}/" class="inline-block mb-6 hover:opacity-80 transition-opacity">
-                <img src="{base}/logo.svg" alt="Suomalaiset NHL-pelaajat" class="w-16 h-16 mx-auto" />
-            </a>
-            <h1 class="text-4xl font-bold text-slate-900 mb-4">Scouting Reports</h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                Yksityiskohtaiset analyysit Suomen lupaavimmista NHL-prospekteista ja tulevista draft-ikäluokista.
-            </p>
-        </div>
+    <PageShell>
+        <a
+            href={base + "/lupaukset"}
+            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+        >
+            <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
+            Takaisin lupaukset-sivulle
+        </a>
+
+        <PageHeader
+            title="Scouting Reports"
+            subtitle="Yksityiskohtaiset analyysit Suomen lupaavimmista NHL-prospekteista ja tulevista draft-ikäluokista."
+        />
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left column: Top 10 -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                <Card>
                     <h2 class="text-xl font-bold text-slate-900 mb-4">Draft 2026 - Top 10</h2>
                     <p class="text-sm text-slate-500 mb-4">NHL Central Scouting - Eurooppalaiset</p>
                     
                     <div class="space-y-3">
                         {#each draftRankings.slice(0, 10) as player}
-                            <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                                <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                            <div class="flex items-center gap-3 p-2 transition-colors hover:bg-slate-50">
+                                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-blue-100">
                                     <span class="text-sm font-bold text-blue-700">#{player.rank}</span>
                                 </div>
                                 <div class="flex-1 min-w-0">
@@ -97,21 +102,23 @@ const draftRankings = [
                             Lähde: NHL Central Scouting Midterm Rankings 2026
                         </p>
                     </div>
-                </div>
+                </Card>
 
                 <!-- Draft History Link -->
-                <div class="mt-6 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                    <h2 class="text-xl font-bold text-slate-900 mb-4">Draft-historia</h2>
-                    <p class="text-sm text-slate-600 mb-4">
-                        Tutustu suomalaisten NHL-varausten historiaan ja tilastoihin.
-                    </p>
-                    <a 
-                        href={`${base}/drafts`}
-                        class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
-                    >
-                        Näytä historia
-                        <ChevronRight class="w-4 h-4 ml-1" aria-hidden="true" />
-                    </a>
+                <div class="mt-6">
+                    <Card>
+                        <h2 class="text-xl font-bold text-slate-900 mb-4">Draft-historia</h2>
+                        <p class="text-sm text-slate-600 mb-4">
+                            Tutustu suomalaisten NHL-varausten historiaan ja tilastoihin.
+                        </p>
+                        <a
+                            href={`${base}/drafts`}
+                            class="inline-flex items-center font-medium text-blue-600 hover:text-blue-700"
+                        >
+                            Näytä historia
+                            <ChevronRight class="ml-1 h-4 w-4" aria-hidden="true" />
+                        </a>
+                    </Card>
                 </div>
             </div>
 
@@ -123,13 +130,13 @@ const draftRankings = [
                     {#each scoutingReports as report}
                         <a 
                             href="{base}/scouting/{report.slug}"
-                            class="block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md hover:border-blue-200 transition-all group"
+                            class="group block overflow-hidden border border-slate-200 bg-white transition-colors hover:border-blue-300"
                         >
                             <div class="p-6">
                                 <div class="flex items-start justify-between gap-4">
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-2">
-                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            <span class="inline-flex items-center bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
                                                 {report.rank}
                                             </span>
                                             <span class="text-xs text-slate-500">{report.draft} Draft</span>
@@ -155,31 +162,23 @@ const draftRankings = [
                 </div>
 
                 <!-- More reports coming -->
-                <div class="mt-8 p-6 bg-slate-100 rounded-xl border border-slate-200">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center">
-                            <Plus class="w-5 h-5 text-slate-500" aria-hidden="true" />
+                <div class="mt-8">
+                    <Card>
+                        <div class="flex items-center gap-3">
+                            <div class="flex h-10 w-10 items-center justify-center bg-slate-200">
+                                <Plus class="h-5 w-5 text-slate-500" aria-hidden="true" />
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-900">Lisää raportteja tulossa</h3>
+                                <p class="text-sm text-slate-600">
+                                    Seuraamme jatkuvasti suomalaisia prospecteja ja julkaisemme uusia raportteja.
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 class="font-semibold text-slate-900">Lisää raportteja tulossa</h3>
-                            <p class="text-sm text-slate-600">
-                                Seuraamme jatkuvasti suomalaisia prospecteja ja julkaisemme uusia raportteja.
-                            </p>
-                        </div>
-                    </div>
+                    </Card>
                 </div>
             </div>
         </div>
 
-        <!-- Back link -->
-        <div class="mt-12 text-center">
-            <a 
-                href="{base}/lupaukset"
-                class="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors"
-            >
-                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
-                Takaisin lupaukset-sivulle
-            </a>
-        </div>
-    </div>
+    </PageShell>
 </div>

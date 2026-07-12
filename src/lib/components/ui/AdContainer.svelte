@@ -19,25 +19,25 @@ import {
 /** @type {Ad[]} */
 const bannerAds = getBannerAds()
 let bannerIndex = getRandomAdIndex(AD_SPOTS.BANNER, bannerAds)
-let bannerTransitioning = false
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let bannerInterval
+let failedBannerAds = {}
 
 // Mobile square/rectangle ads
 /** @type {Ad[]} */
 const mobileAds = getMobileAds()
 let mobileIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, mobileAds)
-let mobileTransitioning = false
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let mobileInterval
+let failedMobileAds = {}
 
 // Mobile banner ads (horizontal, narrower)
 /** @type {Ad[]} */
 const mobileBannerAds = getMobileBannerAds()
 let mobileBannerIndex = getRandomAdIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerAds)
-let mobileBannerTransitioning = false
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let mobileBannerInterval
+let failedMobileBannerAds = {}
 
 let isPaused = false
 /** @type {boolean} */
@@ -50,44 +50,32 @@ function checkMobile() {
 // --- Banner rotation ---
 function nextBanner() {
     if (isPaused) return
-    bannerTransitioning = true
-    setTimeout(() => {
-        bannerIndex = getNextAdIndex(AD_SPOTS.BANNER, bannerIndex, bannerAds)
-        setAdSpotIndex(AD_SPOTS.BANNER, bannerIndex)
-        setTimeout(() => {
-            bannerTransitioning = false
-        }, 500)
-    }, 500)
+    bannerIndex = getNextAdIndex(AD_SPOTS.BANNER, bannerIndex, bannerAds)
+    setAdSpotIndex(AD_SPOTS.BANNER, bannerIndex)
 }
 
 // --- Mobile ad rotation ---
 function nextMobile() {
     if (isPaused) return
-    mobileTransitioning = true
-    setTimeout(() => {
-        mobileIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex, mobileAds)
-        setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex)
-        setTimeout(() => {
-            mobileTransitioning = false
-        }, 500)
-    }, 500)
+    mobileIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex, mobileAds)
+    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex)
 }
 
 // --- Mobile banner rotation ---
 function nextMobileBanner() {
     if (isPaused) return
-    mobileBannerTransitioning = true
-    setTimeout(() => {
-        mobileBannerIndex = getNextAdIndex(
-            AD_SPOTS.MOBILE_BANNER,
-            mobileBannerIndex,
-            mobileBannerAds
-        )
-        setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex)
-        setTimeout(() => {
-            mobileBannerTransitioning = false
-        }, 500)
-    }, 500)
+    mobileBannerIndex = getNextAdIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex, mobileBannerAds)
+    setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex)
+}
+
+function setAdFailed(group, id, failed) {
+    if (group === AD_SPOTS.BANNER) {
+        failedBannerAds = { ...failedBannerAds, [id]: failed }
+    } else if (group === AD_SPOTS.MOBILE_MAIN) {
+        failedMobileAds = { ...failedMobileAds, [id]: failed }
+    } else {
+        failedMobileBannerAds = { ...failedMobileBannerAds, [id]: failed }
+    }
 }
 
 onMount(() => {
@@ -134,10 +122,12 @@ function getLogoSrc(ad) {
 >
     <!-- Desktop banner (hidden on mobile) -->
     <div class="ad-slot ad-slot--desktop">
-        <div class="support-message" aria-hidden="true">
-            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
-            lisäät sivuston sallittujen listalle.
-        </div>
+        {#if failedBannerAds[bannerAds[bannerIndex]?.id]}
+            <div class="support-message" aria-hidden="true">
+                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+                lisäät sivuston sallittujen listalle.
+            </div>
+        {/if}
         {#each bannerAds as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -145,7 +135,7 @@ function getLogoSrc(ad) {
                 rel="noopener noreferrer"
                 class="ad-link"
                 class:active={index === bannerIndex}
-                class:fade-out={index !== bannerIndex || bannerTransitioning}
+                class:fade-out={index !== bannerIndex}
             >
                 {#if ad.isCustom === 'dna'}
                     <div class="custom-banner dna">
@@ -208,7 +198,13 @@ function getLogoSrc(ad) {
                         <span class="cta">Lisätietoja</span>
                     </div>
                 {:else}
-                    <img src={ad.src} alt={ad.alt || 'Mainos'} class="ad-img" />
+                    <img
+                        src={ad.src}
+                        alt={ad.alt || 'Mainos'}
+                        class="ad-img"
+                        onload={() => setAdFailed(AD_SPOTS.BANNER, ad.id, false)}
+                        onerror={() => setAdFailed(AD_SPOTS.BANNER, ad.id, true)}
+                    />
                 {/if}
                 <span class="ad-disclaimer">Mainos</span>
             </a>
@@ -217,10 +213,12 @@ function getLogoSrc(ad) {
 
     <!-- Mobile square/rectangle ad (hidden on desktop) -->
     <div class="ad-slot ad-slot--mobile-square">
-        <div class="support-message" aria-hidden="true">
-            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
-            lisäät sivuston sallittujen listalle.
-        </div>
+        {#if failedMobileAds[mobileAds[mobileIndex]?.id]}
+            <div class="support-message" aria-hidden="true">
+                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+                lisäät sivuston sallittujen listalle.
+            </div>
+        {/if}
         {#each mobileAds as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -228,9 +226,15 @@ function getLogoSrc(ad) {
                 rel="noopener noreferrer"
                 class="ad-link ad-link--square"
                 class:active={index === mobileIndex}
-                class:fade-out={index !== mobileIndex || mobileTransitioning}
+                class:fade-out={index !== mobileIndex}
             >
-                <img src={ad.src} alt="Mainos" class="ad-img ad-img--square" />
+                <img
+                    src={ad.src}
+                    alt="Mainos"
+                    class="ad-img ad-img--square"
+                    onload={() => setAdFailed(AD_SPOTS.MOBILE_MAIN, ad.id, false)}
+                    onerror={() => setAdFailed(AD_SPOTS.MOBILE_MAIN, ad.id, true)}
+                />
                 <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}
@@ -238,10 +242,12 @@ function getLogoSrc(ad) {
 
     <!-- Mobile horizontal banner (hidden on desktop) -->
     <div class="ad-slot ad-slot--mobile-banner">
-        <div class="support-message" aria-hidden="true">
-            Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
-            lisäät sivuston sallittujen listalle.
-        </div>
+        {#if failedMobileBannerAds[mobileBannerAds[mobileBannerIndex]?.id]}
+            <div class="support-message" aria-hidden="true">
+                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
+                lisäät sivuston sallittujen listalle.
+            </div>
+        {/if}
         {#each mobileBannerAds as ad, index (ad.id)}
             <a
                 href={ad.href}
@@ -249,9 +255,15 @@ function getLogoSrc(ad) {
                 rel="noopener noreferrer"
                 class="ad-link ad-link--mbanner"
                 class:active={index === mobileBannerIndex}
-                class:fade-out={index !== mobileBannerIndex || mobileBannerTransitioning}
+                class:fade-out={index !== mobileBannerIndex}
             >
-                <img src={ad.src} alt="Mainos" class="ad-img" />
+                <img
+                    src={ad.src}
+                    alt="Mainos"
+                    class="ad-img"
+                    onload={() => setAdFailed(AD_SPOTS.MOBILE_BANNER, ad.id, false)}
+                    onerror={() => setAdFailed(AD_SPOTS.MOBILE_BANNER, ad.id, true)}
+                />
                 <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}

@@ -3,7 +3,6 @@
 
 import { AlertCircle, Loader2, TableProperties } from 'lucide-svelte'
 import { onMount } from 'svelte'
-import { getCurrentSeason } from '$lib/api/nhlApi.js'
 import ConferenceStandings from '$lib/components/standings/ConferenceStandings.svelte'
 import { loadStandings, standings, standingsLoading } from '$lib/stores/gameData.js'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
@@ -13,9 +12,6 @@ let _activeConference = $state('eastern') // 'eastern' or 'western'
 let _showAdvancedStats = $state(false) // Advanced stats toggle
 let _lastGameDate = $state('') // Most recent game date in manifest
 let _manifestLastUpdated = $state('') // Manifest last updated timestamp
-
-// Get current season
-const _currentSeason = getCurrentSeason()
 
 // Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
 let _loading = $state($standingsLoading)
@@ -60,54 +56,47 @@ async function _refreshStandingsData() {
 </script>
 
 <div class="standings-view">
-    <!-- Header -->
-    <div class="standings-header mb-8 text-center">
-        <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-            NHL Sarjataulukot {_currentSeason}
-        </h1>
-        <p class="text-gray-600 mb-6">Konferenssit ja divisioonat</p>
-
-        {#if hasAnyData}
-            <!-- Controls -->
-            <div class="standings-controls flex flex-wrap justify-center items-center gap-4 mb-6">
-                <!-- Conference Toggle -->
-                <div class="conference-toggle flex bg-gray-100 rounded-lg p-1 gap-x-1">
-                    <button
-                        type="button"
-                        class="px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-gray-600 hover:text-gray-900 hover:bg-white"
-                        class:bg-white={_activeConference === "eastern"}
-                        class:text-gray-900={_activeConference === "eastern"}
-                        class:shadow={_activeConference === "eastern"}
-                        onclick={() => (_activeConference = "eastern")}
-                    >
-                        Itäinen
-                    </button>
-                    <button
-                        type="button"
-                        class="px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer text-gray-600 hover:text-gray-900 hover:bg-white"
-                        class:bg-white={_activeConference === "western"}
-                        class:text-gray-900={_activeConference === "western"}
-                        class:shadow={_activeConference === "western"}
-                        onclick={() => (_activeConference = "western")}
-                    >
-                        Läntinen
-                    </button>
-                </div>
-
-                <!-- Advanced Stats Toggle -->
+    {#if hasAnyData}
+        <!-- Controls -->
+        <div class="standings-controls mb-6 flex flex-wrap items-center justify-center gap-4">
+            <!-- Conference Toggle -->
+            <div class="conference-toggle flex gap-x-1 border border-gray-200 bg-gray-100 p-1">
                 <button
                     type="button"
-                    class="advanced-stats-toggle px-4 py-2 rounded-md text-sm font-medium border transition-colors cursor-pointer border-gray-300 text-gray-700 hover:bg-gray-50"
-                    class:bg-blue-50={_showAdvancedStats}
-                    class:border-blue-300={_showAdvancedStats}
-                    class:text-blue-700={_showAdvancedStats}
-                    onclick={() => (_showAdvancedStats = !_showAdvancedStats)}
+                    class="cursor-pointer border border-transparent px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-white hover:text-gray-900"
+                    class:bg-white={_activeConference === "eastern"}
+                    class:border-gray-300={_activeConference === "eastern"}
+                    class:text-gray-900={_activeConference === "eastern"}
+                    onclick={() => (_activeConference = "eastern")}
                 >
-                    Lisätilastot
+                    Itäinen
+                </button>
+                <button
+                    type="button"
+                    class="cursor-pointer border border-transparent px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-white hover:text-gray-900"
+                    class:bg-white={_activeConference === "western"}
+                    class:border-gray-300={_activeConference === "western"}
+                    class:text-gray-900={_activeConference === "western"}
+                    onclick={() => (_activeConference = "western")}
+                >
+                    Läntinen
                 </button>
             </div>
-        {/if}
-    </div>
+
+            <!-- Advanced Stats Toggle -->
+            <button
+                type="button"
+                class="advanced-stats-toggle cursor-pointer border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                class:bg-blue-50={_showAdvancedStats}
+                class:border-blue-300={_showAdvancedStats}
+                class:text-blue-700={_showAdvancedStats}
+                aria-pressed={_showAdvancedStats}
+                onclick={() => (_showAdvancedStats = !_showAdvancedStats)}
+            >
+                Lisätilastot
+            </button>
+        </div>
+    {/if}
 
     <!-- Main Content -->
     <div class="standings-main-container max-w-7xl mx-auto">
@@ -115,7 +104,7 @@ async function _refreshStandingsData() {
             <!-- Initial Loading State -->
             <div class="standings-loading-state text-center py-16">
                 <div
-                    class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4"
+                    class="mb-4 inline-flex h-16 w-16 items-center justify-center border border-blue-200 bg-blue-100"
                 >
                     <Loader2 class="animate-spin h-8 w-8 text-blue-600" aria-hidden="true" />
                 </div>
@@ -128,7 +117,7 @@ async function _refreshStandingsData() {
             <!-- Error State -->
             <div class="standings-error-state text-center py-16">
                 <div
-                    class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4"
+                    class="mb-4 inline-flex h-16 w-16 items-center justify-center border border-red-200 bg-red-100"
                 >
                     <AlertCircle class="h-8 w-8 text-red-600" aria-hidden="true" />
                 </div>
@@ -139,7 +128,7 @@ async function _refreshStandingsData() {
                 <button
                     type="button"
                     onclick={_refreshStandingsData}
-                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer"
+                    class="inline-flex cursor-pointer items-center border border-blue-700 bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none"
                 >
                     Yritä uudelleen
                 </button>
@@ -148,7 +137,7 @@ async function _refreshStandingsData() {
             <!-- No Data State -->
             <div class="standings-empty-state text-center py-16">
                 <div
-                    class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4"
+                    class="mb-4 inline-flex h-16 w-16 items-center justify-center border border-gray-200 bg-gray-100"
                 >
                     <TableProperties class="h-8 w-8 text-gray-400" aria-hidden="true" />
                 </div>
@@ -200,5 +189,17 @@ async function _refreshStandingsData() {
 <style>
     .standings-view {
         min-height: 400px;
+    }
+
+    .standings-view :global(*) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .standings-view :global(a:focus-visible),
+    .standings-view :global(button:focus-visible),
+    .standings-view :global(input:focus-visible) {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px;
     }
 </style>

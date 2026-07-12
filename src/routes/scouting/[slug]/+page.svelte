@@ -3,10 +3,14 @@
 import { ChevronLeft } from 'lucide-svelte'
 
 import { base } from '$app/paths'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
 /** @type {{ data: { slug: string, content: string, metadata: { title: string, playerName: string, pageTitle: string, description: string, updated: string, url: string } } }} */
 const { data } = $props()
+const articleContent = $derived(data.content.replace(/^\s*<h1>.*?<\/h1>\s*/s, ''))
 
 const articleSchema = $derived({
     '@context': 'https://schema.org',
@@ -79,31 +83,30 @@ const breadcrumbSchema = $derived({
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Back links -->
-        <div class="mb-8 flex items-center gap-4">
-            <a 
-                href="{base}/scouting"
-                class="inline-flex items-center text-sm text-slate-600 hover:text-slate-900 transition-colors"
-            >
-                <ChevronLeft class="w-4 h-4 mr-1" aria-hidden="true" />
-                Scouting Reports
-            </a>
-            <span class="text-slate-300">/</span>
-            <a 
-                href="{base}/lupaukset"
-                class="inline-flex items-center text-sm text-slate-600 hover:text-slate-900 transition-colors"
-            >
-                Lupaukset
-            </a>
-        </div>
+    <PageShell width="content">
+        <a
+            href={base + "/scouting"}
+            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+        >
+            <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
+            Scouting Reports
+        </a>
+
+        <PageHeader
+            title={data.metadata.title}
+            subtitle={data.metadata.description}
+            size="compact"
+            align="left"
+        />
 
         <!-- Content -->
-        <article class="bg-white rounded-xl shadow-sm border border-slate-200 p-8 md:p-12">
-            <div class="prose prose-slate max-w-none">
-                {@html data.content}
-            </div>
-        </article>
+        <Card padding="none">
+            <article class="p-8 md:p-12">
+                <div class="prose prose-slate max-w-none">
+                    {@html articleContent}
+                </div>
+            </article>
+        </Card>
 
         <!-- Navigation -->
         <div class="mt-8 flex justify-between">
@@ -115,5 +118,5 @@ const breadcrumbSchema = $derived({
                 Kaikki raportit
             </a>
         </div>
-    </div>
+    </PageShell>
 </div>

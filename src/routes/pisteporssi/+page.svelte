@@ -1,13 +1,13 @@
 <script>
 // @ts-nocheck
 
-import { AlertCircle } from 'lucide-svelte'
+import { AlertCircle, ChevronLeft } from 'lucide-svelte'
 import { fade } from 'svelte/transition'
 import { base } from '$app/paths'
-import NavTabs from '$lib/components/ui/NavTabs.svelte'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import Card from '$lib/components/ui/Card.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import { resetToDefault } from '$lib/stores/gameData.js'
 
 /** @type {import('./$types').PageData} */
 export let data
@@ -58,41 +58,20 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
     })}</script>`}
 </svelte:head>
 
-<div
-    class="page-background min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 relative overflow-hidden"
->
-    <Snowfall count={8} />
-
-    <div class="page-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-        <!-- Header -->
-        <div class="page-header text-center mb-12">
-            <a
-                href="{base}/"
-                onclick={resetToDefault}
-                class="logo-button focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded-xl transition-all duration-300 inline-block mb-6"
-                aria-label="Palaa etusivulle"
-            >
-                <img
-                    src={base + "/logo.svg"}
-                    alt="Suomalaiset NHL-pelaajat"
-                    class="w-16 h-16 mx-auto logo-img"
-                />
-            </a>
-
-            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-                Suomalaisten Pistepörssi
-            </h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
-                NHL-kauden {formattedSeason} tehokkaimmat suomalaispelaajat
-            </p>
-
-            <!-- Navigation -->
-            <NavTabs />
-        </div>
+<div class="flat-view min-h-screen">
+    <PageShell width="wide">
+        <a class="back-link" href={base + "/"}>
+            <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+            Takaisin etusivulle
+        </a>
+        <PageHeader
+            title="Suomalaisten Pistepörssi"
+            subtitle={`NHL-kauden ${formattedSeason} tehokkaimmat suomalaispelaajat`}
+        />
 
         {#if error}
             <div
-                class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md mx-auto max-w-lg shadow-sm"
+                class="mx-auto max-w-lg border border-red-200 border-l-4 border-l-red-500 bg-red-50 p-4"
                 role="alert"
             >
                 <div class="flex">
@@ -105,16 +84,14 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                 </div>
             </div>
         {:else if players.length === 0}
-            <div class="text-center py-12 bg-white rounded-2xl shadow-sm border border-slate-100">
+            <div class="border border-slate-200 bg-white/60 py-12 text-center">
                 <p class="text-slate-500">Ei tilastoja saatavilla tälle kaudelle vielä.</p>
             </div>
         {:else}
             <!-- Leaderboard Table -->
-            <div
-                class="leaderboard-card bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 ring-1 ring-slate-900/5"
-                in:fade={{ duration: 300 }}
-            >
-                <div class="leaderboard-scroll-area overflow-x-auto">
+            <div in:fade={{ duration: 300 }}>
+                <Card padding="none" accent>
+                    <div class="leaderboard-scroll-area overflow-x-auto">
                     <table class="leaderboard-table w-full text-left text-sm whitespace-nowrap">
                         <thead>
                             <tr
@@ -160,25 +137,23 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                         <tbody class="divide-y divide-slate-100">
                             {#each players as player, index}
                                 <tr
-                                    class="hover:bg-slate-50/80 transition-colors duration-150 {index <
-                                    3
-                                        ? 'bg-gradient-to-r from-yellow-50/30 to-transparent'
-                                        : ''}"
+                                    class="transition-colors duration-150 hover:bg-slate-50/80 {index <
+                                    3 ? 'bg-yellow-50/30' : ''}"
                                 >
                                     <td class="px-6 py-4 text-center font-medium text-slate-400">
                                         {#if index === 0}
                                             <span
-                                                class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-yellow-100 text-yellow-700 ring-1 ring-yellow-200 font-bold text-xs"
+                                                class="inline-flex h-6 w-6 items-center justify-center border border-yellow-200 bg-yellow-100 text-xs font-bold text-yellow-700"
                                                 >1</span
                                             >
                                         {:else if index === 1}
                                             <span
-                                                class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-700 ring-1 ring-slate-300 font-bold text-xs"
+                                                class="inline-flex h-6 w-6 items-center justify-center border border-slate-300 bg-slate-200 text-xs font-bold text-slate-700"
                                                 >2</span
                                             >
                                         {:else if index === 2}
                                             <span
-                                                class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-100 text-amber-800 ring-1 ring-amber-200 font-bold text-xs"
+                                                class="inline-flex h-6 w-6 items-center justify-center border border-amber-200 bg-amber-100 text-xs font-bold text-amber-800"
                                                 >3</span
                                             >
                                         {:else}
@@ -208,7 +183,7 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                                         >{player.assists}</td
                                     >
                                     <td
-                                        class="px-6 py-4 text-center font-bold text-lg text-blue-600 bg-blue-50/30 shadow-sm border-x border-slate-100 border-dotted"
+                                        class="border-x border-dotted border-slate-100 bg-blue-50/30 px-6 py-4 text-center text-lg font-bold text-blue-600"
                                     >
                                         {player.points}
                                     </td>
@@ -239,7 +214,8 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                             {/each}
                         </tbody>
                     </table>
-                </div>
+                    </div>
+                </Card>
             </div>
 
             <div class="mt-8 text-center text-sm text-slate-400">
@@ -248,5 +224,38 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                 </p>
             </div>
         {/if}
-    </div>
+    </PageShell>
 </div>
+
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+
+    .flat-view :global(*) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .flat-view :global(.page-header__logo) {
+        filter: none !important;
+    }
+
+    .flat-view :global(a:focus-visible),
+    .flat-view :global(button:focus-visible),
+    .flat-view :global(input:focus-visible) {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px;
+    }
+</style>

@@ -64,15 +64,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    filter: blur(6px) drop-shadow(0 10px 18px rgba(15, 23, 42, 0.28));
+    filter: blur(6px);
     opacity: 0.55;
     transform: scale(1.08);
     pointer-events: none;
     mix-blend-mode: hue;
-}
-
-.player-photo__team-logo {
-    filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.25));
 }
 
 .player-photo__live {

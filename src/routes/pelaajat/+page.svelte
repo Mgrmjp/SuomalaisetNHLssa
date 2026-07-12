@@ -1,7 +1,9 @@
 <script>
 // @ts-nocheck
+import { ChevronLeft } from 'lucide-svelte'
 import { base } from '$app/paths'
-import Snowfall from '$lib/components/ui/Snowfall.svelte'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
@@ -95,36 +97,28 @@ function getPlayerSlug(player) {
     })}</script>`}
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50 relative overflow-hidden">
-    <Snowfall count={8} />
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-        <div class="text-center mb-12">
-            <a href="{base}/" class="inline-block mb-6 hover:opacity-80 transition-opacity">
-                <img
-                    src={base + "/logo.svg"}
-                    alt="Suomalaiset NHL-pelaajat"
-                    class="w-16 h-16 mx-auto"
-                />
-            </a>
-            <h1 class="text-4xl font-bold text-slate-900 mb-4">Kaikki suomalaiset NHL-pelaajat</h1>
-            <p class="text-lg text-slate-600 mb-8">
-                Kausi {_formattedSeason}
-            </p>
-
+<div class="flat-view min-h-screen">
+    <PageShell width="wide">
+        <a class="back-link" href={base + "/"}>
+            <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+            Takaisin etusivulle
+        </a>
+        <PageHeader title="Kaikki suomalaiset NHL-pelaajat" subtitle={`Kausi ${_formattedSeason}`}>
             <!-- Search -->
             <div class="max-w-md mx-auto">
+                <label class="sr-only" for="player-search">Hae pelaajaa tai joukkuetta</label>
                 <input
+                    id="player-search"
                     type="text"
                     bind:value={searchTerm}
                     placeholder="Hae pelaajaa tai joukkuetta..."
-                    class="w-full px-4 py-3 rounded-xl border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                    class="w-full border border-slate-300 bg-white/70 px-4 py-3 transition-colors focus:border-blue-700 focus:outline-none"
                 />
             </div>
-        </div>
+        </PageHeader>
 
         {#if _error}
-            <div class="bg-red-50 text-red-700 p-4 rounded-lg text-center max-w-lg mx-auto">
+            <div class="mx-auto max-w-lg border border-red-200 border-l-4 border-l-red-500 bg-red-50 p-4 text-center text-red-700">
                 {_error}
             </div>
         {:else}
@@ -132,10 +126,10 @@ function getPlayerSlug(player) {
                 {#each filteredPlayers as player}
                     <a
                         href={`${base}/pelaajat/${getPlayerSlug(player)}`}
-                        class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition-all group"
+                        class="player-card group flex items-center gap-4 border border-slate-200 bg-white/60 p-6 transition-colors hover:border-blue-700 hover:bg-white"
                     >
                         <div
-                            class="flex-shrink-0 w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center"
+                            class="flex h-16 w-16 flex-shrink-0 items-center justify-center border border-slate-200 bg-slate-50"
                         >
                             <TeamLogo team={player.teamAbbrevs} size="48" />
                         </div>
@@ -162,5 +156,59 @@ function getPlayerSlug(player) {
                 Yhteensä {filteredPlayers.length} pelaajaa
             </div>
         {/if}
-    </div>
+    </PageShell>
 </div>
+
+<style>
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-6);
+        color: var(--color-muted);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        color: var(--accent);
+    }
+
+    .player-card {
+        position: relative;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .player-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: var(--accent);
+        opacity: 0;
+        transition: opacity 0.16s ease;
+    }
+
+    .player-card:hover::before,
+    .player-card:focus-visible::before {
+        opacity: 1;
+    }
+
+    .flat-view :global(*) {
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .flat-view :global(.page-header__logo) {
+        filter: none !important;
+    }
+
+    .flat-view :global(a:focus-visible),
+    .flat-view :global(button:focus-visible),
+    .flat-view :global(input:focus-visible) {
+        outline: 3px solid var(--accent) !important;
+        outline-offset: 2px;
+    }
+</style>

@@ -1,11 +1,13 @@
 <script>
 // @ts-nocheck
 
-import { BarChart3, ChevronRight, FileText } from 'lucide-svelte'
+import { BarChart3, ChevronLeft, ChevronRight, FileText } from 'lucide-svelte'
 
 import { onMount } from 'svelte'
 import { fade } from 'svelte/transition'
 import { base } from '$app/paths'
+import PageHeader from '$lib/components/ui/PageHeader.svelte'
+import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { draftRankings, loadProspects, prospects, prospectsLoading } from '$lib/stores/gameData'
@@ -908,23 +910,19 @@ function _dedupeProspects(players) {
 </svelte:head>
 
 <div class="min-h-screen bg-slate-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <a href="{base}/" class="inline-block mb-6 hover:opacity-80 transition-opacity">
-                <img
-                    src={base + "/logo.svg"}
-                    alt="Suomalaiset NHL-pelaajat"
-                    class="w-16 h-16 mx-auto"
-                />
-            </a>
-            <h1 class="text-4xl font-bold text-slate-900 mb-4">
-                Suomalaiset Lupaukset
-            </h1>
-            <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
-                Seuraa suomalaisten NHL-varausten ja tulevien huippujen otteita maailmalla.
-            </p>
+    <PageShell>
+        <a
+            href={base + "/"}
+            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+        >
+            <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
+            Takaisin etusivulle
+        </a>
 
+        <PageHeader
+            title="Suomalaiset Lupaukset"
+            subtitle="Seuraa suomalaisten NHL-varausten ja tulevien huippujen otteita maailmalla."
+        >
             <!-- Filter Buttons -->
             <div class="filter-tabs-container">
                 <div class="filter-tabs-list">
@@ -959,7 +957,7 @@ function _dedupeProspects(players) {
                     <select 
                         id="ranking-source"
                         bind:value={selectedRankingSlug}
-                        class="block w-full bg-white border border-slate-200 text-slate-700 py-2 px-3 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
+                        class="block w-full border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         {#each $draftRankings.sources || [] as source}
                             <option value={source.slug}>{source.name}</option>
@@ -967,11 +965,11 @@ function _dedupeProspects(players) {
                     </select>
                 </div>
             {/if}
-        </div>
+        </PageHeader>
 
         {#if $prospectsLoading}
             <div class="flex justify-center items-center h-64">
-                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                <div class="h-12 w-12 animate-spin border-2 border-slate-200 border-t-blue-600" aria-label="Ladataan"></div>
             </div>
         {:else}
             <div in:fade={{ duration: 300 }}>
@@ -1031,11 +1029,11 @@ function _dedupeProspects(players) {
                                 {@const headshotUrl = _getBestAvailableSeasonHeadshot(player)}
                                 {@const headshotSettings = _getProspectHeadshotSettings(player, selectedSeason?.league || player.league)}
                                 <div 
-                                    class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md hover:border-blue-200 transition-all group p-4"
+                                    class="group overflow-hidden border border-slate-200 bg-white p-4 transition-colors hover:border-blue-300"
                                 >
                                     <div class="flex items-center gap-4 mb-4">
                                         <div class="relative w-20 h-20 flex-shrink-0">
-                                            <div class="w-full h-full rounded-full border-2 border-slate-100 overflow-hidden bg-slate-50 relative z-10">
+                                            <div class="relative z-10 h-full w-full overflow-hidden border-2 border-slate-100 bg-slate-50">
                                                 <PlayerHeadshot
                                                     playerId={_getBestFallbackPlayerId(player)}
                                                     explicitUrl={headshotUrl}
@@ -1051,7 +1049,7 @@ function _dedupeProspects(players) {
                                                 />
                                             </div>
                                             {#if player.type === 'draft2026' || _hasKnownNhlRights(player)}
-                                                <div class="absolute -bottom-1 -right-1 z-20 bg-white rounded-full p-1 shadow-sm border border-slate-100">
+                                                <div class="absolute -bottom-1 -right-1 z-20 border border-slate-100 bg-white p-1">
                                                     <div class="w-7 h-7 flex items-center justify-center">
                                                         {#if player.type === 'draft2026'}
                                                             <span class="text-[10px] font-black text-amber-600">#{player.draftRank}</span>
@@ -1065,11 +1063,11 @@ function _dedupeProspects(players) {
                                         
                                         <div class="min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
-                                                <div class="inline-block bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                <div class="inline-block bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white">
                                                     {selectedSeason?.league || player.league}
                                                 </div>
                                                 {#if player.type === 'draft2026'}
-                                                    <div class="inline-block bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                    <div class="inline-block bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
                                                         Draft 2026
                                                     </div>
                                                 {/if}
@@ -1106,7 +1104,7 @@ function _dedupeProspects(players) {
 
                                     {#if player.type === 'draft2026'}
                                         <!-- Draft prospect stats -->
-                                        <div class="grid grid-cols-4 gap-2 bg-amber-50/50 rounded-lg p-3 text-center border border-amber-100/50">
+                                        <div class="grid grid-cols-4 gap-2 border border-amber-100/50 bg-amber-50/50 p-3 text-center">
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
                                                 <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
@@ -1126,7 +1124,7 @@ function _dedupeProspects(players) {
                                         </div>
                                     {:else}
                                         <!-- Regular prospect stats -->
-                                        <div class="grid grid-cols-4 gap-2 bg-slate-50/50 rounded-lg p-3 text-center border border-slate-100/50">
+                                        <div class="grid grid-cols-4 gap-2 border border-slate-100/50 bg-slate-50/50 p-3 text-center">
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
                                                 <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
@@ -1190,11 +1188,11 @@ function _dedupeProspects(players) {
                                     {@const headshotUrl = _getBestAvailableSeasonHeadshot(goalie)}
                                     {@const headshotSettings = _getProspectHeadshotSettings(goalie, selectedSeason?.league || goalie.league)}
                                     <div 
-                                        class="bg-white rounded-xl shadow-sm border border-emerald-200 overflow-hidden hover:shadow-md hover:border-emerald-300 transition-all group p-4"
+                                        class="group overflow-hidden border border-emerald-200 bg-white p-4 transition-colors hover:border-emerald-300"
                                     >
                                         <div class="flex items-center gap-4 mb-4">
                                             <div class="relative w-20 h-20 flex-shrink-0">
-                                                <div class="w-full h-full rounded-full border-2 border-emerald-100 overflow-hidden bg-slate-50 relative z-10">
+                                                <div class="relative z-10 h-full w-full overflow-hidden border-2 border-emerald-100 bg-slate-50">
                                                     <PlayerHeadshot
                                                         playerId={_getBestFallbackPlayerId(goalie)}
                                                         explicitUrl={headshotUrl}
@@ -1210,7 +1208,7 @@ function _dedupeProspects(players) {
                                                     />
                                                 </div>
                                                 {#if goalie.type === 'draft2026' || _hasKnownNhlRights(goalie)}
-                                                    <div class="absolute -bottom-1 -right-1 z-20 bg-white rounded-full p-1 shadow-sm border border-emerald-100">
+                                                    <div class="absolute -bottom-1 -right-1 z-20 border border-emerald-100 bg-white p-1">
                                                         <div class="w-7 h-7 flex items-center justify-center">
                                                             {#if goalie.type === 'draft2026'}
                                                                 <span class="text-[10px] font-black text-amber-600">#{goalie.draftRank}</span>
@@ -1224,11 +1222,11 @@ function _dedupeProspects(players) {
                                             
                                             <div class="min-w-0">
                                                 <div class="flex items-center gap-2 mb-1">
-                                                    <div class="inline-block bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                    <div class="inline-block bg-emerald-600 px-2 py-0.5 text-[10px] font-bold text-white">
                                                         {selectedSeason?.league || goalie.league}
                                                     </div>
                                                     {#if goalie.type === 'draft2026'}
-                                                        <div class="inline-block bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                                        <div class="inline-block bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
                                                             Draft 2026
                                                         </div>
                                                     {/if}
@@ -1265,7 +1263,7 @@ function _dedupeProspects(players) {
 
                                         {#if goalie.type === 'draft2026'}
                                             <!-- Draft prospect stats -->
-                                            <div class="grid grid-cols-4 gap-2 bg-amber-50/50 rounded-lg p-3 text-center border border-amber-100/50">
+                                            <div class="grid grid-cols-4 gap-2 border border-amber-100/50 bg-amber-50/50 p-3 text-center">
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
                                                     <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
@@ -1285,7 +1283,7 @@ function _dedupeProspects(players) {
                                             </div>
                                         {:else}
                                             <!-- Regular goalie stats -->
-                                            <div class="grid grid-cols-4 gap-2 bg-emerald-50/50 rounded-lg p-3 text-center border border-emerald-100/50">
+                                            <div class="grid grid-cols-4 gap-2 border border-emerald-100/50 bg-emerald-50/50 p-3 text-center">
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
                                                     <div class="font-mono font-bold text-slate-700">{unifiedStats?.gp || selectedSeason?.gp || 0}</div>
@@ -1316,9 +1314,9 @@ function _dedupeProspects(players) {
             <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <a 
                     href="{base}/scouting"
-                    class="flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-6 hover:shadow-md hover:border-blue-200 transition-all group"
+                    class="group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
                 >
-                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-blue-100">
                         <FileText class="w-6 h-6 text-blue-600" aria-hidden="true" />
                     </div>
                     <div class="flex-1">
@@ -1330,9 +1328,9 @@ function _dedupeProspects(players) {
                 
                 <a 
                     href="{base}/drafts"
-                    class="flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-6 hover:shadow-md hover:border-blue-200 transition-all group"
+                    class="group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
                 >
-                    <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-emerald-100">
                         <BarChart3 class="w-6 h-6 text-emerald-600" aria-hidden="true" />
                     </div>
                     <div class="flex-1">
@@ -1359,8 +1357,8 @@ function _dedupeProspects(players) {
                     </p>
                 </div>
             </div>
-        </div>
-    </div>
+    </PageShell>
+</div>
 
 <style>
     .filter-tabs-container {
@@ -1376,7 +1374,6 @@ function _dedupeProspects(players) {
         border: 1px solid rgba(16, 24, 40, 0.1);
         border-radius: 0;
         background: rgba(255, 255, 255, 0.7);
-        box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
     }
 
     .filter-tab-item {
@@ -1399,7 +1396,6 @@ function _dedupeProspects(players) {
         transition:
             background 0.16s ease,
             color 0.16s ease,
-            box-shadow 0.16s ease,
             transform 0.16s ease;
     }
 
@@ -1416,9 +1412,6 @@ function _dedupeProspects(players) {
     .filter-tab-item--active {
         background: var(--accent);
         color: #ffffff;
-        box-shadow:
-            0 6px 14px rgba(0, 53, 128, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
 
     .sort-tabs-container {
@@ -1434,7 +1427,6 @@ function _dedupeProspects(players) {
         border: 1px solid rgba(16, 24, 40, 0.1);
         border-radius: 0;
         background: rgba(255, 255, 255, 0.7);
-        box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.03);
     }
 
     .sort-tabs-list--goalie {
@@ -1461,7 +1453,6 @@ function _dedupeProspects(players) {
         transition:
             background 0.16s ease,
             color 0.16s ease,
-            box-shadow 0.16s ease,
             transform 0.16s ease;
     }
 
@@ -1483,25 +1474,10 @@ function _dedupeProspects(players) {
     .sort-tab-item--active {
         background: var(--accent);
         color: #ffffff;
-        box-shadow:
-            0 6px 14px rgba(0, 53, 128, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
     }
 
     .sort-tab-item--goalie.sort-tab-item--active {
         background: #10b981;
-        box-shadow:
-            0 6px 14px rgba(16, 185, 129, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.18);
-    }
-
-    :global(.page-background button),
-    :global(.page-background select),
-    :global(.page-background a),
-    :global(.page-background .rounded-full),
-    :global(.page-background .rounded-lg),
-    :global(.page-background .rounded-xl) {
-        border-radius: 0 !important;
     }
 
     @media (max-width: 480px) {
