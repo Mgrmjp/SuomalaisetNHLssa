@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-09-01T12:16:51.110528",
+  "updatedAt": "2026-09-02T11:54:23.017903",
   "sources": [
     {
       "name": "NHL Central Scouting",
@@ -150,7 +150,7 @@
             "positionCode": "D",
             "shootsCatches": "L",
             "heightInInches": 74,
-            "weightInPounds": 186,
+            "weightInPounds": 190,
             "lastAmateurClub": "REGINA",
             "lastAmateurLeague": "WHL",
             "birthDate": "2007-11-03",
@@ -737,7 +737,28 @@
       "type": "independent",
       "players": [
         {
-          "rank": null,
+          "rank": 12,
+          "name": "Luca Santala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-07-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 189
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 190,
+            "metrics": 86
+          },
+          "playerId": "1009106"
+        },
+        {
+          "rank": 26,
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
@@ -798,27 +819,6 @@
             "metrics": 86
           },
           "playerId": "1032879"
-        },
-        {
-          "rank": null,
-          "name": "Luca Santala",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
-          "playerId": "1009106"
         },
         {
           "rank": null,
@@ -961,7 +961,28 @@
       "type": "independent",
       "players": [
         {
-          "rank": null,
+          "rank": 12,
+          "name": "Luca Santala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-07-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 189
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 190,
+            "metrics": 86
+          },
+          "playerId": "1009106"
+        },
+        {
+          "rank": 33,
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
@@ -1022,27 +1043,6 @@
             "metrics": 86
           },
           "playerId": "1032879"
-        },
-        {
-          "rank": null,
-          "name": "Luca Santala",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
-          "playerId": "1009106"
         },
         {
           "rank": null,
