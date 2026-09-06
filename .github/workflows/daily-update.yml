@@ -36,6 +36,9 @@ jobs:
           pip install --upgrade pip
           pip install -r scripts/data_collection/requirements.txt
 
+      - name: Test offseason move collection
+        run: .venv/bin/python scripts/data_collection/finnish/test_fetch_offseason_moves.py
+
       - name: Validate Finnish players cache
         run: |
           source .venv/bin/activate
@@ -54,15 +57,15 @@ jobs:
           chmod +x scripts/daily_update.sh
           ./scripts/daily_update.sh $(date +%Y-%m-%d)
 
+      - name: Fetch offseason moves
+        run: |
+          source .venv/bin/activate
+          python scripts/data_collection/finnish/fetch_offseason_moves.py || echo "::warning::Offseason moves collection incomplete; inspect source warnings"
+
       - name: Sync Finnish players roster
         run: |
           source .venv/bin/activate
           python scripts/data_collection/finnish/sync_roster.py
-
-      - name: Fetch offseason moves
-        run: |
-          source .venv/bin/activate
-          python scripts/data_collection/finnish/fetch_offseason_moves.py || echo "::warning::Offseason moves fetch failed, retaining last valid data"
 
       - name: Commit and push updated data
         run: |

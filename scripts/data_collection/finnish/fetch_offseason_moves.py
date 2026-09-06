@@ -555,6 +555,8 @@ def parse_signing_line(line, team_abbrev):
 
 def parse_free_agent_entries(paragraphs, roster_by_last, roster_by_full, page_date):
     moves = []
+    # Read departures first: the roster may already contain the destination team.
+    departures = parse_free_agent_departures(paragraphs)
     current_team_abbrev = None
     in_signings_section = False
 
@@ -611,10 +613,10 @@ def parse_free_agent_entries(paragraphs, roster_by_last, roster_by_full, page_da
             if not player:
                 continue
 
-            if is_re_signing(player, current_team_abbrev):
-                continue
-
             old_team = player.get("currentTeam", "")
+            departure = departures.get(normalize_name_key(player["name"]))
+            if departure and departure["newTeam"] == current_team_abbrev:
+                old_team = departure["oldTeam"]
             if not old_team or old_team == current_team_abbrev:
                 continue
 
@@ -630,8 +632,9 @@ def parse_free_agent_entries(paragraphs, roster_by_last, roster_by_full, page_da
     return moves
 
 
-def parse_free_agent_old_teams(paragraphs):
-    team_abbrevs = {}
+def parse_free_agent_departures(paragraphs):
+    """Read explicit old/new team pairs from the tracker's free-agent lists."""
+    departures = {}
     current_team_abbrev = None
 
     team_header_re = re.compile(
@@ -666,20 +669,35 @@ def parse_free_agent_old_teams(paragraphs):
             for m in signed_matches:
                 player_name = m.group(1).strip()
                 key = normalize_name_key(player_name)
-                team_abbrevs[key] = current_team_abbrev
+                new_team = m.group(2)
+                if new_team in VALID_NHL_TEAMS and new_team != current_team_abbrev:
+                    departures[key] = {
+                        "oldTeam": current_team_abbrev,
+                        "newTeam": new_team,
+                    }
 
-    return team_abbrevs
+    return departures
 
 
-def enrich_old_teams(moves, old_team_lookup):
-    for move in moves:
-        if move.get("oldTeam"):
+def validate_free_agent_coverage(paragraphs, moves, roster_by_last, roster_by_full):
+    """Flag confirmed Finnish departures that the signing parser missed."""
+    parsed = {
+        (move["player"]["playerId"], move["oldTeam"], move["newTeam"])
+        for move in moves
+    }
+    complete = True
+    for name, departure in parse_free_agent_departures(paragraphs).items():
+        player = match_player_to_roster(name, roster_by_last, roster_by_full)
+        if not player:
             continue
-        player = move.get("player", {})
-        name_key = normalize_name_key(player.get("name", ""))
-        if name_key in old_team_lookup:
-            move["oldTeam"] = old_team_lookup[name_key]
-    return moves
+        identity = (player["playerId"], departure["oldTeam"], departure["newTeam"])
+        if identity not in parsed:
+            print(
+                f"::warning::Unparsed Finnish signing: {player['name']} "
+                f"{departure['oldTeam']} -> {departure['newTeam']}"
+            )
+            complete = False
+    return complete
 
 
 def get_offseason_window(offseason_year=2026):
@@ -782,16 +800,16 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
         fa_page_date = extract_article_date(fa_html, fa_json_ld)
         fa_paragraphs = extract_article_text(fa_html)
 
-        old_team_lookup = parse_free_agent_old_teams(fa_paragraphs)
-
         fa_moves = parse_free_agent_entries(
             fa_paragraphs, roster_by_last, roster_by_full, fa_page_date
         )
-        fa_moves = enrich_old_teams(fa_moves, old_team_lookup)
+        complete = validate_free_agent_coverage(
+            fa_paragraphs, fa_moves, roster_by_last, roster_by_full
+        )
         fa_moves = enrich_free_agent_dates(fa_moves, fa_html, offseason_year)
         print(f"  Found {len(fa_moves)} Finnish free-agent signing(s)")
         all_moves.extend(fa_moves)
-        source_status["freeAgentTracker"] = "ok"
+        source_status["freeAgentTracker"] = "ok" if complete else "error"
     else:
         print("  WARNING: Could not fetch free-agent tracker page")
 

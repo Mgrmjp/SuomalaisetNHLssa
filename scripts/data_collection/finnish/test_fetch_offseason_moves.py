@@ -8,10 +8,13 @@ deduplication, exclusion rules, and offseason boundaries.
 Run: python scripts/data_collection/finnish/test_fetch_offseason_moves.py
 """
 
+import io
 import json
 import sys
 import tempfile
+from contextlib import redirect_stdout
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
@@ -25,7 +28,9 @@ from fetch_offseason_moves import (
     generate_move_id,
     parse_trade_entries,
     parse_free_agent_entries,
-    parse_free_agent_old_teams,
+    parse_free_agent_departures,
+    validate_free_agent_coverage,
+    collect_offseason_moves,
     parse_signing_line,
     merge_moves,
     build_output,
@@ -289,6 +294,79 @@ def test_parse_free_agent_excludes_re_signing():
     print("PASSED: parse_free_agent_excludes_re_signing")
 
 
+def test_free_agent_move_survives_roster_refresh():
+    paragraphs = [
+        "NEW YORK RANGERS",
+        "Signings",
+        "Tolvanen signs 1-year contract with Rangers",
+        "Free agents",
+        "SEATTLE KRAKEN",
+        "Free agents",
+        "Group 3 Unrestricted Free Agents: Eeli Tolvanen (signed: NYR).",
+    ]
+    identities = set()
+    for cached_team in ["SEA", "NYR", "", "NSH"]:
+        roster = make_roster()
+        roster["8480999"]["currentTeam"] = cached_team
+        by_last, by_full = build_lookups(roster)
+        moves = parse_free_agent_entries(paragraphs, by_last, by_full, "2026-09-02")
+        assert len(moves) == 1, f"Missing move with cached team {cached_team!r}"
+        move = moves[0]
+        assert (move["oldTeam"], move["newTeam"]) == ("SEA", "NYR")
+        assert validate_free_agent_coverage(paragraphs, moves, by_last, by_full)
+        identities.add(generate_move_id(
+            move["player"]["playerId"], move["moveType"],
+            move["oldTeam"], move["newTeam"],
+        ))
+    assert len(identities) == 1
+    print("PASSED: free_agent_move_survives_roster_refresh")
+
+
+def test_free_agent_departure_must_match_signing_destination():
+    roster = make_roster()
+    roster["8480999"]["currentTeam"] = "NYR"
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "NEW YORK RANGERS", "Signings",
+        "Tolvanen signs 1-year contract with Rangers", "Free agents",
+        "SEATTLE KRAKEN", "Free agents", "Eeli Tolvanen (signed: NSH).",
+    ]
+    assert parse_free_agent_entries(paragraphs, by_last, by_full, "2026-09-02") == []
+    print("PASSED: free_agent_departure_must_match_signing_destination")
+
+
+def test_collector_flags_unparsed_confirmed_signing():
+    # A changed signing headline must not silently erase the confirmed departure.
+    html = """
+      <h2>NEW YORK RANGERS</h2><h3>Signings</h3>
+      <p>Tolvanen agrees to terms with Rangers</p>
+      <h3>Free agents</h3><h2>SEATTLE KRAKEN</h2><h3>Free agents</h3>
+      <p>Eeli Tolvanen (signed: NYR), Connor McDavid (signed: DAL).</p>
+    """
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    logs = io.StringIO()
+    with (
+        patch("fetch_offseason_moves.build_roster_lookup", return_value=(roster, by_last, by_full)),
+        patch("fetch_offseason_moves.fetch_page_html", side_effect=["<p>No trades</p>", html]),
+        patch("fetch_offseason_moves.load_existing_moves", return_value={
+            "offseasonYear": 2026,
+            "moves": [{"playerId": "8480999", "moveType": "free_agent",
+                       "oldTeam": "SEA", "newTeam": "NYR", "date": "2026-09-02"}],
+        }),
+        patch("fetch_offseason_moves.get_offseason_window", return_value={}),
+        patch("fetch_offseason_moves.save_output") as save,
+        redirect_stdout(logs),
+    ):
+        assert collect_offseason_moves() is False
+    output = save.call_args.args[0]
+    assert output["sourceStatus"]["freeAgentTracker"] == "error"
+    assert len(output["moves"]) == 1  # Retain already recorded history.
+    assert "::warning::Unparsed Finnish signing: Eeli Tolvanen SEA -> NYR" in logs.getvalue()
+    assert "Connor McDavid" not in logs.getvalue()
+    print("PASSED: collector_flags_unparsed_confirmed_signing")
+
+
 def test_parse_free_agent_excludes_non_nhl():
     roster = make_roster()
     by_last, by_full = build_lookups(roster)
@@ -303,16 +381,16 @@ def test_parse_free_agent_excludes_non_nhl():
     print("PASSED: parse_free_agent_excludes_non_nhl")
 
 
-def test_parse_free_agent_old_teams():
+def test_parse_free_agent_departures():
     paragraphs = [
         "COLORADO AVALANCHE",
         "Free agents",
         "Group 3 Unrestricted Free Agents: Joel Kiviranta (signed: DAL), Jacob MacDonald",
     ]
-    lookup = parse_free_agent_old_teams(paragraphs)
+    lookup = parse_free_agent_departures(paragraphs)
     key = normalize_name_key("Joel Kiviranta")
-    assert lookup.get(key) == "COL"
-    print("PASSED: parse_free_agent_old_teams")
+    assert lookup.get(key) == {"oldTeam": "COL", "newTeam": "DAL"}
+    print("PASSED: parse_free_agent_departures")
 
 
 def test_generate_move_id_stable():
@@ -469,7 +547,10 @@ def test_build_output_structure():
             "date": "2026-07-01",
         }
     ]
-    output = build_output(2026, moves, {"tradeTracker": "ok", "freeAgentTracker": "ok"})
+    with patch("fetch_offseason_moves.get_offseason_window", return_value={
+        "start": "2026-06-20", "end": "2026-10-06",
+    }):
+        output = build_output(2026, moves, {"tradeTracker": "ok", "freeAgentTracker": "ok"})
     assert output["offseasonYear"] == 2026
     assert "window" in output
     assert "start" in output["window"]
@@ -512,8 +593,11 @@ if __name__ == "__main__":
     test_parse_signing_line_grouped()
     test_parse_free_agent_kiviranta()
     test_parse_free_agent_excludes_re_signing()
+    test_free_agent_move_survives_roster_refresh()
+    test_free_agent_departure_must_match_signing_destination()
+    test_collector_flags_unparsed_confirmed_signing()
     test_parse_free_agent_excludes_non_nhl()
-    test_parse_free_agent_old_teams()
+    test_parse_free_agent_departures()
     test_generate_move_id_stable()
     test_merge_moves_deduplication()
     test_extract_signing_links()
