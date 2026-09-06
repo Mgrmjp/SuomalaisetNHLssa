@@ -87,33 +87,10 @@ const bannerAds = [
         height: 120,
         alt: 'Finlayson',
     },
-    {
-        id: 'matkapojat',
-        href: 'https://do.matkapojat.fi/t/t?a=1749276268&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1749276268&as=2038972948&t=1&tk=1&i=1',
-        width: 1456,
-        height: 180,
-        alt: 'Matkapojat',
-    },
-    {
-        id: 'matkapojat-2',
-        href: 'https://do.matkapojat.fi/t/t?a=1749275885&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1749275885&as=2038972948&t=1&tk=1&i=1',
-        width: 1450,
-        height: 179,
-        alt: 'Matkapojat',
-    },
 ]
 
 // Mobile ads - 300x250 only (IAB Medium Rectangle)
 const mobileAds = [
-    {
-        id: 'dna-mobile',
-        href: 'https://go.adt291.com/t/t?a=1998771852&as=2038972948&t=2&tk=1',
-        src: 'https://track.adtraction.com/t/t?a=1998771852&as=2038972948&t=1&tk=1&i=1',
-        width: 300,
-        height: 250,
-    },
     {
         id: 'moi1',
         href: 'https://in.moi.fi/t/t?a=1551605636&as=2038972948&t=2&tk=1',
