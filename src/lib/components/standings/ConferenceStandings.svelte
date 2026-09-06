@@ -74,7 +74,7 @@ const _hasError = $derived(error !== null)
                         {divisionName}
                         showPlayoffIndicator={true}
                         wildCardTeams={_wildCardTeams}
-                        showAdvancedStats={_showAdvancedStats}
+                        {_showAdvancedStats}
                     />
                 </div>
             {/each}

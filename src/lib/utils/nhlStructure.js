@@ -16,8 +16,8 @@ export const NHL_CONFERENCES = {
 
 export const DIVISION_NAMES = {
     atlantic: 'Atlantti',
-    metropolitan: 'Metropolitan',
-    central: 'Keski',
+    metropolitan: 'Metropolialue',
+    central: 'Keskinen',
     pacific: 'Tyynimeri',
 }
 

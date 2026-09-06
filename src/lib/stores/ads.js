@@ -87,6 +87,14 @@ const bannerAds = [
         height: 120,
         alt: 'Finlayson',
     },
+    {
+        id: 'finlayson-full',
+        href: 'https://go.adt291.com/t/t?a=2066020464&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2066020464&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Mainos',
+    },
 ]
 
 // Mobile ads - 300x250 only (IAB Medium Rectangle)

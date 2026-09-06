@@ -32,6 +32,22 @@ const ads = [
         width: 120,
         height: 600,
     },
+    {
+        id: 'finlayson-vertical',
+        href: 'https://to.finlayson.fi/t/t?a=1914383793&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1914383793&as=2038972948&t=1&tk=1&i=1',
+        alt: 'Finlayson',
+        width: 120,
+        height: 600,
+    },
+    {
+        id: 'adt291-full-vertical',
+        href: 'https://go.adt291.com/t/t?a=2066020446&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2066020446&as=2038972948&t=1&tk=1&i=1',
+        alt: 'Mainos',
+        width: 160,
+        height: 600,
+    },
 ]
 
 let currentAdIndex = 0
@@ -137,35 +153,30 @@ onDestroy(() => {
             right: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            width: 110px;
+            width: 160px;
             max-height: 100vh;
             max-height: 100dvh;
             overflow: visible;
         }
 
         .ad-wrapper {
-            width: 110px;
-            height: 400px;
-            max-height: 400px;
+            width: 160px;
+            height: 600px;
+            max-height: calc(100dvh - 2rem);
         }
 
         .ad-link {
             position: absolute;
-            width: 110px;
-            max-height: 400px;
-        }
-
-        .ad-img {
-            width: 110px;
-            max-height: 400px;
-            object-fit: contain;
+            width: 100%;
+            max-height: 600px;
         }
     }
 
     .ad-wrapper {
         position: relative;
-        width: 110px;
-        height: 400px;
+        width: 160px;
+        height: 600px;
+        max-height: calc(100dvh - 2rem);
         background: #ffffff;
         border-radius: 0;
         border: 1px solid rgba(16, 24, 40, 0.12);

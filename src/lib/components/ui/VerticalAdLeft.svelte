@@ -117,29 +117,30 @@ onDestroy(() => {
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            width: 110px;
+            width: 160px;
             max-height: 100vh;
             max-height: 100dvh;
             overflow: visible;
         }
 
         .ad-wrapper {
-            width: 110px;
-            height: 400px;
-            max-height: 400px;
+            width: 160px;
+            height: 600px;
+            max-height: calc(100dvh - 2rem);
         }
 
         .ad-link {
             position: absolute;
-            width: 110px;
-            max-height: 400px;
+            width: 100%;
+            max-height: 600px;
         }
     }
 
     .ad-wrapper {
         position: relative;
-        width: 110px;
-        height: 400px;
+        width: 160px;
+        height: 600px;
+        max-height: calc(100dvh - 2rem);
         background: #ffffff;
         border-radius: 0;
         border: 1px solid rgba(16, 24, 40, 0.12);
@@ -204,8 +205,8 @@ onDestroy(() => {
     }
 
     .ad-img {
-        width: 110px;
-        height: 400px;
+        width: 100%;
+        height: 100%;
         object-fit: contain;
         border: none;
         box-shadow: none;

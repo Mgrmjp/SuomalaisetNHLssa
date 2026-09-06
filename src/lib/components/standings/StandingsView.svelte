@@ -11,9 +11,8 @@ let _error = $state(null)
 let _activeConference = $state('eastern') // 'eastern' or 'western'
 let _showAdvancedStats = $state(false) // Advanced stats toggle
 let _lastGameDate = $state('') // Most recent game date in manifest
-let _manifestLastUpdated = $state('') // Manifest last updated timestamp
 
-// Subscribe to standings store using Svelte 5 $effect for non-derived reactive state
+// Subscribe to standings store using Svelte 5 $effect for non-reactive derived state
 let _loading = $state($standingsLoading)
 
 $effect(() => {
@@ -27,6 +26,10 @@ const hasEasternData = $derived(Object.keys(easternConference).length > 0)
 const hasWesternData = $derived(Object.keys(westernConference).length > 0)
 const hasAnyData = $derived(hasEasternData || hasWesternData)
 
+const _lastGameDateFormatted = $derived(
+    _lastGameDate ? new Date(`${_lastGameDate}T00:00:00`).toLocaleDateString('fi-FI') : ''
+)
+
 // Load standings on component mount
 onMount(async () => {
     try {
@@ -34,7 +37,6 @@ onMount(async () => {
         const manifest = await fetchLocalJSON('/data/games_manifest.json')
         if (manifest?.games?.length) {
             _lastGameDate = manifest.games[manifest.games.length - 1]
-            _manifestLastUpdated = manifest.lastUpdated
         }
         await loadStandings()
     } catch (err) {
@@ -152,7 +154,7 @@ async function _refreshStandingsData() {
                     conferenceName="eastern"
                     loading={_loading}
                     error={_error}
-                    showAdvancedStats={_showAdvancedStats}
+                    _showAdvancedStats={_showAdvancedStats}
                 />
             {:else if _activeConference === "western"}
                 <ConferenceStandings
@@ -160,7 +162,7 @@ async function _refreshStandingsData() {
                     conferenceName="western"
                     loading={_loading}
                     error={_error}
-                    showAdvancedStats={_showAdvancedStats}
+                    _showAdvancedStats={_showAdvancedStats}
                 />
             {/if}
         {/if}
@@ -173,14 +175,7 @@ async function _refreshStandingsData() {
         </p>
         {#if _lastGameDate}
             <p class="text-xs text-gray-400 mt-2">
-                Tiedot {new Date(_lastGameDate + 'T00:00:00').toLocaleDateString("fi-FI")} asti
-                {#if _manifestLastUpdated}
-                    • Päivitetty {new Date(_manifestLastUpdated).toLocaleDateString("fi-FI")}
-                {/if}
-            </p>
-        {:else}
-            <p class="text-xs text-gray-400 mt-2">
-                Päivitetty: {new Date().toLocaleString("fi-FI")}
+                Tiedot {_lastGameDateFormatted} asti
             </p>
         {/if}
     </div>
