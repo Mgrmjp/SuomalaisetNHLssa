@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-09-08T11:55:21.148787",
+  "updatedAt": "2026-09-09T12:05:18.228645",
   "sources": [
     {
       "name": "NHL Central Scouting",
@@ -59,7 +59,7 @@
             "positionCode": "D",
             "shootsCatches": "L",
             "heightInInches": 74,
-            "weightInPounds": 190,
+            "weightInPounds": 202,
             "lastAmateurClub": "ERIE",
             "lastAmateurLeague": "OHL",
             "birthDate": "2007-03-07",
@@ -135,7 +135,7 @@
             "positionCode": "LW",
             "shootsCatches": "L",
             "heightInInches": 75,
-            "weightInPounds": 212,
+            "weightInPounds": 223,
             "lastAmateurClub": "PELICANS JR.",
             "lastAmateurLeague": "FINLAND-JR.",
             "birthDate": "2008-01-14",
@@ -446,6 +446,27 @@
         },
         {
           "rank": null,
+          "name": "Olli Kylmälä",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-03-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1033455"
+        },
+        {
+          "rank": null,
           "name": "Miska Liljeberg",
           "firstName": null,
           "lastName": null,
@@ -618,6 +639,27 @@
             "metrics": 85
           },
           "playerId": "1008855"
+        },
+        {
+          "rank": null,
+          "name": "Olli Kylmälä",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-03-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1033455"
         }
       ]
     },
@@ -730,6 +772,27 @@
             "metrics": 85
           },
           "playerId": "1008855"
+        },
+        {
+          "rank": null,
+          "name": "Olli Kylmälä",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-03-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1033455"
         }
       ]
     },
@@ -800,6 +863,27 @@
             "metrics": 78
           },
           "playerId": "1032870"
+        },
+        {
+          "rank": null,
+          "name": "Olli Kylmälä",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-03-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1033455"
         },
         {
           "rank": null,
@@ -954,6 +1038,27 @@
             "metrics": 85
           },
           "playerId": "1008855"
+        },
+        {
+          "rank": null,
+          "name": "Olli Kylmälä",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-03-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1033455"
         }
       ]
     },
@@ -963,7 +1068,7 @@
       "type": "independent",
       "players": [
         {
-          "rank": 12,
+          "rank": 23,
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
@@ -984,7 +1089,7 @@
           "playerId": "1009106"
         },
         {
-          "rank": 33,
+          "rank": 40,
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
@@ -1005,7 +1110,7 @@
           "playerId": "1113813"
         },
         {
-          "rank": null,
+          "rank": 47,
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
@@ -1024,6 +1129,27 @@
             "metrics": 78
           },
           "playerId": "1032870"
+        },
+        {
+          "rank": 67,
+          "name": "Olli Kylmälä",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-03-06",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'0\"",
+            "metrics": 184
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 172,
+            "metrics": 78
+          },
+          "playerId": "1033455"
         },
         {
           "rank": null,
