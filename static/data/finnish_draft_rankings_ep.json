@@ -1,6 +1,6 @@
 {
   "year": 2026,
-  "updatedAt": "2026-09-23T12:29:00.192210",
+  "updatedAt": "2026-09-24T12:28:08.552922",
   "sources": [
     {
       "name": "EliteProspects.com",
@@ -271,6 +271,27 @@
       "slug": "tsn-craig-button",
       "players": [
         {
+          "rank": 12,
+          "name": "Luca Santala",
+          "firstName": null,
+          "lastName": null,
+          "position": null,
+          "team": null,
+          "league": null,
+          "birthDate": "2009-07-28",
+          "height": {
+            "__typename": "Height",
+            "imperial": "6'2\"",
+            "metrics": 189
+          },
+          "weight": {
+            "__typename": "Weight",
+            "imperial": 190,
+            "metrics": 86
+          },
+          "playerId": "1009106"
+        },
+        {
           "rank": null,
           "name": "Lenni Kokkonen",
           "firstName": null,
@@ -332,27 +353,6 @@
             "metrics": 86
           },
           "playerId": "1032879"
-        },
-        {
-          "rank": null,
-          "name": "Luca Santala",
-          "firstName": null,
-          "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
-          "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
-          "playerId": "1009106"
         },
         {
           "rank": null,
@@ -667,7 +667,7 @@
       "slug": "consolidated-ranking",
       "players": [
         {
-          "rank": 18,
+          "rank": 17,
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
@@ -688,7 +688,7 @@
           "playerId": "1009106"
         },
         {
-          "rank": 39,
+          "rank": 44,
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
@@ -709,7 +709,7 @@
           "playerId": "1113813"
         },
         {
-          "rank": 47,
+          "rank": 53,
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
@@ -730,7 +730,7 @@
           "playerId": "1032870"
         },
         {
-          "rank": 67,
+          "rank": 70,
           "name": "Olli Kylmälä",
           "firstName": null,
           "lastName": null,
