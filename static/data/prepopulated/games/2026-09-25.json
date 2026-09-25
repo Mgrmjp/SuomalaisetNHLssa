@@ -1,0 +1,69 @@
+{
+  "date": "2026-09-25",
+  "games": [
+    {
+      "gameId": 2026010049,
+      "homeTeam": "WSH",
+      "awayTeam": "BOS",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 1,
+      "startTime": "2026-09-25T23:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2026010051,
+      "homeTeam": "NYI",
+      "awayTeam": "NYR",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 1,
+      "startTime": "2026-09-25T23:30:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2026010050,
+      "homeTeam": "MIN",
+      "awayTeam": "DAL",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 1,
+      "startTime": "2026-09-26T00:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2026010048,
+      "homeTeam": "COL",
+      "awayTeam": "WPG",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 1,
+      "startTime": "2026-09-26T00:30:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    }
+  ],
+  "players": [],
+  "total_players": 0,
+  "generated_at": "2026-09-25T11:02:05.632060",
+  "source": "NHL API - Enhanced with Empty Net Goal Tracking"
+}
