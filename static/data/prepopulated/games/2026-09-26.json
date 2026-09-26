@@ -7,7 +7,7 @@
       "awayTeam": "CAR",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 1,
       "startTime": "2026-09-26T19:00:00Z",
       "isOT": false,
@@ -22,7 +22,7 @@
       "awayTeam": "PIT",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 1,
       "startTime": "2026-09-26T19:00:00Z",
       "isOT": false,
@@ -214,6 +214,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-09-26T10:42:02.426055",
+  "generated_at": "2026-09-26T18:32:00.379215",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
