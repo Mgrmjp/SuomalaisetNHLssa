@@ -4,7 +4,7 @@
     "start": "2026-06-20",
     "end": "2026-10-06"
   },
-  "updatedAt": "2026-09-25T11:02:13Z",
+  "updatedAt": "2026-09-26T10:42:07Z",
   "sourceStatus": {
     "tradeTracker": "ok",
     "freeAgentTracker": "ok"
@@ -33,6 +33,18 @@
       "moveType": "trade",
       "date": "2026-07-02",
       "sourceUrl": "https://www.nhl.com/news/2026-27-nhl-trades"
+    },
+    {
+      "moveId": "15129d61a27c6656",
+      "playerId": "8482447",
+      "playerName": "Leevi Meriläinen",
+      "playerSlug": "leevi-merilainen",
+      "position": "G",
+      "oldTeam": "VAN",
+      "newTeam": "OTT",
+      "moveType": "free_agent",
+      "date": "2026-07-02",
+      "sourceUrl": "https://www.nhl.com/senators/news/senators-agree-to-contract-extension-with-leevi-merilainen-for-the-2026-27-season"
     },
     {
       "moveId": "64f7d62442a80b19",
