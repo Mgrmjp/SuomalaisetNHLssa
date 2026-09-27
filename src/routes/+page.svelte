@@ -305,7 +305,7 @@ onMount(() => {
 
                         <!-- Mobile toggle -->
                         <button
-                            class="hero-stats-toggle md:hidden"
+                            class="hero-stats-toggle"
                             onclick={toggleHeroStats}
                             aria-label="Näytä tilastot"
                             aria-expanded={_showHeroStats}
@@ -1033,6 +1033,15 @@ onMount(() => {
         cursor: pointer;
         font-size: 0.9rem;
         font-weight: 700;
+    }
+
+    /* The toggle is mobile-only. Cannot use Tailwind's md:hidden here: it
+       lives in @layer utilities, which loses to this unlayered scoped
+       display: flex. */
+    @media (min-width: 768px) {
+        .hero-stats-toggle {
+            display: none;
+        }
     }
 
     .hero-stats-toggle-icon {
