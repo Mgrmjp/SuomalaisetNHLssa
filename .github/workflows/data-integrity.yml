@@ -10,7 +10,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: data-updates
+  cancel-in-progress: false
 
 jobs:
   validate-data:
@@ -41,4 +45,5 @@ jobs:
           git config --local user.name "GitHub Action"
           git add static/data/
           git commit -m "fix: auto-cleared invalid player data $(date +%Y-%m-%d)" || echo "No data changes"
-          git push || echo "No changes to push"
+          git pull --rebase origin main
+          git push

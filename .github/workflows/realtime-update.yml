@@ -12,6 +12,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: data-updates
+  cancel-in-progress: false
+
 jobs:
   realtime-update:
     runs-on: ubuntu-latest
@@ -51,6 +55,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore: automated realtime data update $(date +'%Y-%m-%d %H:%M')"
+            git pull --rebase origin main
             git push
           fi
 
@@ -66,6 +71,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add static/data/games_manifest.json
           git commit -m "chore: updated games manifest" || echo "No manifest changes"
+          git pull --rebase origin main
           git push
 
       - name: Set up Node.js
