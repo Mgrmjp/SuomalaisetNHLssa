@@ -52,11 +52,11 @@ describe('offseason moves data integrity', () => {
         }
     })
 
-    it('move types are only trade or free_agent', async () => {
+    it('move types are trade, free_agent, or waiver_claim', async () => {
         const content = await readFile(getMovesPath(), 'utf-8')
         const data = JSON.parse(content)
         for (const move of data.moves) {
-            expect(['trade', 'free_agent']).toContain(move.moveType)
+            expect(['trade', 'free_agent', 'waiver_claim']).toContain(move.moveType)
         }
     })
 
@@ -92,11 +92,11 @@ describe('offseason moves data integrity', () => {
         }
     })
 
-    it('source URLs point to nhl.com', async () => {
+    it('source URLs point to NHL or ESPN transactions', async () => {
         const content = await readFile(getMovesPath(), 'utf-8')
         const data = JSON.parse(content)
         for (const move of data.moves) {
-            expect(move.sourceUrl).toMatch(/^https:\/\/www\.nhl\.com/)
+            expect(move.sourceUrl).toMatch(/^https:\/\/www\.(?:nhl|espn)\.com/)
         }
     })
 
@@ -121,6 +121,21 @@ describe('offseason moves data integrity', () => {
         )
         expect(kiviranta).toBeDefined()
         expect(kiviranta.newTeam).toBe('DAL')
+    })
+
+    it('records Meriläinen’s September waiver claim in the right direction', async () => {
+        const content = await readFile(getMovesPath(), 'utf-8')
+        const data = JSON.parse(content)
+        const merilainen = data.moves.filter(/** @param {any} m */ (m) => m.playerId === '8482447')
+        expect(merilainen).toHaveLength(1)
+        expect(merilainen[0]).toMatchObject({
+            oldTeam: 'OTT',
+            newTeam: 'VAN',
+            moveType: 'waiver_claim',
+            date: '2026-09-25',
+            sourceUrl:
+                'https://www.nhl.com/canucks/news/canucks-claim-goaltender-leevi-merilaeinen-off-waivers-from-ottawa',
+        })
     })
 })
 

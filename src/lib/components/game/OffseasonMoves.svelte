@@ -15,6 +15,7 @@ const moves = $derived(movesData?.moves || [])
 const totalMoves = $derived(moves.length)
 const tradeCount = $derived(moves.filter((m) => m.moveType === 'trade').length)
 const faCount = $derived(moves.filter((m) => m.moveType === 'free_agent').length)
+const waiverCount = $derived(moves.filter((m) => m.moveType === 'waiver_claim').length)
 const visibleMoves = $derived(_expanded ? moves : moves.slice(0, COLLAPSED_MOVE_LIMIT))
 const hasMore = $derived(moves.length > COLLAPSED_MOVE_LIMIT)
 const hiddenMoveCount = $derived(_expanded ? 0 : Math.max(0, totalMoves - COLLAPSED_MOVE_LIMIT))
@@ -53,7 +54,9 @@ function formatMoveDate(dateStr) {
 }
 
 function moveTypeLabel(type) {
-    return type === 'trade' ? 'Trade' : 'Vapaa agentti'
+    if (type === 'trade') return 'Trade'
+    if (type === 'waiver_claim') return 'Waiver-poiminta'
+    return 'Vapaa agentti'
 }
 
 function countLabel(count, singular, partitive) {
@@ -76,7 +79,8 @@ function toggleExpand() {
                 <p class="moves-header__sub">
                     {countLabel(totalMoves, 'siirto', 'siirtoa')} ·
                     {countLabel(tradeCount, 'pelaajakauppa', 'pelaajakauppaa')} ·
-                    {countLabel(faCount, 'vapaan agentin siirto', 'vapaan agentin siirtoa')}
+                    {countLabel(faCount, 'vapaan agentin siirto', 'vapaan agentin siirtoa')} ·
+                    {countLabel(waiverCount, 'waiver-poiminta', 'waiver-poimintaa')}
                 </p>
             </div>
             {#if hasMore && _expanded}

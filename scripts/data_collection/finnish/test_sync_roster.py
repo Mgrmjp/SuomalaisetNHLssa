@@ -12,11 +12,12 @@ import json
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from sync_roster import sync_roster
-from config import FINNISH_CACHE_FILE, DATA_DIR
+from config import FINNISH_CACHE_FILE
+import sync_roster as sr
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
@@ -49,6 +50,18 @@ def make_player(pid, name, team="", active=True, **extra):
     }
 
 
+def test_latest_move_wins_even_when_moves_are_newest_first():
+    moves = [
+        {"playerId": "8482447", "newTeam": "VAN", "date": "2026-09-25"},
+        {"playerId": "8482447", "newTeam": "OTT", "date": "2026-07-02"},
+        {"playerId": "8470001", "newTeam": "DAL", "date": "2026-08-01"},
+    ]
+    latest = sr.latest_moves_by_player(moves)
+    assert latest["8482447"]["newTeam"] == "VAN"
+    assert latest["8470001"]["newTeam"] == "DAL"
+    print("PASSED: latest move wins even when moves are newest first")
+
+
 def test_sync_preserves_last_team():
     """lastTeam/gamesPlayed from existing roster should survive sync."""
     cache = {
@@ -77,12 +90,6 @@ def test_sync_preserves_last_team():
     with open(roster_file, "w") as f:
         json.dump(existing_roster, f)
 
-    import sync_roster as sr
-    from config import FINNISH_CACHE_FILE, DATA_DIR
-
-    orig_cache = sr.FINNISH_CACHE_FILE if hasattr(sr, "FINNISH_CACHE_FILE") else None
-    orig_dir = sr.DATA_DIR if hasattr(sr, "DATA_DIR") else None
-
     tmp_data = Path(tmpdir) / "players"
     tmp_data.mkdir(parents=True, exist_ok=True)
 
@@ -92,26 +99,18 @@ def test_sync_preserves_last_team():
     with open(cache_file, "w") as f:
         json.dump(cache, f)
 
-    import config
-
-    orig_cfg_cache = config.FINNISH_CACHE_FILE
-    orig_cfg_dir = config.DATA_DIR
-    config.FINNISH_CACHE_FILE = cache_file
-    config.DATA_DIR = Path(tmpdir)
-
-    roster_written = None
-    try:
+    with (
+        patch.object(sr, "FINNISH_CACHE_FILE", cache_file),
+        patch.object(sr, "DATA_DIR", Path(tmpdir)),
+    ):
         with open(roster_file, "w") as f:
             json.dump(existing_roster, f)
 
-        result = sync_roster()
+        result = sr.sync_roster()
         assert result is True, "sync_roster should return True"
 
         with open(Path(tmpdir) / "players" / "finnish-roster.json") as f:
             roster_written = json.load(f)
-    finally:
-        config.FINNISH_CACHE_FILE = orig_cfg_cache
-        config.DATA_DIR = orig_cfg_dir
 
     retired = roster_written["8470002"]
     assert "lastTeam" in retired, f"lastTeam missing from retired player: {retired}"
@@ -155,20 +154,13 @@ def test_sync_does_not_overwrite_active_team():
     with open(tmp_data / "finnish-roster.json", "w") as f:
         json.dump(existing_roster, f)
 
-    import config
-
-    orig_cfg_cache = config.FINNISH_CACHE_FILE
-    orig_cfg_dir = config.DATA_DIR
-    config.FINNISH_CACHE_FILE = cache_file
-    config.DATA_DIR = Path(tmpdir)
-
-    try:
-        sync_roster()
+    with (
+        patch.object(sr, "FINNISH_CACHE_FILE", cache_file),
+        patch.object(sr, "DATA_DIR", Path(tmpdir)),
+    ):
+        sr.sync_roster()
         with open(Path(tmpdir) / "players" / "finnish-roster.json") as f:
             roster_written = json.load(f)
-    finally:
-        config.FINNISH_CACHE_FILE = orig_cfg_cache
-        config.DATA_DIR = orig_cfg_dir
 
     active = roster_written["8470001"]
     assert active["currentTeam"] == "ANA", (
@@ -208,6 +200,7 @@ def test_sync_handles_missing_roster_file():
 if __name__ == "__main__":
     print("Running sync_roster field preservation tests...")
     print()
+    test_latest_move_wins_even_when_moves_are_newest_first()
     test_sync_preserves_last_team()
     test_sync_does_not_overwrite_active_team()
     test_sync_handles_missing_roster_file()

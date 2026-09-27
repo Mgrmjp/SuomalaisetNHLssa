@@ -24,6 +24,18 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import FINNISH_CACHE_FILE, DATA_DIR
 
 
+def latest_moves_by_player(moves):
+    latest = {}
+    for move in moves:
+        pid = str(move.get("playerId", ""))
+        if pid and (
+            pid not in latest
+            or move.get("date", "") > latest[pid].get("date", "")
+        ):
+            latest[pid] = move
+    return latest
+
+
 def sync_roster():
     """
     Sync the Finnish players cache to the static roster location.
@@ -82,16 +94,15 @@ def sync_roster():
     if merged_count:
         print(f"   Preserved {merged_count} extra field(s) from existing roster")
 
-    # Apply offseason moves overrides (trades/free-agent signings that the
-    # NHL API rosters may not reflect yet)
+    # Apply the latest offseason move when the NHL API roster lags a transfer.
     moves_file = DATA_DIR / "offseason-moves.json"
     if moves_file.exists():
         try:
             with open(moves_file, "r", encoding="utf-8") as f:
                 moves_data = json.load(f)
-            moves = moves_data.get("moves", [])
+            moves = latest_moves_by_player(moves_data.get("moves", []))
             overridden = 0
-            for move in moves:
+            for move in moves.values():
                 pid = str(move.get("playerId", ""))
                 new_team = move.get("newTeam", "")
                 if not pid or not new_team or pid not in cache_data:

@@ -5,6 +5,8 @@ Offseason movement collector for Finnish NHL players.
 Parses NHL.com trade tracker and free-agent tracker pages,
 matches players against the Finnish roster, and writes
 validated moves to static/data/offseason-moves.json.
+Previously recorded waiver claims are preserved, but this collector
+also checks ESPN's transaction feed for new waiver claims.
 
 Usage:
     python fetch_offseason_moves.py [--backfill]
@@ -37,6 +39,7 @@ TRADE_TRACKER_URL = "https://www.nhl.com/news/2026-27-nhl-trades"
 FREE_AGENT_TRACKER_URL = (
     "https://www.nhl.com/news/topic/free-agency/free-agency-signings-nhl-2026-27"
 )
+ESPN_TRANSACTIONS_URL = "https://site.api.espn.com/apis/site/v2/sports/hockey/nhl/transactions"
 
 OUTPUT_FILE = DATA_DIR / "offseason-moves.json"
 
@@ -67,6 +70,29 @@ TEAM_FULL_TO_ABBREV = {
 }
 
 VALID_NHL_TEAMS = set(TEAM_FULL_TO_ABBREV.values())
+
+ESPN_LOCATION_TO_ABBREV = {}
+for full_name, abbrev in TEAM_FULL_TO_ABBREV.items():
+    location = next(
+        (
+            prefix for prefix in (
+                "Los Angeles", "New Jersey", "New York", "San Jose", "St. Louis", "Tampa Bay"
+            ) if full_name.startswith(prefix + " ")
+        ),
+        full_name.split()[0],
+    )
+    key = location.lower().replace(".", "")
+    if key in ESPN_LOCATION_TO_ABBREV and ESPN_LOCATION_TO_ABBREV[key] != abbrev:
+        ESPN_LOCATION_TO_ABBREV[key] = None
+    else:
+        ESPN_LOCATION_TO_ABBREV[key] = abbrev
+
+ESPN_CLAIM_RE = re.compile(
+    r"\bClaimed\s+[A-Z]{1,3}(?:/[A-Z]{1,3})?\s+"
+    r"(?P<name>[\w'’.-]+(?:\s+[\w'’.-]+){1,3})\s+"
+    r"off\s+waivers?\s+from\s+(?:the\s+)?(?P<old>[^.;]+)",
+    re.IGNORECASE,
+)
 
 NON_PLAYER_WORDS = {
     "pick", "picks", "round", "conditional", "draft", "consideration",
@@ -127,6 +153,33 @@ def fetch_page_html(url):
     except requests.RequestException as e:
         print(f"  ERROR fetching {url}: {e}")
         return None
+
+
+def fetch_espn_transactions(start_date, end_date, fetcher=requests.get):
+    dates = f"{start_date.replace('-', '')}-{end_date.replace('-', '')}"
+    transactions = []
+    page = 1
+    while True:
+        try:
+            response = fetcher(
+                ESPN_TRANSACTIONS_URL,
+                params={"dates": dates, "limit": 100, "page": page},
+                timeout=API_TIMEOUT,
+            )
+            response.raise_for_status()
+            data = response.json()
+            if data.get("status") != "success" or not isinstance(data.get("transactions"), list):
+                raise ValueError("Invalid ESPN transactions response")
+            transactions.extend(data["transactions"])
+            page_count = data.get("pageCount")
+            if not isinstance(page_count, int) or page_count < page:
+                raise ValueError("Invalid ESPN transaction pagination")
+            if page >= page_count:
+                return transactions
+            page += 1
+        except (requests.RequestException, ValueError) as error:
+            print(f"  ERROR fetching ESPN transactions page {page}: {error}")
+            return None
 
 
 def parse_json_ld(html):
@@ -575,6 +628,18 @@ def parse_free_agent_entries(paragraphs, roster_by_last, roster_by_full, page_da
         re.IGNORECASE,
     )
 
+    # A later team change must not turn an earlier contract extension into a move.
+    re_signings = set()
+    listed_team = None
+    for text in paragraphs:
+        normalized = re.sub(r"\s+", " ", text.strip())
+        if team_header_re.match(normalized):
+            listed_team = team_full_to_abbrev(normalized)
+            continue
+        if listed_team:
+            for match in re.finditer(r"([^,:;()]+?)\s*\(re-signed\)", normalized, re.IGNORECASE):
+                re_signings.add((listed_team, normalize_name_key(match.group(1))))
+
     for text in paragraphs:
         normalized = re.sub(r"\s+", " ", text.strip())
         team_match = team_header_re.match(normalized)
@@ -613,12 +678,13 @@ def parse_free_agent_entries(paragraphs, roster_by_last, roster_by_full, page_da
             if not player:
                 continue
 
-            old_team = player.get("currentTeam", "")
-            departure = departures.get(normalize_name_key(player["name"]))
-            if departure and departure["newTeam"] == current_team_abbrev:
-                old_team = departure["oldTeam"]
-            if not old_team or old_team == current_team_abbrev:
+            if (current_team_abbrev, normalize_name_key(player["name"])) in re_signings:
                 continue
+
+            departure = departures.get(normalize_name_key(player["name"]))
+            if not departure or departure["newTeam"] != current_team_abbrev:
+                continue
+            old_team = departure["oldTeam"]
 
             moves.append({
                 "player": player,
@@ -677,6 +743,40 @@ def parse_free_agent_departures(paragraphs):
                     }
 
     return departures
+
+
+def parse_espn_waiver_claims(transactions, roster_by_last, roster_by_full):
+    moves = []
+    for transaction in transactions:
+        team = transaction.get("team") or {}
+        new_team = team_full_to_abbrev(team.get("displayName"))
+        if not new_team and team.get("abbreviation") in VALID_NHL_TEAMS:
+            new_team = team["abbreviation"]
+        if not new_team:
+            continue
+
+        description = (transaction.get("description") or "").replace("St. Louis", "St Louis")
+        date = str(transaction.get("date") or "")[:10]
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", date):
+            continue
+
+        for match in ESPN_CLAIM_RE.finditer(description):
+            player = match_player_to_roster(match.group("name"), roster_by_last, roster_by_full)
+            old_label = match.group("old").strip()
+            old_team = team_full_to_abbrev(old_label) or ESPN_LOCATION_TO_ABBREV.get(
+                old_label.lower().replace(".", "")
+            )
+            if not player or not old_team or old_team == new_team:
+                continue
+            moves.append({
+                "player": player,
+                "oldTeam": old_team,
+                "newTeam": new_team,
+                "moveType": "waiver_claim",
+                "date": date,
+                "sourceUrl": f"https://www.espn.com/nhl/transactions?date={date.replace('-', '')}",
+            })
+    return moves
 
 
 def validate_free_agent_coverage(paragraphs, moves, roster_by_last, roster_by_full):
@@ -738,13 +838,21 @@ def merge_moves(existing, new_moves_list, offseason_year):
         existing_moves = {}
 
     for move in new_moves_list:
-        existing_moves[move_identity(move)] = move
+        identity = move_identity(move)
+        previous = existing_moves.get(identity, {})
+        if (
+            previous.get("sourceUrl", "").startswith("https://www.nhl.com/")
+            and move.get("sourceUrl", "").startswith("https://www.espn.com/")
+        ):
+            continue
+        existing_moves[identity] = move
 
     return list(existing_moves.values())
 
 
-def build_output(offseason_year, moves, source_status):
-    window = get_offseason_window(offseason_year)
+def build_output(offseason_year, moves, source_status, window=None):
+    if window is None:
+        window = get_offseason_window(offseason_year)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     sorted_moves = sorted(moves, key=lambda m: m.get("date", ""), reverse=True)
@@ -775,7 +883,12 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
 
     print(f"  Loaded {len(roster_by_id)} Finnish players from roster")
 
-    source_status = {"tradeTracker": "error", "freeAgentTracker": "error"}
+    window = get_offseason_window(offseason_year)
+    source_status = {
+        "tradeTracker": "error",
+        "freeAgentTracker": "error",
+        "espnTransactions": "error",
+    }
     all_moves = []
 
     print(f"  Fetching trade tracker: {TRADE_TRACKER_URL}")
@@ -812,6 +925,24 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
         source_status["freeAgentTracker"] = "ok" if complete else "error"
     else:
         print("  WARNING: Could not fetch free-agent tracker page")
+
+    espn_end = min(window["end"], datetime.now(timezone.utc).date().isoformat())
+    if espn_end >= window["start"]:
+        print(f"  Fetching ESPN transactions: {window['start']} to {espn_end}")
+        espn_transactions = fetch_espn_transactions(window["start"], espn_end)
+        if espn_transactions is not None:
+            waiver_moves = parse_espn_waiver_claims(
+                espn_transactions, roster_by_last, roster_by_full
+            )
+            waiver_moves = [
+                move for move in waiver_moves
+                if window["start"] <= move["date"] <= window["end"]
+            ]
+            print(f"  Found {len(waiver_moves)} Finnish waiver claim(s)")
+            all_moves.extend(waiver_moves)
+            source_status["espnTransactions"] = "ok"
+    else:
+        source_status["espnTransactions"] = "ok"
 
     formatted_moves = []
     for move in all_moves:
@@ -850,7 +981,7 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
     existing = load_existing_moves()
     merged = merge_moves(existing, deduped, offseason_year)
 
-    output = build_output(offseason_year, merged, source_status)
+    output = build_output(offseason_year, merged, source_status, window=window)
     save_output(output)
 
     if any(v == "error" for v in source_status.values()):

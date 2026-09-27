@@ -4,7 +4,7 @@
 import {
     Activity as ActivityIcon,
     CheckCircle,
-    ChevronDown as ChevronDownIcon,
+    ChevronDown,
     CircleDot,
     Database,
     Goal,

@@ -29,6 +29,8 @@ from fetch_offseason_moves import (
     parse_trade_entries,
     parse_free_agent_entries,
     parse_free_agent_departures,
+    parse_espn_waiver_claims,
+    fetch_espn_transactions,
     validate_free_agent_coverage,
     collect_offseason_moves,
     parse_signing_line,
@@ -267,6 +269,9 @@ def test_parse_free_agent_kiviranta():
         "Hyry, Shlaine, Halverson each signs contract with Stars",
         "Free agents",
         "Group 3 Unrestricted Free Agents: Nathan Bastian, Jamie Benn",
+        "COLORADO AVALANCHE",
+        "Free agents",
+        "Group 3 Unrestricted Free Agents: Joel Kiviranta (signed: DAL)",
     ]
     moves = parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-02")
     finnish_moves = [m for m in moves if m["player"]["playerId"] == 8478123]
@@ -276,6 +281,18 @@ def test_parse_free_agent_kiviranta():
     assert move["newTeam"] == "DAL"
     assert move["moveType"] == "free_agent"
     print("PASSED: parse_free_agent_kiviranta")
+
+
+def test_signing_without_confirmed_departure_is_not_a_move():
+    roster = make_roster()
+    roster["8478123"]["currentTeam"] = "VAN"
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "DALLAS STARS", "Signings",
+        "Kiviranta signs 1-year contract with Stars", "Free agents",
+    ]
+    assert parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-01") == []
+    print("PASSED: signing_without_confirmed_departure_is_not_a_move")
 
 
 def test_parse_free_agent_excludes_re_signing():
@@ -292,6 +309,29 @@ def test_parse_free_agent_excludes_re_signing():
     finnish_moves = [m for m in moves if m["player"]["playerId"] == 8480456]
     assert len(finnish_moves) == 0
     print("PASSED: parse_free_agent_excludes_re_signing")
+
+
+def test_re_signing_stays_excluded_after_waiver_claim():
+    roster = make_roster()
+    roster["8482447"] = {
+        "playerId": 8482447,
+        "name": "Leevi Meriläinen",
+        "firstName": {"default": "Leevi"},
+        "lastName": {"default": "Meriläinen"},
+        "position": "G",
+        "currentTeam": "VAN",
+        "isActive": True,
+    }
+    by_last, by_full = build_lookups(roster)
+    paragraphs = [
+        "OTTAWA SENATORS",
+        "Signings",
+        "Merilainen signs 1-year contract with Senators",
+        "Free agents",
+        "Group 2 Restricted Free Agents: Leevi Merilainen (re-signed).",
+    ]
+    assert parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-02") == []
+    print("PASSED: re_signing_stays_excluded_after_waiver_claim")
 
 
 def test_free_agent_move_survives_roster_refresh():
@@ -354,7 +394,10 @@ def test_collector_flags_unparsed_confirmed_signing():
             "moves": [{"playerId": "8480999", "moveType": "free_agent",
                        "oldTeam": "SEA", "newTeam": "NYR", "date": "2026-09-02"}],
         }),
-        patch("fetch_offseason_moves.get_offseason_window", return_value={}),
+        patch("fetch_offseason_moves.get_offseason_window", return_value={
+            "start": "2026-06-20", "end": "2026-10-06",
+        }),
+        patch("fetch_offseason_moves.fetch_espn_transactions", return_value=[]),
         patch("fetch_offseason_moves.save_output") as save,
         redirect_stdout(logs),
     ):
@@ -391,6 +434,87 @@ def test_parse_free_agent_departures():
     key = normalize_name_key("Joel Kiviranta")
     assert lookup.get(key) == {"oldTeam": "COL", "newTeam": "DAL"}
     print("PASSED: parse_free_agent_departures")
+
+
+def test_parse_espn_waiver_claim_from_compound_transaction():
+    roster = make_roster()
+    roster["8482447"] = {
+        "playerId": 8482447,
+        "name": "Leevi Meriläinen",
+        "firstName": {"default": "Leevi"},
+        "lastName": {"default": "Meriläinen"},
+        "position": "G",
+        "currentTeam": "VAN",
+    }
+    by_last, by_full = build_lookups(roster)
+    transactions = [{
+        "date": "2026-09-25T07:00Z",
+        "description": (
+            "Claimed G Leevi Merilainen off waivers from Ottawa. "
+            "Placed F Filip Chytil on injured reserve."
+        ),
+        "team": {"abbreviation": "VAN"},
+    }]
+    moves = parse_espn_waiver_claims(transactions, by_last, by_full)
+    assert len(moves) == 1
+    assert moves[0]["player"]["playerId"] == 8482447
+    assert (moves[0]["oldTeam"], moves[0]["newTeam"]) == ("OTT", "VAN")
+    assert moves[0]["moveType"] == "waiver_claim"
+    assert moves[0]["date"] == "2026-09-25"
+    print("PASSED: parse_espn_waiver_claim_from_compound_transaction")
+
+
+def test_parse_espn_waiver_claim_skips_placement_and_ambiguous_team():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    transactions = [
+        {"date": "2026-09-25T07:00Z", "description": "Placed G Joonas Korpisalo on waivers.", "team": {"abbreviation": "BOS"}},
+        {"date": "2026-09-25T07:00Z", "description": "Claimed G Joonas Korpisalo off waivers from New York.", "team": {"abbreviation": "BOS"}},
+    ]
+    assert parse_espn_waiver_claims(transactions, by_last, by_full) == []
+    print("PASSED: parse_espn_waiver_claim_skips_placement_and_ambiguous_team")
+
+
+def test_parse_espn_waiver_claim_resolves_team_names_before_espn_abbreviations():
+    roster = make_roster()
+    by_last, by_full = build_lookups(roster)
+    transactions = [{
+        "date": "2026-09-25T07:00Z",
+        "description": "Claimed G Joonas Korpisalo off waivers from St. Louis.",
+        "team": {"displayName": "Los Angeles Kings", "abbreviation": "LA"},
+    }]
+    moves = parse_espn_waiver_claims(transactions, by_last, by_full)
+    assert len(moves) == 1
+    assert (moves[0]["oldTeam"], moves[0]["newTeam"]) == ("STL", "LAK")
+    print("PASSED: parse_espn_waiver_claim_resolves_team_names_before_espn_abbreviations")
+
+
+def test_fetch_espn_transactions_reads_all_pages():
+    requested_pages = []
+
+    class Response:
+        def __init__(self, page):
+            self.page = page
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {
+                "status": "success",
+                "pageCount": 2,
+                "transactions": [{"description": f"Page {self.page}"}],
+            }
+
+    def fake_get(_url, **kwargs):
+        requested_pages.append(kwargs["params"]["page"])
+        assert kwargs["params"]["dates"] == "20260620-20261006"
+        return Response(kwargs["params"]["page"])
+
+    transactions = fetch_espn_transactions("2026-06-20", "2026-10-06", fake_get)
+    assert requested_pages == [1, 2]
+    assert [item["description"] for item in transactions] == ["Page 1", "Page 2"]
+    print("PASSED: fetch_espn_transactions_reads_all_pages")
 
 
 def test_generate_move_id_stable():
@@ -434,6 +558,18 @@ def test_merge_moves_deduplication():
     assert merged[0].get("sourceUrl") == "https://nhl.com"
     assert merged[0]["date"] == "2026-07-01"
     print("PASSED: merge_moves_deduplication")
+
+
+def test_merge_keeps_official_claim_source_over_espn():
+    official = {
+        "playerId": "8482447", "moveType": "waiver_claim",
+        "oldTeam": "OTT", "newTeam": "VAN", "date": "2026-09-25",
+        "sourceUrl": "https://www.nhl.com/canucks/news/claim",
+    }
+    espn = dict(official, sourceUrl="https://www.espn.com/nhl/transactions?date=20260925")
+    merged = merge_moves({"offseasonYear": 2026, "moves": [official]}, [espn], 2026)
+    assert merged == [official]
+    print("PASSED: merge_keeps_official_claim_source_over_espn")
 
 
 def test_extract_signing_links():
@@ -488,6 +624,10 @@ def test_enrich_free_agent_dates_uses_linked_article():
         "DALLAS STARS",
         "Signings",
         "Kiviranta signs 1-year contract with Stars",
+        "Free agents",
+        "COLORADO AVALANCHE",
+        "Free agents",
+        "Group 3 Unrestricted Free Agents: Joel Kiviranta (signed: DAL)",
     ]
     moves = parse_free_agent_entries(
         paragraphs, by_last, by_full, "2026-07-03"
@@ -592,14 +732,21 @@ if __name__ == "__main__":
     test_parse_signing_line_single()
     test_parse_signing_line_grouped()
     test_parse_free_agent_kiviranta()
+    test_signing_without_confirmed_departure_is_not_a_move()
     test_parse_free_agent_excludes_re_signing()
+    test_re_signing_stays_excluded_after_waiver_claim()
     test_free_agent_move_survives_roster_refresh()
     test_free_agent_departure_must_match_signing_destination()
     test_collector_flags_unparsed_confirmed_signing()
     test_parse_free_agent_excludes_non_nhl()
     test_parse_free_agent_departures()
+    test_parse_espn_waiver_claim_from_compound_transaction()
+    test_parse_espn_waiver_claim_skips_placement_and_ambiguous_team()
+    test_parse_espn_waiver_claim_resolves_team_names_before_espn_abbreviations()
+    test_fetch_espn_transactions_reads_all_pages()
     test_generate_move_id_stable()
     test_merge_moves_deduplication()
+    test_merge_keeps_official_claim_source_over_espn()
     test_extract_signing_links()
     test_article_date_uses_weekday_before_publish_date()
     test_article_date_uses_explicit_transaction_date()
