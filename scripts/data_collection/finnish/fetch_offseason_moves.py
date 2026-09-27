@@ -804,16 +804,14 @@ def get_offseason_window(offseason_year=2026):
     start = f"{offseason_year}-06-20"
     end = f"{offseason_year}-10-06"
     try:
-        schedule_url = f"{NHL_API_BASE}/v1/schedule/{offseason_year}-{offseason_year + 1}"
+        schedule_url = f"{NHL_API_BASE}/v1/schedule/{offseason_year}-09-01"
         resp = requests.get(schedule_url, headers=REQUEST_HEADERS, timeout=API_TIMEOUT)
         if resp.ok:
             data = resp.json()
-            dates = sorted(data.get("dates", []))
-            if dates:
-                first_game = dates[0].get("date", "")
-                if first_game:
-                    opener = datetime.strptime(first_game, "%Y-%m-%d")
-                    end = (opener - timedelta(days=1)).strftime("%Y-%m-%d")
+            first_game = data.get("regularSeasonStartDate")
+            if first_game:
+                opener = datetime.strptime(first_game, "%Y-%m-%d")
+                end = (opener - timedelta(days=1)).strftime("%Y-%m-%d")
     except Exception:
         pass
     return {"start": start, "end": end}

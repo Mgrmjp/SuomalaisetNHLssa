@@ -40,6 +40,7 @@ from fetch_offseason_moves import (
     extract_signing_links,
     extract_move_date_from_article,
     enrich_free_agent_dates,
+    get_offseason_window,
 )
 
 
@@ -701,6 +702,20 @@ def test_build_output_structure():
     print("PASSED: build_output_structure")
 
 
+def test_offseason_window_ends_before_nhl_regular_season():
+    class Response:
+        ok = True
+
+        def json(self):
+            return {"regularSeasonStartDate": "2026-09-29"}
+
+    with patch("fetch_offseason_moves.requests.get", return_value=Response()) as get:
+        window = get_offseason_window(2026)
+    assert window == {"start": "2026-06-20", "end": "2026-09-28"}
+    assert get.call_args.args[0].endswith("/v1/schedule/2026-09-01")
+    print("PASSED: offseason_window_ends_before_nhl_regular_season")
+
+
 def test_source_date_fallback():
     roster = make_roster()
     by_last, by_full = build_lookups(roster)
@@ -753,6 +768,7 @@ if __name__ == "__main__":
     test_enrich_free_agent_dates_uses_linked_article()
     test_merge_moves_adds_new()
     test_build_output_structure()
+    test_offseason_window_ends_before_nhl_regular_season()
     test_source_date_fallback()
     print()
     print("All tests passed!")
