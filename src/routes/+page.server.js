@@ -90,6 +90,34 @@ export async function load() {
         // breaks.json may not exist yet
     }
 
+    let upcomingGames = []
+    try {
+        const content = await readFile(
+            join(process.cwd(), 'static', 'data', 'upcoming-finnish-games.json'),
+            'utf-8'
+        )
+        upcomingGames = JSON.parse(content).games || []
+    } catch {
+        // The schedule teaser is optional when NHL schedule data is unavailable.
+    }
+
+    let preseasonSummary = null
+    try {
+        const content = await readFile(
+            join(process.cwd(), 'static', 'data', 'preseason-summary.json'),
+            'utf-8'
+        )
+        const summary = JSON.parse(content)
+        const regularStart = new Date(`${summary.regularSeasonStartDate}T00:00:00Z`)
+        const recapEnd = new Date(regularStart)
+        recapEnd.setUTCDate(recapEnd.getUTCDate() + 14)
+        if (summary.completedGames > 0 && Date.now() < recapEnd.getTime()) {
+            preseasonSummary = summary
+        }
+    } catch {
+        // Preseason recap is optional before the first final game.
+    }
+
     try {
         const dates = await getGameDates(gamesDir)
         const today = formatLocalDate(new Date())
@@ -109,6 +137,8 @@ export async function load() {
             playoffStats,
             offseasonMoves,
             breaks,
+            upcomingGames,
+            preseasonSummary,
         }
     } catch (error) {
         console.warn('Could not load homepage SEO data:', error)
@@ -118,6 +148,8 @@ export async function load() {
             playoffStats,
             offseasonMoves,
             breaks,
+            upcomingGames,
+            preseasonSummary,
         }
     }
 }

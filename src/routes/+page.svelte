@@ -19,6 +19,8 @@ import { base } from '$app/paths'
 import DateControls from '$lib/components/game/DateControls.svelte'
 import OffseasonMoves from '$lib/components/game/OffseasonMoves.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
+import PreseasonSummary from '$lib/components/game/PreseasonSummary.svelte'
+import UpcomingFinnishGames from '$lib/components/game/UpcomingFinnishGames.svelte'
 import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
@@ -237,9 +239,9 @@ onMount(() => {
                         <div class="panel__inner flex flex-col items-center justify-center text-center">
                             {#if activeBreak.type === 'offseason'}
                                 <span class="break-emoji" role="img" aria-label="Offseason">☀️</span>
-                                <h3 class="break-title">Nähdään ensi kaudella!</h3>
+                                <h2 class="break-title">Runkosarja alkaa pian!</h2>
                                 <p class="break-meta">
-                                    NHL-kausi on päättynyt. Uusi kausi alkaa lokakuussa.
+                                    Kurkkaa tuleviin otteluihin alta.
                                 </p>
                             {:else}
                                 <span class="break-emoji" role="img" aria-label="Break">🏒</span>
@@ -250,6 +252,18 @@ onMount(() => {
                             {/if}
                         </div>
                     </section>
+                </div>
+            {/if}
+
+            {#if data.upcomingGames?.length}
+                <div class="dashboard__upcoming">
+                    <UpcomingFinnishGames games={data.upcomingGames} />
+                </div>
+            {/if}
+
+            {#if data.preseasonSummary}
+                <div class="dashboard__preseason">
+                    <PreseasonSummary summary={data.preseasonSummary} />
                 </div>
             {/if}
 
@@ -678,6 +692,8 @@ onMount(() => {
     }
 
     .dashboard__notice,
+    .dashboard__upcoming,
+    .dashboard__preseason,
     .dashboard__moves {
         margin-bottom: 1.5rem;
     }

@@ -37,7 +37,10 @@ jobs:
           pip install -r scripts/data_collection/requirements.txt
 
       - name: Test offseason move collection
-        run: .venv/bin/python scripts/data_collection/finnish/test_fetch_offseason_moves.py
+        run: |
+          .venv/bin/python scripts/data_collection/finnish/test_fetch_offseason_moves.py
+          .venv/bin/python scripts/data_collection/finnish/test_fetch_upcoming_games.py
+          .venv/bin/python scripts/data_collection/finnish/test_fetch_preseason_summary.py
 
       - name: Validate Finnish players cache
         run: |
@@ -67,11 +70,21 @@ jobs:
           source .venv/bin/activate
           python scripts/data_collection/finnish/sync_roster.py
 
+      - name: Build upcoming Finnish games teaser
+        run: |
+          source .venv/bin/activate
+          python scripts/data_collection/finnish/fetch_upcoming_games.py || echo "::warning::Upcoming games teaser could not be refreshed"
+
+      - name: Build Finnish preseason recap
+        run: |
+          source .venv/bin/activate
+          python scripts/data_collection/finnish/fetch_preseason_summary.py || echo "::warning::Preseason recap could not be refreshed"
+
       - name: Commit and push updated data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json static/data/offseason-moves.json
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json static/data/offseason-moves.json static/data/upcoming-finnish-games.json static/data/preseason-summary.json
           git diff --cached --quiet || git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git push
 
