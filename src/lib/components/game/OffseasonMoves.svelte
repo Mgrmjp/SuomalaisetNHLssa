@@ -11,7 +11,9 @@ let _expanded = $state(false)
 
 const COLLAPSED_MOVE_LIMIT = 5
 
-const moves = $derived(movesData?.moves || [])
+// Moves with active: false are roster-state corrections (e.g. AHL
+// assignments after clearing waivers), not transactions to display.
+const moves = $derived((movesData?.moves || []).filter((m) => m.active !== false))
 const totalMoves = $derived(moves.length)
 const tradeCount = $derived(moves.filter((m) => m.moveType === 'trade').length)
 const faCount = $derived(moves.filter((m) => m.moveType === 'free_agent').length)

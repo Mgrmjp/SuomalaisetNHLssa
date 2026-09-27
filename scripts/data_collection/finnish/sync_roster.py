@@ -105,9 +105,31 @@ def sync_roster():
             for move in moves.values():
                 pid = str(move.get("playerId", ""))
                 new_team = move.get("newTeam", "")
-                if not pid or not new_team or pid not in cache_data:
+                if not pid or pid not in cache_data:
                     continue
                 player = cache_data[pid]
+                if move.get("active") is False:
+                    # Curated override: the NHL API roster still lists the
+                    # player (feed lag, IR, AHL assignment) but curated data
+                    # says he is off the NHL roster.
+                    changed = False
+                    if player.get("isActive") is not False:
+                        player["isActive"] = False
+                        changed = True
+                    if player.get("currentTeam"):
+                        player["currentTeam"] = ""
+                        player["teamAbbrev"] = None
+                        player["team"] = None
+                        changed = True
+                    if changed:
+                        overridden += 1
+                        print(
+                            f"   ⬇️ {player.get('name', pid)}: "
+                            f"marked inactive ({move.get('moveType', 'off NHL roster')})"
+                        )
+                    continue
+                if not new_team:
+                    continue
                 current = (
                     player.get("teamAbbrev")
                     or player.get("team")
@@ -118,6 +140,8 @@ def sync_roster():
                     player["teamAbbrev"] = new_team
                     player["team"] = new_team
                     player["currentTeam"] = new_team
+                    if player.get("isActive") is False:
+                        player["isActive"] = True
                     overridden += 1
                     print(
                         f"   🔄 {player.get('name', pid)}: "

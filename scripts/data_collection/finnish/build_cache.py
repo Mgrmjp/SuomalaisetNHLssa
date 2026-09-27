@@ -129,6 +129,7 @@ def get_current_nhl_rosters():
     print(f"   Found {len(teams)} teams")
 
     player_teams = {}
+    failed_teams = []
     for team in teams:
         roster_url = f"{NHL_API_BASE}/v1/roster/{team}/current"
         roster = fetch_from_api(roster_url)
@@ -138,9 +139,14 @@ def get_current_nhl_rosters():
                     player_id = player.get("id")
                     if player_id:
                         player_teams[player_id] = team
+        else:
+            failed_teams.append(team)
         time.sleep(0.3)
 
-    print(f"   Found {len(player_teams)} players on NHL rosters\n")
+    print(f"   Found {len(player_teams)} players on NHL rosters")
+    if failed_teams:
+        print(f"   ⚠️ Failed to fetch rosters for {len(failed_teams)} team(s): {failed_teams}")
+    print()
     return player_teams
 
 
@@ -331,12 +337,14 @@ def main():
             except (ValueError, TypeError):
                 continue
             if player_id in player_teams:
-                old_team = existing.get("currentTeam", "")
                 new_team = player_teams[player_id]
-                if old_team != new_team:
+                if existing.get("currentTeam") != new_team:
                     existing["currentTeam"] = new_team
                     existing["teamAbbrev"] = new_team
                     existing["team"] = new_team
+                    updated_players_count += 1
+                if existing.get("isActive") is not True:
+                    existing["isActive"] = True
                     updated_players_count += 1
 
         if updated_players_count > 0:

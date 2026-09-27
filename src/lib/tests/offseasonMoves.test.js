@@ -52,11 +52,21 @@ describe('offseason moves data integrity', () => {
         }
     })
 
-    it('move types are trade, free_agent, or waiver_claim', async () => {
+    it('move types are trade, free_agent, waiver_claim, or waivers', async () => {
         const content = await readFile(getMovesPath(), 'utf-8')
         const data = JSON.parse(content)
         for (const move of data.moves) {
-            expect(['trade', 'free_agent', 'waiver_claim']).toContain(move.moveType)
+            expect(['trade', 'free_agent', 'waiver_claim', 'waivers']).toContain(move.moveType)
+        }
+    })
+
+    it('waivers moves (AHL assignments) are marked inactive with no NHL team', async () => {
+        const content = await readFile(getMovesPath(), 'utf-8')
+        const data = JSON.parse(content)
+        for (const move of data.moves) {
+            if (move.moveType !== 'waivers') continue
+            expect(move.active).toBe(false)
+            expect(move.newTeam).toBe('')
         }
     })
 
@@ -135,6 +145,19 @@ describe('offseason moves data integrity', () => {
             date: '2026-09-25',
             sourceUrl:
                 'https://www.nhl.com/canucks/news/canucks-claim-goaltender-leevi-merilaeinen-off-waivers-from-ottawa',
+        })
+    })
+
+    it('records Vaakanainen’s September waiver assignment as inactive', async () => {
+        const content = await readFile(getMovesPath(), 'utf-8')
+        const data = JSON.parse(content)
+        const vaakanainen = data.moves.filter(/** @param {any} m */ (m) => m.playerId === '8480001')
+        expect(vaakanainen).toHaveLength(1)
+        expect(vaakanainen[0]).toMatchObject({
+            oldTeam: 'NYR',
+            moveType: 'waivers',
+            active: false,
+            date: '2026-09-23',
         })
     })
 })
