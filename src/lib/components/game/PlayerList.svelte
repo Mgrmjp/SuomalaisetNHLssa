@@ -4,25 +4,33 @@ import { onMount } from 'svelte'
 // Swiper - only import core, handle CSS in scoped styles
 import Swiper from 'swiper'
 import { FreeMode, Mousewheel } from 'swiper/modules'
+import { base } from '$app/paths'
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import { getDailyFallbackNews } from '$lib/services/dailyNewsService.js'
 import {
-    availableDates,
     currentBreak,
+    currentDate,
     displayDate,
     error,
     games,
     isLoading,
     players,
+    prepopulatedDates,
     selectedDate,
     setDate,
 } from '$lib/stores/gameData.js'
 import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
+import { selectUpcomingFinnishGames } from '$lib/utils/upcomingFinnishGames.js'
 import EmptyState from './EmptyState.svelte'
 import PlayerCard from './PlayerCard.svelte'
 import SkeletonPlayerCard from './SkeletonPlayerCard.svelte'
+
+const { upcomingGames = [] } = $props()
+const scheduledFinnishGames = $derived(
+    selectUpcomingFinnishGames(upcomingGames, $selectedDate, $currentDate.getTime())
+)
 
 let forwardsSwiper = null
 let defendersSwiper = null
@@ -271,7 +279,7 @@ const upcomingFinnishGames = $derived.by(() => {
         return sameDayGames
     }
 
-    return relatedFinnishGames
+    return scheduledFinnishGames.length > 0 ? scheduledFinnishGames : relatedFinnishGames
 })
 
 const sameDayUpcomingFinnishGames = $derived(
@@ -291,8 +299,8 @@ const sameDayUpcomingFinnishGames = $derived(
 )
 
 const relatedGamesLabel = $derived(
-    sameDayUpcomingFinnishGames.length > 0
-        ? 'Seuraavaksi suomalaisia mukana näissä otteluissa:'
+    sameDayUpcomingFinnishGames.length > 0 || scheduledFinnishGames.length > 0
+        ? 'Seuraavat ottelut suomalaispelaajien joukkueille (kokoonpanot vahvistuvat myöhemmin):'
         : relatedFinnishGamesLabel
 )
 
@@ -310,7 +318,7 @@ async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesV
 
     for (const date of futureDates) {
         try {
-            const response = await fetch(`/data/prepopulated/games/${date}.json`)
+            const response = await fetch(`${base}/data/prepopulated/games/${date}.json`)
             if (!response.ok) continue
 
             const data = await response.json()
@@ -361,7 +369,7 @@ async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesV
 
     for (const date of pastDates) {
         try {
-            const response = await fetch(`/data/prepopulated/games/${date}.json`)
+            const response = await fetch(`${base}/data/prepopulated/games/${date}.json`)
             if (!response.ok) continue
 
             const data = await response.json()
@@ -395,7 +403,7 @@ async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesV
 
 $effect(() => {
     const selectedDateValue = $selectedDate
-    const availableDatesValue = $availableDates
+    const availableDatesValue = $prepopulatedDates
     const currentVariant = emptyStateVariant
     const currentSameDayUpcomingGames = sameDayUpcomingFinnishGames
 
@@ -405,7 +413,7 @@ $effect(() => {
         return
     }
 
-    if (currentSameDayUpcomingGames.length > 0) {
+    if (currentSameDayUpcomingGames.length > 0 || scheduledFinnishGames.length > 0) {
         relatedFinnishGames = []
         relatedFinnishGamesLabel = ''
         return
@@ -446,7 +454,7 @@ $effect(() => {
         <ErrorBoundary
             error={$error}
             retryAction="Yritä uudelleen"
-            onRetry={handleRetry}
+            onRetry={_handleRetry}
             variant="error"
         />
     </div>

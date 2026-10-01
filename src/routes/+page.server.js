@@ -1,7 +1,6 @@
 // @ts-nocheck
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { loadOffseasonMovesFromDisk } from '$lib/server/offseasonMoves.js'
 import { loadPlayoffStatsFromDisk } from '$lib/server/playerStats.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 
@@ -74,10 +73,18 @@ function buildSeo(data, date) {
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
     const gamesDir = join(process.cwd(), 'static', 'data', 'prepopulated', 'games')
-    const [playoffStats, offseasonMoves] = await Promise.all([
-        loadPlayoffStatsFromDisk(),
-        loadOffseasonMovesFromDisk(),
-    ])
+    const playoffStats = await loadPlayoffStatsFromDisk()
+
+    let upcomingGames = []
+    try {
+        const content = await readFile(
+            join(process.cwd(), 'static', 'data', 'upcoming-finnish-games.json'),
+            'utf-8'
+        )
+        upcomingGames = JSON.parse(content).games || []
+    } catch {
+        // The empty state can fall back to game files if the schedule is unavailable.
+    }
 
     let breaks = []
     try {
@@ -88,34 +95,6 @@ export async function load() {
         breaks = JSON.parse(breaksContent)
     } catch {
         // breaks.json may not exist yet
-    }
-
-    let upcomingGames = []
-    try {
-        const content = await readFile(
-            join(process.cwd(), 'static', 'data', 'upcoming-finnish-games.json'),
-            'utf-8'
-        )
-        upcomingGames = JSON.parse(content).games || []
-    } catch {
-        // The schedule teaser is optional when NHL schedule data is unavailable.
-    }
-
-    let preseasonSummary = null
-    try {
-        const content = await readFile(
-            join(process.cwd(), 'static', 'data', 'preseason-summary.json'),
-            'utf-8'
-        )
-        const summary = JSON.parse(content)
-        const regularStart = new Date(`${summary.regularSeasonStartDate}T00:00:00Z`)
-        const recapEnd = new Date(regularStart)
-        recapEnd.setUTCDate(recapEnd.getUTCDate() + 14)
-        if (summary.completedGames > 0 && Date.now() < recapEnd.getTime()) {
-            preseasonSummary = summary
-        }
-    } catch {
-        // Preseason recap is optional before the first final game.
     }
 
     try {
@@ -135,10 +114,8 @@ export async function load() {
             initialDate,
             seo: buildSeo(gameData, initialDate),
             playoffStats,
-            offseasonMoves,
             breaks,
             upcomingGames,
-            preseasonSummary,
         }
     } catch (error) {
         console.warn('Could not load homepage SEO data:', error)
@@ -146,10 +123,8 @@ export async function load() {
             initialDate: '',
             seo: buildSeo(null, ''),
             playoffStats,
-            offseasonMoves,
             breaks,
             upcomingGames,
-            preseasonSummary,
         }
     }
 }

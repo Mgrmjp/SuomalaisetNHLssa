@@ -103,14 +103,14 @@ onDestroy(() => {
         max-height: 100dvh;
     }
 
-    /* Hide on tablet */
-    @media (max-width: 1535px) {
+    /* Show only when both 160px side slots fit beside the 1280px rail. */
+    @media (max-width: 1727px) {
         .vertical-ad-container-left {
             display: none !important;
         }
     }
 
-    @media (min-width: 1536px) {
+    @media (min-width: 1728px) {
         .vertical-ad-container-left {
             display: block;
             position: fixed;

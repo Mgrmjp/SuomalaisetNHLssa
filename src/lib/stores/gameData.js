@@ -14,6 +14,8 @@ const browser = typeof window !== 'undefined'
 
 // Store for dynamically loaded available dates
 const availableDatesStore = writable([])
+// Only dates backed by game files; availableDates also includes calendar breaks.
+export const prepopulatedDates = readonly(availableDatesStore)
 let availableDatesLoaded = false
 
 import { base } from '$app/paths'

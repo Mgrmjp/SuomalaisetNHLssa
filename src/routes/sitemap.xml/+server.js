@@ -86,6 +86,12 @@ function getStaticPages() {
 
     return [
         { path: '/', priority: '1.0', changefreq: 'daily', lastmod: gamesLastMod || statsLastMod },
+        {
+            path: '/siirrot',
+            priority: '0.8',
+            changefreq: 'daily',
+            lastmod: fileLastMod(join(process.cwd(), 'static/data/offseason-moves.json')),
+        },
         { path: '/pisteporssi', priority: '0.9', changefreq: 'daily', lastmod: statsLastMod },
         {
             path: '/pelaajat',

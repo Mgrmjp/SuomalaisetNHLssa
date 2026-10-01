@@ -11,10 +11,10 @@ const { children, width = 'wide', compact = false } = $props()
     .page-shell {
         position: relative;
         z-index: 1;
-        width: min(100%, var(--page-shell-max, 80rem));
+        width: min(100%, var(--page-shell-max, var(--rail-max)));
         min-height: 100vh;
         margin-inline: auto;
-        padding: var(--space-9) var(--page-gutter) var(--space-10);
+        padding: var(--space-9) 0 var(--space-10);
     }
 
     .page-shell[data-width="dashboard"] {
@@ -22,11 +22,11 @@ const { children, width = 'wide', compact = false } = $props()
     }
 
     .page-shell[data-width="content"] {
-        --page-shell-max: 48rem;
+        --page-shell-max: 56rem;
     }
 
     .page-shell[data-width="medium"] {
-        --page-shell-max: 64rem;
+        --page-shell-max: 72rem;
     }
 
     .page-shell--compact {

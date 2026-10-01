@@ -6,6 +6,7 @@ import {
     Sparkles as LupauksetIcon,
     ClipboardList as PisteporssiIcon,
     BarChart3 as SarjataulukkoIcon,
+    ArrowLeftRight as SiirrotIcon,
     Activity as TuloksetIcon,
 } from 'lucide-svelte'
 import { base } from '$app/paths'
@@ -17,6 +18,11 @@ const _navItems = [
         href: `${base}/`,
         label: 'Tulokset',
         Icon: TuloksetIcon,
+    },
+    {
+        href: `${base}/siirrot`,
+        label: 'Siirrot',
+        Icon: SiirrotIcon,
     },
     {
         href: `${base}/sarjataulukko`,
@@ -65,18 +71,16 @@ const currentPath = $derived($page.url.pathname)
 <style>
     .nav-tabs-container {
         display: flex;
-        justify-content: stretch;
-        width: 100%;
+        justify-content: center;
+        width: fit-content;
         min-width: 0;
         max-width: 100%;
-        overflow: hidden;
+        margin: 0 auto;
         padding: 0;
-        margin: 0;
     }
 
     .nav-tabs-list {
         display: flex;
-        width: 100%;
         min-width: 0;
         max-width: 100%;
         gap: 0.2rem;
@@ -85,6 +89,7 @@ const currentPath = $derived($page.url.pathname)
         border-radius: 0;
         background: rgba(255, 255, 255, 0.76);
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
 
@@ -95,12 +100,12 @@ const currentPath = $derived($page.url.pathname)
     .nav-tab-item {
         position: relative;
         display: inline-flex;
-        flex: 1 0 auto;
+        flex: 0 0 auto;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
+        gap: 0.4rem;
         min-height: 2.4rem;
-        padding: 0.5rem 0.9rem;
+        padding: 0.5rem 0.75rem;
         border-radius: 0;
         color: #475467;
         font-size: 0.88rem;
@@ -129,7 +134,7 @@ const currentPath = $derived($page.url.pathname)
         color: #ffffff;
     }
 
-    .nav-tab-icon {
+    .nav-tab-item :global(.nav-tab-icon) {
         width: 1.05rem;
         height: 1.05rem;
         color: #98a2b3;
@@ -138,46 +143,34 @@ const currentPath = $derived($page.url.pathname)
             transform 0.16s ease;
     }
 
-    .nav-tab-item:hover .nav-tab-icon {
+    .nav-tab-item:hover :global(.nav-tab-icon) {
         color: var(--accent);
     }
 
-    .nav-tab-item--active .nav-tab-icon {
+    .nav-tab-item--active :global(.nav-tab-icon) {
         color: #ffffff;
         transform: scale(1.04);
     }
 
     @media (min-width: 768px) {
         .nav-tab-item {
-            padding-inline: 1rem;
+            padding-inline: 0.85rem;
         }
     }
 
     @media (max-width: 767px) {
         .nav-tabs-container {
-            overflow: visible;
-        }
-
-        .nav-tabs-list {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.25rem;
-            padding: 0.25rem;
-            overflow: visible;
+            max-width: 100%;
         }
 
         .nav-tab-item {
-            flex: none;
-            min-width: 0;
-            gap: 0.25rem;
+            gap: 0.3rem;
             min-height: 2.25rem;
-            padding: 0.35rem 0.25rem;
-            font-size: 0.72rem;
-            line-height: 1.05;
-            white-space: normal;
+            padding: 0.35rem 0.55rem;
+            font-size: 0.75rem;
         }
 
-        .nav-tab-icon {
+        .nav-tab-item :global(.nav-tab-icon) {
             width: 0.82rem;
             height: 0.82rem;
             flex: 0 0 auto;
@@ -185,12 +178,10 @@ const currentPath = $derived($page.url.pathname)
     }
 
     @media (max-width: 360px) {
-        .nav-tabs-list {
-            gap: 0.2rem;
-        }
-
         .nav-tab-item {
-            font-size: 0.68rem;
+            gap: 0.25rem;
+            padding: 0.35rem 0.45rem;
+            font-size: 0.7rem;
         }
     }
 </style>

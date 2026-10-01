@@ -1,26 +1,11 @@
 <script>
 // @ts-nocheck
 
-import {
-    Activity as ActivityIcon,
-    CheckCircle,
-    ChevronDown,
-    CircleDot,
-    Database,
-    Goal,
-    HandHeart,
-    Menu,
-    Trophy,
-    Users,
-    X,
-} from 'lucide-svelte'
+import { CheckCircle, Database, Menu, Trophy, X } from 'lucide-svelte'
 import { onMount } from 'svelte'
 import { base } from '$app/paths'
 import DateControls from '$lib/components/game/DateControls.svelte'
-import OffseasonMoves from '$lib/components/game/OffseasonMoves.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
-import PreseasonSummary from '$lib/components/game/PreseasonSummary.svelte'
-import UpcomingFinnishGames from '$lib/components/game/UpcomingFinnishGames.svelte'
 import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
@@ -38,8 +23,9 @@ import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 
 /** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number }, playoffStats: { season: string, skaters: Array<{ name: string, team: string, gamesPlayed: number, goals: number, assists: number, points: number }>, goalies: Array<{ name: string, team: string, gamesPlayed: number, wins: number, savePct: number }> } } }} */
 const { data } = $props()
+// Temporarily disabled; set to true to restore the homepage tracker.
+const SHOW_PLAYOFF_TRACKER = false
 const playoffStats = $derived(data.playoffStats)
-const offseasonMoves = $derived(data.offseasonMoves)
 
 const activeBreak = $derived.by(() => {
     const breaks = data.breaks || []
@@ -125,13 +111,8 @@ const _metaDescription = $derived.by(() => {
     return `${selectedDateSummary?.summary || 'Päivän ottelut'}. ${playerText} ${SEO_KEYWORDS}.`
 })
 
-let _showHeroStats = $state(false)
 let _showPlayoffStats = $state(false)
 let _hideFloatingHeader = $state(false)
-
-function toggleHeroStats() {
-    _showHeroStats = !_showHeroStats
-}
 
 function togglePlayoffStats() {
     _showPlayoffStats = !_showPlayoffStats
@@ -165,7 +146,7 @@ onMount(() => {
 </svelte:head>
 
 <div class="page-shell dashboard-bg" class:page-shell--compact-header={_hideFloatingHeader}>
-    <div class="dashboard__floating-header" class:dashboard__floating-header--hidden={_hideFloatingHeader} aria-label="Päivämäärä ja päänavigaatio">
+    <div class="dashboard__floating-header" class:dashboard__floating-header--hidden={_hideFloatingHeader} aria-label="Päivämäärävalinta">
         {#if !_hideFloatingHeader}
             <div id="floating-header-content" class="dashboard__floating-content">
                 <div class="dashboard__floating-topline">
@@ -177,15 +158,12 @@ onMount(() => {
                             onclick={toggleFloatingHeader}
                             aria-expanded={!_hideFloatingHeader}
                             aria-controls="floating-header-content"
-                            aria-label="Piilota valikko"
-                            title="Piilota valikko"
+                            aria-label="Piilota päivävalinta"
+                            title="Piilota päivävalinta"
                         >
                             <X class="dashboard__floating-toggle-icon" aria-hidden="true" />
                         </button>
                     </div>
-                </div>
-                <div class="dashboard__tabs" aria-label="Päänavigaatio">
-                    <NavTabs />
                 </div>
             </div>
         {:else}
@@ -195,13 +173,17 @@ onMount(() => {
                 onclick={toggleFloatingHeader}
                 aria-expanded={!_hideFloatingHeader}
                 aria-controls="floating-header-content"
-                aria-label="Näytä valikko"
-                title="Näytä valikko"
+                aria-label="Näytä päivävalinta"
+                title="Näytä päivävalinta"
             >
                 <Menu class="dashboard__floating-toggle-icon dashboard__floating-toggle-icon--left" aria-hidden="true" />
-                <span class="dashboard__floating-toggle-label">Näytä valikko</span>
+                <span class="dashboard__floating-toggle-label">Näytä päivävalinta</span>
             </button>
         {/if}
+    </div>
+
+    <div class="dashboard__bottom-nav">
+        <NavTabs />
     </div>
 
     <header class="hero-header">
@@ -233,7 +215,7 @@ onMount(() => {
     <div class="dashboard">
         <div class="dashboard__rail">
             <!-- Controls (date picker) -->
-            {#if activeBreak}
+            {#if activeBreak && !$isLoading && totalPlayers === 0}
                 <div class="dashboard__notice">
                     <section class="panel panel--break">
                         <div class="panel__inner flex flex-col items-center justify-center text-center">
@@ -241,7 +223,7 @@ onMount(() => {
                                 <span class="break-emoji" role="img" aria-label="Offseason">☀️</span>
                                 <h2 class="break-title">Runkosarja alkaa pian!</h2>
                                 <p class="break-meta">
-                                    Kurkkaa tuleviin otteluihin alta.
+                                    NHL on tauolla ({formatFinnishDateWithRelative(activeBreak.startDate).formatted} - {formatFinnishDateWithRelative(activeBreak.endDate).formatted})
                                 </p>
                             {:else}
                                 <span class="break-emoji" role="img" aria-label="Break">🏒</span>
@@ -255,38 +237,20 @@ onMount(() => {
                 </div>
             {/if}
 
-            {#if data.upcomingGames?.length}
-                <div class="dashboard__upcoming">
-                    <UpcomingFinnishGames games={data.upcomingGames} />
-                </div>
-            {/if}
-
-            {#if data.preseasonSummary}
-                <div class="dashboard__preseason">
-                    <PreseasonSummary summary={data.preseasonSummary} />
-                </div>
-            {/if}
-
-            <!-- Offseason moves tracker -->
-            {#if offseasonMoves}
-                <div class="dashboard__moves">
-                    <OffseasonMoves movesData={offseasonMoves} />
-                </div>
-            {/if}
-
             <!-- Navigation and its active content form one section. -->
             <section class="dashboard__results" aria-label="Tulokset ja tilastot">
                 <div class="dashboard__active-stack">
 
-            <!-- Hero Stats — the "answer" of the page -->
+            <!-- Compact daily totals -->
             {#if $isLoading}
-                <section class="panel panel--hero" aria-busy="true">
+                <section class="panel panel--hero" aria-busy="true" aria-label="Päivän yhteistilastot">
                     <div class="panel__inner">
-                        <div class="panel__eyebrow rink-divider">Päivän yhteistilastot</div>
-                        <div class="hero-stats-skeleton">
+                        <div class="hero-stats-header">
+                            <h2 class="panel__hero-heading">Päivän yhteistilastot</h2>
+                        </div>
+                        <div class="hero-stats-skeleton" aria-hidden="true">
                             {#each [1,2,3,4,5] as _}
                                 <div class="hero-stat-skel">
-                                    <div class="hero-stat-skel__icon"></div>
                                     <div class="hero-stat-skel__value"></div>
                                     <div class="hero-stat-skel__label"></div>
                                 </div>
@@ -297,72 +261,46 @@ onMount(() => {
             {:else if _hasScoringPlayers}
                 <section class="panel panel--hero" aria-labelledby="hero-stats-title">
                     <div class="panel__inner">
-                        <div class="panel__eyebrow rink-divider">Päivän yhteistilastot</div>
-                        <h2 id="hero-stats-title" class="panel__hero-heading">
-                            {selectedDateSummary?.label || 'Valittu päivä'}
-                        </h2>
-                        <p class="panel__hero-sub">{selectedDateSummary?.summary || ''}</p>
-
-                        <!-- Mobile toggle -->
-                        <button
-                            class="hero-stats-toggle"
-                            onclick={toggleHeroStats}
-                            aria-label="Näytä tilastot"
-                            aria-expanded={_showHeroStats}
-                        >
-                            <span class="hero-stats-toggle-text">Päivän tilastot</span>
-                            <ChevronDown class="hero-stats-toggle-icon" aria-hidden="true" />
-                        </button>
-
-                        <div class="hero-stats-wrapper" class:expanded={_showHeroStats}>
-                            <div class="hero-stats">
-                                <div class="hero-stat">
-                                    <div class="hero-stat__icon-wrap">
-                                        <ActivityIcon class="hero-stat__icon" aria-hidden="true" />
-                                    </div>
-                                    <div class="hero-stat__value">{_totalGoals}</div>
-                                    <div class="hero-stat__label" data-full="Maalit (Goals)">Maalit</div>
-                                </div>
-                                <div class="hero-stat">
-                                    <div class="hero-stat__icon-wrap">
-                                        <HandHeart class="hero-stat__icon" aria-hidden="true" />
-                                    </div>
-                                    <div class="hero-stat__value">{_totalAssists}</div>
-                                    <div class="hero-stat__label" data-full="Syötöt (Assists)">Syötöt</div>
-                                </div>
-                                <div class="hero-stat hero-stat--primary">
-                                    <div class="hero-stat__icon-wrap">
-                                        <CircleDot class="hero-stat__icon hero-stat__icon--lg" aria-hidden="true" />
-                                    </div>
-                                    <div class="hero-stat__value hero-stat__value--lg">{_totalPoints}</div>
-                                    <div class="hero-stat__label" data-full="Pisteet (Points)">Pisteet</div>
-                                </div>
-                                <div class="hero-stat">
-                                    <div class="hero-stat__icon-wrap">
-                                        <Goal class="hero-stat__icon" aria-hidden="true" />
-                                    </div>
-                                    <div class="hero-stat__value">{_totalPenaltyMinutes}</div>
-                                    <div class="hero-stat__label" data-full="Rangaistusmin (PIM)">Rangaistusmin</div>
-                                </div>
-                                <div class="hero-stat">
-                                    <div class="hero-stat__icon-wrap">
-                                        <Users class="hero-stat__icon" aria-hidden="true" />
-                                    </div>
-                                    <div class="hero-stat__value">{totalPlayers}</div>
-                                    <div class="hero-stat__label" data-full="Pelaajaa kokoonpanossa">Kokoonpanossa</div>
-                                </div>
-                            </div>
+                        <div class="hero-stats-header">
+                            <h2 id="hero-stats-title" class="panel__hero-heading">Päivän yhteistilastot</h2>
+                            <p class="panel__hero-sub">
+                                <span>{formatFinnishDateWithRelative($selectedDate || data.initialDate).formatted}</span>
+                                <span class="hero-game-count">{selectedDateSummary?.count || 0} ottelua</span>
+                            </p>
                         </div>
+                        <dl class="hero-stats">
+                            <div class="hero-stat">
+                                <dt class="hero-stat__label">Maalit</dt>
+                                <dd class="hero-stat__value">{_totalGoals}</dd>
+                            </div>
+                            <div class="hero-stat">
+                                <dt class="hero-stat__label">Syötöt</dt>
+                                <dd class="hero-stat__value">{_totalAssists}</dd>
+                            </div>
+                            <div class="hero-stat hero-stat--primary">
+                                <dt class="hero-stat__label">Pisteet</dt>
+                                <dd class="hero-stat__value">{_totalPoints}</dd>
+                            </div>
+                            <div class="hero-stat">
+                                <dt class="hero-stat__label">Jäähymin</dt>
+                                <dd class="hero-stat__value">{_totalPenaltyMinutes}</dd>
+                            </div>
+                            <div class="hero-stat">
+                                <dt class="hero-stat__label">Pelaajia</dt>
+                                <dd class="hero-stat__value">{totalPlayers}</dd>
+                            </div>
+                        </dl>
                     </div>
                 </section>
             {/if}
 
             <!-- Player List -->
-            {#if !activeBreak}
-                <PlayerList />
+            {#if !activeBreak || $isLoading || totalPlayers > 0}
+                <PlayerList upcomingGames={data.upcomingGames} />
             {/if}
 
             <!-- Playoff tracker — same card language -->
+            {#if SHOW_PLAYOFF_TRACKER}
             <section class="panel panel--playoff" class:panel--active={activeBreak}>
                 <div class="panel__inner">
                     <div class="panel__eyebrow rink-divider">Pudotuspelit</div>
@@ -430,6 +368,7 @@ onMount(() => {
                     {/if}
                 </div>
             </section>
+            {/if}
                 </div>
             </section>
 
@@ -479,11 +418,22 @@ onMount(() => {
         width: 100%;
         max-width: var(--rail-max);
         margin: 0 auto;
-        padding: 7.75rem 1.25rem 4rem;
+        padding: 5.25rem 0 6.5rem;
     }
 
     .page-shell--compact-header {
         padding-top: 3.75rem;
+    }
+
+    .dashboard__bottom-nav {
+        position: fixed;
+        bottom: 0.75rem;
+        left: 50%;
+        z-index: 100;
+        width: fit-content;
+        max-width: calc(100% - 1rem);
+        transform: translateX(-50%);
+        padding-bottom: env(safe-area-inset-bottom);
     }
 
     .dashboard__floating-header {
@@ -491,7 +441,7 @@ onMount(() => {
         top: 0.75rem;
         left: 50%;
         z-index: 100;
-        width: min(calc(100% - 2rem), var(--rail-max));
+        width: min(100%, var(--rail-max));
         transform: translateX(-50%);
         --floating-header-gap: 0.35rem;
         --floating-header-control: 4.5rem;
@@ -553,16 +503,6 @@ onMount(() => {
         position: relative;
     }
 
-    .dashboard__floating-content > .dashboard__tabs {
-        grid-column: 1;
-        grid-row: 2;
-        display: block;
-        width: 100%;
-        max-width: none;
-        margin: 0;
-        min-width: 0;
-    }
-
     .dashboard__floating-date > .dashboard__floating-toggle {
         position: absolute;
         top: 50%;
@@ -579,7 +519,7 @@ onMount(() => {
         transform: translateY(-50%);
     }
 
-    .dashboard__floating-toggle-icon {
+    :global(.dashboard__floating-toggle-icon) {
         width: 1.1rem;
         height: 1.1rem;
         flex: 0 0 auto;
@@ -660,26 +600,12 @@ onMount(() => {
         padding: var(--floating-row-inner-padding-y) 0.65rem;
     }
 
-    :global(.dashboard__floating-header .nav-tabs-list) {
+    :global(.dashboard__bottom-nav .nav-tabs-list) {
         box-sizing: border-box;
         padding: 0.25rem;
         background: rgba(255, 255, 255, 0.92);
         border-color: rgba(16, 24, 40, 0.14);
-        font-size: var(--floating-row-font-size);
-        line-height: var(--floating-row-line-height);
-    }
-
-    :global(.dashboard__floating-header .nav-tab-item) {
-        min-height: var(--floating-row-control-height);
-        padding: var(--floating-row-inner-padding-y) 0.65rem;
-        font-size: var(--floating-row-font-size);
-        line-height: var(--floating-row-line-height);
-    }
-
-    :global(.dashboard__floating-header .nav-tab-icon) {
-        width: 1rem;
-        height: 1rem;
-        flex: 0 0 auto;
+        box-shadow: 0 4px 16px rgba(16, 24, 40, 0.08);
     }
 
     .dashboard {
@@ -691,37 +617,34 @@ onMount(() => {
         flex-direction: column;
     }
 
-    .dashboard__notice,
-    .dashboard__upcoming,
-    .dashboard__preseason,
-    .dashboard__moves {
-        margin-bottom: 1.5rem;
+    .dashboard__notice {
+        margin-bottom: 2.25rem;
     }
 
     .dashboard__results {
         display: grid;
-        gap: 1.5rem;
-        margin-bottom: 1.5rem;
+        gap: 2.25rem;
+        margin-bottom: 2.25rem;
         min-width: 0;
     }
 
     .dashboard__active-stack {
         display: grid;
-        gap: 1.5rem;
+        gap: 2.25rem;
         min-width: 0;
     }
 
     .dashboard__ads {
         display: grid;
-        gap: 1.5rem;
-        margin-top: 1.5rem;
+        gap: 2.25rem;
+        margin-top: 2.25rem;
     }
 
     /* ============================================
        Hero header
        ============================================ */
     .hero-header {
-        margin: 0 auto 1rem;
+        margin: 0 auto 1.75rem;
         text-align: center;
     }
 
@@ -735,10 +658,11 @@ onMount(() => {
         max-width: 580px;
         margin: 0.4rem auto 0;
         color: var(--color-ink);
-        font-size: clamp(1.55rem, 3.2vw, 2.15rem);
-        line-height: 1.1;
+        font-size: clamp(1.05rem, 2.6vw, 1.6rem);
+        line-height: 1.15;
         font-weight: 800;
         letter-spacing: -0.01em;
+        white-space: nowrap;
     }
 
     .hero-subtitle {
@@ -821,29 +745,35 @@ onMount(() => {
         margin-bottom: 0.75rem;
     }
 
-    /* Hero card — the page's "answer" */
-    .panel--hero {
-        background: var(--card-bg);
+    /* Daily totals: compact header and a single row at every width. */
+    .panel--hero .panel__inner {
+        padding: 0.75rem 1rem;
     }
 
-    .panel--hero::before {
-        display: block;
+    .hero-stats-header {
+        margin-bottom: 0.75rem;
     }
 
     .panel__hero-heading {
-        margin: 0 0 0.25rem;
+        margin: 0;
         color: var(--color-ink);
-        font-size: clamp(1.4rem, 2.6vw, 1.75rem);
-        line-height: 1.2;
-        font-weight: 800;
-        letter-spacing: -0.01em;
+        font-size: 0.95rem;
+        line-height: 1.4;
+        font-weight: 700;
     }
 
     .panel__hero-sub {
-        margin: 0 0 1.25rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.75rem;
+        margin: 0.25rem 0 0;
         color: var(--color-muted);
-        font-size: 0.95rem;
-        line-height: 1.5;
+        font-size: 0.8rem;
+        line-height: 1.4;
+    }
+
+    .hero-game-count {
+        white-space: nowrap;
     }
 
     /* Break card — same family, just compact */
@@ -869,145 +799,65 @@ onMount(() => {
         font-size: 0.9rem;
     }
 
-    /* ============================================
-       Hero stats — the central "answer"
-       ============================================ */
-    .hero-stats-wrapper {
-        margin-top: 0.5rem;
-    }
-
-    .hero-stats {
+    .hero-stats,
+    .hero-stats-skeleton {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 0.5rem;
-        align-items: stretch;
+        margin: 0;
+        padding: 0.75rem 0 0;
+        border-top: var(--card-border);
     }
 
-    .hero-stat {
-        position: relative;
+    .hero-stat,
+    .hero-stat-skel {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 0.35rem;
-        padding: 1rem 0.5rem;
-        border-radius: var(--card-radius-sm);
-        background: rgba(248, 250, 255, 0.6);
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        min-height: 96px;
+        gap: 0.25rem;
+        min-width: 0;
+        padding: 0;
+        text-align: center;
     }
 
-    .hero-stat--primary {
-        background: linear-gradient(180deg, var(--accent-ice), #ffffff);
-        border-color: rgba(16, 24, 40, 0.12);
-    }
-
-    .hero-stat__icon-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 1.75rem;
-    }
-
-    .hero-stat__icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        color: var(--accent-soft);
-    }
-
-    .hero-stat--primary .hero-stat__icon {
-        color: var(--accent);
-    }
-
-    .hero-stat__icon--lg {
-        width: 1.85rem;
-        height: 1.85rem;
+    .hero-stat + .hero-stat,
+    .hero-stat-skel + .hero-stat-skel {
+        border-left: var(--card-border);
     }
 
     .hero-stat__value {
+        order: -1;
+        margin: 0;
         color: var(--color-ink);
         font-size: 1.4rem;
         font-weight: 800;
-        line-height: 1;
+        line-height: 1.2;
         font-variant-numeric: tabular-nums;
     }
 
-    .hero-stat__value--lg {
-        font-size: 2rem;
+    .hero-stat--primary .hero-stat__value {
         color: var(--accent);
     }
 
     .hero-stat__label {
         color: var(--color-muted);
-        font-size: 0.78rem;
-        font-weight: 600;
-        line-height: 1.1;
-        text-align: center;
-    }
-
-    .hero-stat__label::after {
-        content: attr(data-full);
-        position: absolute;
-        left: 50%;
-        top: 100%;
-        transform: translateX(-50%);
-        padding: 0.35rem 0.5rem;
-        background: rgba(17, 24, 39, 0.92);
-        color: #e5e7eb;
         font-size: 0.75rem;
-        border-radius: 0;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.12s ease;
-        z-index: 10;
-    }
-
-    .hero-stat:hover .hero-stat__label::after {
-        opacity: 1;
-        transition-delay: 0.25s;
-    }
-
-    .hero-stats-skeleton {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-    }
-
-    .hero-stat-skel {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 1rem 0.5rem;
-        min-height: 96px;
-        border-radius: var(--card-radius-sm);
-        background: rgba(248, 250, 255, 0.6);
-    }
-
-    .hero-stat-skel__icon {
-        width: 1.5rem;
-        height: 1.5rem;
-        border-radius: 50%;
-        background: rgba(0, 53, 128, 0.08);
+        font-weight: 600;
+        line-height: 1.4;
     }
 
     .hero-stat-skel__value {
-        width: 3rem;
-        height: 1.4rem;
-        border-radius: 0;
-        background: rgba(0, 53, 128, 0.08);
+        width: 1.75rem;
+        height: 1.75rem;
+        background: var(--accent-ice);
     }
 
     .hero-stat-skel__label {
-        width: 4rem;
-        height: 0.7rem;
-        border-radius: 0;
-        background: rgba(0, 53, 128, 0.06);
+        width: 75%;
+        max-width: 3rem;
+        height: 0.75rem;
+        background: var(--accent-ice);
     }
 
-    .hero-stat-skel__icon,
     .hero-stat-skel__value,
     .hero-stat-skel__label {
         animation: pulse 1.4s ease-in-out infinite;
@@ -1018,57 +868,11 @@ onMount(() => {
         50% { opacity: 1; }
     }
 
-    /* Mobile toggle (compact) */
-    .hero-stats-toggle {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.6rem 0.85rem;
-        margin-top: 0.25rem;
-        background: var(--card-bg);
-        border: var(--card-border);
-        border-radius: var(--card-radius-sm);
-        color: var(--color-ink);
-        cursor: pointer;
-        font-size: 0.9rem;
-        font-weight: 700;
-    }
-
-    /* The toggle is mobile-only. Cannot use Tailwind's md:hidden here: it
-       lives in @layer utilities, which loses to this unlayered scoped
-       display: flex. */
-    @media (min-width: 768px) {
-        .hero-stats-toggle {
-            display: none;
+    @media (prefers-reduced-motion: reduce) {
+        .hero-stat-skel__value,
+        .hero-stat-skel__label {
+            animation: none;
         }
-    }
-
-    .hero-stats-toggle-icon {
-        width: 1.1rem;
-        height: 1.1rem;
-        transition: transform 0.2s ease;
-    }
-
-    .hero-stats-toggle-icon.rotated {
-        transform: rotate(180deg);
-    }
-
-    .hero-stats-wrapper.expanded {
-        margin-top: 0.5rem;
-    }
-
-    /* ============================================
-       Dashboard tabs — anchored to the rail
-       ============================================ */
-    .dashboard__tabs {
-        display: flex;
-        justify-content: center;
-        max-width: var(--rail-max);
-        margin: 0 auto;
-        padding: 0;
-        width: 100%;
-        min-width: 0;
     }
 
     /* ============================================
@@ -1234,7 +1038,7 @@ onMount(() => {
        Footer
        ============================================ */
     .page-footer {
-        margin-top: 2.5rem;
+        margin-top: 3.25rem;
         text-align: center;
         font-size: 0.85rem;
         color: var(--color-muted);
@@ -1255,7 +1059,7 @@ onMount(() => {
        ============================================ */
     @media (max-width: 767px) {
         .page-shell {
-            padding: 6rem 1rem 3rem;
+            padding: 5rem 0 5.25rem;
         }
 
         .page-shell--compact-header {
@@ -1264,7 +1068,7 @@ onMount(() => {
 
         .dashboard__floating-header {
             top: 0.35rem;
-            width: calc(100% - 0.75rem);
+            width: 100%;
             --floating-header-gap: 0.2rem;
             --floating-header-control: 2rem;
             --floating-row-font-size: 0.78rem;
@@ -1286,7 +1090,7 @@ onMount(() => {
             padding: 0;
         }
 
-        .dashboard__floating-toggle-icon {
+        :global(.dashboard__floating-toggle-icon) {
             width: 0.95rem;
             height: 0.95rem;
         }
@@ -1348,30 +1152,8 @@ onMount(() => {
             display: none;
         }
 
-        :global(.dashboard__floating-header .nav-tabs-list) {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 0.12rem;
-            padding: 0.12rem;
-            overflow: visible;
-        }
-
-        :global(.dashboard__floating-header .nav-tab-item) {
-            flex: none;
-            min-width: 0;
-            min-height: var(--floating-row-control-height);
-            padding: 0.3rem 0.25rem;
-            font-size: var(--floating-row-font-size);
-            line-height: 1.1;
-            white-space: normal;
-        }
-
-        :global(.dashboard__floating-header .nav-tab-icon) {
-            display: none;
-        }
-
         .hero-header {
-            margin-bottom: 0.85rem;
+            margin-bottom: 1.4rem;
         }
 
         .hero-header__inner {
@@ -1385,8 +1167,8 @@ onMount(() => {
 
         .hero-title {
             margin-top: 0.35rem;
-            font-size: clamp(1.3rem, 6.4vw, 1.65rem);
-            line-height: 1.1;
+            font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+            line-height: 1.15;
         }
 
         .hero-subtitle {
@@ -1405,17 +1187,13 @@ onMount(() => {
             padding: 0.9rem;
         }
 
-        .hero-stats,
-        .hero-stats-skeleton {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .panel--hero .panel__inner {
+            padding: 0.75rem;
         }
 
-        .hero-stats-wrapper {
-            display: none;
-        }
-
-        .hero-stats-wrapper.expanded {
-            display: block;
+        .hero-stat__label {
+            font-size: 0.7rem;
+            letter-spacing: -0.02em;
         }
 
         .info-grid {
@@ -1424,9 +1202,4 @@ onMount(() => {
         }
     }
 
-    @media (max-width: 380px) {
-        .page-shell {
-            padding-inline: 0.75rem;
-        }
-    }
 </style>

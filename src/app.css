@@ -25,7 +25,7 @@ body {
     /* ===== Unified Dashboard Design Tokens ===== */
 
     /* Single rail width for the main centered dashboard content */
-    --rail-max: 920px;
+    --rail-max: 1280px;
     --page-gutter: clamp(1rem, 3vw, 2rem);
 
     /* Single card system — controls, data, info all share this base */
