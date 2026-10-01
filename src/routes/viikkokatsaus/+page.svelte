@@ -16,7 +16,7 @@ const data = _data
 function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('fi-FI', {
         day: 'numeric',
-        month: 'long',
+        month: 'numeric',
         year: 'numeric',
     })
 }

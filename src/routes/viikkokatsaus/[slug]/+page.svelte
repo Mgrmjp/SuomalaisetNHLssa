@@ -23,7 +23,7 @@ const articleImage = 'https://suomalaisetnhlssa.fi/og-image.svg'
 function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('fi-FI', {
         day: 'numeric',
-        month: 'long',
+        month: 'numeric',
         year: 'numeric',
     })
 }

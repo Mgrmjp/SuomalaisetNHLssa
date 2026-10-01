@@ -51,7 +51,7 @@ $: currentMonth = $selectedDate ? new Date(`${$selectedDate}T00:00:00`) : $curre
 
 // Get the month and year display string (reactive)
 $: monthYearDisplay = currentMonth.toLocaleDateString('fi-FI', {
-    month: 'long',
+    month: 'numeric',
     year: 'numeric',
 })
 

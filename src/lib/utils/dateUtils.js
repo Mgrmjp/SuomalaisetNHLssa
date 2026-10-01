@@ -15,22 +15,6 @@ export function formatFinnishDate(date, options = {}) {
 
     const { showYear = true, showWeekday = true, longFormat = false, capitalized = false } = options
 
-    // Finnish month names
-    const months = [
-        'tammikuuta',
-        'helmikuuta',
-        'maaliskuuta',
-        'huhtikuuta',
-        'toukokuuta',
-        'kesäkuuta',
-        'heinäkuuta',
-        'elokuuta',
-        'syyskuuta',
-        'lokakuuta',
-        'marraskuuta',
-        'joulukuuta',
-    ]
-
     // Finnish weekday names
     const weekdays = [
         'sunnuntai',
@@ -45,7 +29,7 @@ export function formatFinnishDate(date, options = {}) {
     const weekdayShort = ['su', 'ma', 'ti', 'ke', 'to', 'pe', 'la']
 
     const day = dateObj.getDate()
-    const month = months[dateObj.getMonth()]
+    const month = dateObj.getMonth() + 1
     const year = dateObj.getFullYear()
     const weekdayIndex = dateObj.getDay()
 
@@ -59,10 +43,10 @@ export function formatFinnishDate(date, options = {}) {
         }
     }
 
-    formattedDate += `${day}. ${month}`
+    formattedDate += `${day}.${month}.`
 
     if (showYear) {
-        formattedDate += ` ${year}`
+        formattedDate += year
     }
 
     if (capitalized) {
@@ -233,7 +217,7 @@ export function parseFinnishDateInput(input) {
     const finnishPatterns = [
         // DD.MM.YYYY
         /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/,
-        // D. month YYYY
+        // Legacy input: D. month YYYY
         /^(\d{1,2})\. (tammikuuta|helmikuuta|maaliskuuta|huhtikuuta|toukokuuta|kesäkuuta|heinäkuuta|elokuuta|syyskuuta|lokakuuta|marraskuuta|joulukuuta) (\d{4})$/,
     ]
 
