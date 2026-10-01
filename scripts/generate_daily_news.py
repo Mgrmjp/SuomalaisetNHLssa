@@ -911,14 +911,10 @@ def main():
     daily_cache = load_daily_cache()
 
     requested_dates = enumerate_dates(start_date, end_date)
-    fetched_daily = {}
-
     for date_str in requested_dates:
-        items = fetch_daily_news_tavily(date_str, daily_cache)
-        if items:
-            fetched_daily[date_str] = items
+        fetch_daily_news_tavily(date_str, daily_cache)
 
-    index = build_news_index(cache, fetched_daily)
+    index = build_news_index(cache, daily_cache)
     OUTPUT_FILE.write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Wrote {OUTPUT_FILE}")
     print(f"Daily dates: {len(index['byDate'])}")
