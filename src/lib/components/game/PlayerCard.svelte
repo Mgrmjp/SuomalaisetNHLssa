@@ -1,8 +1,7 @@
 <script>
 // @ts-nocheck
 
-import { X } from 'lucide-svelte'
-import { onMount } from 'svelte'
+import { Rotate3D, X } from 'lucide-svelte'
 import { fly, scale } from 'svelte/transition'
 import { base } from '$app/paths'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
@@ -15,7 +14,6 @@ import {
 } from '$lib/utils/gameFormatHelpers.mjs'
 import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelpers.mjs'
 import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/playerHeadshots.js'
-import { getTeamColorVariables } from '$lib/utils/teamColors.js'
 import ComprehensivePlayerDetails from './ComprehensivePlayerDetails.svelte'
 import './PlayerCard.css'
 
@@ -144,6 +142,14 @@ function _handleCardClick(event) {
     toggleFlip()
 }
 
+function _handleCardKeydown(event) {
+    if (event.target !== event.currentTarget) return
+    if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        toggleFlip()
+    }
+}
+
 function _handlePressStart() {
     isPressed = true
 }
@@ -178,39 +184,6 @@ const _playerInitials = $derived(
         .slice(0, 2)
 )
 
-// Team color variables
-let _teamColorVars = $state({
-    '--team-primary-color': '#3b82f6',
-    '--team-secondary-color': '#60a5fa',
-    '--team-accent-color': '#2563eb',
-})
-
-onMount(async () => {
-    if (player?.team) {
-        try {
-            _teamColorVars = await getTeamColorVariables(player.team)
-        } catch (error) {
-            // Silently ignore color loading errors
-        }
-    }
-})
-
-$effect(() => {
-    if (player?.team) {
-        loadTeamColors()
-    }
-})
-
-async function loadTeamColors() {
-    if (player?.team) {
-        try {
-            _teamColorVars = await getTeamColorVariables(player.team)
-        } catch (error) {
-            // Silently ignore color loading errors
-        }
-    }
-}
-
 // Goalie helpers
 const isGoalie = $derived(
     (player.position || '').toUpperCase() === 'G' ||
@@ -221,7 +194,6 @@ const _hasENG = $derived((player.empty_net_goals || 0) > 0)
 
 const _didWin = $derived(['W', 'OTW', 'SOW'].includes(gameResult))
 const _didLose = $derived(['L', 'OTL', 'SOL'].includes(gameResult))
-const _hasResolvedResult = $derived(_didWin || _didLose)
 const _hasUnresolvedTiedExtraTime = $derived.by(() => {
     if (!_game) return false
     const tied = _game.awayScore === _game.homeScore
@@ -348,28 +320,25 @@ $effect(() => {
                 class:pressed={isPressed}
                 class:expanded
                 class:flipped={isFlipped}
-                style="--accent: {_teamColorVars['--team-primary-color']}"
                 onclick={_handleCardClick}
                 onpointerdown={_handlePressStart}
                 onpointerup={_handlePressEnd}
                 onpointerleave={_handlePressEnd}
                 role="button"
                 tabindex="0"
-                onkeydown={(e) => e.key === "Enter" && _handleCardClick(e)}
-                aria-label="Click to flip player card"
+                onkeydown={_handleCardKeydown}
+                aria-label="Käännä pelaajakortti ja näytä lisää tilastoja"
                 in:scale={{ duration: 220, start: 0.96 }}
             >
-                <!-- Team color glow -->
+                <!-- Accent glow -->
                 <div class="card__glow" aria-hidden="true"></div>
 
-                <!-- Faint background logo watermark -->
-                <div class="card__watermark" aria-hidden="true">
-                    <TeamLogo team={player.team || "NHL"} size="120" />
-                </div>
-
                 <div class="card__content">
-                    <!-- Header: name + badges -->
+                    <!-- Centered name over the team logo -->
                     <div class="card__top">
+                        <div class="card__watermark" aria-hidden="true">
+                            <TeamLogo team={player.team || "NHL"} size="160" />
+                        </div>
                         <div class="card__player-info">
                             <h3 class="card__name">{displayName}</h3>
                             <p class="card__team">
@@ -380,14 +349,6 @@ $effect(() => {
                                 {/if}
                             </p>
                         </div>
-                        <div class="card__corner-logo">
-                            <TeamLogo team={player.team || "NHL"} size="36" />
-                        </div>
-                    </div>
-
-                    <!-- Team row -->
-                    <div class="card__team-row">
-                        <span class="card__team-name-text">{_teamWithCity}</span>
                     </div>
 
                     {#if _venue}
@@ -409,16 +370,7 @@ $effect(() => {
                         </div>
                         {#if _formattedScore}
                             <div class="card__gamebar-score-wrap">
-                                {#if !_isLive && _hasResolvedResult}
-                                    <span
-                                        class="card__gamebar-result"
-                                        class:card__gamebar-result--win={_didWin}
-                                        class:card__gamebar-result--loss={_didLose}
-                                    >
-                                        {_didWin ? 'V' : _didLose ? 'H' : ''}
-                                    </span>
-                                {/if}
-                                <span class="card__gamebar-score">{_formattedScore}</span>
+                                <span class="card__gamebar-score" aria-label={_didWin ? `Voitto ${_formattedScore}` : _didLose ? `Tappio ${_formattedScore}` : _formattedScore}>{_formattedScore}</span>
                                 {#if _gameExtraTimeLabel}
                                     <span class="card__gamebar-extra-time">{_gameExtraTimeLabel}</span>
                                 {/if}
@@ -429,10 +381,6 @@ $effect(() => {
                     <!-- Primary stat -->
                     {#if !isGoalie && _primaryStat}
                         <div class="card__hero card__hero--skater">
-                            <div class="card__hero-value-wrap">
-                                <span class="card__hero-value">{_primaryStat.value}</span>
-                                <span class="card__hero-unit">p</span>
-                            </div>
                             <div class="card__hero-meta">
                                 <strong>{_skaterStatLine}</strong>
                                 {#if _statBreakdown}
@@ -442,7 +390,7 @@ $effect(() => {
                         </div>
                     {:else if _primaryStat}
                         <div class="card__stat">
-                            <div class="card__ring" style="--accent: {_teamColorVars['--team-primary-color']}; --progress: {_ringProgress * 360}deg">
+                            <div class="card__ring" style="--progress: {_ringProgress * 360}deg">
                                 <span>{_primaryStat.value}{_primaryStat.unit}</span>
                             </div>
                             <div class="card__stat-meta">
@@ -544,13 +492,16 @@ $effect(() => {
 
                     <!-- Footer -->
                     <div class="card__footer">
-                        <span class="card__footer-hint">Napauta kääntääksesi</span>
+                        <span class="card__footer-hint">
+                            <Rotate3D class="card__flip-icon" aria-hidden="true" />
+                            Käännä kortti · lisää tilastoja
+                        </span>
                         <button
                             class="card__footer-btn"
                             onclick={(e) => { e.stopPropagation(); _toggleComprehensiveDetails(e); }}
-                            aria-label="Näytä tarkemmat tiedot"
+                            aria-label="Näytä pelikohtaiset tilastot ja viimeisimmät pelit"
                         >
-                            Tiedot
+                            Pelikohtaiset tilastot
                         </button>
                     </div>
                 </div>
@@ -562,23 +513,17 @@ $effect(() => {
                 class:pressed={isPressed}
                 class:expanded
                 class:flipped={isFlipped}
-                style="--accent: {_teamColorVars['--team-primary-color']}"
                 onclick={_handleCardClick}
                 onpointerdown={_handlePressStart}
                 onpointerup={_handlePressEnd}
                 onpointerleave={_handlePressEnd}
                 role="button"
                 tabindex="0"
-                onkeydown={(e) => e.key === "Enter" && _handleCardClick(e)}
-                aria-label="Click to flip player card back"
+                onkeydown={_handleCardKeydown}
+                aria-label="Käännä pelaajakortti takaisin"
             >
-                <!-- Team color glow -->
+                <!-- Accent glow -->
                 <div class="card__glow" aria-hidden="true"></div>
-
-                <!-- Team logo watermark -->
-                <div class="card__watermark" aria-hidden="true">
-                    <TeamLogo team={player.team || "NHL"} size="100" />
-                </div>
 
                 <!-- Top accent stripe -->
                 <div class="card__stripe" aria-hidden="true"></div>
@@ -586,6 +531,9 @@ $effect(() => {
                 <div class="card__content">
                     <!-- Header -->
                     <div class="card__top">
+                        <div class="card__watermark" aria-hidden="true">
+                            <TeamLogo team={player.team || "NHL"} size="160" />
+                        </div>
                         <div class="card__player-info">
                             <h3 class="card__name">{displayName}</h3>
                             <p class="card__team">{_teamWithCity}</p>
@@ -658,6 +606,12 @@ $effect(() => {
                                 Aika kentällä: <strong>{player.time_on_ice}</strong>
                             </div>
                         {/if}
+                    </div>
+                    <div class="card__footer">
+                        <span class="card__footer-hint">
+                            <Rotate3D class="card__flip-icon" aria-hidden="true" />
+                            Käännä takaisin
+                        </span>
                     </div>
                 </div>
             </div>

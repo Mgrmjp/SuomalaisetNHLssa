@@ -435,7 +435,7 @@ $effect(() => {
 
 {#if $isLoading}
     <div class="py-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9">
             {#each [1,2,3,4,5,6] as _}
                 <SkeletonPlayerCard />
             {/each}
@@ -461,7 +461,7 @@ $effect(() => {
 {:else}
     <section id="scoringList" class="scoring-list">
         <div class="scoring-list__container w-full">
-            <div class="scoring-list__sections space-y-10">
+            <div class="scoring-list__sections space-y-12">
                 {#if forwards.length}
                     <div class="scoring-list__section space-y-4">
                         <div
@@ -475,7 +475,7 @@ $effect(() => {
                         </div>
                         <!-- Desktop Grid -->
                         <div
-                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
+                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9"
                         >
                             {#each forwards as player, index (`${player.playerId}-${index}`)}
                                 <PlayerCard {player} />
@@ -507,7 +507,7 @@ $effect(() => {
                         </div>
                         <!-- Desktop Grid -->
                         <div
-                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
+                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9"
                         >
                             {#each defenders as player, index (`${player.playerId}-${index}`)}
                                 <PlayerCard {player} />
@@ -539,7 +539,7 @@ $effect(() => {
                         </div>
                         <!-- Desktop Grid -->
                         <div
-                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-7"
+                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9"
                         >
                             {#each goalies as player, index (`${player.playerId}-${index}`)}
                                 <PlayerCard {player} />
@@ -564,6 +564,7 @@ $effect(() => {
 
 <style>
     .scoring-list {
+        min-width: 0;
         padding: 0;
         background: transparent;
     }
@@ -571,6 +572,10 @@ $effect(() => {
     .scoring-list__section-title {
         font-family: var(--font-display, "Sora", "Inter", system-ui, sans-serif);
         letter-spacing: 0;
+    }
+
+    .scoring-list__grid {
+        align-items: stretch;
     }
 
     /* Mobile-only styles for swiper - prevents affecting desktop layout */
@@ -581,11 +586,9 @@ $effect(() => {
 
         /* Essential Swiper styles - only applied on mobile */
         .swiper {
-            overflow: visible;
+            overflow: hidden;
             position: relative;
-            margin-left: -0.75rem;
-            margin-right: -0.75rem;
-            padding: 0.35rem 0.75rem 1.25rem;
+            padding: 0.35rem 0 1.25rem;
         }
 
         .swiper-wrapper {
@@ -597,18 +600,17 @@ $effect(() => {
         }
 
         .swiper-slide {
+            display: grid;
+            height: auto;
             flex-shrink: 0;
             position: relative;
         }
 
-        /* Mobile swiper card slides - narrower for more breathing room, taller spacer to prevent cutoff */
+        /* Slides stretch to the tallest card in the carousel. */
         .mobile-card-slide {
-            width: min(20rem, calc(100vw - 1.5rem)) !important;
+            width: min(20rem, 100%) !important;
             flex-shrink: 0;
         }
 
-        .mobile-card-slide :global(.player-card__spacer) {
-            min-height: 320px;
-        }
     }
 </style>

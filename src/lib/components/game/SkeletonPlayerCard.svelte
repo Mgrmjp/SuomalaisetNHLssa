@@ -11,9 +11,6 @@
         <div class="card__badge-skeleton"></div>
     </div>
 
-    <!-- Team row -->
-    <div class="card__team-row-skeleton"></div>
-
     <!-- Matchup pill -->
     <div class="card__matchup-skeleton"></div>
 
@@ -97,32 +94,6 @@
         background: #e5e7eb;
         border-radius: 0;
         flex-shrink: 0;
-    }
-
-    .card__team-row-skeleton {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        margin-top: 0.35rem;
-    }
-
-    .card__team-row-skeleton::before {
-        content: '';
-        display: block;
-        width: 28px;
-        height: 28px;
-        background: #f3f4f6;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .card__team-row-skeleton::after {
-        content: '';
-        display: block;
-        height: 12px;
-        width: 50%;
-        background: #f3f4f6;
-        border-radius: 0;
     }
 
     .card__matchup-skeleton {
