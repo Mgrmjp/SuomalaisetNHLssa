@@ -27,6 +27,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -45,6 +47,9 @@ jobs:
           .venv/bin/python scripts/data_collection/finnish/test_fetch_offseason_moves.py
           .venv/bin/python scripts/data_collection/finnish/test_fetch_upcoming_games.py
           .venv/bin/python scripts/data_collection/finnish/test_fetch_preseason_summary.py
+          .venv/bin/python scripts/data_collection/finnish/test_fetch_results.py
+          .venv/bin/python scripts/test_check_deployment.py
+          .venv/bin/python scripts/test_daily_update.py
 
       - name: Validate Finnish players cache
         run: |
@@ -62,7 +67,8 @@ jobs:
       - name: Run daily update pipeline
         run: |
           chmod +x scripts/daily_update.sh
-          ./scripts/daily_update.sh $(date +%Y-%m-%d)
+          # Use the default window: yesterday through seven days ahead.
+          ./scripts/daily_update.sh
 
       - name: Fetch offseason moves
         run: |
@@ -118,6 +124,9 @@ jobs:
 
       - name: Build static site
         run: npm run build
+
+      - name: Record artifact revision
+        run: .venv/bin/python scripts/check_deployment.py --write build/data/deployment.json
 
       - name: Clean up old season data files
         run: |

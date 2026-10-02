@@ -1,10 +1,10 @@
 import { get } from 'svelte/store'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { getResultsForDate } from '../services/dataService.js'
 
 vi.mock('$app/paths', () => ({ base: '' }))
 vi.mock('$lib/services/dataService.js', () => ({
-    getFinnishPlayersForDate: vi.fn(),
-    getGamesForDate: vi.fn(),
+    getResultsForDate: vi.fn(),
 }))
 vi.mock('$lib/services/standingsService.js', () => ({
     StandingsService: class {},
@@ -40,5 +40,25 @@ describe('game file dates', () => {
 
         expect(stores.prepopulatedDates).toBeDefined()
         expect(get(stores.prepopulatedDates)).toEqual(['2026-09-30', '2026-10-01'])
+    })
+
+    it('defaults to yesterday in the visitor timezone just after midnight', async () => {
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => ({ ok: false }))
+        )
+        vi.mocked(getResultsForDate).mockResolvedValue({
+            players: [],
+            games: { games: [], findGameById: () => null },
+        })
+        stores = await import('../stores/gameData.js')
+        stores.currentDate.set(new Date(2026, 9, 2, 0, 30))
+
+        await stores.resetToDefault()
+
+        expect(get(stores.selectedDate)).toBe('2026-10-01')
+        expect(get(stores.displayDate)).toBe('01.10.2026 (Viime yönä)')
+        expect(get(stores.activeButton)).toBe('yesterday')
+        expect(getResultsForDate).toHaveBeenCalledWith('2026-10-01')
     })
 })

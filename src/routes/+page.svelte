@@ -10,14 +10,7 @@ import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import {
-    games,
-    isLoading,
-    players,
-    resetToDefault,
-    selectedDate,
-    setDate,
-} from '$lib/stores/gameData.js'
+import { games, isLoading, players, resetToDefault, selectedDate } from '$lib/stores/gameData.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 
@@ -129,9 +122,8 @@ function formatSavePct(value) {
 
 onMount(() => {
     if ($selectedDate) return
-    if (data.initialDate) {
-        setDate(data.initialDate)
-    }
+    // The server date is prerendered; use the visitor's current date on arrival.
+    resetToDefault()
 })
 </script>
 

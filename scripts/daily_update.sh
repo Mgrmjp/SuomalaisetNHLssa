@@ -78,6 +78,10 @@ if [ $EXIT_CODE -eq 0 ] && [ $NEWS_EXIT_CODE -eq 0 ]; then
     echo -e "${GREEN}✅ Update completed successfully!${NC}"
 else
     echo -e "${YELLOW}⚠️ Update completed with issues.${NC}"
+    if [ $EXIT_CODE -ne 0 ]; then
+        exit "$EXIT_CODE"
+    fi
+    exit "$NEWS_EXIT_CODE"
 fi
 
 # Step 4: Optional Git Commit (uncomment if running on server)

@@ -299,16 +299,17 @@ def get_schedule_for_date(date):
     """Get NHL schedule for a specific date."""
     data = fetch_from_api(schedule_url(date))
     if not data:
-        return None
+        raise RuntimeError(f"Could not fetch NHL schedule for {date}")
 
     game_week = data.get("gameWeek", [])
-    if game_week and len(game_week) > 0:
+    day = next((day for day in game_week if day.get("date") == date), None)
+    if day is not None and isinstance(day.get("games"), list):
         return {
-            "games": game_week[0].get("games", []),
-            "date": game_week[0].get("date", date),
-            "week_data": game_week[0]
+            "games": day["games"],
+            "date": date,
+            "week_data": day
         }
-    return {"games": [], "date": date}
+    raise RuntimeError(f"NHL schedule is missing the requested day: {date}")
 
 
 def get_game_details(game_id):
@@ -670,15 +671,11 @@ def generate_finnish_players_data(game_date):
 
     schedule = get_schedule_for_date(game_date)
     if not schedule:
-        return {
-            "date": game_date,
-            "games": [],
-            "players": [],
-            "total_players": 0,
-            "source": "NHL API - Enhanced"
-        }
+        raise RuntimeError(f"Could not fetch NHL schedule for {game_date}")
 
     games = schedule.get("games", [])
+    if games and not finnish_cache:
+        raise RuntimeError("Finnish player cache is empty; keeping previous results")
     all_finnish_players = []
     game_summaries = []
 
@@ -704,9 +701,7 @@ def generate_finnish_players_data(game_date):
             # Check if game should be skipped due to incomplete data
             should_skip, skip_reason = should_skip_game(game_details, normalized_state)
             if should_skip:
-                print(f"      ⚠️ Skipping: {skip_reason}")
-                print(f"      💡 Run fix_game_states.py later to correct this game")
-                continue
+                raise RuntimeError(f"Incomplete boxscore for {game_id}: {skip_reason}")
 
             finnish_players, game_info = extract_finnish_player_data(
                 game_details, game_id, game_date, schedule, finnish_cache
@@ -745,7 +740,7 @@ def generate_finnish_players_data(game_date):
             else:
                 print(f"      No Finnish players")
         else:
-            print(f"      ❌ Failed to fetch game details")
+            raise RuntimeError(f"Could not fetch boxscore for {game_id}; keeping previous results")
 
     # Sort players by points (descending) then by name
     all_finnish_players.sort(key=lambda x: (-x.get("points", 0), x.get("name", "")))

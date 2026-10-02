@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -36,7 +38,11 @@ jobs:
       - name: Poll for live games
         id: poll
         run: |
-          # The script checks if games are live on today's date
+          # Guard final-result recovery before polling the NHL feed.
+          python scripts/data_collection/test_realtime_poll.py
+          python scripts/data_collection/finnish/test_fetch_results.py
+          python scripts/test_check_deployment.py
+          # Check for live games and missing final results.
           # It automatically handles the late-night/early-morning date logic
           python scripts/data_collection/realtime_poll.py --once
 
@@ -50,7 +56,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json
+          # The poll also regenerates the manifest; commit it before rebasing.
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/games_manifest.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
@@ -59,38 +66,31 @@ jobs:
             git push
           fi
 
-      - name: Regenerate games manifest
-        if: steps.poll.outputs.updated == 'true'
-        run: |
-          python scripts/data_collection/generate_manifest.py
-
-      - name: Commit and push updated manifest
-        if: steps.poll.outputs.updated == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add static/data/games_manifest.json
-          git commit -m "chore: updated games manifest" || echo "No manifest changes"
-          git pull --rebase origin main
-          git push
+      - name: Check published revision
+        id: publish
+        run: python scripts/check_deployment.py --check-url https://suomalaisetnhlssa.fi/data/deployment.json
 
       - name: Set up Node.js
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.publish.outputs.needs_deployment == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '25'
           cache: 'npm'
 
       - name: Install Node dependencies
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.publish.outputs.needs_deployment == 'true'
         run: npm ci
 
       - name: Build static site
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.publish.outputs.needs_deployment == 'true'
         run: npm run build
 
+      - name: Record artifact revision
+        if: steps.publish.outputs.needs_deployment == 'true'
+        run: python scripts/check_deployment.py --write build/data/deployment.json
+
       - name: Clean up old season data files
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.publish.outputs.needs_deployment == 'true'
         run: |
           season_dir=build/data/prepopulated/season
           if [ ! -d "$season_dir" ]; then
@@ -104,16 +104,16 @@ jobs:
           find "$season_dir" -maxdepth 1 -type f -name 'season-*.json.br' -printf '%T@ %p\n' | sort -nr | tail -n +2 | cut -d' ' -f2- | xargs -r rm -f
 
       - name: Setup Pages
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.publish.outputs.needs_deployment == 'true'
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.publish.outputs.needs_deployment == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: './build'
 
       - name: Deploy to GitHub Pages
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.publish.outputs.needs_deployment == 'true'
         id: deployment
         uses: actions/deploy-pages@v4

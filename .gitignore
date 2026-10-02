@@ -109,6 +109,8 @@ scripts/check_na_finns.py
 scripts/debug_*.py
 scripts/probe_*.py
 scripts/test_*.py
+!scripts/test_check_deployment.py
+!scripts/test_daily_update.py
 scripts/inspect_*.py
 scripts/find_undrafted.py
 scripts/deep_probe_*.py

@@ -3,9 +3,10 @@
 
 // @ts-nocheck
 
+import { base } from '$app/paths'
 import { isValidDateFormat } from '$lib/api/nhlApi.js'
 import playerDetectionService from '$lib/services/playerDetectionService.js'
-import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
+import { fetchLocalJSON, fetchWithTimeout } from '$lib/utils/apiHelpers.js'
 import { formatDate } from '$lib/utils/dateUtils.js'
 import logger from '$lib/utils/logger.js'
 
@@ -16,6 +17,26 @@ import logger from '$lib/utils/logger.js'
 // API fetching functions removed - only prepopulated data is used
 
 // API processing functions removed - only prepopulated data is used
+
+/** Load one fresh snapshot so scores and players update together. */
+export async function getResultsForDate(date) {
+    if (!isValidDateFormat(date)) throw new Error('Invalid results date')
+    const response = await fetchWithTimeout(
+        `${base}/data/prepopulated/games/${date}.json?t=${Date.now()}`,
+        10000,
+        { cache: 'no-store' }
+    )
+    if (!response.ok) throw new Error(`Could not load results: HTTP ${response.status}`)
+    const data = await response.json()
+    if (data.date !== date || !Array.isArray(data.games) || !Array.isArray(data.players)) {
+        throw new Error('Incomplete results snapshot')
+    }
+    const gamesById = new Map(data.games.map((game) => [game.gameId, game]))
+    return {
+        players: data.players,
+        games: { games: data.games, findGameById: (id) => gamesById.get(id) || null },
+    }
+}
 
 /**
  * Load pre-populated data for a specific date

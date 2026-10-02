@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { derived, get, readonly, writable } from 'svelte/store'
 
-import { getFinnishPlayersForDate, getGamesForDate } from '$lib/services/dataService.js'
+import { getResultsForDate } from '$lib/services/dataService.js'
 import { StandingsService } from '$lib/services/standingsService.js'
 import { formatDate as formatDateUtil } from '$lib/utils/dateUtils.js'
 import logger from '$lib/utils/logger.js'
@@ -138,7 +138,7 @@ export const currentDate = writable(new Date())
 export const yesterdayDate = derived(currentDate, ($currentDate) => {
     const yesterday = new Date($currentDate)
     yesterday.setDate(yesterday.getDate() - 1)
-    return yesterday.toISOString().split('T')[0]
+    return formatDate(yesterday)
 })
 
 // Memory Management: Store interval ID for cleanup
@@ -148,7 +148,13 @@ let currentDateInterval = null
 if (browser) {
     currentDateInterval = setInterval(() => {
         currentDate.set(new Date())
+        refreshWhenVisible()
     }, 60000) // Update every minute
+    document.addEventListener('visibilitychange', refreshWhenVisible)
+}
+
+function refreshWhenVisible() {
+    if (document.visibilityState === 'visible') refreshSelectedDate()
 }
 
 // Memory Management: Cleanup function for intervals
@@ -157,6 +163,7 @@ export function cleanupIntervals() {
         clearInterval(currentDateInterval)
         currentDateInterval = null
     }
+    if (browser) document.removeEventListener('visibilitychange', refreshWhenVisible)
 }
 
 // Core stores
@@ -173,8 +180,13 @@ export { currentDate as currentDateReadOnly }
 
 // Note: Data is loaded from prepopulated JSON files - no API calls
 
-export const players = writable([])
-export const games = writable({}) // Store games data with findGameById function
+export const players = writable(/** @type {Player[]} */ ([]))
+export const games = writable(
+    /** @type {{ games: any[], findGameById: (id: number) => any }} */ ({
+        games: [],
+        findGameById: () => null,
+    })
+)
 
 // Derived store for checking if selected date is in a break
 export const currentBreak = derived([selectedDate, breaks], ([$selectedDate, $breaks]) => {
@@ -194,10 +206,10 @@ export const displayDate = derived([selectedDate, currentDate], ([$selectedDate,
     let displayText = `${day}.${month}.${year}`
 
     // Add European-friendly date indicators
-    const today = $currentDate.toISOString().split('T')[0]
+    const today = formatDate($currentDate)
     const yesterday = new Date($currentDate)
     yesterday.setDate(yesterday.getDate() - 1)
-    const yesterdayStr = yesterday.toISOString().split('T')[0]
+    const yesterdayStr = formatDate(yesterday)
 
     if ($selectedDate === today) {
         displayText += ' (Tänä iltana)'
@@ -314,10 +326,10 @@ export async function refreshStandings(seasonStart) {
 export const activeButton = derived(
     [selectedDate, currentDate],
     ([$selectedDate, $currentDate]) => {
-        const today = $currentDate.toISOString().split('T')[0]
+        const today = formatDate($currentDate)
         const yesterday = new Date($currentDate)
         yesterday.setDate(yesterday.getDate() - 1)
-        const yesterdayStr = yesterday.toISOString().split('T')[0]
+        const yesterdayStr = formatDate(yesterday)
 
         if ($selectedDate === today) return 'today'
         if ($selectedDate === yesterdayStr) return 'yesterday'
@@ -360,18 +372,18 @@ export const playerStats = derived([players], ([$players]) => {
  * @param {string} date - Date in YYYY-MM-DD format
  * @returns {Promise<Player[]>} Array of players
  */
-export async function loadPlayersForDate(date) {
+let resultsRequestId = 0
+let refreshInFlight = false
+let followsYesterday = false
+
+export async function loadPlayersForDate(date, { background = false } = {}) {
     if (!date) {
         players.set([])
         return []
     }
 
     // Validate that we're loading data for the currently selected date
-    let currentSelectedDate
-    const unsubscribe = selectedDateStore.subscribe((value) => {
-        currentSelectedDate = value
-    })
-    unsubscribe()
+    const currentSelectedDate = get(selectedDateStore)
 
     if (currentSelectedDate && currentSelectedDate !== date) {
         console.warn(
@@ -384,15 +396,15 @@ export async function loadPlayersForDate(date) {
 
     logger.debug(`📊 Loading players for UI display for date: ${date}`)
 
-    isLoadingStore.set(true)
+    const requestId = ++resultsRequestId
+    if (!background) isLoadingStore.set(true)
     errorStore.set(null)
 
     try {
         // Get data from prepopulated JSON files only
-        const [fetchedPlayers, gamesData] = await Promise.all([
-            getFinnishPlayersForDate(date),
-            getGamesForDate(date),
-        ])
+        const { players: fetchedPlayers, games: gamesData } = await getResultsForDate(date)
+        // Navigation or a newer request may have overtaken this response.
+        if (date !== get(selectedDateStore) || requestId !== resultsRequestId) return []
 
         // Update the players store
         players.set(fetchedPlayers)
@@ -406,7 +418,12 @@ export async function loadPlayersForDate(date) {
 
         return fetchedPlayers
     } catch (err) {
-        logger.error('Error loading player data:', err)
+        if (date !== get(selectedDateStore) || requestId !== resultsRequestId) return []
+        if (background) {
+            logger.warn('Results refresh failed; retaining the last results:', err)
+        } else {
+            logger.error('Error loading player data:', err)
+        }
 
         // Provide more specific error messages based on the error type
         let errorMessage = 'Failed to load player data. Please try again.'
@@ -416,10 +433,9 @@ export async function loadPlayersForDate(date) {
         }
 
         errorStore.set(errorMessage)
-        players.set([])
         return []
     } finally {
-        isLoadingStore.set(false)
+        if (requestId === resultsRequestId) isLoadingStore.set(false)
     }
 }
 
@@ -428,9 +444,32 @@ export async function loadPlayersForDate(date) {
  * @param {string} date
  * @returns {Promise<Player[]>}
  */
-export async function setDate(date) {
+export async function setDate(date, { followYesterday = false } = {}) {
+    followsYesterday = followYesterday
+    if (date !== get(selectedDateStore)) {
+        players.set([])
+        games.set({ games: [], findGameById: () => null })
+    }
     selectedDateStore.set(date)
     return await loadPlayersForDate(date)
+}
+
+/** Refresh silently, preserving historical selections and existing results on failure. */
+export async function refreshSelectedDate() {
+    if (refreshInFlight || get(isLoadingStore) || !get(selectedDateStore)) return
+    refreshInFlight = true
+    try {
+        currentDate.set(new Date())
+        const date = get(selectedDateStore)
+        const yesterday = get(yesterdayDate)
+        if (followsYesterday && date !== yesterday) {
+            await setDate(yesterday, { followYesterday: true })
+        } else {
+            await loadPlayersForDate(date, { background: true })
+        }
+    } finally {
+        refreshInFlight = false
+    }
 }
 
 /**
@@ -448,6 +487,6 @@ export async function resetToDefault() {
     // Reset date (prefer yesterday, fallback to latest prepopulated)
     const defaultDate = yesterday || latestDate
     if (defaultDate) {
-        return await setDate(defaultDate)
+        return await setDate(defaultDate, { followYesterday: true })
     }
 }

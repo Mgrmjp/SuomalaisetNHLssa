@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Realtime NHL Polling Script for Finnish Player Tracker.
-Checks for live games and updates data files accordingly.
+Checks for live games and missing final results, then updates data files.
 """
 
 import sys
@@ -19,7 +19,7 @@ sys.path.insert(0, str(scripts_dir / "finnish"))
 # Import from existing modules
 try:
     from finnish.fetch import generate_finnish_players_data
-    from utils import fetch_from_api, schedule_url, save_json
+    from utils import fetch_from_api, schedule_url, save_json, load_json
     from config import GAMES_DIR
     from generate_manifest import generate_manifest
 except ImportError as e:
@@ -28,26 +28,40 @@ except ImportError as e:
 
 def check_for_live_games(date_str, near_hours=2):
     """
-    Check if there are any live, critical, or games starting soon for the given date.
+    Check for live/near-starting games or final results missing from saved data.
     
     Args:
         date_str: Date to check (YYYY-MM-DD)
         near_hours: Hours to look ahead for upcoming games
         
     Returns:
-        bool: True if live or near-starting games are found, False otherwise.
+        bool: True if this date needs a data update, False otherwise.
     """
     schedule = fetch_from_api(schedule_url(date_str))
     if not schedule:
-        return False
+        raise RuntimeError(f"Could not fetch NHL schedule for {date_str}")
     
     game_week = schedule.get("gameWeek", [])
-    if not game_week:
-        return False
-    
-    # We look at the first day in the week data which should be the requested date
-    day_data = game_week[0]
-    games = day_data.get("games", [])
+    day_data = next((day for day in game_week if day.get("date") == date_str), None)
+    if day_data is None or not isinstance(day_data.get("games"), list):
+        raise RuntimeError(f"NHL schedule is missing the requested day: {date_str}")
+    games = day_data["games"]
+
+    # Polling may miss the last live snapshot, or its deployment may fail.
+    # Reconcile completed games so the next poll can recover their final results.
+    finished_games = [g for g in games if g.get("gameState") in ("OFF", "FINAL")]
+    if finished_games:
+        saved_data = load_json(GAMES_DIR / f"{date_str}.json") or {}
+        saved_games = {g.get("gameId"): g for g in saved_data.get("games", [])}
+        for game in finished_games:
+            saved = saved_games.get(game.get("id"), {})
+            if (
+                saved.get("gameState") not in ("OFF", "FINAL")
+                or saved.get("homeScore") != game.get("homeTeam", {}).get("score")
+                or saved.get("awayScore") != game.get("awayTeam", {}).get("score")
+            ):
+                print(f"Final results need updating for {date_str}: {game.get('id')}")
+                return True
     
     live_states = ["LIVE", "CRIT", "PRE"] # PRE included to catch just before start
     
@@ -98,52 +112,66 @@ def run_update(date_str):
         
         # Regenerate manifest to include the new/updated file
         generate_manifest()
+        return True
     except Exception as e:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] ❌ Error during update: {e}")
+        return False
+
+def poll_dates(explicit_date=None, now=None):
+    """Cover both sides of UTC midnight and recalculate dates on every poll."""
+    if explicit_date:
+        return [explicit_date]
+    now = now or datetime.now(timezone.utc)
+    return [(now - timedelta(days=1)).strftime("%Y-%m-%d"), now.strftime("%Y-%m-%d")]
+
+
+def poll_once(dates, force=False):
+    updated = False
+    for date_str in dates:
+        if force or check_for_live_games(date_str):
+            if not run_update(date_str):
+                raise RuntimeError(f"Update failed for {date_str}")
+            updated = True
+        else:
+            print(f"No live/near games or missing final results for {date_str}. Skipping update.")
+    return updated
+
 
 def main():
     parser = argparse.ArgumentParser(description="Realtime NHL Polling Script")
-    parser.add_argument("--date", help="Date to check (YYYY-MM-DD), defaults to today")
+    parser.add_argument("--date", help="Date to check (YYYY-MM-DD), defaults to yesterday and today UTC")
     parser.add_argument("--once", action="store_true", help="Run once and exit")
     parser.add_argument("--interval", type=int, default=60, help="Poll interval in seconds (default: 60)")
     parser.add_argument("--force", action="store_true", help="Force update even if no live games are found")
     
     args = parser.parse_args()
     
-    # Determine date (NHL "today" might be yesterday in some timezones, but we use server date)
-    if args.date:
-        date_str = args.date
-    else:
-        # If it's early morning in Europe, we might still want yesterday's games
-        now = datetime.now()
-        if now.hour < 12:
-            date_str = (now - timedelta(days=1)).strftime("%Y-%m-%d")
-            print(f"Early morning detected, checking yesterday's games: {date_str}")
-        else:
-            date_str = now.strftime("%Y-%m-%d")
-    
     if args.once:
-        should_update = args.force or check_for_live_games(date_str)
-        if should_update:
-            run_update(date_str)
-        else:
-            print(f"No live or near games found for {date_str}. Skipping update.")
+        updated = False
+        failed = False
+        try:
+            updated = poll_once(poll_dates(args.date), args.force)
+        except Exception as error:
+            print(f"Polling failed: {error}")
+            failed = True
         
         # Set GitHub Action output if running in GA
         if "GITHUB_OUTPUT" in os.environ:
             with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-                f.write(f"updated={'true' if should_update else 'false'}\n")
+                f.write(f"updated={'true' if updated else 'false'}\n")
+        if failed:
+            sys.exit(1)
         return
 
-    print(f"Starting polling loop for {date_str} every {args.interval} seconds...")
+    print(f"Starting polling every {args.interval} seconds...")
     print("Press Ctrl+C to stop.")
     
     try:
         while True:
-            if args.force or check_for_live_games(date_str):
-                run_update(date_str)
-            else:
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] No live games. Waiting...")
+            try:
+                poll_once(poll_dates(args.date), args.force)
+            except Exception as error:
+                print(f"Polling failed, will retry: {error}")
             
             time.sleep(args.interval)
     except KeyboardInterrupt:
