@@ -11,6 +11,8 @@ import {
 } from 'lucide-svelte'
 import { base } from '$app/paths'
 import { page } from '$app/stores'
+import ControlGroup from '$lib/components/ui/ControlGroup.svelte'
+import { PROSPECTS_ENABLED } from '$lib/config/features.js'
 
 // Navigation items
 const _navItems = [
@@ -43,29 +45,31 @@ const _navItems = [
         href: `${base}/lupaukset`,
         label: 'Lupaukset',
         Icon: LupauksetIcon,
+        enabled: PROSPECTS_ENABLED,
     },
-]
+].filter((item) => item.enabled !== false)
 
 const currentPath = $derived($page.url.pathname)
 </script>
 
 <nav class="nav-tabs-container" aria-label="Päänavigaatio">
-    <div class="nav-tabs-list" role="group">
+    <ControlGroup label="Päänavigaation sivut" class="nav-tabs-list" scrollable>
         {#each _navItems as item}
             {@const isActive =
                 currentPath === item.href ||
                 (item.href !== `${base}/` && currentPath.startsWith(item.href))}
             <a
                 href={item.href}
-                class="nav-tab-item group"
+                class="nav-tab-item ui-control group"
                 class:nav-tab-item--active={isActive}
+                class:ui-control--selected={isActive}
                 aria-current={isActive ? "page" : undefined}
             >
                 <item.Icon class="nav-tab-icon" aria-hidden="true" />
                 {item.label}
             </a>
         {/each}
-    </div>
+    </ControlGroup>
 </nav>
 
 <style>
@@ -79,23 +83,7 @@ const currentPath = $derived($page.url.pathname)
         padding: 0;
     }
 
-    .nav-tabs-list {
-        display: flex;
-        min-width: 0;
-        max-width: 100%;
-        gap: 0.2rem;
-        padding: 0.25rem;
-        border: var(--card-border);
-        border-radius: 0;
-        background: rgba(255, 255, 255, 0.76);
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .nav-tabs-list::-webkit-scrollbar {
-        display: none;
-    }
+    .nav-tabs-container :global(.nav-tabs-list) { gap: 0.2rem; }
 
     .nav-tab-item {
         position: relative;
@@ -106,10 +94,10 @@ const currentPath = $derived($page.url.pathname)
         gap: 0.4rem;
         min-height: 2.4rem;
         padding: 0.5rem 0.75rem;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
         color: #475467;
-        font-size: 0.88rem;
-        font-weight: 700;
+        font-size: 0.8125rem;
+        font-weight: 600;
         line-height: 1;
         text-decoration: none;
         white-space: nowrap;

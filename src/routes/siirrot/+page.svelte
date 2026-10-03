@@ -1,7 +1,6 @@
 <script>
 import { base } from '$app/paths'
 import OffseasonMoves from '$lib/components/game/OffseasonMoves.svelte'
-import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 
@@ -23,9 +22,6 @@ const { data } = $props()
         backLabel="Takaisin tuloksiin"
         children={undefined}
     />
-    <div class="moves-navigation">
-        <NavTabs />
-    </div>
     {#if data.offseasonMoves}
         <OffseasonMoves movesData={data.offseasonMoves} />
     {:else}
@@ -36,9 +32,3 @@ const { data } = $props()
         </section>
     {/if}
 </PageShell>
-
-<style>
-    .moves-navigation {
-        margin-bottom: var(--space-6);
-    }
-</style>

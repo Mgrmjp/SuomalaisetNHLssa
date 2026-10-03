@@ -1,7 +1,15 @@
 <script>
 // @ts-nocheck
-
-import { ArrowUpRight, Calendar, Disc3, Pause, Sun } from 'lucide-svelte'
+import {
+    ArrowUpRight,
+    Calendar,
+    CalendarDays,
+    ChevronDown,
+    Newspaper,
+    Pause,
+    Sun,
+} from 'lucide-svelte'
+import FinnishFlag from '$lib/components/ui/FinnishFlag.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { displayDate } from '$lib/stores/gameData.js'
 
@@ -23,598 +31,354 @@ let {
 } = $props()
 
 const messages = {
-    'no-games': {
-        title: 'Ei otteluita tänään',
-        text: 'NHL:ssä ei pelata tähän päivään otteluita.',
-    },
+    'no-games': { title: 'Ei otteluita tänään', text: 'Tälle päivälle ei ole NHL-otteluita.' },
     'no-scorers': {
         title: 'Suomalaiset pisteittä tänään',
-        text: 'Kukaan suomalaispelaaja ei yltänyt tehopisteille tai tilastot eivät ole vielä päivittyneet.',
+        text: 'Ei tehopisteitä tai tilastot eivät ole vielä päivittyneet.',
     },
-    break: {
-        title: 'NHL-tauko',
-        text: 'NHL:ssä on meneillään tauko. Uudet ottelut alkavat pian.',
-    },
+    break: { title: 'NHL-tauko', text: 'NHL:ssä on tauko. Uudet ottelut alkavat pian.' },
     offseason: {
         title: 'Nähdään ensi kaudella!',
-        text: 'NHL-kausi on päättynyt. Uusi kausi alkaa lokakuussa – siihen asti voit seurata suomalaispelaajien siirtoja ja sopimuksia alta.',
+        text: 'Kausi on päättynyt. Seuraa pelaajien siirtoja ja sopimuksia alta.',
     },
 }
-
 const currentMessage = $derived(messages[variant] || messages['no-scorers'])
-
-const iconVariant = $derived(messages[variant] ? variant : 'no-scorers')
-
-const isOffseason = $derived(variant === 'offseason')
+const hasRelatedGames = $derived(
+    variant === 'no-scorers' && Array.isArray(relatedGames) && relatedGames.length > 0
+)
+const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
+const showRelatedGameDates = $derived(relatedGamesLabel.toLowerCase().includes('viimeksi'))
+const gamesTitle = $derived(showRelatedGameDates ? 'Viimeisimmät ottelut' : 'Seuraavat ottelut')
 
 function formatStartTime(startTime, includeDate = false) {
     if (!startTime) return ''
-
     try {
-        return new Intl.DateTimeFormat(
-            'fi-FI',
-            includeDate
-                ? {
-                      day: 'numeric',
-                      month: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      timeZone: 'Europe/Helsinki',
-                  }
-                : {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      timeZone: 'Europe/Helsinki',
-                  }
-        ).format(new Date(startTime))
+        return new Intl.DateTimeFormat('fi-FI', {
+            ...(includeDate ? { day: 'numeric', month: 'numeric' } : {}),
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'Europe/Helsinki',
+        }).format(new Date(startTime))
     } catch {
         return ''
     }
 }
-
-const hasRelatedGames = $derived(
-    variant === 'no-scorers' && Array.isArray(relatedGames) && relatedGames.length > 0
-)
-
-const showNoRelatedGamesNote = $derived(
-    variant === 'no-scorers' && Array.isArray(relatedGames) && relatedGames.length === 0
-)
-
-const showRelatedGameDates = $derived(relatedGamesLabel.toLowerCase().includes('viimeksi'))
-const hasNewsItems = $derived(Array.isArray(newsItems) && newsItems.length > 0)
-
-const emptyStateStats = $derived.by(() => {
-    const stats = []
-
-    if (variant === 'no-scorers') {
-        stats.push({
-            value: '0',
-            label: 'suomalaista pisteillä',
-        })
-    }
-
-    if (variant === 'no-scorers' && lineupCount > 0) {
-        stats.push({
-            value: lineupCount,
-            label: lineupCount === 1 ? 'suomalainen kokoonpanossa' : 'suomalaista kokoonpanossa',
-        })
-    }
-
-    if (hasRelatedGames) {
-        stats.push({
-            value: relatedGames.length,
-            label: showRelatedGameDates ? 'vertailuottelua' : 'tulevaa ottelua',
-        })
-    }
-
-    return stats
-})
 </script>
 
-<div class="empty-state-wrapper">
-    <div class="empty-state-card">
+<div class="empty-state-card" class:empty-state-card--with-options={hasRelatedGames || hasNewsItems}>
+    <div class="empty-state-header">
+        <div class="empty-state-icon" aria-hidden="true">
+            {#if variant === 'no-games'}
+                <Calendar aria-hidden="true" />
+            {:else if variant === 'break'}
+                <Pause aria-hidden="true" />
+            {:else if variant === 'offseason'}
+                <Sun aria-hidden="true" />
+            {:else}
+                <FinnishFlag width={36} />
+            {/if}
+        </div>
         <div class="empty-state-content">
-            <div
-                class="empty-state-icon"
-                class:empty-state-icon--break={iconVariant === 'break'}
-                class:empty-state-icon--offseason={iconVariant === 'offseason'}
-                class:empty-state-icon--premium={iconVariant === 'no-scorers'}
-                aria-hidden="true"
-            >
-                {#if iconVariant === 'no-games'}
-                    <Calendar aria-hidden="true" />
-                {:else if iconVariant === 'break'}
-                    <Pause aria-hidden="true" />
-                {:else if iconVariant === 'offseason'}
-                    <Sun aria-hidden="true" />
-                {:else}
-                    <Disc3 aria-hidden="true" />
-                {/if}
-            </div>
+            <p class="empty-state-kicker">Kierroksen tilanne</p>
             <h3 class="empty-state-title">{currentMessage.title}</h3>
-            <p class="empty-state-text">
-                {currentMessage.text}
-                {#if !isOffseason}
-                    <span class="empty-state-date">{$displayDate}</span>.
-                {/if}
-            </p>
-
-            {#if emptyStateStats.length > 0 && !isOffseason}
-                <div class="empty-state-stats" role="list" aria-label="Päivän yhteenveto">
-                    {#each emptyStateStats as stat}
-                        <div class="empty-state-stat" role="listitem">
-                            <strong>{stat.value}</strong>
-                            <span>{stat.label}</span>
-                        </div>
-                    {/each}
-                </div>
-            {/if}
-
-            {#if hasRelatedGames}
-                <div class="empty-state-section upcoming-games">
-                    <p class="section-label">{relatedGamesLabel}</p>
-
-                    <div class="upcoming-games-list">
-                        {#each relatedGames as game (game.gameId)}
-                            <div class="upcoming-game-row">
-                                <div class="team-pair">
-                                    <span class="team-chip">
-                                        <TeamLogo team={game.awayTeam} size="22" />
-                                        <span>{game.awayTeam}</span>
-                                    </span>
-                                    <span class="at-separator">@</span>
-                                    <span class="team-chip">
-                                        <TeamLogo team={game.homeTeam} size="22" />
-                                        <span>{game.homeTeam}</span>
-                                    </span>
-                                </div>
-
-                                <div class="upcoming-game-aside">
-                                    <span class="upcoming-game-time">
-                                        {formatStartTime(game.startTime, showRelatedGameDates)}
-                                    </span>
-                                    <span class="finn-count-badge">
-                                        <span class="finn-flag" aria-hidden="true">🇫🇮</span>
-                                        {game.finnish_players_count || 0}
-                                    </span>
-                                </div>
-
-                                {#if Array.isArray(game.finnishPlayers) && game.finnishPlayers.length > 0}
-                                    <div class="finnish-players-line">
-                                        <span class="finnish-players-flag" aria-hidden="true">🇫🇮</span>
-                                        <span class="finnish-players-names">{game.finnishPlayers.join(', ')}</span>
-                                    </div>
-                                {/if}
-                            </div>
-                        {/each}
-                    </div>
-                </div>
-            {:else if showNoRelatedGamesNote && !isOffseason}
-                <p class="upcoming-games-empty-note">
-                    Tulevia tai viimeisimpiä suomalaispelaajien otteluita ei löytynyt paikallisesta
-                    datasta.
+            <p class="empty-state-text">{currentMessage.text}</p>
+            {#if variant !== 'offseason'}
+                <p class="empty-state-meta">
+                    {$displayDate}
+                    {#if variant === 'no-scorers' && lineupCount > 0}
+                        · {lineupCount} {lineupCount === 1 ? 'suomalainen kokoonpanossa' : 'suomalaista kokoonpanossa'}
+                    {/if}
                 </p>
-            {/if}
-
-            {#if hasNewsItems}
-                <div class="empty-state-section daily-news">
-                    <p class="section-label">Päivän NHL-uutisia</p>
-
-                    <div class="daily-news-list">
-                        {#each newsItems as item, index (`${item.url || item.title || index}`)}
-                            <article class="daily-news-item">
-                                <h4 class="daily-news-title">
-                                    {item.translatedTitle || item.title}
-                                </h4>
-                                <p class="daily-news-summary">
-                                    {item.translatedSummary || item.summary}
-                                </p>
-                                <div class="daily-news-footer">
-                                    {#if item.source}
-                                        <span class="daily-news-source">{item.source}</span>
-                                    {/if}
-                                    {#if item.url}
-                                        <a
-                                            class="daily-news-link"
-                                            href={item.url}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                        >
-                                            Lue lisää
-                                            <ArrowUpRight aria-hidden="true" />
-                                        </a>
-                                    {/if}
-                                </div>
-                            </article>
-                        {/each}
-                    </div>
-                </div>
             {/if}
         </div>
     </div>
+
+    {#if hasRelatedGames || hasNewsItems}
+        <div class="empty-state-options">
+    {#if hasRelatedGames}
+        <details class="empty-state-details upcoming-games">
+            <summary>
+                <span class="disclosure-label"><CalendarDays aria-hidden="true" /><span class="disclosure-title">{gamesTitle}</span><span class="detail-count"><span class="detail-count-text">{relatedGames.length}</span></span></span>
+                <span class="match-preview">
+                    <TeamLogo team={relatedGames[0].awayTeam} size="20" />
+                    <span class="preview-team">{relatedGames[0].awayTeam}</span>
+                    <span class="preview-versus">vs</span>
+                    <TeamLogo team={relatedGames[0].homeTeam} size="20" />
+                    <span class="preview-team">{relatedGames[0].homeTeam}</span>
+                </span>
+                <ChevronDown class="disclosure-chevron" aria-hidden="true" />
+            </summary>
+            <div class="empty-state-details-content">
+                {#if relatedGamesLabel}<p class="details-description">{relatedGamesLabel}</p>{/if}
+                <div class="upcoming-games-list">
+                    {#each relatedGames as game (game.gameId)}
+                        <div class="upcoming-game-row">
+                            <div class="team-pair">
+                                <span class="team-chip"><TeamLogo team={game.awayTeam} size="18" />{game.awayTeam}</span>
+                                <span class="at-separator">@</span>
+                                <span class="team-chip"><TeamLogo team={game.homeTeam} size="18" />{game.homeTeam}</span>
+                            </div>
+                            <div class="upcoming-game-aside">
+                                <span>{formatStartTime(game.startTime, showRelatedGameDates)}</span>
+                                <span class="finn-count" aria-label={`Suomalaispelaajia: ${game.finnish_players_count || 0}`}><FinnishFlag width={16} />{game.finnish_players_count || 0}</span>
+                            </div>
+                            {#if Array.isArray(game.finnishPlayers) && game.finnishPlayers.length > 0}
+                                <p class="finnish-players-names">{game.finnishPlayers.join(', ')}</p>
+                            {/if}
+                        </div>
+                    {/each}
+                </div>
+            </div>
+        </details>
+    {/if}
+
+    {#if hasNewsItems}
+        <details class="empty-state-details daily-news">
+            <summary>
+                <span class="disclosure-label"><Newspaper aria-hidden="true" /><span class="disclosure-title">Päivän NHL-uutisia</span><span class="detail-count"><span class="detail-count-text">{newsItems.length}</span></span></span>
+                {#if newsItems[0].source}<span class="news-preview">{newsItems[0].source}</span>{/if}
+                <ChevronDown class="disclosure-chevron" aria-hidden="true" />
+            </summary>
+            <div class="empty-state-details-content daily-news-list">
+                {#each newsItems as item, index (`${item.url || item.title || index}`)}
+                    <article class="daily-news-item">
+                        <h4 class="daily-news-title">
+                            {#if item.url}
+                                <a href={item.url} target="_blank" rel="noreferrer">
+                                    {item.translatedTitle || item.title}
+                                    <ArrowUpRight aria-hidden="true" />
+                                </a>
+                            {:else}
+                                {item.translatedTitle || item.title}
+                            {/if}
+                        </h4>
+                        {#if item.translatedSummary || item.summary}
+                            <p class="daily-news-summary">{item.translatedSummary || item.summary}</p>
+                        {/if}
+                        {#if item.source}<p class="daily-news-source">{item.source}</p>{/if}
+                    </article>
+                {/each}
+            </div>
+        </details>
+    {/if}
+        </div>
+    {/if}
 </div>
 
 <style>
-    .empty-state-wrapper {
-        display: block;
-        padding: 0;
-        min-height: 0;
-    }
-
     .empty-state-card {
-        max-width: var(--rail-max, 920px);
         width: 100%;
-        margin: 0 auto;
-        background: var(--card-bg, rgba(255, 255, 255, 0.9));
-        border-radius: 0;
-        padding: var(--card-padding-y, 1.25rem) var(--card-padding-x, 1.5rem);
-        text-align: center;
-        border: var(--card-border, 1px solid rgba(16, 24, 40, 0.08));
-        box-shadow: none;
-        backdrop-filter: none;
-        position: relative;
+        padding: 0.875rem;
+        text-align: left;
         overflow: hidden;
     }
-
-    .empty-state-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--accent, #003580);
-        border-radius: 0;
+    .empty-state-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
     }
-
-    .empty-state-content {
-        position: relative;
-    }
-
     .empty-state-icon {
+        display: grid;
+        place-items: center;
+        width: 2.25rem;
+        height: 1.75rem;
+        flex: 0 0 auto;
+        color: var(--accent);
+        margin-top: 0.2rem;
+    }
+    .empty-state-icon :global(.lucide-icon) { width: 1.25rem; height: 1.25rem; }
+    .empty-state-content { min-width: 0; }
+    .empty-state-kicker {
+        margin: 0 0 0.2rem;
+        color: var(--accent);
+        font-size: 0.625rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .empty-state-title {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.4;
+        color: var(--color-ink);
+    }
+    .empty-state-text {
+        margin: 0.2rem 0 0;
+        font-size: 0.8125rem;
+        line-height: 1.5;
+        color: var(--color-muted);
+    }
+    .empty-state-meta {
+        margin: 0.35rem 0 0;
+        color: var(--color-muted);
+        font-size: 0.6875rem;
+        line-height: 1.5;
+    }
+    .empty-state-options { margin-top: 0.6rem; }
+    .empty-state-details {
+        margin-top: 0;
+        border: var(--card-border);
+        border-radius: var(--card-radius-sm);
+        background: var(--color-table-head);
+    }
+    .empty-state-details + .empty-state-details { margin-top: 0.4rem; }
+    .empty-state-details > summary {
         display: flex;
         align-items: center;
-        justify-content: center;
-        width: 3.75rem;
-        height: 3.75rem;
-        margin: 0 auto 1rem;
-        border-radius: 9999px;
-        color: #fff;
-    }
-
-    .empty-state-icon--premium {
-        background: linear-gradient(135deg, var(--accent, #003580) 0%, var(--accent-soft, #4f7dd8) 100%);
-    }
-
-    .empty-state-icon--break {
-        background: #f59e0b;
-    }
-
-    .empty-state-icon--offseason {
-        background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-    }
-
-    .empty-state-icon svg {
-        width: 1.85rem;
-        height: 1.85rem;
-    }
-
-    .empty-state-title {
-        font-size: clamp(1.25rem, 2.4vw, 1.5rem);
-        font-weight: 800;
-        letter-spacing: 0;
-        color: var(--color-ink, #101828);
-        margin-bottom: 0.5rem;
-        line-height: 1.22;
-        font-family: var(--font-display, "Sora", "Inter", system-ui, sans-serif);
-    }
-
-    .empty-state-text {
-        font-size: 0.95rem;
-        color: var(--color-muted, #667085);
-        line-height: 1.6;
-        max-width: 32rem;
-        margin: 0 auto;
-    }
-
-    .empty-state-date {
-        font-weight: 700;
-        color: var(--accent, #003580);
-        white-space: nowrap;
-    }
-
-    .empty-state-stats {
-        display: flex;
-        justify-content: center;
         gap: 0.5rem;
-        flex-wrap: wrap;
-        max-width: 36rem;
-        margin: 1.1rem auto 0;
+        min-height: 2.25rem;
+        padding: 0.4rem 0.65rem;
+        list-style: none;
+        cursor: pointer;
+        color: var(--accent);
+        font-size: 0.8125rem;
+        font-weight: 600;
+        line-height: 1.4;
     }
-
-    .empty-state-stat {
-        min-width: 9rem;
-        padding: 0.75rem 1rem;
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        border-radius: 0;
-        background: rgba(248, 250, 255, 0.7);
-    }
-
-    .empty-state-stat strong {
+    .empty-state-details > summary::-webkit-details-marker { display: none; }
+    .empty-state-details > summary:hover { background: var(--accent-ice); }
+    .disclosure-label { display: inline-flex; align-items: center; gap: 0.45rem; }
+    .disclosure-title, .detail-count-text {
         display: block;
-        color: var(--color-ink, #101828);
-        font-size: 1.2rem;
+        text-box-trim: trim-both;
+        text-box-edge: cap alphabetic;
+    }
+    .disclosure-label :global(svg) { width: 0.9rem; height: 0.9rem; color: var(--color-muted); }
+    .empty-state-details :global(.disclosure-chevron) {
+        width: 0.9rem;
+        height: 0.9rem;
+        margin-left: auto;
+        color: var(--color-muted);
+        transition: transform 160ms ease;
+        flex-shrink: 0;
+    }
+    .empty-state-details[open] :global(.disclosure-chevron) { transform: rotate(180deg); }
+    .match-preview {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        gap: 0.35rem;
+        min-width: 0;
+        height: 1.25rem;
+        font-family: var(--font-body);
+        font-size: 0.75rem;
+        font-weight: 600;
         line-height: 1;
-        font-weight: 800;
-        font-variant-numeric: tabular-nums;
     }
-
-    .empty-state-stat span {
+    .preview-team, .preview-versus {
         display: block;
-        margin-top: 0.3rem;
-        color: var(--color-muted, #667085);
-        font-size: 0.72rem;
-        font-weight: 700;
-        line-height: 1.25;
+        line-height: 1;
+        text-box-trim: trim-both;
+        text-box-edge: cap alphabetic;
     }
-
-    .empty-state-section {
-        margin-top: 1.5rem;
-        padding-top: 1.25rem;
-        border-top: 1px solid rgba(16, 24, 40, 0.06);
-        text-align: left;
+    .preview-team { color: var(--color-ink); letter-spacing: 0.025em; }
+    .preview-versus {
+        color: var(--color-muted);
+        font-family: inherit;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        text-box-edge: ex alphabetic;
     }
-
-    .section-label {
-        font-size: var(--eyebrow-size, 0.72rem);
-        font-weight: var(--eyebrow-weight, 800);
-        letter-spacing: var(--eyebrow-track, 0.1em);
-        text-transform: uppercase;
-        color: var(--eyebrow-color, #667085);
-        margin-bottom: 0.85rem;
-        text-align: center;
+    .news-preview { flex: 1; text-align: right; color: var(--color-muted); font-size: 0.6875rem; font-weight: 500; }
+    .empty-state-details > summary:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
     }
-
-    .upcoming-games-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
+    .detail-count {
+        display: inline-grid;
+        place-items: center;
+        min-width: 1.2rem;
+        height: 1.2rem;
+        border-radius: var(--card-radius-sm);
+        background: var(--accent);
+        color: white;
+        font-size: 0.625rem;
+        font-weight: 600;
     }
-
+    .empty-state-details-content { padding: 0.5rem 0.65rem 0.65rem; border-top: var(--card-border); background: var(--card-bg); }
+    .details-description {
+        margin: 0 0 0.4rem;
+        color: var(--color-muted);
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
     .upcoming-game-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
         flex-wrap: wrap;
-        gap: 0.5rem 0.9rem;
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        border-radius: 0;
-        background: rgba(248, 250, 255, 0.5);
-        padding: 0.7rem 0.95rem;
-        transition:
-            border-color 0.15s ease,
-            transform 0.12s ease,
-            background 0.15s ease;
+        gap: 0.3rem 0.5rem;
+        padding: 0.55rem 0;
+        border-bottom: var(--card-border);
     }
-
-    .upcoming-game-row:hover {
-        border-color: rgba(16, 24, 40, 0.18);
-        background: rgba(255, 255, 255, 0.9);
-        transform: translateY(-1px);
-    }
-
-    .team-pair {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        min-width: 0;
-        flex-wrap: wrap;
-    }
-
-    .team-chip {
+    .upcoming-game-row:last-child { border-bottom: 0; }
+    .team-pair, .team-chip, .upcoming-game-aside {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        font-size: 0.92rem;
-        font-weight: 700;
-        color: var(--color-ink, #101828);
-        letter-spacing: 0;
     }
-
-    .at-separator {
-        color: #94a3b8;
-        font-weight: 600;
-        font-size: 0.78rem;
-    }
-
+    .team-chip { color: var(--color-ink); font-size: 0.8125rem; font-weight: 600; }
+    .at-separator { color: var(--color-muted); font-size: 0.75rem; }
     .upcoming-game-aside {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 0.3rem;
-        flex-shrink: 0;
-    }
-
-    .upcoming-game-time {
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: var(--color-muted, #667085);
+        gap: 0.75rem;
+        color: var(--color-muted);
+        font-size: 0.75rem;
         white-space: nowrap;
-        letter-spacing: 0.01em;
     }
-
-    .finn-count-badge {
+    .finn-count {
         display: inline-flex;
         align-items: center;
-        gap: 0.25rem;
-        padding: 0.08rem 0.6rem;
-        border-radius: 0;
-        background: var(--accent-ice, #eef3fb);
-        border: 1px solid rgba(16, 24, 40, 0.12);
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        color: var(--accent, #003580);
-        white-space: nowrap;
-    }
-
-    .finn-flag {
-        font-size: 0.78rem;
-        line-height: 1;
-    }
-
-    .finnish-players-line {
-        display: flex;
-        align-items: baseline;
-        gap: 0.4rem;
-        width: 100%;
-        padding-top: 0.45rem;
-        margin-top: 0.15rem;
-        border-top: 1px dashed rgba(16, 24, 40, 0.1);
-        font-size: 0.78rem;
-        line-height: 1.4;
-        color: var(--color-muted, #475467);
-    }
-
-    .finnish-players-flag {
-        font-size: 0.85rem;
-        line-height: 1;
-    }
-
-    .finnish-players-names {
+        gap: 0.35rem;
+        padding: 0.2rem 0.35rem;
+        border: var(--card-border);
+        border-radius: var(--card-radius-sm);
+        color: var(--accent);
         font-weight: 600;
-        color: var(--color-ink, #101828);
-        word-break: break-word;
     }
-
-    .upcoming-games-empty-note {
-        margin-top: 1.4rem;
-        padding-top: 1.25rem;
-        border-top: 1px solid rgba(16, 24, 40, 0.06);
-        font-size: 0.85rem;
-        color: var(--color-muted, #667085);
-        line-height: 1.55;
-        max-width: 32rem;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .daily-news-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .daily-news-item {
-        border: 1px solid rgba(16, 24, 40, 0.08);
-        border-radius: 0;
-        background: #ffffff;
-        padding: 0.85rem 1rem;
-        transition: border-color 0.15s ease;
-    }
-
-    .daily-news-item:hover {
-        border-color: rgba(16, 24, 40, 0.18);
-    }
-
-    .daily-news-title {
-        font-size: 0.92rem;
-        font-weight: 700;
-        color: var(--color-ink, #101828);
-        margin: 0 0 0.35rem;
-        line-height: 1.4;
-    }
-
-    .daily-news-summary {
-        font-size: 0.8rem;
-        color: #475569;
+    .finnish-players-names {
+        width: 100%;
         margin: 0;
-        line-height: 1.55;
+        color: var(--color-muted);
+        font-size: 0.75rem;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+    .daily-news-list { display: grid; gap: 0.75rem; }
+    .daily-news-item { min-width: 0; }
+    .daily-news-title { margin: 0; font-size: 0.8125rem; font-weight: 600; line-height: 1.5; }
+    .daily-news-title a { color: var(--accent); text-decoration: none; }
+    .daily-news-title a:hover { text-decoration: underline; }
+    .daily-news-title :global(svg) {
+        display: inline;
+        width: 0.8rem;
+        height: 0.8rem;
+        vertical-align: middle;
+    }
+    .daily-news-summary {
         display: -webkit-box;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        margin: 0.2rem 0 0;
+        color: var(--color-muted);
+        font-size: 0.75rem;
+        line-height: 1.5;
     }
-
-    .daily-news-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
-        margin-top: 0.6rem;
+    .daily-news-source { margin: 0.25rem 0 0; color: var(--color-muted); font-size: 0.6875rem; }
+    @media (min-width: 768px) {
+        .daily-news-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
-
-    .daily-news-source {
-        font-size: 0.68rem;
-        font-weight: 600;
-        color: var(--color-muted, #667085);
-        padding: 0.1rem 0.45rem;
-        border-radius: 0;
-        background: var(--accent-ice, #eef3fb);
-        max-width: 60%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    @media (min-width: 1024px) {
+        .empty-state-card--with-options { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 0.85fr); gap: 1.5rem; align-items: start; }
+        .empty-state-options { margin-top: 0; }
     }
-
-    .daily-news-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.25rem;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--accent, #003580);
-        text-decoration: none;
-        margin-left: auto;
-        white-space: nowrap;
-    }
-
-    .daily-news-link svg {
-        width: 0.85rem;
-        height: 0.85rem;
-    }
-
-    .daily-news-link:hover {
-        text-decoration: underline;
-    }
-
     @media (max-width: 640px) {
-        .empty-state-card {
-            padding: 1.5rem 1.25rem 1.25rem;
-        }
-
-        .empty-state-icon {
-            width: 3.25rem;
-            height: 3.25rem;
-        }
-
-        .empty-state-icon svg {
-            width: 1.55rem;
-            height: 1.55rem;
-        }
-
-        .empty-state-text {
-            font-size: 0.9rem;
-        }
-
-        .empty-state-stat {
-            min-width: min(100%, 9rem);
-            flex: 1 1 8rem;
-        }
-
-        .upcoming-game-row {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-            padding: 0.7rem 0.85rem;
-        }
-
-        .upcoming-game-aside {
-            flex-direction: row;
-            align-items: center;
-            align-self: stretch;
-            justify-content: space-between;
-        }
+        .preview-team, .news-preview { display: none; }
+        .empty-state-details > summary { gap: 0.4rem; }
+        .disclosure-label { gap: 0.35rem; font-size: 0.75rem; }
     }
 </style>

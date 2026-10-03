@@ -61,11 +61,11 @@ const draftRankings = [
     <meta property="og:description" content="Yksityiskohtaiset scouting-raportit suomalaisista NHL-prospekteista." />
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen">
     <PageShell>
         <a
             href={base + "/lupaukset"}
-            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+            class="back-link"
         >
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Takaisin lupaukset-sivulle
@@ -82,7 +82,7 @@ const draftRankings = [
                 <Card>
                     <h2 class="text-xl font-bold text-slate-900 mb-4">Draft 2026 - Top 10</h2>
                     <p class="text-sm text-slate-500 mb-4">NHL Central Scouting - Eurooppalaiset</p>
-                    
+
                     <div class="space-y-3">
                         {#each draftRankings.slice(0, 10) as player}
                             <div class="flex items-center gap-3 p-2 transition-colors hover:bg-slate-50">
@@ -96,7 +96,7 @@ const draftRankings = [
                             </div>
                         {/each}
                     </div>
-                    
+
                     <div class="mt-4 pt-4 border-t border-slate-200">
                         <p class="text-xs text-slate-400">
                             Lähde: NHL Central Scouting Midterm Rankings 2026
@@ -125,12 +125,12 @@ const draftRankings = [
             <!-- Right column: Scouting Reports -->
             <div class="lg:col-span-2">
                 <h2 class="text-2xl font-bold text-slate-900 mb-6">Yksityiskohtaiset raportit</h2>
-                
+
                 <div class="space-y-4">
                     {#each scoutingReports as report}
-                        <a 
+                        <a
                             href="{base}/scouting/{report.slug}"
-                            class="group block overflow-hidden border border-slate-200 bg-white transition-colors hover:border-blue-300"
+                            class="ui-surface ui-surface--interactive group block overflow-hidden border border-slate-200 bg-white transition-colors hover:border-blue-300"
                         >
                             <div class="p-6">
                                 <div class="flex items-start justify-between gap-4">

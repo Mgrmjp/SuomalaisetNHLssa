@@ -1,13 +1,17 @@
 <script>
 // @ts-nocheck
 
-import { AlertCircle, ChevronLeft } from 'lucide-svelte'
+import { ChevronLeft } from 'lucide-svelte'
 import { fade } from 'svelte/transition'
 import { base } from '$app/paths'
 import Card from '$lib/components/ui/Card.svelte'
+import DataTable from '$lib/components/ui/DataTable.svelte'
+import Notice from '$lib/components/ui/Notice.svelte'
 import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import ViewMetadata from '$lib/components/ui/ViewMetadata.svelte'
+import ViewState from '$lib/components/ui/ViewState.svelte'
 
 /** @type {import('./$types').PageData} */
 export let data
@@ -58,7 +62,7 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
     })}</script>`}
 </svelte:head>
 
-<div class="flat-view min-h-screen">
+<div class="public-view min-h-screen">
     <PageShell width="wide">
         <a class="back-link" href={base + "/"}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
@@ -70,29 +74,15 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
         />
 
         {#if error}
-            <div
-                class="mx-auto max-w-lg border border-red-200 border-l-4 border-l-red-500 bg-red-50 p-4"
-                role="alert"
-            >
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700">{error}</p>
-                    </div>
-                </div>
-            </div>
+            <Notice variant="error">{error}</Notice>
         {:else if players.length === 0}
-            <div class="border border-slate-200 bg-white/60 py-12 text-center">
-                <p class="text-slate-500">Ei tilastoja saatavilla tälle kaudelle vielä.</p>
-            </div>
+            <ViewState message="Ei tilastoja saatavilla tälle kaudelle vielä." />
         {:else}
             <!-- Leaderboard Table -->
             <div in:fade={{ duration: 300 }}>
                 <Card padding="none" accent>
-                    <div class="leaderboard-scroll-area overflow-x-auto">
-                    <table class="leaderboard-table w-full text-left text-sm whitespace-nowrap">
+
+                    <DataTable caption={`Suomalaisten pistepörssi ${formattedSeason}`} class="leaderboard-table w-full text-left text-sm whitespace-nowrap" scrollClass="leaderboard-scroll-area">
                         <thead>
                             <tr
                                 class="bg-slate-50/80 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-semibold"
@@ -213,49 +203,19 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                                 </tr>
                             {/each}
                         </tbody>
-                    </table>
-                    </div>
+                    </DataTable>
+
                 </Card>
             </div>
 
-            <div class="mt-8 text-center text-sm text-slate-400">
+            <ViewMetadata class="mt-8">
                 <p class="mt-2 text-xs">
                     Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}
                 </p>
-            </div>
+            </ViewMetadata>
         {/if}
     </PageShell>
 </div>
 
 <style>
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        margin-bottom: var(--space-6);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-        font-weight: 700;
-        text-decoration: none;
-    }
-
-    .back-link:hover {
-        color: var(--accent);
-    }
-
-    .flat-view :global(*) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
-
-    .flat-view :global(.page-header__logo) {
-        filter: none !important;
-    }
-
-    .flat-view :global(a:focus-visible),
-    .flat-view :global(button:focus-visible),
-    .flat-view :global(input:focus-visible) {
-        outline: 3px solid var(--accent) !important;
-        outline-offset: 2px;
-    }
 </style>

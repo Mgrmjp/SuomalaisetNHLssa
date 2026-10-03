@@ -2,14 +2,16 @@
 // @ts-nocheck
 
 import { BarChart3, ChevronLeft, ChevronRight, FileText } from 'lucide-svelte'
-
 import { onMount } from 'svelte'
 import { fade } from 'svelte/transition'
 import { base } from '$app/paths'
+import Button from '$lib/components/ui/Button.svelte'
+import ControlGroup from '$lib/components/ui/ControlGroup.svelte'
 import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import ViewState from '$lib/components/ui/ViewState.svelte'
 import { draftRankings, loadProspects, prospects, prospectsLoading } from '$lib/stores/gameData'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { normalizeTeamAbbreviation } from '$lib/utils/teamMapping.js'
@@ -909,11 +911,11 @@ function _dedupeProspects(players) {
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/lupaukset" />
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen">
     <PageShell>
         <a
             href={base + "/"}
-            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+            class="back-link"
         >
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Takaisin etusivulle
@@ -925,36 +927,36 @@ function _dedupeProspects(players) {
         >
             <!-- Filter Buttons -->
             <div class="filter-tabs-container">
-                <div class="filter-tabs-list">
-                    <button
-                        class="filter-tab-item"
-                        class:filter-tab-item--active={activeFilter === 'all'}
+                <ControlGroup label="Pelaajatyyppi">
+                    <Button
+
+                        selected={activeFilter === 'all'}
                         onclick={() => activeFilter = 'all'}
                     >
                         Kaikki ({allPlayers().length})
-                    </button>
-                    <button
-                        class="filter-tab-item"
-                        class:filter-tab-item--active={activeFilter === 'prospects'}
+                    </Button>
+                    <Button
+
+                        selected={activeFilter === 'prospects'}
                         onclick={() => activeFilter = 'prospects'}
                     >
                         NHL-varaukset
-                    </button>
-                    <button
-                        class="filter-tab-item"
-                        class:filter-tab-item--active={activeFilter === 'draft2026'}
+                    </Button>
+                    <Button
+
+                        selected={activeFilter === 'draft2026'}
                         onclick={() => activeFilter = 'draft2026'}
                     >
                         Draft 2026
-                    </button>
-                </div>
+                    </Button>
+                </ControlGroup>
             </div>
 
             <!-- Ranking Source Selector (only visible when Draft 2026 is active) -->
             {#if activeFilter === 'draft2026'}
                 <div class="mt-8 max-w-xs mx-auto">
                     <label for="ranking-source" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Rankings-lähde</label>
-                    <select 
+                    <select
                         id="ranking-source"
                         bind:value={selectedRankingSlug}
                         class="block w-full border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -968,46 +970,44 @@ function _dedupeProspects(players) {
         </PageHeader>
 
         {#if $prospectsLoading}
-            <div class="flex justify-center items-center h-64">
-                <div class="h-12 w-12 animate-spin border-2 border-slate-200 border-t-blue-600" aria-label="Ladataan"></div>
-            </div>
+            <ViewState busy message="Ladataan lupauksia…" />
         {:else}
             <div in:fade={{ duration: 300 }}>
                     <!-- Controls -->
                     <div class="sort-tabs-container">
-                        <div class="sort-tabs-list">
-                            <button
-                                class="sort-tab-item"
-                                class:sort-tab-item--active={sortBy === 'points'}
+                        <ControlGroup label="Kenttäpelaajien järjestys">
+                            <Button
+
+                                selected={sortBy === 'points'}
                                 onclick={() => _setSort('points')}
                             >
                                 Pisteet {getSortIcon('points')}
-                            </button>
-                            <button
-                                class="sort-tab-item"
-                                class:sort-tab-item--active={sortBy === 'goals'}
+                            </Button>
+                            <Button
+
+                                selected={sortBy === 'goals'}
                                 onclick={() => _setSort('goals')}
                             >
                                 Maalit {getSortIcon('goals')}
-                            </button>
-                            <button
-                                class="sort-tab-item"
-                                class:sort-tab-item--active={sortBy === 'league'}
+                            </Button>
+                            <Button
+
+                                selected={sortBy === 'league'}
                                 onclick={() => _setSort('league')}
                             >
                                 Liiga {getSortIcon('league')}
-                            </button>
-                            <button
-                                class="sort-tab-item"
-                                class:sort-tab-item--active={sortBy === 'age'}
+                            </Button>
+                            <Button
+
+                                selected={sortBy === 'age'}
                                 onclick={() => {
                                     sortBy = 'age';
                                     sortDirection = 'asc';
                                 }}
                             >
                                 Ikä {getSortIcon('age')}
-                            </button>
-                        </div>
+                            </Button>
+                        </ControlGroup>
                     </div>
 
                     <!-- Active prospects count -->
@@ -1028,8 +1028,8 @@ function _dedupeProspects(players) {
                                 {@const selectedSeason = _getSelectedSeasonEntry(player)}
                                 {@const headshotUrl = _getBestAvailableSeasonHeadshot(player)}
                                 {@const headshotSettings = _getProspectHeadshotSettings(player, selectedSeason?.league || player.league)}
-                                <div 
-                                    class="group overflow-hidden border border-slate-200 bg-white p-4 transition-colors hover:border-blue-300"
+                                <div
+                                    class="ui-surface ui-surface--interactive group overflow-hidden border border-slate-200 bg-white p-4 transition-colors hover:border-blue-300"
                                 >
                                     <div class="flex items-center gap-4 mb-4">
                                         <div class="relative w-20 h-20 flex-shrink-0">
@@ -1060,7 +1060,7 @@ function _dedupeProspects(players) {
                                                 </div>
                                             {/if}
                                         </div>
-                                        
+
                                         <div class="min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
                                                 <div class="inline-block bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white">
@@ -1104,7 +1104,7 @@ function _dedupeProspects(players) {
 
                                     {#if player.type === 'draft2026'}
                                         <!-- Draft prospect stats -->
-                                        <div class="grid grid-cols-4 gap-2 border border-amber-100/50 bg-amber-50/50 p-3 text-center">
+                                        <div class="grid grid-cols-4 gap-2 border border-slate-200 bg-slate-50/50 p-3 text-center">
                                             <div>
                                                 <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
                                                 <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
@@ -1152,32 +1152,32 @@ function _dedupeProspects(players) {
                     {#if sortedGoalies.length > 0}
                         <div class="mt-12">
                             <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Maalivahdit</h2>
-                            
+
                             <!-- Goalie Sort Controls -->
                             <div class="sort-tabs-container">
-                                <div class="sort-tabs-list sort-tabs-list--goalie">
-                                    <button
-                                        class="sort-tab-item sort-tab-item--goalie"
-                                        class:sort-tab-item--active={goalieSortBy === 'savePct'}
+                                <ControlGroup label="Maalivahtien järjestys">
+                                    <Button
+
+                                        selected={goalieSortBy === 'savePct'}
                                         onclick={() => _setGoalieSort('savePct')}
                                     >
                                         Torjunta-% {getGoalieSortIcon('savePct')}
-                                    </button>
-                                    <button
-                                        class="sort-tab-item sort-tab-item--goalie"
-                                        class:sort-tab-item--active={goalieSortBy === 'gaa'}
+                                    </Button>
+                                    <Button
+
+                                        selected={goalieSortBy === 'gaa'}
                                         onclick={() => _setGoalieSort('gaa')}
                                     >
                                         Päästettyjen keskiarvo {getGoalieSortIcon('gaa')}
-                                    </button>
-                                    <button
-                                        class="sort-tab-item sort-tab-item--goalie"
-                                        class:sort-tab-item--active={goalieSortBy === 'gp'}
+                                    </Button>
+                                    <Button
+
+                                        selected={goalieSortBy === 'gp'}
                                         onclick={() => _setGoalieSort('gp')}
                                     >
                                         Ottelut {getGoalieSortIcon('gp')}
-                                    </button>
-                                </div>
+                                    </Button>
+                                </ControlGroup>
                             </div>
 
                             <!-- Goalies Grid -->
@@ -1187,12 +1187,12 @@ function _dedupeProspects(players) {
                                     {@const unifiedStats = _getUnifiedGoalieStats(goalie.name)}
                                     {@const headshotUrl = _getBestAvailableSeasonHeadshot(goalie)}
                                     {@const headshotSettings = _getProspectHeadshotSettings(goalie, selectedSeason?.league || goalie.league)}
-                                    <div 
-                                        class="group overflow-hidden border border-emerald-200 bg-white p-4 transition-colors hover:border-emerald-300"
+                                    <div
+                                        class="ui-surface ui-surface--interactive group overflow-hidden border border-slate-200 bg-white p-4 transition-colors hover:border-blue-300"
                                     >
                                         <div class="flex items-center gap-4 mb-4">
                                             <div class="relative w-20 h-20 flex-shrink-0">
-                                                <div class="relative z-10 h-full w-full overflow-hidden border-2 border-emerald-100 bg-slate-50">
+                                                <div class="relative z-10 h-full w-full overflow-hidden border-2 border-slate-200 bg-slate-50">
                                                     <PlayerHeadshot
                                                         playerId={_getBestFallbackPlayerId(goalie)}
                                                         explicitUrl={headshotUrl}
@@ -1208,7 +1208,7 @@ function _dedupeProspects(players) {
                                                     />
                                                 </div>
                                                 {#if goalie.type === 'draft2026' || _hasKnownNhlRights(goalie)}
-                                                    <div class="absolute -bottom-1 -right-1 z-20 border border-emerald-100 bg-white p-1">
+                                                    <div class="absolute -bottom-1 -right-1 z-20 border border-slate-200 bg-white p-1">
                                                         <div class="w-7 h-7 flex items-center justify-center">
                                                             {#if goalie.type === 'draft2026'}
                                                                 <span class="text-[10px] font-black text-amber-600">#{goalie.draftRank}</span>
@@ -1219,7 +1219,7 @@ function _dedupeProspects(players) {
                                                     </div>
                                                 {/if}
                                             </div>
-                                            
+
                                             <div class="min-w-0">
                                                 <div class="flex items-center gap-2 mb-1">
                                                     <div class="inline-block bg-emerald-600 px-2 py-0.5 text-[10px] font-bold text-white">
@@ -1263,7 +1263,7 @@ function _dedupeProspects(players) {
 
                                         {#if goalie.type === 'draft2026'}
                                             <!-- Draft prospect stats -->
-                                            <div class="grid grid-cols-4 gap-2 border border-amber-100/50 bg-amber-50/50 p-3 text-center">
+                                            <div class="grid grid-cols-4 gap-2 border border-slate-200 bg-slate-50/50 p-3 text-center">
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
                                                     <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
@@ -1283,7 +1283,7 @@ function _dedupeProspects(players) {
                                             </div>
                                         {:else}
                                             <!-- Regular goalie stats -->
-                                            <div class="grid grid-cols-4 gap-2 border border-emerald-100/50 bg-emerald-50/50 p-3 text-center">
+                                            <div class="grid grid-cols-4 gap-2 border border-slate-200/50 bg-slate-50/50 p-3 text-center">
                                                 <div>
                                                     <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
                                                     <div class="font-mono font-bold text-slate-700">{unifiedStats?.gp || selectedSeason?.gp || 0}</div>
@@ -1312,9 +1312,9 @@ function _dedupeProspects(players) {
 
             <!-- Related Links -->
             <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a 
+                <a
                     href="{base}/scouting"
-                    class="group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
+                    class="ui-surface ui-surface--interactive group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
                 >
                     <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-blue-100">
                         <FileText class="w-6 h-6 text-blue-600" aria-hidden="true" />
@@ -1325,10 +1325,10 @@ function _dedupeProspects(players) {
                     </div>
                     <ChevronRight class="w-5 h-5 text-slate-400 group-hover:text-blue-500" aria-hidden="true" />
                 </a>
-                
-                <a 
+
+                <a
                     href="{base}/drafts"
-                    class="group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
+                    class="ui-surface ui-surface--interactive group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
                 >
                     <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-emerald-100">
                         <BarChart3 class="w-6 h-6 text-emerald-600" aria-hidden="true" />
@@ -1352,7 +1352,7 @@ function _dedupeProspects(players) {
                         <span>• Liiga, SHL, AHL: Kausitilastot</span>
                     </div>
                     <p class="text-xs text-slate-400 mt-4">
-                        Päivitetty: {new Date().toLocaleDateString('fi-FI')} • 
+                        Päivitetty: {new Date().toLocaleDateString('fi-FI')} •
                         Näytetään {activeProspects.length + (activeFilter === 'all' ? ($draftRankings.north_american_skaters?.length || 0) + ($draftRankings.international_skaters?.length || 0) : 0)} lupausta
                     </p>
                 </div>
@@ -1361,130 +1361,5 @@ function _dedupeProspects(players) {
 </div>
 
 <style>
-    .filter-tabs-container {
-        display: flex;
-        justify-content: center;
-        padding: 0 0 0.5rem;
-    }
-
-    .filter-tabs-list {
-        display: inline-flex;
-        gap: 0.15rem;
-        padding: 0.25rem;
-        border: 1px solid rgba(16, 24, 40, 0.1);
-        border-radius: 0;
-        background: rgba(255, 255, 255, 0.7);
-    }
-
-    .filter-tab-item {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        min-height: 2.4rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0;
-        color: #475467;
-        font-size: 0.88rem;
-        font-weight: 700;
-        line-height: 1;
-        text-decoration: none;
-        white-space: nowrap;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition:
-            background 0.16s ease,
-            color 0.16s ease,
-            transform 0.16s ease;
-    }
-
-    .filter-tab-item:hover {
-        color: var(--accent-strong);
-        background: var(--accent-ice);
-    }
-
-    .filter-tab-item:focus-visible {
-        outline: 3px solid rgba(16, 24, 40, 0.18);
-        outline-offset: 2px;
-    }
-
-    .filter-tab-item--active {
-        background: var(--accent);
-        color: #ffffff;
-    }
-
-    .sort-tabs-container {
-        display: flex;
-        justify-content: center;
-        padding: 0 0 2rem;
-    }
-
-    .sort-tabs-list {
-        display: inline-flex;
-        gap: 0.15rem;
-        padding: 0.25rem;
-        border: 1px solid rgba(16, 24, 40, 0.1);
-        border-radius: 0;
-        background: rgba(255, 255, 255, 0.7);
-    }
-
-    .sort-tabs-list--goalie {
-        border-color: rgba(16, 185, 129, 0.12);
-    }
-
-    .sort-tab-item {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        min-height: 2.4rem;
-        padding: 0.5rem 1rem;
-        border-radius: 0;
-        color: #475467;
-        font-size: 0.88rem;
-        font-weight: 700;
-        line-height: 1;
-        text-decoration: none;
-        white-space: nowrap;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        transition:
-            background 0.16s ease,
-            color 0.16s ease,
-            transform 0.16s ease;
-    }
-
-    .sort-tab-item:hover {
-        color: var(--accent-strong);
-        background: var(--accent-ice);
-    }
-
-    .sort-tab-item--goalie:hover {
-        color: #065f46;
-        background: rgba(16, 185, 129, 0.08);
-    }
-
-    .sort-tab-item:focus-visible {
-        outline: 3px solid rgba(16, 24, 40, 0.18);
-        outline-offset: 2px;
-    }
-
-    .sort-tab-item--active {
-        background: var(--accent);
-        color: #ffffff;
-    }
-
-    .sort-tab-item--goalie.sort-tab-item--active {
-        background: #10b981;
-    }
-
-    @media (max-width: 480px) {
-        .filter-tab-item,
-        .sort-tab-item {
-            padding-inline: 0.75rem;
-            font-size: 0.82rem;
-        }
-    }
+    .filter-tabs-container, .sort-tabs-container { display: flex; justify-content: flex-start; margin-bottom: var(--space-5); min-width: 0; }
 </style>

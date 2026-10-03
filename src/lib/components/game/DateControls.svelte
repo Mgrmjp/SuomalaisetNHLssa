@@ -236,7 +236,7 @@ function _toggleCalendar() {
         transition: background 0.15s ease, color 0.15s ease;
     }
 
-    .nav-btn svg {
+    .nav-btn :global(svg) {
         width: 1.2rem;
         height: 1.2rem;
     }

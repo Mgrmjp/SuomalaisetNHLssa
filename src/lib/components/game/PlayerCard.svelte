@@ -249,16 +249,6 @@ const _primaryStat = $derived.by(() => {
     return null
 })
 
-// Ring progress: goalie SV% mapped 85-95 to 0-100%, skater points mapped 1-5
-const _ringProgress = $derived.by(() => {
-    if (!_primaryStat) return 0
-    if (isGoalie && goalieSavePct !== null) {
-        return Math.min(Math.max((goalieSavePct - 85) / 10, 0), 1)
-    }
-    // Skater points: 1-5 points mapped to 0-100%
-    return Math.min(Math.max((player.points - 0.5) / 4.5, 0), 1)
-})
-
 // Sub-label with breakdown
 const _statBreakdown = $derived.by(() => {
     if (isGoalie) return `${player.saves}/${player.shots_against || player.shotsAgainst}`
@@ -308,15 +298,15 @@ $effect(() => {
 })
 </script>
 
-<div class="player-card__container relative w-full" class:goalie-card={isGoalie}>
+<div class="game-player-card__container relative w-full" class:goalie-card={isGoalie}>
     <!-- Player Card -->
-    <div class="player-card" class:flipped={isFlipped}>
+    <div class="game-player-card" class:flipped={isFlipped}>
         <!-- Spacer in normal flow to size container -->
-        <div class="player-card__spacer" aria-hidden="true"></div>
-        <div class="player-card__inner">
+        <div class="game-player-card__spacer" aria-hidden="true"></div>
+        <div class="game-player-card__inner">
             <!-- Front of Card -->
             <div
-                class="card"
+                class="game-card ui-surface"
                 class:pressed={isPressed}
                 class:expanded
                 class:flipped={isFlipped}
@@ -330,15 +320,17 @@ $effect(() => {
                 aria-label="Käännä pelaajakortti ja näytä lisää tilastoja"
                 in:scale={{ duration: 220, start: 0.96 }}
             >
-                <!-- Accent glow -->
-                <div class="card__glow" aria-hidden="true"></div>
+
+                <div class="card__watermark card__watermark--background" aria-hidden="true">
+                    <TeamLogo team={player.team || "NHL"} size="160" />
+                </div>
+                <div class="card__watermark" aria-hidden="true">
+                    <TeamLogo team={player.team || "NHL"} size="160" />
+                </div>
 
                 <div class="card__content">
-                    <!-- Centered name over the team logo -->
+                    <!-- Player name -->
                     <div class="card__top">
-                        <div class="card__watermark" aria-hidden="true">
-                            <TeamLogo team={player.team || "NHL"} size="160" />
-                        </div>
                         <div class="card__player-info">
                             <h3 class="card__name">{displayName}</h3>
                             <p class="card__team">
@@ -390,9 +382,7 @@ $effect(() => {
                         </div>
                     {:else if _primaryStat}
                         <div class="card__stat">
-                            <div class="card__ring" style="--progress: {_ringProgress * 360}deg">
-                                <span>{_primaryStat.value}{_primaryStat.unit}</span>
-                            </div>
+                            <strong class="card__stat-value">{_primaryStat.value}{_primaryStat.unit}</strong>
                             <div class="card__stat-meta">
                                 <strong>{_primaryStat.label}</strong>
                                 {#if _statBreakdown}
@@ -402,9 +392,7 @@ $effect(() => {
                         </div>
                     {:else}
                         <div class="card__stat">
-                            <div class="card__ring card__ring--empty">
-                                <span>–</span>
-                            </div>
+                            <strong class="card__stat-value card__stat-value--empty">–</strong>
                             <div class="card__stat-meta">
                                 <strong>Ei tilastoja</strong>
                             </div>
@@ -509,7 +497,7 @@ $effect(() => {
 
             <!-- Back of Card -->
             <div
-                class="card card--back"
+                class="game-card ui-surface card--back"
                 class:pressed={isPressed}
                 class:expanded
                 class:flipped={isFlipped}
@@ -522,18 +510,18 @@ $effect(() => {
                 onkeydown={_handleCardKeydown}
                 aria-label="Käännä pelaajakortti takaisin"
             >
-                <!-- Accent glow -->
-                <div class="card__glow" aria-hidden="true"></div>
 
-                <!-- Top accent stripe -->
-                <div class="card__stripe" aria-hidden="true"></div>
+
+                <div class="card__watermark card__watermark--background" aria-hidden="true">
+                    <TeamLogo team={player.team || "NHL"} size="160" />
+                </div>
+                <div class="card__watermark" aria-hidden="true">
+                    <TeamLogo team={player.team || "NHL"} size="160" />
+                </div>
 
                 <div class="card__content">
                     <!-- Header -->
                     <div class="card__top">
-                        <div class="card__watermark" aria-hidden="true">
-                            <TeamLogo team={player.team || "NHL"} size="160" />
-                        </div>
                         <div class="card__player-info">
                             <h3 class="card__name">{displayName}</h3>
                             <p class="card__team">{_teamWithCity}</p>
@@ -638,23 +626,23 @@ $effect(() => {
             aria-labelledby="season-stats-title"
         >
             <div class="bg-gray-50 px-6 py-4 border-b border-gray-100 flex items-center gap-4">
-                <div class="player-card__modal-avatar shrink-0">
+                <div class="game-player-card__modal-avatar shrink-0">
                     {#if playerPhotoUrl && !_photoError}
                         <img
                             src={playerPhotoUrl || player.headshot_url}
                             alt={displayName}
-                            class="player-card__modal-photo"
+                            class="game-player-card__modal-photo"
                             class:blurred={_photoLoading || _imageLoading}
                             onload={() => { _photoLoading = false; _imageLoading = false; }}
                             onerror={() => { _photoError = true; _photoLoading = false; _imageLoading = false; }}
                         />
                         {#if (_photoLoading || _imageLoading) && _lqipUrl}
-                            <img src={_lqipUrl} alt="" class="player-card__modal-photo-lqip" />
+                            <img src={_lqipUrl} alt="" class="game-player-card__modal-photo-lqip" />
                         {/if}
                     {:else if _lqipUrl}
-                        <img src={_lqipUrl} alt="" class="player-card__modal-photo-lqip" />
+                        <img src={_lqipUrl} alt="" class="game-player-card__modal-photo-lqip" />
                     {:else}
-                        <div class="player-card__modal-initials">{_playerInitials}</div>
+                        <div class="game-player-card__modal-initials">{_playerInitials}</div>
                     {/if}
                 </div>
                 <div>

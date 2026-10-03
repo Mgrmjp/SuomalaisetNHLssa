@@ -1,287 +1,58 @@
 <script>
 // @ts-nocheck
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import { getTeamColorVariables } from '$lib/utils/teamColors.js'
-import teamMapping from '$lib/utils/teamMapping.js'
 
-const {
-    team,
-    teamData = {},
-    rank,
-    _showPlayoffIndicator = false,
-    isWildCard = false,
-    _showAdvancedStats = false,
-} = $props()
-
-// Get team full name
-const _teamName = $derived(teamMapping[team] || team)
-
-// Determine playoff indicator
-const _isPlayoffTeam = $derived(rank <= 3 || isWildCard) // Top 3 in division OR Wild Card
-
-// Use teamData for all team statistics
-const _teamStats = $derived(teamData)
-
-// Team color variables
-let _teamColorVars = $state({
-    '--team-primary-color': '#000000',
-    '--team-secondary-color': '#FFFFFF',
-    '--team-accent-color': '#000000',
-})
-
-// Load team colors when team changes
-$effect(async () => {
-    if (team) {
-        try {
-            _teamColorVars = await getTeamColorVariables(team)
-        } catch (error) {
-            // Silently ignore color loading errors
-        }
-    }
-})
-
-// Format streak with enhanced gradient styling
-const _streakDisplay = $derived(getEnhancedStreakDisplay(teamData.streak))
-
-// Format last 10 games
-const _last10Display = $derived(teamData.last10 || '0-0-0')
-
-// Calculate advanced stats
-const _advancedStats = $derived(calculateAdvancedStats(teamData))
-
-// Row classes - different background for wildcards
-const _rowClasses = $derived(
-    isWildCard
-        ? 'border-b border-blue-200 bg-blue-50/50 hover:bg-blue-100/50'
-        : 'border-b border-gray-100 bg-white hover:bg-gray-50'
+const { teamData, isWildCard = false, showAdvancedStats = false } = $props()
+const eligible = $derived(teamData.gamesPlayed > 0 && (teamData.divisionRank <= 3 || isWildCard))
+const pct = $derived(
+    teamData.pointsPercentage === null
+        ? '–'
+        : `${(teamData.pointsPercentage * 100).toLocaleString('fi-FI', { maximumFractionDigits: 1 })}%`
 )
-
-// Enhanced streak display with gradients matching PlayerCard style
-function getEnhancedStreakDisplay(streak) {
-    if (!streak || streak.length < 2) return null
-
-    // Check if streak starts with "OT" first (before checking single char)
-    if (streak.startsWith('OT')) {
-        return {
-            text: streak.replace('OT', 'JA'),
-            bg: 'bg-gradient-to-br from-amber-500 to-orange-500',
-            textColor: 'text-white',
-            ring: 'ring-amber-300',
-        }
-    }
-
-    const type = streak[0]
-
-    switch (type) {
-        case 'W':
-            return {
-                text: streak,
-                bg: 'bg-gradient-to-br from-green-500 to-green-600',
-                textColor: 'text-white',
-                ring: 'ring-green-300',
-            }
-        case 'L':
-            return {
-                text: streak,
-                bg: 'bg-gradient-to-br from-red-500 to-red-600',
-                textColor: 'text-white',
-                ring: 'ring-red-300',
-            }
-        default:
-            return null
-    }
-}
-
-// Calculate advanced statistics
-function calculateAdvancedStats(stats) {
-    const gamesPlayed = stats.gamesPlayed || 1
-
-    // Power Play Percentage (placeholder - would need real PP data)
-    const powerPlayGoals = stats.powerPlayGoals || 0
-    const powerPlayOpportunities = stats.powerPlayOpportunities || 1
-    const powerPlayPercentage = ((powerPlayGoals / powerPlayOpportunities) * 100).toFixed(1)
-
-    // Penalty Kill Percentage (placeholder - would need real PK data)
-    const penaltyKillGoalsAllowed = stats.penaltyKillGoalsAllowed || 0
-    const penaltyKillTimesShorthanded = stats.penaltyKillTimesShorthanded || 1
-    const penaltyKillPercentage = (
-        ((penaltyKillTimesShorthanded - penaltyKillGoalsAllowed) / penaltyKillTimesShorthanded) *
-        100
-    ).toFixed(1)
-
-    // Goal Differential
-    const goalDifferential = stats.goalDifferential || stats.goalsFor - stats.goalsAgainst || 0
-
-    // Goals For Per Game
-    const goalsForPerGame = ((stats.goalsFor || 0) / gamesPlayed).toFixed(2)
-
-    // Goals Against Per Game
-    const goalsAgainstPerGame = ((stats.goalsAgainst || 0) / gamesPlayed).toFixed(2)
-
-    return {
-        powerPlayPercentage,
-        penaltyKillPercentage,
-        goalDifferential,
-        goalsForPerGame,
-        goalsAgainstPerGame,
-    }
-}
+const perGame = (goals) =>
+    teamData.gamesPlayed
+        ? (goals / teamData.gamesPlayed).toLocaleString('fi-FI', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+          })
+        : '–'
+const streak = $derived(teamData.streak.replace(/^W/, 'V').replace(/^L/, 'H').replace(/^OT/, 'JA'))
 </script>
 
-<tr
-    class={_rowClasses}
-    style={Object.entries(_teamColorVars)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join("; ")}
->
-    <!-- Rank -->
-    <td
-        class="standing-cell standing-cell--rank px-3 py-3 text-sm font-medium text-gray-900 text-center w-12 sticky left-0 z-10 {isWildCard
-            ? 'bg-blue-50/50 border-blue-200'
-            : 'bg-white border-gray-100'} border-r shadow-[2px_0_5px_rgba(0,0,0,0.05)]"
-    >
-        <div class="flex items-center justify-center">
-            <span class="text-gray-600">
-                {rank}
-            </span>
-            {#if _showPlayoffIndicator && _isPlayoffTeam}
-                <div
-                    class="ml-1 w-2 h-2 {isWildCard
-                        ? 'bg-blue-500'
-                        : 'bg-gray-800'} rounded-full"
-                    title={isWildCard ? 'Wild Card' : 'Pudotuspelipaikka'}
-                ></div>
-            {/if}
+<tr class:standings-row--wildcard={isWildCard && eligible}>
+    <td class="rank-cell">
+        <span>{teamData.divisionRank}</span>
+        {#if eligible}<i class="playoff-dot" class:playoff-dot--wildcard={isWildCard} title={isWildCard ? 'Tämänhetkinen Wild Card -sija' : 'Divisioonan kolmen parhaan joukossa'}></i>{/if}
+    </td>
+    <th scope="row" class="team-cell">
+        <div class="team-identity">
+            <TeamLogo team={teamData.team} size="28" />
+            <span class="team-full-name">{teamData.teamName}</span><span class="team-abbrev">{teamData.team}</span>
+            {#if teamData.clinchIndicator}<span class="clinch-badge" title="NHL:n varmistettu pudotuspelimerkintä">{teamData.clinchIndicator}</span>{/if}
         </div>
-    </td>
-
-    <!-- Team -->
-    <td
-        class="standing-cell standing-cell--team px-3 py-3 text-sm sticky left-12 z-10 {isWildCard
-            ? 'bg-blue-50/50 border-blue-200'
-            : 'bg-white border-gray-100'} border-r shadow-[2px_0_5px_rgba(0,0,0,0.05)]"
-    >
-        <div class="flex items-center space-x-3">
-            <div class="flex-shrink-0">
-                <TeamLogo {team} size="36" />
-            </div>
-            <div class="min-w-0 flex-1">
-                <p class="font-medium text-gray-900 truncate hidden sm:block">
-                    {_teamName}
-                </p>
-                <p class="text-xs font-bold sm:font-normal text-gray-700 sm:text-gray-500">
-                    {team}
-                </p>
-            </div>
-        </div>
-    </td>
-
-    <!-- Games Played -->
-    <td class="standing-cell standing-cell--gp px-3 py-3 text-sm text-center text-gray-900 w-12">
-        <span class="stat-value">{_teamStats.gamesPlayed}</span>
-    </td>
-
-    <!-- Wins -->
-    <td class="standing-cell standing-cell--wins px-3 py-3 text-sm text-center w-12">
-        {_teamStats.wins}
-    </td>
-
-    <!-- Losses -->
-    <td class="standing-cell standing-cell--losses px-3 py-3 text-sm text-center w-12">
-        {_teamStats.losses}
-    </td>
-
-    <!-- Overtime Losses -->
-    <td class="standing-cell standing-cell--ot px-3 py-3 text-sm text-center w-12">
-        {_teamStats.overtimeLosses}
-    </td>
-
-    <!-- Points -->
-    <td class="standing-cell standing-cell--points px-3 py-3 text-sm font-bold text-center w-12">
-        {_teamStats.points}
-    </td>
-
-    <!-- Points Percentage -->
-    <td
-        class="standing-cell standing-cell--points-pct px-3 py-3 text-sm text-center text-gray-900 w-14"
-    >
-        <span class="stat-value">{_teamStats.pointsPercentage.toFixed(3)}</span>
-    </td>
-
-    <!-- Streak -->
-    <td class="standing-cell standing-cell--streak px-3 py-3 text-sm text-center w-14">
-        {#if _streakDisplay}
-            <span class="text-gray-600" title="Voitto-, häviö- tai jatkoaikataikkujen määrä">
-                {_streakDisplay.text}
-            </span>
-        {:else}
-            <span class="text-gray-400">-</span>
-        {/if}
-    </td>
-
-    <!-- Last 10 Games -->
-    <td
-        class="standing-cell standing-cell--l10 px-3 py-3 text-sm text-center text-gray-600 w-20 whitespace-nowrap"
-    >
-        <span class="stat-value tabular-nums" title="Viimeiset 10 pelia: voitot-häviöt-jatkoaika-tappiot">
-            {_last10Display}
-        </span>
-    </td>
-
-    {#if _showAdvancedStats}
-        <!-- Power Play Percentage -->
-        <td class="px-3 py-3 text-sm text-center w-14">
-            {_advancedStats.powerPlayPercentage}%
-        </td>
-
-        <!-- Penalty Kill Percentage -->
-        <td class="px-3 py-3 text-sm text-center w-14">
-            {_advancedStats.penaltyKillPercentage}%
-        </td>
-
-        <!-- Goal Differential -->
-        <td class="px-3 py-3 text-sm text-center w-14">
-            <span
-                class={_advancedStats.goalDifferential > 0
-                    ? "text-green-700"
-                    : _advancedStats.goalDifferential < 0
-                      ? "text-red-700"
-                      : "text-gray-700"}
-            >
-                {_advancedStats.goalDifferential > 0 ? "+" : ""}{_advancedStats.goalDifferential}
-            </span>
-        </td>
-
-        <!-- Goals For Per Game -->
-        <td class="px-3 py-3 text-sm text-center text-gray-900 w-14">
-            <span class="stat-value">{_advancedStats.goalsForPerGame}</span>
-        </td>
-
-        <!-- Goals Against Per Game -->
-        <td class="px-3 py-3 text-sm text-center text-gray-900 w-14">
-            <span class="stat-value">{_advancedStats.goalsAgainstPerGame}</span>
-        </td>
+    </th>
+    <td>{teamData.gamesPlayed}</td><td>{teamData.wins}</td><td>{teamData.losses}</td><td>{teamData.overtimeLosses}</td>
+    <td class="points-cell">{teamData.points}</td><td>{pct}</td><td>{streak || '–'}</td><td>{teamData.last10 || '–'}</td>
+    {#if showAdvancedStats}
+        <td>{teamData.goalsFor}</td><td>{teamData.goalsAgainst}</td>
+        <td>{teamData.goalDifferential > 0 ? '+' : ''}{teamData.goalDifferential}</td>
+        <td>{perGame(teamData.goalsFor)}</td><td>{perGame(teamData.goalsAgainst)}</td>
     {/if}
 </tr>
 
 <style>
-    tr {
-        position: relative;
-    }
-
-    .stat-value {
-        font-variant-numeric: tabular-nums;
-        font-weight: 600;
-        color: #1f2937;
-    }
-
-    @media (max-width: 768px) {
-        tr {
-            font-size: 0.75rem;
-        }
-
-        td {
-            padding: 0.625rem 0.5rem;
-        }
+    tr { --row-bg: var(--color-panel); background: var(--row-bg); }
+    tr:hover { --row-bg: var(--color-table-hover); }
+    .standings-row--wildcard { --row-bg: var(--accent-ice); }
+    .rank-cell { position: sticky; left: 0; z-index: 1; min-width: 3rem; width: 3rem; background: var(--row-bg); }
+    .rank-cell span { margin-right: 0.25rem; }
+    .team-cell { position: sticky; left: 3rem; z-index: 1; background: var(--row-bg); text-align: left; }
+    .team-identity { display: flex; gap: var(--space-2); align-items: center; min-width: 12rem; }
+    .team-abbrev { display: none; }
+    .clinch-badge { font-size: 0.7rem; color: var(--color-muted); }
+    @media (max-width: 640px) {
+        .team-full-name { display: none; }
+        .team-abbrev { display: inline; }
+        .team-identity { min-width: 5.5rem; }
     }
 </style>

@@ -4,7 +4,7 @@ const { children, padding = 'normal', accent = false, interactive = false } = $p
 </script>
 
 <div
-    class="card"
+    class="card ui-surface"
     class:card--accent={accent}
     class:card--interactive={interactive}
     data-padding={padding}
@@ -20,6 +20,8 @@ const { children, padding = 'normal', accent = false, interactive = false } = $p
         overflow: hidden;
         background: var(--card-bg);
         border: var(--card-border);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
     }
 
     .card[data-padding="normal"] {
@@ -35,11 +37,7 @@ const { children, padding = 'normal', accent = false, interactive = false } = $p
     }
 
     .card--accent::before {
-        content: "";
-        position: absolute;
-        inset: 0 0 auto;
-        height: 3px;
-        background: var(--card-accent);
+        display: none;
     }
 
     .card--interactive {

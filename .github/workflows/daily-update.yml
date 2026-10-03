@@ -50,6 +50,7 @@ jobs:
           .venv/bin/python scripts/data_collection/finnish/test_fetch_results.py
           .venv/bin/python scripts/test_check_deployment.py
           .venv/bin/python scripts/test_daily_update.py
+          .venv/bin/python scripts/data_collection/test_fetch_standings.py
 
       - name: Validate Finnish players cache
         run: |
@@ -75,6 +76,9 @@ jobs:
           source .venv/bin/activate
           python scripts/data_collection/finnish/fetch_offseason_moves.py || echo "::warning::Offseason moves collection incomplete; inspect source warnings"
 
+      - name: Refresh official standings
+        run: .venv/bin/python scripts/data_collection/fetch_standings.py --force || echo "::warning::Standings refresh failed; previous snapshot preserved"
+
       - name: Sync Finnish players roster
         run: |
           source .venv/bin/activate
@@ -94,7 +98,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json static/data/offseason-moves.json static/data/upcoming-finnish-games.json static/data/preseason-summary.json
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json static/data/offseason-moves.json static/data/upcoming-finnish-games.json static/data/preseason-summary.json static/data/standings.json
           git diff --cached --quiet || git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git pull --rebase origin main
           git push

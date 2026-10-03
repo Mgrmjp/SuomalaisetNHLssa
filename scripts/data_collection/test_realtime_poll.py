@@ -128,6 +128,7 @@ class RealtimePollTests(unittest.TestCase):
             "static/data/prepopulated/games/2026-10-01.json",
             "static/data/players/finnish-roster.json",
             "static/data/games_manifest.json",
+            "static/data/standings.json",
         ]
         for filename in files:
             path = checkout / filename
@@ -136,7 +137,7 @@ class RealtimePollTests(unittest.TestCase):
         git("add", ".", cwd=checkout)
         git("commit", "-m", "Initial data", cwd=checkout)
         git("push", "origin", "main", cwd=checkout)
-        for filename in (files[0], files[2]):
+        for filename in (files[0], files[2], files[3]):
             (checkout / filename).write_text('{"updated":true}\n')
 
         result = subprocess.run(
@@ -145,11 +146,23 @@ class RealtimePollTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(git("status", "--porcelain", cwd=checkout).stdout, "")
-        for filename in (files[0], files[2]):
+        for filename in (files[0], files[2], files[3]):
             self.assertEqual(
                 git("show", f"main:{filename}", cwd=remote).stdout,
                 '{"updated":true}\n',
             )
+
+        # An hourly standings-only update must also be committed and published.
+        (checkout / files[3]).write_text('{"standingsOnly":true}\n')
+        result = subprocess.run(
+            ["bash", "-e", "-c", script], cwd=checkout, capture_output=True, text=True
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(git("status", "--porcelain", cwd=checkout).stdout, "")
+        self.assertEqual(
+            git("show", f"main:{files[3]}", cwd=remote).stdout,
+            '{"standingsOnly":true}\n',
+        )
 
 
 if __name__ == "__main__":

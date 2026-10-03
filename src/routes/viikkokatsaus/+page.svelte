@@ -11,7 +11,7 @@ import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 /** @type {{ data: { articles: Array<{slug: string, title: string, date: string, week: number, year: number, excerpt: string}> } }} */
 const { data: _data } = $props()
 
-const data = _data
+const data = $derived(_data)
 
 function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString('fi-FI', {
@@ -127,22 +127,6 @@ function formatDate(dateStr) {
         gap: var(--space-6);
     }
 
-    .back-link {
-        display: inline-flex;
-        width: fit-content;
-        align-items: center;
-        gap: var(--space-2);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: color 0.16s ease;
-    }
-
-    .back-link:hover {
-        color: var(--accent);
-    }
-
     .back-link:focus-visible,
     .article-link:focus-visible {
         outline: 3px solid var(--accent-glow);
@@ -158,12 +142,6 @@ function formatDate(dateStr) {
         display: block;
         color: inherit;
         text-decoration: none;
-    }
-
-    .article-link :global(.card) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        transition: border-color 0.16s ease;
     }
 
     .article-link:hover :global(.card) {

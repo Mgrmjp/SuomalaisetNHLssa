@@ -42,9 +42,21 @@ jobs:
           python scripts/data_collection/test_realtime_poll.py
           python scripts/data_collection/finnish/test_fetch_results.py
           python scripts/test_check_deployment.py
+          python scripts/data_collection/test_fetch_standings.py
           # Check for live games and missing final results.
           # It automatically handles the late-night/early-morning date logic
           python scripts/data_collection/realtime_poll.py --once
+
+      - name: Refresh official standings hourly and after result updates
+        id: standings
+        env:
+          GAMES_UPDATED: ${{ steps.poll.outputs.updated }}
+        run: |
+          if [ "$GAMES_UPDATED" = 'true' ]; then
+            python scripts/data_collection/fetch_standings.py --force || echo "::warning::Standings refresh failed; previous snapshot preserved"
+          else
+            python scripts/data_collection/fetch_standings.py || echo "::warning::Standings refresh failed; previous snapshot preserved"
+          fi
 
       - name: Sync Finnish players roster
         if: steps.poll.outputs.updated == 'true'
@@ -52,12 +64,12 @@ jobs:
           python scripts/data_collection/finnish/sync_roster.py
 
       - name: Commit and push updated data
-        if: steps.poll.outputs.updated == 'true'
+        if: steps.poll.outputs.updated == 'true' || steps.standings.outputs.updated == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           # The poll also regenerates the manifest; commit it before rebasing.
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/games_manifest.json
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/games_manifest.json static/data/standings.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

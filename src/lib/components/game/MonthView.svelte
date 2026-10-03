@@ -130,10 +130,10 @@ function generateCalendarDays(selectedDateStr) {
 </script>
 
 <div
-    class="calendar-month bg-white rounded-2xl shadow-xl p-2 sm:p-4 border border-gray-100 w-full mx-auto max-w-md box-border"
+    class="calendar-month ui-surface p-2 sm:p-3 border border-gray-100 w-full mx-auto max-w-md box-border"
 >
     <div
-        class="calendar-month__header grid grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-2 mb-4 px-1"
+        class="calendar-month__header grid grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-2 mb-2 px-1"
     >
         <span class="calendar-month__header-slot flex justify-start">
             {#if view === "calendar"}
@@ -202,9 +202,8 @@ function generateCalendarDays(selectedDateStr) {
                         class:opacity-30={!day.isCurrentMonth && !day.isSelected}
                         class:bg-blue-50={day.isToday && !day.isSelected}
                         class:text-blue-600={day.isToday && !day.isSelected}
-                        class:bg-blue-600={day.isSelected}
+                        class:calendar-month__selected={day.isSelected}
                         class:text-white={day.isSelected}
-                        class:shadow-md={day.isSelected}
                         class:hover:scale-110={!day.isFuture && !day.isSelected}
                         class:active:scale-95={!day.isFuture}
                         class:hover:bg-gray-50={!day.isToday && !day.isSelected && !day.isFuture}
@@ -236,7 +235,7 @@ function generateCalendarDays(selectedDateStr) {
                 {#each years as year}
                     <button
                         class="year-btn p-4 rounded-xl text-lg font-semibold transition-all duration-200 border-2"
-                        class:bg-blue-600={year === currentMonth.getFullYear()}
+                        class:calendar-month__selected={year === currentMonth.getFullYear()}
                         class:text-white={year === currentMonth.getFullYear()}
                         class:border-transparent={year === currentMonth.getFullYear()}
                         class:bg-white={year !== currentMonth.getFullYear()}
@@ -262,3 +261,8 @@ function generateCalendarDays(selectedDateStr) {
         </div>
     </div>
 </div>
+
+<style>
+    .calendar-month__selected { background: var(--accent); color: white; }
+    .calendar-month__nav-btn { color: var(--accent); background: var(--accent-ice); }
+</style>

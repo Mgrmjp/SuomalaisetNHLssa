@@ -1,7 +1,4 @@
-<div class="card card--skeleton">
-    <!-- Top accent stripe -->
-    <div class="card__stripe card__stripe--skeleton"></div>
-
+<div class="card ui-surface card--skeleton">
     <!-- Header -->
     <div class="card__top">
         <div class="card__player-info">
@@ -16,7 +13,7 @@
 
     <!-- Primary stat ring -->
     <div class="card__stat">
-        <div class="card__ring-skeleton"></div>
+        <div class="card__value-skeleton"></div>
         <div class="card__stat-meta-skeleton">
             <div class="card__stat-meta-label-skeleton"></div>
             <div class="card__stat-meta-context-skeleton"></div>
@@ -46,25 +43,19 @@
     .card {
         position: relative;
         overflow: hidden;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
         padding: 1rem;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 252, 0.94));
+        background: var(--card-bg);
         border: 1px solid rgba(226, 232, 240, 0.8);
-        box-shadow: none;
+        box-shadow: var(--card-shadow);
         min-height: 260px;
+        border-radius: var(--card-radius);
     }
 
     @media (max-width: 767px) {
-        .card { padding: 0.85rem; border-radius: 0; }
+        .card { padding: 0.85rem; border-radius: var(--card-radius); }
     }
 
-    .card__stripe--skeleton {
-        position: absolute;
-        top: 0; left: 0; right: 0;
-        height: 3px;
-        background: #e5e7eb;
-        z-index: 2;
-    }
 
     .card__top {
         display: flex;
@@ -77,7 +68,7 @@
         height: 16px;
         width: 70%;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
         margin-bottom: 0.35rem;
     }
 
@@ -85,20 +76,20 @@
         height: 10px;
         width: 40%;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
     }
 
     .card__badge-skeleton {
         width: 44px;
         height: 24px;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
         flex-shrink: 0;
     }
 
     .card__matchup-skeleton {
         height: 28px;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
         background: #f3f4f6;
         margin-top: 0.5rem;
     }
@@ -110,10 +101,10 @@
         padding: 0.5rem 0;
     }
 
-    .card__ring-skeleton {
-        width: 80px;
-        height: 80px;
-        border-radius: 999px;
+    .card__value-skeleton {
+        width: 72px;
+        height: 28px;
+        border-radius: var(--card-radius-sm);
         background: #f3f4f6;
         flex-shrink: 0;
     }
@@ -127,14 +118,14 @@
         height: 10px;
         width: 60px;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
     }
 
     .card__stat-meta-context-skeleton {
         height: 10px;
         width: 80px;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
     }
 
     .card__sub-stats-skeleton {
@@ -156,14 +147,14 @@
         height: 14px;
         width: 18px;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
     }
 
     .card__sub-stat-label-skeleton {
         height: 8px;
         width: 32px;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
     }
 
     .card__footer {
@@ -177,13 +168,13 @@
         height: 8px;
         width: 80px;
         background: #f3f4f6;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
     }
 
     .card__footer-btn-skeleton {
         width: 44px;
         height: 22px;
         background: #e5e7eb;
-        border-radius: 0;
+        border-radius: var(--card-radius-sm);
     }
 </style>

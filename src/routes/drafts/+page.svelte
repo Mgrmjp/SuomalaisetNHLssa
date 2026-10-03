@@ -1,9 +1,10 @@
 <script>
 // @ts-nocheck
-import { ChevronLeft } from 'lucide-svelte'
 
+import { ChevronLeft } from 'lucide-svelte'
 import { base } from '$app/paths'
 import Card from '$lib/components/ui/Card.svelte'
+import DataTable from '$lib/components/ui/DataTable.svelte'
 import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 
@@ -40,11 +41,11 @@ const yearlyStats = [
     <meta property="og:description" content="Suomalaisten NHL-varausten historia ja tilastot." />
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen">
     <PageShell width="medium">
         <a
             href={base + "/lupaukset"}
-            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+            class="back-link"
         >
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Takaisin lupaukset-sivulle
@@ -97,18 +98,18 @@ const yearlyStats = [
             <!-- Right column: Top picks -->
             <div class="lg:col-span-2">
                 <h2 class="text-2xl font-bold text-slate-900 mb-6">Menestyneimmät top-varaukset</h2>
-                
+
                 <Card padding="none">
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
+
+                        <DataTable caption="Suomalaisten NHL-varaukset" class="w-full">
                             <thead class="bg-slate-50 border-b border-slate-200">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Vuosi</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Varaus</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Pelaaja</th>
-                                    <th class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Joukkue</th>
-                                    <th class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">O</th>
-                                    <th class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">P</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Vuosi</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Varaus</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Pelaaja</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Joukkue</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">O</th>
+                                    <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">P</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100">
@@ -127,8 +128,8 @@ const yearlyStats = [
                                     </tr>
                                 {/each}
                             </tbody>
-                        </table>
-                    </div>
+                        </DataTable>
+
                 </Card>
 
                 <!-- Fun facts -->
@@ -136,14 +137,14 @@ const yearlyStats = [
                     <div class="border border-blue-100 bg-blue-50 p-6">
                         <h3 class="font-bold text-blue-900 mb-2">Paras varausvuosi</h3>
                         <p class="text-sm text-blue-800">
-                            <strong>2016</strong> tuotti eniten NHL-pelaajia: Patrik Laine, Jesse Puljujärvi, 
+                            <strong>2016</strong> tuotti eniten NHL-pelaajia: Patrik Laine, Jesse Puljujärvi,
                             Mikko Rantanen, Sebastian Aho, Henri Jokiharju...
                         </p>
                     </div>
                     <div class="border border-emerald-100 bg-emerald-50 p-6">
                         <h3 class="font-bold text-emerald-900 mb-2">Eniten pisteitä</h3>
                         <p class="text-sm text-emerald-800">
-                            <strong>Mikko Rantanen</strong> (2015, #9) on kerännyt eniten pisteitä 
+                            <strong>Mikko Rantanen</strong> (2015, #9) on kerännyt eniten pisteitä
                             suomalaisista draft-varauksista yli 500 pistettä.
                         </p>
                     </div>

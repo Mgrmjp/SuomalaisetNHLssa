@@ -283,29 +283,22 @@ export function setView(view) {
 
 /**
  * Load standings data
- * @param {string} seasonStart - Season start date (YYYY-MM-DD)
+ * @param {{ force?: boolean }} options - Bypass the deployed snapshot cache
  * @returns {Promise<object>} Standings data
  */
-export async function loadStandings(seasonStart) {
-    const effectiveSeasonStart =
-        !seasonStart || typeof seasonStart !== 'string'
-            ? get(earliestPrepopulatedDate)
-            : seasonStart
+export const standingsMetadata = writable(null)
 
+export async function loadStandings(options = {}) {
     standingsLoadingStore.set(true)
 
     try {
-        logger.debug('📊 Starting standings calculation from', effectiveSeasonStart)
-        const standingsData = await standingsService.calculateSeasonStandings(effectiveSeasonStart)
-        logger.debug('📊 Standings calculation result:', standingsData)
-        logger.debug('📊 Eastern conference keys:', Object.keys(standingsData?.eastern || {}))
-        logger.debug('📊 Western conference keys:', Object.keys(standingsData?.western || {}))
-        standingsStore.set(standingsData)
+        const { conferences, metadata } = await standingsService.loadLatest(options)
+        standingsStore.set(conferences)
+        standingsMetadata.set(metadata)
         logger.success('Standings loaded successfully')
-        return standingsData
+        return conferences
     } catch (error) {
         logger.error('Error loading standings:', error)
-        standingsStore.set({})
         throw error
     } finally {
         standingsLoadingStore.set(false)
@@ -313,13 +306,11 @@ export async function loadStandings(seasonStart) {
 }
 
 /**
- * Clear standings cache and reload
- * @param {string} seasonStart - Season start date
+ * Reload the latest deployed official standings snapshot
  * @returns {Promise<object>} Updated standings data
  */
-export async function refreshStandings(seasonStart) {
-    standingsService.clearCache()
-    return await loadStandings(seasonStart)
+export async function refreshStandings() {
+    return await loadStandings({ force: true })
 }
 
 // Store for active button state - optimized

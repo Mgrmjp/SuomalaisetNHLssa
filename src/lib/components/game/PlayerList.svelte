@@ -578,7 +578,7 @@ $effect(() => {
     }
 
     .scoring-list__section-title {
-        font-family: var(--font-display, "Sora", "Inter", system-ui, sans-serif);
+        font-family: var(--font-display);
         letter-spacing: 0;
     }
 

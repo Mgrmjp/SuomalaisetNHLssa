@@ -12,7 +12,7 @@ import { jsonLdScript } from '$lib/utils/jsonLd.js'
 /** @type {{ data: { article: {slug: string, title: string, date: string, week: number, year: number, content: string}, prevArticle: {slug: string, title: string} | null, nextArticle: {slug: string, title: string} | null } }} */
 const { data: _data } = $props()
 
-const data = _data
+const data = $derived(_data)
 const articleUrl = $derived(`https://suomalaisetnhlssa.fi/viikkokatsaus/${data.article.slug}`)
 const articleDescription = $derived(
     data.article.excerpt ||
@@ -191,10 +191,6 @@ function formatDate(dateStr) {
         transition: color 0.16s ease;
     }
 
-    .back-link {
-        width: fit-content;
-    }
-
     .back-link:hover,
     .article-nav__link:hover {
         color: var(--accent);
@@ -237,11 +233,6 @@ function formatDate(dateStr) {
         font-weight: var(--eyebrow-weight);
         letter-spacing: var(--eyebrow-track);
         text-transform: uppercase;
-    }
-
-    .article-surface :global(.card) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
     }
 
     .article-surface {

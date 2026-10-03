@@ -82,11 +82,11 @@ const breadcrumbSchema = $derived({
     {@html jsonLdScript(breadcrumbSchema)}
 </svelte:head>
 
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen">
     <PageShell width="content">
         <a
             href={base + "/scouting"}
-            class="mb-6 inline-flex items-center text-sm font-semibold text-slate-600 transition-colors hover:text-slate-900"
+            class="back-link"
         >
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Scouting Reports
@@ -110,7 +110,7 @@ const breadcrumbSchema = $derived({
 
         <!-- Navigation -->
         <div class="mt-8 flex justify-between">
-            <a 
+            <a
                 href="{base}/scouting"
                 class="inline-flex items-center text-slate-600 hover:text-slate-900 transition-colors"
             >

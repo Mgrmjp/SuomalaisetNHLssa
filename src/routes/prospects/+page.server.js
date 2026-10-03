@@ -1,6 +1,7 @@
-// Redirect to lupaukset page
 import { redirect } from '@sveltejs/kit'
+import { base } from '$app/paths'
+import { PROSPECTS_ENABLED } from '$lib/config/features.js'
 
 export function load() {
-    throw redirect(301, '/lupaukset')
+    redirect(PROSPECTS_ENABLED ? 301 : 307, PROSPECTS_ENABLED ? `${base}/lupaukset/` : `${base}/`)
 }

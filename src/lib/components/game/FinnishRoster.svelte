@@ -1,19 +1,21 @@
 <script>
 // @ts-nocheck
+
 import { onMount } from 'svelte'
+import Button from '$lib/components/ui/Button.svelte'
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
-import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import ViewState from '$lib/components/ui/ViewState.svelte'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import teamMapping from '$lib/utils/teamMapping.js'
 
 // State
-let _players = []
-let _teamsMap = new Map()
-let _inactivePlayers = []
-let _loading = true
-let _error = null
+let _players = $state([])
+let _teamsMap = $state(new Map())
+let _inactivePlayers = $state([])
+let _loading = $state(true)
+let _error = $state(null)
 
 // Extract team abbreviation from headshot URL
 function extractTeamFromHeadshot(headshot) {
@@ -112,7 +114,7 @@ async function loadFinnishRoster() {
         _players = playerList
     } catch (err) {
         console.error('Error loading Finnish roster:', err)
-        _error = 'Failed to load Finnish players roster'
+        _error = 'Pelaajaluettelon lataaminen epäonnistui'
     } finally {
         _loading = false
     }
@@ -157,20 +159,14 @@ function _formatBirthDate(dateStr) {
 
 <div class="finnish-roster">
     {#if _loading}
-        <div class="py-12 text-center">
-            <LoadingSpinner message="Ladataan suomalaisten NHL-pelaajien luetteloa..." />
-        </div>
+        <ViewState busy message="Ladataan suomalaisten NHL-pelaajien luetteloa…" />
     {:else if _error}
         <ErrorBoundary>
-            <div class="py-12 text-center">
-                <p class="text-red-600 mb-4">{_error}</p>
-                <button
-                    on:click={loadFinnishRoster}
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                    Yritä uudelleen
-                </button>
-            </div>
+            <ViewState title="Pelaajaluetteloa ei ole saatavilla" message={_error}>
+                {#snippet actions()}
+                    <Button variant="primary" onclick={loadFinnishRoster}>Yritä uudelleen</Button>
+                {/snippet}
+            </ViewState>
         </ErrorBoundary>
     {:else}
         <div class="roster-header mb-8">
@@ -185,11 +181,11 @@ function _formatBirthDate(dateStr) {
             {#each Array.from(_teamsMap.entries()) as [teamAbbr, teamPlayers]}
                 {@const teamName = teamMapping[teamAbbr] || teamAbbr}
                 {@const sortedPlayers = _sortPlayersByPosition(teamPlayers)}
-                <div class="team-card" style:--team-primary-color="#1e40af">
+                <div class="team-card ui-surface">
                     <!-- Team Header -->
                     <div class="team-header">
                         <div class="team-logo-wrapper">
-                            <TeamLogo team={teamAbbr} size="64" />
+                            <TeamLogo team={teamAbbr} size="40" />
                         </div>
                         <div class="team-info">
                             <h3 class="team-name">{teamName}</h3>
@@ -223,7 +219,7 @@ function _formatBirthDate(dateStr) {
         {#if _inactivePlayers.length > 0}
             <div class="inactive-section mt-8">
                 <h3 class="text-xl font-bold text-gray-700 mb-4">Ei joukkueessa / Vanhat pelaajat</h3>
-                <div class="inactive-list">
+                <div class="inactive-list ui-surface">
                     <div class="player-row inactive-header">
                         <span class="player-number">#</span>
                         <span class="player-name">Pelaaja</span>
@@ -258,27 +254,27 @@ function _formatBirthDate(dateStr) {
     }
 
     .roster-header {
-        text-align: center;
+        text-align: left;
     }
 
     .teams-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
         gap: 1.5rem;
         align-items: start;
     }
 
     .team-card {
         background: white;
-        border-radius: 0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-radius: var(--card-radius);
+        box-shadow: var(--card-shadow);
         overflow: hidden;
         transition: box-shadow 0.2s ease;
         border: 1px solid #e5e7eb;
     }
 
     .team-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: var(--card-shadow);
     }
 
     .team-header {
@@ -286,7 +282,7 @@ function _formatBirthDate(dateStr) {
         align-items: center;
         gap: 1rem;
         padding: 1.25rem;
-        background: linear-gradient(135deg, #f3f4f6 0%, #ffffff 100%);
+        background: var(--color-table-head);
         border-bottom: 1px solid #e5e7eb;
     }
 
@@ -298,7 +294,7 @@ function _formatBirthDate(dateStr) {
         width: 56px;
         height: 56px;
         background: white;
-        border-radius: 0;
+        border-radius: var(--card-radius);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
@@ -383,11 +379,11 @@ function _formatBirthDate(dateStr) {
 
     .inactive-list {
         background: #f9fafb;
-        border-radius: 0;
+        border-radius: var(--card-radius);
         border: 1px solid #e5e7eb;
         overflow: hidden;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
     }
 
     .player-row.inactive-header {

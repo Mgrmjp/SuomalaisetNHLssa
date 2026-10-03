@@ -1,5 +1,6 @@
 <script>
 // @ts-nocheck
+import DataTable from '$lib/components/ui/DataTable.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 
 const { summary } = $props()
@@ -53,8 +54,8 @@ function resultSuffix(game) {
                     <p>Harjoituskauden maalit ja syötöt</p>
                 </div>
                 {#if scorers.length}
-                    <div class="scorer-table-wrap" id="preseason-scorers">
-                        <table class="scorer-table">
+
+                        <DataTable caption="Harjoituskauden suomalaisten pistepörssi" class="scorer-table" regionId="preseason-scorers">
                             <thead>
                                 <tr>
                                     <th scope="col">Pelaaja</th>
@@ -80,8 +81,8 @@ function resultSuffix(game) {
                                     </tr>
                                 {/each}
                             </tbody>
-                        </table>
-                    </div>
+                        </DataTable>
+
                     {#if scorers.length > 5}
                         <button type="button" class="preseason-toggle" onclick={() => showAllScorers = !showAllScorers} aria-expanded={showAllScorers} aria-controls="preseason-scorers">
                             {showAllScorers ? 'Näytä vähemmän' : `Näytä kaikki ${scorers.length} pelaajaa`}
@@ -205,38 +206,21 @@ function resultSuffix(game) {
         font-size: 0.79rem;
     }
 
-    .scorer-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.84rem;
-    }
 
-    .scorer-table th,
-    .scorer-table td {
-        padding: 0.55rem 0.4rem;
-        border-bottom: 1px solid rgba(16, 24, 40, 0.08);
-        text-align: right;
-    }
 
-    .scorer-table th:first-child,
-    .scorer-table td:first-child {
+
+
+    :global(.scorer-table) th:first-child,
+    :global(.scorer-table) td:first-child {
         padding-left: 0;
         text-align: left;
     }
 
-    .scorer-table th:last-child,
-    .scorer-table td:last-child {
-        padding-right: 0;
-    }
 
-    .scorer-table thead {
-        color: var(--color-muted);
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-    }
 
-    .scorer-table tbody tr:first-child {
+
+
+    :global(.scorer-table) tbody tr:first-child {
         background: rgba(16, 24, 40, 0.035);
     }
 
@@ -349,14 +333,9 @@ function resultSuffix(game) {
     }
 
     @media (max-width: 420px) {
-        .scorer-table {
-            font-size: 0.78rem;
-        }
 
-        .scorer-table th,
-        .scorer-table td {
-            padding: 0.55rem 0.2rem;
-        }
+
+
 
         .player-cell {
             gap: 0.25rem;

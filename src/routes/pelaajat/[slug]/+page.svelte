@@ -1,27 +1,31 @@
 <script>
 // @ts-nocheck
-import { ChevronLeft } from 'lucide-svelte'
 
+import { ChevronLeft } from 'lucide-svelte'
 import { base } from '$app/paths'
 import Card from '$lib/components/ui/Card.svelte'
 import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
+import ViewMetadata from '$lib/components/ui/ViewMetadata.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
 /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
 const { data } = $props()
 
-const { player, sameTeamPlayers, seasonId, slug } = data
-const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
+const { player, sameTeamPlayers, seasonId, slug } = $derived(data)
+const formattedSeason = $derived(`${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`)
 
-const playerName = player.skaterFullName || player.goalieFullName || player.name || 'Unknown Player'
+const playerName = $derived(
+    player.skaterFullName || player.goalieFullName || player.name || 'Unknown Player'
+)
 const displayName = $derived(correctFullName(playerName))
-const teamName =
+const teamName = $derived(
     player.profileTeamAbbrev || player.currentTeam || player.teamAbbrevs || player.lastTeam || 'NHL'
-const position = player.positionCode || player.position || 'N/A'
-const isGoalie = position === 'G'
+)
+const position = $derived(player.positionCode || player.position || 'N/A')
+const isGoalie = $derived(position === 'G')
 const hasSeasonStats = $derived(Boolean(player.hasSeasonStats ?? !player.isRosterProfile))
 const profileGamesPlayed = $derived(player.gamesPlayed ?? player.careerGamesPlayed)
 
@@ -177,7 +181,7 @@ function getPlayerSlug(p) {
     })}
 </svelte:head>
 
-<div class="flat-view min-h-screen">
+<div class="public-view min-h-screen">
     <PageShell width="medium">
         <a class="back-link" href={base + "/pelaajat"}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
@@ -193,9 +197,9 @@ function getPlayerSlug(p) {
         <!-- Player Header -->
         <div class="mb-6 sm:mb-8">
             <Card padding="none" accent>
-            <div class="bg-slate-950 p-5 sm:p-8 text-white border-b border-slate-800">
+            <div class="bg-slate-50 p-5 sm:p-6 text-slate-900 border-b border-slate-200">
                 <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
-                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-slate-900 flex items-center justify-center border border-slate-700">
+                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-slate-100 flex items-center justify-center border border-slate-200">
                         <PlayerHeadshot
                             playerId={player.playerId}
                             explicitUrl={player.headshot}
@@ -203,14 +207,14 @@ function getPlayerSlug(p) {
                             seasonId={seasonId}
                             alt={`${displayName} - ${teamFullName}`}
                             imageClass="w-full h-full object-cover"
-                            fallbackClass="w-full h-full flex items-center justify-center text-4xl font-bold text-white"
+                            fallbackClass="w-full h-full flex items-center justify-center text-4xl font-bold text-slate-900"
                             initials={displayName.split(' ').map(n => n[0]).join('')}
                             loading="eager"
                         />
                     </div>
                     <div class="min-w-0">
-                        <p class="mb-2 text-2xl font-bold sm:text-3xl">{teamFullName}</p>
-                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm sm:text-base text-slate-300">
+                        <p class="mb-2 text-xl font-bold sm:text-2xl">{teamFullName}</p>
+                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm sm:text-base text-slate-500">
                             <span>{position}</span>
                             <span>•</span>
                             <span>#{player.jerseyNumber || player.sweaterNumber || player.playerId}</span>
@@ -220,7 +224,7 @@ function getPlayerSlug(p) {
                             {/if}
                         </div>
                         {#if player.latestMove}
-                            <div class="mt-3 inline-flex max-w-full border border-slate-700 px-3 py-1 text-[0.65rem] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em] text-slate-300">
+                            <div class="mt-3 inline-flex max-w-full border border-slate-200 px-3 py-1 text-[0.65rem] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em] text-slate-500">
                                 Siirtyi: {player.latestMove.oldTeam} → {player.latestMove.newTeam}
                             </div>
                         {/if}
@@ -235,78 +239,78 @@ function getPlayerSlug(p) {
                 </h2>
                 {#if hasSeasonStats}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.gamesPlayed}</div>
                             <div class="text-sm text-gray-500 mt-1">Ottelut</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.goals}</div>
                             <div class="text-sm text-gray-500 mt-1">Maalit</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.assists}</div>
                             <div class="text-sm text-gray-500 mt-1">Syötöt</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-900 border border-slate-800">
-                            <div class="text-2xl sm:text-3xl font-bold text-white">{player.points}</div>
-                            <div class="text-sm text-slate-300 mt-1 font-medium">Pisteet</div>
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-100 border border-slate-200">
+                            <div class="text-2xl sm:text-3xl font-bold text-slate-900">{player.points}</div>
+                            <div class="text-sm text-slate-500 mt-1 font-medium">Pisteet</div>
                         </div>
                     </div>
                 {:else}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-2xl sm:text-3xl font-bold text-gray-900">{profileGamesPlayed ?? '-'}</div>
                             <div class="text-sm text-gray-500 mt-1">NHL-ottelut</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-2xl sm:text-3xl font-bold text-gray-900">{teamName}</div>
                             <div class="text-sm text-gray-500 mt-1">Joukkue</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-2xl sm:text-3xl font-bold text-gray-900">{position}</div>
                             <div class="text-sm text-gray-500 mt-1">Pelipaikka</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-900 border border-slate-800">
-                            <div class="text-base sm:text-xl font-bold text-white">{player.birthplace || 'Suomi'}</div>
-                            <div class="text-sm text-slate-300 mt-1 font-medium">Syntymäpaikka</div>
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-100 border border-slate-200">
+                            <div class="text-base sm:text-xl font-bold text-slate-900">{player.birthplace || 'Suomi'}</div>
+                            <div class="text-sm text-slate-500 mt-1 font-medium">Syntymäpaikka</div>
                         </div>
                     </div>
                 {/if}
 
                 {#if hasSeasonStats && !isGoalie}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.plusMinus > 0 ? '+' : ''}{player.plusMinus}</div>
                             <div class="text-sm text-gray-500 mt-1">+/-</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.penaltyMinutes || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">R.min</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.pointsPerGame?.toFixed(2) || '0.00'}</div>
                             <div class="text-sm text-gray-500 mt-1">Pisteka.</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.shootingPct ? (player.shootingPct * 100).toFixed(1) + '%' : '-'}</div>
                             <div class="text-sm text-gray-500 mt-1">Laukais-%</div>
                         </div>
                     </div>
                 {:else if hasSeasonStats}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.saves || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">Torjunnat</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.goalsAgainst || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">Päästetyt</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.savePercentage ? (player.savePercentage * 100).toFixed(2) + '%' : '-'}</div>
                             <div class="text-sm text-gray-500 mt-1">Torjunta-%</div>
                         </div>
-                        <div class="text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
+                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
                             <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.gamesStarted || 0}</div>
                             <div class="text-sm text-gray-500 mt-1">Aloitukset</div>
                         </div>
@@ -325,7 +329,7 @@ function getPlayerSlug(p) {
                     {#each sameTeamPlayers as teammate}
                         <a
                             href={`${base}/pelaajat/${getPlayerSlug(teammate)}`}
-                            class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all group"
+                            class="ui-surface ui-surface--interactive flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all group"
                         >
                             <div class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-100 flex-shrink-0 overflow-hidden">
                                 <PlayerHeadshot
@@ -354,41 +358,11 @@ function getPlayerSlug(p) {
         {/if}
 
         <!-- Updated timestamp -->
-        <div class="mt-8 text-center text-sm text-gray-400">
+        <ViewMetadata class="mt-8">
             Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}
-        </div>
+        </ViewMetadata>
     </PageShell>
 </div>
 
 <style>
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        margin-bottom: var(--space-6);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-        font-weight: 700;
-        text-decoration: none;
-    }
-
-    .back-link:hover {
-        color: var(--accent);
-    }
-
-    .flat-view :global(*) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
-
-    .flat-view :global(.page-header__logo) {
-        filter: none !important;
-    }
-
-    .flat-view :global(a:focus-visible),
-    .flat-view :global(button:focus-visible),
-    .flat-view :global(input:focus-visible) {
-        outline: 3px solid var(--accent) !important;
-        outline-offset: 2px;
-    }
 </style>

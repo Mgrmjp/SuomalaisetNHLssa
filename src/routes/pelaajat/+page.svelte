@@ -1,17 +1,21 @@
 <script>
 // @ts-nocheck
+
 import { ChevronLeft } from 'lucide-svelte'
 import { base } from '$app/paths'
+import Notice from '$lib/components/ui/Notice.svelte'
 import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import ViewMetadata from '$lib/components/ui/ViewMetadata.svelte'
+import ViewState from '$lib/components/ui/ViewState.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
 /** @type {{ data: { skaters: any[], goalies: any[], seasonId: string, error: string | null, updatedAt: string } }} */
 const { data } = $props()
 
-const { skaters, goalies, seasonId, error: _error } = data
-const _formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`
+const { skaters, goalies, seasonId, error: _error } = $derived(data)
+const _formattedSeason = $derived(`${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}`)
 
 let searchTerm = $state('')
 
@@ -97,7 +101,7 @@ function getPlayerSlug(player) {
     })}</script>`}
 </svelte:head>
 
-<div class="flat-view min-h-screen">
+<div class="public-view min-h-screen">
     <PageShell width="wide">
         <a class="back-link" href={base + "/"}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
@@ -112,21 +116,21 @@ function getPlayerSlug(player) {
                     type="text"
                     bind:value={searchTerm}
                     placeholder="Hae pelaajaa tai joukkuetta..."
-                    class="w-full border border-slate-300 bg-white/70 px-4 py-3 transition-colors focus:border-blue-700 focus:outline-none"
+                    class="ui-control w-full border border-slate-300 bg-white/70 px-4 py-3 transition-colors focus:border-blue-700 focus:outline-none"
                 />
             </div>
         </PageHeader>
 
         {#if _error}
-            <div class="mx-auto max-w-lg border border-red-200 border-l-4 border-l-red-500 bg-red-50 p-4 text-center text-red-700">
-                {_error}
-            </div>
+            <Notice variant="error">{_error}</Notice>
+        {:else if filteredPlayers.length === 0}
+            <ViewState title="Pelaajia ei löytynyt" message="Kokeile toista pelaajan tai joukkueen nimeä." />
         {:else}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {#each filteredPlayers as player}
                     <a
                         href={`${base}/pelaajat/${getPlayerSlug(player)}`}
-                        class="player-card group flex items-center gap-4 border border-slate-200 bg-white/60 p-6 transition-colors hover:border-blue-700 hover:bg-white"
+                        class="player-directory-card ui-surface ui-surface--interactive group flex items-center gap-4 border border-slate-200 bg-white/60 p-6 transition-colors hover:border-blue-700 hover:bg-white"
                     >
                         <div
                             class="flex h-16 w-16 flex-shrink-0 items-center justify-center border border-slate-200 bg-slate-50"
@@ -151,64 +155,13 @@ function getPlayerSlug(player) {
                 {/each}
             </div>
 
-            <div class="mt-8 text-center text-sm text-slate-400">
+            <ViewMetadata class="mt-8">
                 Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")} <br />
                 Yhteensä {filteredPlayers.length} pelaajaa
-            </div>
+            </ViewMetadata>
         {/if}
     </PageShell>
 </div>
 
 <style>
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        margin-bottom: var(--space-6);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-        font-weight: 700;
-        text-decoration: none;
-    }
-
-    .back-link:hover {
-        color: var(--accent);
-    }
-
-    .player-card {
-        position: relative;
-        color: inherit;
-        text-decoration: none;
-    }
-
-    .player-card::before {
-        content: "";
-        position: absolute;
-        inset: 0 auto 0 0;
-        width: 3px;
-        background: var(--accent);
-        opacity: 0;
-        transition: opacity 0.16s ease;
-    }
-
-    .player-card:hover::before,
-    .player-card:focus-visible::before {
-        opacity: 1;
-    }
-
-    .flat-view :global(*) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
-
-    .flat-view :global(.page-header__logo) {
-        filter: none !important;
-    }
-
-    .flat-view :global(a:focus-visible),
-    .flat-view :global(button:focus-visible),
-    .flat-view :global(input:focus-visible) {
-        outline: 3px solid var(--accent) !important;
-        outline-offset: 2px;
-    }
 </style>

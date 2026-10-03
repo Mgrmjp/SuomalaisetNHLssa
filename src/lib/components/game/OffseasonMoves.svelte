@@ -352,7 +352,7 @@ function toggleExpand() {
         font-weight: 600;
     }
 
-    .move-row__arrow {
+    :global(.move-row__arrow) {
         width: 1rem;
         height: 1rem;
         color: var(--color-muted);

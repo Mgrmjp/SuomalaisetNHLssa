@@ -407,7 +407,7 @@ onMount(() => {
     .page-shell {
         position: relative;
         z-index: 1;
-        width: 100%;
+        width: min(calc(100% - 2 * var(--page-gutter)), var(--rail-max));
         max-width: var(--rail-max);
         margin: 0 auto;
         padding: 5.25rem 0 6.5rem;
@@ -433,7 +433,7 @@ onMount(() => {
         top: 0.75rem;
         left: 50%;
         z-index: 100;
-        width: min(100%, var(--rail-max));
+        width: min(calc(100% - 1rem), 360px);
         transform: translateX(-50%);
         --floating-header-gap: 0.35rem;
         --floating-header-control: 4.5rem;
@@ -499,7 +499,7 @@ onMount(() => {
         position: absolute;
         top: 50%;
         right: 0;
-        width: 3rem;
+        width: 2.25rem;
         height: var(--floating-row-control-height);
         padding: 0;
         border: 0;
@@ -533,11 +533,11 @@ onMount(() => {
     }
 
     :global(.dashboard__floating-header) {
-        --floating-row-font-size: 0.86rem;
+        --floating-row-font-size: 0.8rem;
         --floating-row-line-height: 1.2;
         --floating-row-inner-padding-y: 0.3rem;
         --floating-row-inner-padding-x: 0.5rem;
-        --floating-row-control-height: 2.35rem;
+        --floating-row-control-height: 2rem;
         font-family:
             var(--font-sans, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
         -webkit-font-smoothing: antialiased;
@@ -551,7 +551,7 @@ onMount(() => {
     :global(.dashboard__floating-header .date-controls__card) {
         width: 100%;
         box-sizing: border-box;
-        padding: 0.25rem 3rem 0.25rem 0.25rem;
+        padding: 0.25rem 2.25rem 0.25rem 0.25rem;
         background: rgba(255, 255, 255, 0.92);
         border-color: rgba(16, 24, 40, 0.14);
     }
@@ -561,7 +561,7 @@ onMount(() => {
         align-items: center;
     }
 
-    :global(.dashboard__floating-header .date-controls__label) {
+    :global(.dashboard__floating-header .date-controls .date-controls__label) {
         display: none;
     }
 
@@ -1060,7 +1060,7 @@ onMount(() => {
 
         .dashboard__floating-header {
             top: 0.35rem;
-            width: 100%;
+            width: min(calc(100% - 1rem), 360px);
             --floating-header-gap: 0.2rem;
             --floating-header-control: 2rem;
             --floating-row-font-size: 0.78rem;

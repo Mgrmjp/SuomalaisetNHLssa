@@ -1,0 +1,251 @@
+/* Shared public UI. Campaign artwork keeps its own visual language. */
+:root {
+    --color-page-bg: #eef3f9;
+    --color-panel: #fcfdff;
+    --color-panel-border: #d7e0ec;
+    --color-table-head: #f3f6fa;
+    --color-table-hover: #f4f7fc;
+    --card-bg: var(--color-panel);
+    --card-border: 1px solid var(--color-panel-border);
+    --control-height: 2.25rem;
+    --control-padding: 0.45rem 0.75rem;
+    --table-cell-padding: 0.7rem 0.85rem;
+}
+
+.ui-surface {
+    overflow: hidden;
+}
+
+.app-shell:not(.design-system-exempt) .ui-surface,
+.app-shell:not(.design-system-exempt) .panel,
+.app-shell:not(.design-system-exempt) .empty-state-card,
+.app-shell:not(.design-system-exempt) .date-controls__card {
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    min-width: 0;
+}
+.ui-surface--interactive {
+    transition:
+        border-color 160ms ease,
+        background-color 160ms ease;
+}
+.ui-surface--interactive:hover {
+    border-color: #a9bddb;
+}
+
+.app-shell:not(.design-system-exempt)
+    :is(button, input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    border-radius: var(--card-radius-sm);
+    font-family: inherit;
+}
+.app-shell:not(.design-system-exempt)
+    :is(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+.ui-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--control-height);
+    padding: var(--control-padding);
+    border: var(--card-border);
+    border-radius: var(--card-radius-sm);
+    background: white;
+    color: var(--color-ink);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.2;
+    cursor: pointer;
+}
+.ui-control:hover:not(:disabled) {
+    background: var(--color-table-hover);
+    border-color: #a9bddb;
+}
+.ui-control:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+.ui-control--selected,
+.ui-control--selected:hover:not(:disabled) {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+.segmented-control {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border: var(--card-border);
+    border-radius: var(--card-radius-sm);
+    background: var(--color-table-head);
+}
+.segmented-control .ui-control {
+    border-color: transparent;
+    background: transparent;
+}
+.segmented-control .ui-control--selected {
+    background: var(--accent);
+    color: white;
+}
+.view-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+.view-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+}
+.section-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--color-ink);
+}
+.view-description {
+    margin: var(--space-1) 0 0;
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+.view-metadata {
+    padding-top: var(--space-4);
+    border-top: var(--card-border);
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    line-height: 1.6;
+}
+.view-metadata p {
+    margin: 0;
+}
+.view-metadata a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.ui-state {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    padding: var(--space-9) var(--space-5);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    background: var(--card-bg);
+    text-align: center;
+    color: var(--color-muted);
+}
+.ui-state p {
+    margin: 0;
+}
+.ui-notice {
+    padding: var(--space-3) var(--space-4);
+    border: var(--card-border);
+    border-radius: var(--card-radius-sm);
+    background: var(--accent-ice);
+    color: var(--accent-ink);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+}
+.ui-notice--warning {
+    background: #fff8e9;
+    border-color: #ecdbb2;
+    color: #75551b;
+}
+.ui-notice--error {
+    background: #fff1f2;
+    border-color: #f4ccd2;
+    color: #9f1239;
+}
+.ui-notice span {
+    display: block;
+}
+.ui-table-scroll {
+    overflow-x: auto;
+    max-width: 100%;
+    min-width: 0;
+    overscroll-behavior-x: contain;
+}
+.ui-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+}
+.ui-table :is(th, td) {
+    padding: var(--table-cell-padding);
+    white-space: nowrap;
+    text-align: center;
+    border-bottom: 1px solid #e6ecf3;
+}
+.ui-table thead th {
+    background: var(--color-table-head);
+    color: var(--color-muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.035em;
+}
+.ui-table .text-left {
+    text-align: left;
+}
+.ui-stat-tile {
+    border-radius: var(--card-radius-sm);
+    border: var(--card-border);
+    background: var(--color-table-head);
+}
+.ui-table tbody th {
+    font-weight: 600;
+}
+.ui-table tbody tr:hover {
+    background: var(--color-table-hover);
+}
+.ui-table tbody tr:last-child :is(td, th) {
+    border-bottom: 0;
+}
+.ui-table .points-cell {
+    color: var(--accent);
+    font-weight: 700;
+}
+.playoff-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #64748b;
+}
+.playoff-dot--wildcard {
+    background: var(--accent);
+}
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-bottom: var(--space-5);
+}
+.back-link:hover {
+    color: var(--accent);
+}
+
+@media (max-width: 640px) {
+    :root {
+        --table-cell-padding: 0.65rem 0.65rem;
+    }
+    .view-actions {
+        width: 100%;
+    }
+}

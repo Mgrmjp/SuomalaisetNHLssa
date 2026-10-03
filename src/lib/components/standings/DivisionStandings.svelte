@@ -1,161 +1,40 @@
 <script>
 // @ts-nocheck
-import { TableProperties } from 'lucide-svelte'
-import TeamStandingRow from '$lib/components/standings/TeamStandingRow.svelte'
+
+import Card from '$lib/components/ui/Card.svelte'
+import DataTable from '$lib/components/ui/DataTable.svelte'
 import { DIVISION_NAMES } from '$lib/utils/nhlStructure.js'
-import { getTeamColorVariables } from '$lib/utils/teamColors.js'
+import TeamStandingRow from './TeamStandingRow.svelte'
 
-const {
-    teams = [],
-    divisionName = '',
-    _showPlayoffIndicator = true,
-    _wildCardTeams = [],
-    _showAdvancedStats = false,
-} = $props()
-
-// Format division name for display
-const _displayName = $derived(DIVISION_NAMES[divisionName] || divisionName)
-const _hasTeams = $derived(teams && teams.length > 0)
-
-// Load division-leading team colors for container styling
-let _divisionLeaderColors = $state({
-    '--team-primary-color': '#003580',
-    '--team-secondary-color': '#6366f1',
-    '--team-accent-color': '#8b5cf6',
-})
-
-// Load team colors when teams change
-$effect(() => {
-    ;(async () => {
-        if (teams && teams.length > 0) {
-            const leaderTeam = teams[0].team
-            try {
-                _divisionLeaderColors = await getTeamColorVariables(leaderTeam)
-            } catch (error) {
-                // Silently ignore color loading errors
-            }
-        }
-    })()
-})
-
-// Table headers
-const baseHeaders = [
-    { key: 'rank', label: 'Sija', center: true, width: 'w-12' },
-    { key: 'team', label: 'Joukkue', center: false, width: '' },
-    { key: 'gamesPlayed', label: 'O', center: true, width: 'w-12' },
-    { key: 'wins', label: 'V', center: true, width: 'w-12' },
-    { key: 'losses', label: 'H', center: true, width: 'w-12' },
-    { key: 'ot', label: 'JA', center: true, width: 'w-12' },
-    { key: 'points', label: 'P', center: true, width: 'w-12' },
-    { key: 'pointsPct', label: 'P%', center: true, width: 'w-14' },
-    { key: 'streak', label: 'Sarja', center: true, width: 'w-14' },
-    { key: 'last10', label: 'V10', center: true, width: 'w-20' },
-]
-
-const advancedHeaders = [
-    { key: 'powerPlayPercentage', label: 'YV%', center: true, width: 'w-14' },
-    { key: 'penaltyKillPercentage', label: 'AV%', center: true, width: 'w-14' },
-    { key: 'goalDifferential', label: '+/-', center: true, width: 'w-14' },
-    { key: 'goalsForPerGame', label: 'TM/O', center: true, width: 'w-14' },
-    { key: 'goalsAgainstPerGame', label: 'VM/O', center: true, width: 'w-14' },
-]
-
-const _headers = $derived(_showAdvancedStats ? [...baseHeaders, ...advancedHeaders] : baseHeaders)
+const { teams = [], divisionName = '', wildCardTeams = [], showAdvancedStats = false } = $props()
+const headers = $derived([
+    'Sija',
+    'Joukkue',
+    'O',
+    'V',
+    'H',
+    'JA',
+    'P',
+    'P%',
+    'Sarja',
+    'V10',
+    ...(showAdvancedStats ? ['TM', 'VM', '+/−', 'TM/O', 'VM/O'] : []),
+])
 </script>
 
-<div
-    class="division-container bg-white rounded-lg shadow-lg overflow-hidden relative w-full max-w-full"
-    style={Object.entries(_divisionLeaderColors)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join("; ")}
->
-    <!-- Division Header -->
-    <div class="division-header px-4 py-4 text-white relative overflow-hidden">
-        <h3 class="division-title text-xl font-bold relative z-10 text-shadow">
-            {_displayName}
-        </h3>
-    </div>
+<Card padding="none">
+    <div class="table-heading"><h3 class="section-title">{DIVISION_NAMES[divisionName] || divisionName}</h3></div>
 
-    {#if _hasTeams}
-        <div class="standings-table-wrapper overflow-x-auto w-full">
-            <table class="standings-table w-full text-sm">
-                <!-- Table Header -->
-                <thead class="bg-gray-100 border-b border-gray-200">
-                    <tr>
-                        {#each _headers as header}
-                            <th
-                                class="px-3 py-2 text-xs font-medium text-gray-600 uppercase tracking-wider whitespace-nowrap {header.width} {header.center
-                                    ? 'text-center'
-                                    : 'text-left'} {header.key === 'rank'
-                                    ? 'sticky left-0 z-20 bg-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.05)]'
-                                    : ''} {header.key === 'team'
-                                    ? 'sticky left-12 z-20 bg-gray-100 border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.05)]'
-                                    : ''}"
-                            >
-                                {header.label}
-                            </th>
-                        {/each}
-                    </tr>
-                </thead>
+        <DataTable caption={`${DIVISION_NAMES[divisionName]} – NHL-sarjataulukko`} class="standings-table">
+            <thead><tr>{#each headers as header, index}<th scope="col" class:team-column={index === 1} class:rank-column={index === 0}>{header}</th>{/each}</tr></thead>
+            <tbody>{#each teams as team (team.team)}<TeamStandingRow teamData={team} isWildCard={wildCardTeams.includes(team.team)} {showAdvancedStats} />{/each}</tbody>
+        </DataTable>
 
-                <!-- Table Body -->
-                <tbody class="divide-y divide-gray-200">
-                    {#each teams as team, index}
-                        <TeamStandingRow
-                            team={team.team}
-                            rank={index + 1}
-                            teamData={team}
-                            {_showPlayoffIndicator}
-                            isWildCard={_wildCardTeams.includes(team.team)}
-                            {_showAdvancedStats}
-                        />
-                    {/each}
-                </tbody>
-            </table>
-        </div>
-    {:else}
-        <!-- Empty State -->
-        <div class="px-6 py-12 text-center">
-            <div
-                class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 mb-4"
-            >
-                <TableProperties class="w-6 h-6 text-gray-400" aria-hidden="true" />
-            </div>
-            <h4 class="text-sm font-medium text-gray-900 mb-1">Ei sarjataulukkoa saatavilla</h4>
-            <p class="text-xs text-gray-500">Odottaa ottelutietojen lataamista...</p>
-        </div>
-    {/if}
-</div>
+</Card>
 
 <style>
-    .division-container {
-        border-radius: 8px;
-        overflow: hidden;
-        background: white;
-        border: 1px solid #e5e7eb;
-    }
-
-    .division-header {
-        background: #1e40af;
-        color: white;
-        padding: 0.75rem 1rem;
-    }
-
-    .division-title {
-        font-weight: 600;
-    }
-
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
-
-    thead th {
-        background: #f9fafb;
-        border-bottom: 1px solid #e5e7eb;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        padding: 0.625rem 0.5rem;
-    }
+    .table-heading { padding: var(--space-4) var(--space-5); border-bottom: var(--card-border); }
+    .table-heading h3 { margin: 0; }
+    :global(.standings-table) :global(.rank-column) { width: 3rem; min-width: 3rem; position: sticky; left: 0; z-index: 2; background: var(--color-table-head); }
+    :global(.standings-table) :global(.team-column) { position: sticky; left: 3rem; z-index: 2; text-align: left; background: var(--color-table-head); }
 </style>

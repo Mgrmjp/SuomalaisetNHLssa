@@ -1,8 +1,10 @@
 <script>
 // @ts-nocheck
+
 import { BadgeCheck, ChevronLeft } from 'lucide-svelte'
 import { base } from '$app/paths'
 import Card from '$lib/components/ui/Card.svelte'
+import DataTable from '$lib/components/ui/DataTable.svelte'
 import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 
@@ -47,7 +49,7 @@ const winners = _winners
     })}</script>`}
 </svelte:head>
 
-<div class="flat-view min-h-screen">
+<div class="public-view min-h-screen">
     <PageShell width="medium">
         <a class="back-link" href={base + "/"}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
@@ -59,15 +61,15 @@ const winners = _winners
         />
 
         <Card padding="none" accent>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+
+                <DataTable caption="Suomalaisten Stanley Cup -mestaruudet" class="w-full text-left border-collapse">
                     <thead>
                         <tr class="bg-slate-50 border-b border-slate-200">
-                            <th class="px-6 py-4 font-semibold text-slate-700">Pelaaja</th>
-                            <th class="px-6 py-4 text-center font-semibold text-slate-700"
+                            <th scope="col" class="px-6 py-4 font-semibold text-slate-700">Pelaaja</th>
+                            <th scope="col" class="px-6 py-4 text-center font-semibold text-slate-700"
                                 >Mestaruudet</th
                             >
-                            <th class="px-6 py-4 font-semibold text-slate-700"
+                            <th scope="col" class="px-6 py-4 font-semibold text-slate-700"
                                 >Vuodet ja Joukkueet</th
                             >
                         </tr>
@@ -117,8 +119,8 @@ const winners = _winners
                             </tr>
                         {/each}
                     </tbody>
-                </table>
-            </div>
+                </DataTable>
+
         </Card>
 
         <div class="mt-8 text-center text-sm text-slate-500">
@@ -131,34 +133,4 @@ const winners = _winners
 </div>
 
 <style>
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        margin-bottom: var(--space-6);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-        font-weight: 700;
-        text-decoration: none;
-    }
-
-    .back-link:hover {
-        color: var(--accent);
-    }
-
-    .flat-view :global(*) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
-
-    .flat-view :global(.page-header__logo) {
-        filter: none !important;
-    }
-
-    .flat-view :global(a:focus-visible),
-    .flat-view :global(button:focus-visible),
-    .flat-view :global(input:focus-visible) {
-        outline: 3px solid var(--accent) !important;
-        outline-offset: 2px;
-    }
 </style>

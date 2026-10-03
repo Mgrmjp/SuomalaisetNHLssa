@@ -1,7 +1,9 @@
 <script>
 // @ts-nocheck
+
 import { X } from 'lucide-svelte'
 import { base } from '$app/paths'
+import Button from '$lib/components/ui/Button.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { games } from '$lib/stores/gameData.js'
 import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
@@ -123,7 +125,7 @@ function handleBackdropClick(e) {
         tabindex="0"
         onkeydown={(e) => e.key === "Escape" && onclose?.()}
     >
-        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="player-details-dialog max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="p-6 md:p-7">
                 <!-- Header -->
                 <div class="flex items-start gap-4 mb-6">
@@ -131,39 +133,39 @@ function handleBackdropClick(e) {
                         <img
                             src={_playerPhotoUrl || _lqipUrl}
                             alt={displayName}
-                            class="w-32 h-32 rounded-full object-cover shrink-0"
+                            class="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover shrink-0"
                         />
                     {:else}
-                        <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center text-4xl font-bold text-gray-500 shrink-0">
+                        <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-gray-200 flex items-center justify-center text-4xl font-bold text-gray-500 shrink-0">
                             {_playerInitials}
                         </div>
                     {/if}
-                    <div class="flex-1 pt-2">
-                        <h2 class="text-2xl font-bold text-gray-900">{displayName}</h2>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-xl font-bold text-gray-900">{displayName}</h2>
                         <div class="text-gray-600">{player.team_full || player.team || "Unknown Team"}</div>
                     </div>
-                    <button
+                    <Button
                         type="button"
                         aria-label="Sulje pelaajan lisätiedot"
                         onclick={onclose}
-                        class="shrink-0 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors cursor-pointer"
+                        class="shrink-0 w-9 h-9"
                     >
                         <X class="w-5 h-5" aria-hidden="true" />
-                    </button>
+                    </Button>
                 </div>
 
                 <!-- Game Stats -->
-                <div class="bg-gray-50 rounded-lg p-5 mb-4">
+                <div class="player-details-panel p-4 mb-4">
                     <h3 class="text-sm font-semibold text-gray-500 mb-3">Pelin tilastot</h3>
-                    
+
                     {#if isGoalie}
                         <!-- Main stat: Save % -->
                         <div class="text-center mb-4 pb-4 border-b border-gray-200" title="pisteet / torjuntaprosentti">
                             <div class="text-5xl font-bold text-gray-900 leading-none">
-                                {player.points || (_goalieSavePct || 0)}%
+                                {_goalieSavePct === null ? "—" : _goalieSavePct + "%"}
                             </div>
                             <div class="text-sm text-gray-500 mt-1.5">
-                                {player.points ? 'pistettä' : `torjuntaprosentti`}
+                                torjuntaprosentti
                             </div>
                         </div>
                         <!-- Secondary stats -->
@@ -229,7 +231,7 @@ function handleBackdropClick(e) {
 
                 <!-- Additional Stats -->
                 {#if !isGoalie && (player.shots || player.hits || player.blocked_shots || player.takeaways || player.giveaways)}
-                    <div class="bg-gray-50 rounded-lg p-5 mb-4">
+                    <div class="player-details-panel p-4 mb-4">
                         <div class="flex justify-center gap-4 text-center flex-wrap">
                             {#if player.shots > 0}
                                 <div class="px-3 min-w-[4rem]" title="laukaukset">
@@ -279,7 +281,7 @@ function handleBackdropClick(e) {
                             {#each player.recent_results.slice(0, 5) as game}
                                 {@const isWin = game.result === 'W' || game.result === 'OTW' || game.result === 'SOW'}
                                 {@const opponentCode = game.opponent?.toLowerCase()}
-                                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 p-3 md:p-4 bg-gray-50 rounded-lg">
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 p-3 md:p-4 player-details-panel">
                                     <div class="w-10 shrink-0 text-sm text-gray-500">{parseInt(game.date.split('-')[2])}.{parseInt(game.date.split('-')[1])}.</div>
                                     <div class="w-8 shrink-0 text-center">
                                         <img src="/nhl-logos/{opponentCode}.svg" alt={game.opponent} class="w-6 h-6 mx-auto" onerror={(e) => e.target.style.display = 'none'} />
@@ -308,3 +310,8 @@ function handleBackdropClick(e) {
         </div>
     </div>
 {/if}
+
+<style>
+    .player-details-dialog { background: var(--card-bg); border: var(--card-border); border-radius: var(--card-radius); box-shadow: 0 16px 48px #10182829; }
+    .player-details-panel { background: var(--color-table-head); border: var(--card-border); border-radius: var(--card-radius-sm); }
+</style>

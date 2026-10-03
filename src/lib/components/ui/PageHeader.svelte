@@ -6,7 +6,7 @@ const {
     title,
     subtitle = '',
     size = 'standard',
-    align = 'center',
+    align = 'left',
     showLogo = true,
     backHref = '',
     backLabel = 'Takaisin',
@@ -45,8 +45,8 @@ const {
     .page-header {
         width: 100%;
         min-width: 0;
-        max-width: 48rem;
-        margin: 0 auto var(--space-9);
+        max-width: none;
+        margin: 0 auto var(--space-6);
         overflow-wrap: anywhere;
         text-align: center;
     }
@@ -58,7 +58,7 @@ const {
 
     .page-header__logo-link {
         display: inline-block;
-        margin-bottom: var(--space-5);
+        margin-bottom: var(--space-3);
     }
 
     .page-header__back {
@@ -94,8 +94,8 @@ const {
 
     .page-header__logo {
         display: block;
-        width: 4rem;
-        height: 4rem;
+        width: 2.5rem;
+        height: 2.5rem;
         transition: transform 0.2s ease;
     }
 
@@ -106,25 +106,25 @@ const {
     h1 {
         margin: 0;
         color: var(--color-ink);
-        font-size: clamp(2rem, 4vw, 3rem);
-        font-weight: 800;
-        line-height: 1.08;
+        font-size: clamp(1.5rem, 3vw, 2.125rem);
+        font-weight: 700;
+        line-height: 1.2;
     }
 
     [data-size="hero"] h1 {
-        font-size: clamp(2.5rem, 5.2vw, 3.8rem);
-        line-height: 1;
+        font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+        line-height: 1.2;
     }
 
     [data-size="compact"] h1 {
-        font-size: clamp(1.75rem, 3vw, 2.25rem);
+        font-size: clamp(1.5rem, 3vw, 2rem);
     }
 
     p {
         max-width: 42rem;
         margin: var(--space-4) auto 0;
         color: var(--color-muted);
-        font-size: 1.05rem;
+        font-size: 0.875rem;
         line-height: 1.6;
     }
 
@@ -143,7 +143,7 @@ const {
 
         h1,
         [data-size="hero"] h1 {
-            font-size: 2.25rem;
+            font-size: 1.75rem;
         }
 
         [data-size="compact"] h1 {
@@ -151,7 +151,7 @@ const {
         }
 
         p {
-            font-size: 0.95rem;
+            font-size: 0.875rem;
         }
     }
 </style>

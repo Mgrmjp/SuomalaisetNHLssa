@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { isProspectsPath, PROSPECTS_ENABLED } from '$lib/config/features.js'
 import { loadRegularSeasonStatsFromDisk } from '$lib/server/playerStats.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
@@ -117,7 +118,7 @@ function getStaticPages() {
         { path: '/lupaukset', priority: '0.7', changefreq: 'daily', lastmod: prospectsLastMod },
         { path: '/drafts', priority: '0.7', changefreq: 'weekly', lastmod: draftLastMod },
         { path: '/scouting', priority: '0.7', changefreq: 'weekly', lastmod: scoutingLastMod },
-    ]
+    ].filter((page) => PROSPECTS_ENABLED || !isProspectsPath(page.path))
 }
 
 function getWeeklyReviewRoutes() {
@@ -198,6 +199,7 @@ function getPlayerRoutes() {
 }
 
 function getScoutingRoutes() {
+    if (!PROSPECTS_ENABLED) return []
     try {
         const scoutingDir = join(process.cwd(), 'content/scouting')
         return readdirSync(scoutingDir)

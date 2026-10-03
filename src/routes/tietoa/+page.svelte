@@ -183,35 +183,9 @@ onMount(() => {
         gap: var(--space-6);
     }
 
-    .back-link {
-        display: inline-flex;
-        width: fit-content;
-        align-items: center;
-        gap: var(--space-2);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: color 0.16s ease;
-    }
-
-    .back-link:hover {
-        color: var(--accent);
-    }
-
-    .back-link:focus-visible {
-        outline: 3px solid var(--accent-glow);
-        outline-offset: 3px;
-    }
-
     .info-sections {
         display: grid;
         gap: var(--space-4);
-    }
-
-    .info-section :global(.card) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
     }
 
     h2 {
