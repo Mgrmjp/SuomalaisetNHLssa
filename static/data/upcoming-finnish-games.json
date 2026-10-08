@@ -1,54 +1,6 @@
 {
-  "updatedAt": "2026-10-07T12:35:06Z",
+  "updatedAt": "2026-10-08T12:43:45Z",
   "games": [
-    {
-      "gameId": 2026020053,
-      "startTime": "2026-10-07T23:30:00Z",
-      "awayTeam": "PIT",
-      "homeTeam": "WSH",
-      "finnishPlayers": [
-        {
-          "name": "Ville Koivunen",
-          "team": "PIT"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020054,
-      "startTime": "2026-10-07T23:30:00Z",
-      "awayTeam": "COL",
-      "homeTeam": "WPG",
-      "finnishPlayers": [
-        {
-          "name": "Artturi Lehkonen",
-          "team": "COL"
-        },
-        {
-          "name": "Brad Lambert",
-          "team": "WPG"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020055,
-      "startTime": "2026-10-08T02:00:00Z",
-      "awayTeam": "EDM",
-      "homeTeam": "ANA",
-      "finnishPlayers": [
-        {
-          "name": "Kasperi Kapanen",
-          "team": "EDM"
-        },
-        {
-          "name": "Mikael Granlund",
-          "team": "ANA"
-        },
-        {
-          "name": "Ville Husso",
-          "team": "ANA"
-        }
-      ]
-    },
     {
       "gameId": 2026020057,
       "startTime": "2026-10-08T23:00:00Z",
@@ -166,6 +118,50 @@
         {
           "name": "Sebastian Aho",
           "team": "CAR"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020062,
+      "startTime": "2026-10-08T23:30:00Z",
+      "awayTeam": "CHI",
+      "homeTeam": "NYI",
+      "finnishPlayers": [
+        {
+          "name": "Teuvo Teravainen",
+          "team": "CHI"
+        },
+        {
+          "name": "Matias Maccelli",
+          "team": "NYI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020064,
+      "startTime": "2026-10-09T01:00:00Z",
+      "awayTeam": "COL",
+      "homeTeam": "CGY",
+      "finnishPlayers": [
+        {
+          "name": "Artturi Lehkonen",
+          "team": "COL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020066,
+      "startTime": "2026-10-09T23:00:00Z",
+      "awayTeam": "SEA",
+      "homeTeam": "DET",
+      "finnishPlayers": [
+        {
+          "name": "Kaapo Kakko",
+          "team": "SEA"
+        },
+        {
+          "name": "Ville Ottavainen",
+          "team": "SEA"
         }
       ]
     }
