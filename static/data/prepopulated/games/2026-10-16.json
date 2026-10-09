@@ -1,15 +1,15 @@
 {
-  "date": "2026-10-14",
+  "date": "2026-10-16",
   "games": [
     {
-      "gameId": 2026020106,
-      "homeTeam": "WSH",
-      "awayTeam": "MTL",
+      "gameId": 2026020119,
+      "homeTeam": "COL",
+      "awayTeam": "PIT",
       "homeScore": 0,
       "awayScore": 0,
       "gameState": "FUT",
       "gameType": 2,
-      "startTime": "2026-10-14T23:30:00Z",
+      "startTime": "2026-10-17T01:00:00Z",
       "isOT": false,
       "isSO": false,
       "period": 3,
@@ -17,14 +17,14 @@
       "empty_net_goals": 0
     },
     {
-      "gameId": 2026020107,
-      "homeTeam": "COL",
-      "awayTeam": "DAL",
+      "gameId": 2026020120,
+      "homeTeam": "ANA",
+      "awayTeam": "BOS",
       "homeScore": 0,
       "awayScore": 0,
       "gameState": "FUT",
       "gameType": 2,
-      "startTime": "2026-10-15T00:30:00Z",
+      "startTime": "2026-10-17T02:00:00Z",
       "isOT": false,
       "isSO": false,
       "period": 3,
@@ -34,6 +34,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-10-09T12:31:30.395315",
+  "generated_at": "2026-10-09T12:31:52.801311",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
