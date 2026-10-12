@@ -268,12 +268,11 @@ function processPlayer(player: Player): void {
 ```typescript
 // 1. External libraries
 import { writable, derived } from 'svelte/store';
-import { z } from 'zod';
 
 // 2. Internal lib imports (absolute paths)
 import type { Player } from '$lib/types/player';
 import { formatDate } from '$lib/utils/dateUtils';
-import { gameData } from '$lib/stores/gameData';
+import { selectedDate } from '$lib/stores/gameData.js';
 
 // 3. Relative imports
 import './PlayerCard.css';

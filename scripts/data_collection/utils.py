@@ -5,6 +5,7 @@ Provides common API handling, rate limiting, file I/O, and data processing.
 """
 
 import json
+import tempfile
 import time
 import random
 from pathlib import Path
@@ -126,13 +127,23 @@ def ensure_dir(path):
 
 def save_json(data, file_path, indent=None, ensure_ascii=None):
     """
-    Save data to JSON file with consistent formatting.
+    Save data to JSON file atomically with consistent formatting.
+
+    Writes to a temporary file in the destination directory and replaces the
+    target only after serialization succeeds, so a failed write preserves the
+    previous snapshot (same pattern as the standings collector).
 
     Args:
         data: Data to serialize
         file_path: Output file path
         indent: JSON indentation (defaults to config.JSON_INDENT)
         ensure_ascii: Whether to escape non-ASCII (defaults to config.JSON_ENSURE_ASCII)
+
+    Returns:
+        Path: The file path that was written
+
+    Raises:
+        TypeError: If data is not JSON-serializable (previous file is preserved)
     """
     if indent is None:
         indent = JSON_INDENT
@@ -142,8 +153,17 @@ def save_json(data, file_path, indent=None, ensure_ascii=None):
     file_path = Path(file_path)
     ensure_dir(file_path.parent)
 
-    with open(file_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=indent, ensure_ascii=ensure_ascii)
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode='w', encoding='utf-8', dir=file_path.parent, delete=False
+        ) as stream:
+            temporary = Path(stream.name)
+            json.dump(data, stream, indent=indent, ensure_ascii=ensure_ascii)
+        temporary.replace(file_path)
+    finally:
+        if temporary is not None and temporary.exists():
+            temporary.unlink()
 
     return file_path
 

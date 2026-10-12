@@ -174,27 +174,6 @@ export default defineConfig({
       }
     }
   },
-  define: {
-    // Define environment variables for client-side access
-    __NHL_API_BASE_URL__: JSON.stringify(process.env.NHL_API_BASE_URL || '/api'),
-    __NHL_API_VERSION__: JSON.stringify(process.env.NHL_API_VERSION || 'v1'),
-    __NHL_USER_AGENT__: JSON.stringify(process.env.NHL_USER_AGENT || 'Finnish-NHL-Tracker/4.0-Automatic'),
-    __TEAM_LOGO_CDN_BASE_URL__: JSON.stringify(process.env.TEAM_LOGO_CDN_BASE_URL || 'https://cdn.nhl.com/images/logos/teams-current-primary-light'),
-    __PLAYER_CACHE_TTL__: JSON.stringify(parseInt(process.env.PLAYER_CACHE_TTL) || 21600000),
-    __API_REQUEST_TIMEOUT__: JSON.stringify(parseInt(process.env.API_REQUEST_TIMEOUT) || 10000),
-    __API_MAX_RETRIES__: JSON.stringify(parseInt(process.env.API_MAX_RETRIES) || 3),
-    __API_RETRY_DELAY__: JSON.stringify(parseInt(process.env.API_RETRY_DELAY) || 2000),
-    __API_BATCH_SIZE__: JSON.stringify(parseInt(process.env.API_BATCH_SIZE) || 10),
-    __API_DELAY_BETWEEN_CALLS__: JSON.stringify(parseInt(process.env.API_DELAY_BETWEEN_CALLS) || 500),
-    __FINNISH_NATIONALITY_CODES__: JSON.stringify(process.env.FINNISH_NATIONALITY_CODES || 'FIN,FINLAND'),
-    __EARLIEST_NHL_DATE__: JSON.stringify(process.env.EARLIEST_NHL_DATE || '2010-10-01'),
-    __DEFAULT_SEASON_START_DATE__: JSON.stringify(process.env.DEFAULT_SEASON_START_DATE || '2025-10-01'),
-    __UNIFIED_CACHE_TTL__: JSON.stringify(parseInt(process.env.UNIFIED_CACHE_TTL) || 86400000),
-    __MAX_CACHE_SIZE__: JSON.stringify(parseInt(process.env.MAX_CACHE_SIZE) || 100),
-    __CACHE_CLEANUP_INTERVAL__: JSON.stringify(parseInt(process.env.CACHE_CLEANUP_INTERVAL) || 1800000),
-    __PERFORMANCE_COLLECTION_INTERVAL__: JSON.stringify(parseInt(process.env.PERFORMANCE_COLLECTION_INTERVAL) || 60000),
-    __PERFORMANCE_SLOW_RESPONSE_THRESHOLD__: JSON.stringify(parseInt(process.env.PERFORMANCE_SLOW_RESPONSE_THRESHOLD) || 3000),
-  },
   resolve: {
     alias: {
       '@data': '/data'

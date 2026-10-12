@@ -61,12 +61,12 @@ python3 scripts/python_utils/test_api.py
 ## 📊 Data Output
 
 ### Finnish Players
-- **Location:** `data/prepopulated/games/YYYY-MM-DD.json`
+- **Location:** `static/data/prepopulated/games/YYYY-MM-DD.json`
 - **Count:** 2-28 players per date
 - **Size:** ~2-10KB per date
 
 ### Season Data (All Players)
-- **Location:** `data/prepopulated/games/YYYY-MM-DD.json`
+- **Location:** `static/data/prepopulated/season/YYYY-MM-DD.json`
 - **Count:** 500+ players per date
 - **Size:** ~15-30KB per date
 

@@ -1,5 +1,11 @@
 # Configuration Migration: Hardcoded Values to API-Driven Configuration
 
+> **Historical document.** This migration was superseded: the configuration
+> service it describes (`src/lib/services/configService.js`) and the Vite
+> `define` constants were removed as unused. The site loads all data from
+> static JSON snapshots and no longer has a configurable API layer. Keep for
+> background only; do not follow the instructions here.
+
 ## Overview
 
 This document outlines the migration of hardcoded values throughout the Finnish NHL Players Tracker application to a centralized, environment-driven configuration system.

@@ -94,26 +94,17 @@ jobs:
           source .venv/bin/activate
           python scripts/data_collection/finnish/fetch_preseason_summary.py || echo "::warning::Preseason recap could not be refreshed"
 
-      - name: Commit and push updated data
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json static/data/offseason-moves.json static/data/upcoming-finnish-games.json static/data/preseason-summary.json static/data/standings.json
-          git diff --cached --quiet || git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
-          git pull --rebase origin main
-          git push
-
       - name: Regenerate games manifest
         run: |
           source .venv/bin/activate
           python scripts/data_collection/generate_manifest.py
 
-      - name: Commit and push updated manifest
+      - name: Commit and push complete data snapshot
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add static/data/games_manifest.json
-          git commit -m "chore: updated games manifest" || echo "No manifest changes"
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/daily-news.json static/data/daily-news-source-cache.json static/data/offseason-moves.json static/data/upcoming-finnish-games.json static/data/preseason-summary.json static/data/standings.json static/data/games_manifest.json
+          git diff --cached --quiet || git commit -m "chore: automated daily data update $(date +%Y-%m-%d)" || echo "No changes to commit"
           git pull --rebase origin main
           git push
 

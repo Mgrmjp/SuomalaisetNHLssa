@@ -85,9 +85,10 @@ npm run build
    npm run test:watch
    ```
 
-4. **Warm Up Cache (for faster development)
+4. **Refresh Data (optional, for realistic local data)
    ```bash
-   npm run cache:warmup-recent
+   npm run data:fetch          # Finnish players for today
+   npm run data:fetch:date     # Or for a specific date (pass date as argument)
    ```
 
 ### Creating a New Feature
@@ -224,58 +225,27 @@ src/
 
 #### Store Patterns
 
+Results state lives in `src/lib/stores/gameData.js` as small readonly Svelte
+stores (`selectedDate`, `players`, `games`, `isLoading`, `error`, …). It loads
+one pre-populated snapshot per date via `getResultsForDate`, and request-order
+protection drops stale responses after navigation.
+
+The module has no import-time side effects. The root layout starts and stops
+the app-wide lifecycle explicitly:
+
 ```javascript
-// stores/gameData.js
-import { writable, derived } from 'svelte/store';
-import type { GameData, Player } from '$lib/types';
+// src/routes/+layout.svelte
+import { onMount } from 'svelte';
+import { initializeGameData } from '$lib/stores/gameData.js';
 
-function createGameDataStore() {
-  const { subscribe, set, update } = writable<GameData>({
-    selectedDate: new Date(),
-    players: [],
-    loading: false,
-    error: null
-  });
-
-  return {
-    subscribe,
-    setSelectedDate: (date: Date) => update(state => ({
-      ...state,
-      selectedDate: date,
-      loading: true
-    })),
-    setPlayers: (players: Player[]) => update(state => ({
-      ...state,
-      players,
-      loading: false
-    })),
-    setError: (error: string) => update(state => ({
-      ...state,
-      error,
-      loading: false
-    })),
-    reset: () => set({
-      selectedDate: new Date(),
-      players: [],
-      loading: false,
-      error: null
-    })
-  };
-}
-
-export const gameData = createGameDataStore();
-
-// Derived stores
-export const displayDate = derived(
-  gameData,
-  $gameData => $gameData.selectedDate.toLocaleDateString('fi-FI')
-);
-
-export const hasPlayers = derived(
-  gameData,
-  $gameData => $gameData.players.length > 0
-);
+// Starts available-date loading and the minute-based refresh cycle.
+// Repeated calls are no-ops; the returned function stops timers/listeners.
+onMount(() => initializeGameData());
 ```
+
+New feature state should follow the same shape: writable stores at module
+scope, readonly exports, and no timers, listeners, or fetches until an
+explicit initialize function is called.
 
 ## Code Style and Standards
 
@@ -488,17 +458,14 @@ gameData.subscribe(value => {
 </script>
 ```
 
-### Cache Debugging
+### Data Debugging
 
 ```bash
-# Check cache status
-npm run cache:status
+# Re-fetch a specific date's results
+npm run data:fetch:date
 
-# Monitor cache in real-time
-npm run cache:monitor
-
-# Clear cache for testing
-npm run cache:clear
+# Validate the static roster file
+npm run test:roster
 ```
 
 ## Performance Optimization
@@ -673,14 +640,17 @@ npm test -- --update-snapshots
 npm test -- --reporter=verbose
 ```
 
-#### Cache Issues
+#### Data Issues
 
 ```bash
-# Clear all caches
-npm run cache:clear
+# Re-fetch Finnish players for a specific date
+npm run data:fetch:date
 
-# Reset cache statistics
-npm run cache:warmup-all
+# Rebuild the player cache from the NHL API
+.venv/bin/python3 scripts/data_collection/finnish/build_cache.py
+
+# Sync the cache into the static roster file
+.venv/bin/python3 scripts/data_collection/finnish/sync_roster.py
 ```
 
 ### Getting Help

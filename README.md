@@ -72,13 +72,9 @@ npm run data:news:daily  # Generate daily news summary
 npm run data:realtime    # Poll for live game updates
 npm run goalies:collect  # Collect goalie stats
 
-# Player management
-npm run players:update   # Update player cache
-npm run players:validate # Validate player data
-npm run players:stats    # Show player stats
-npm run players:changes  # Show recent changes
-npm run players:backup   # Backup player data
-npm run players:restore  # Restore from backup
+# Player roster (Python pipeline is authoritative)
+.venv/bin/python3 scripts/data_collection/finnish/build_cache.py  # Rebuild cache from NHL API
+.venv/bin/python3 scripts/data_collection/finnish/sync_roster.py  # Sync cache to static roster
 
 # Prospects
 npm run prospects:leagues:update  # Full prospects data refresh
@@ -94,9 +90,24 @@ The site runs on a multi-layer data pipeline:
 1. **Daily update** (06:00 UTC) — fetches game results, updates roster, generates news, rebuilds and deploys
 2. **Realtime polling** (every 10 min) — checks for live games during NHL game windows
 3. **Prospects update** (07:00 UTC) — scrapes league stats for Finnish prospects
-4. **Prebuild** — fetches season stats and inactive player data before each build
+4. **Prebuild** — fetches season stats and inactive player data before each build (`npm run build` triggers it automatically via the npm `prebuild` lifecycle; use `build:quick` to skip)
 
 Data is stored as static JSON files in `static/data/` and committed to the repo. The site is fully static — no server-side rendering at runtime.
+
+### Snapshot production order
+
+Both data workflows follow the same sequence; the manifest is always
+regenerated before the data is committed as one snapshot:
+
+1. Collect (games, standings, news) → 2. Reconcile roster (`sync_roster.py`)
+→ 3. Enrich (prebuild at build time) → 4. Regenerate `games_manifest.json`
+→ 5. Commit the complete snapshot → 6. Build and deploy.
+
+Ownership: `sync_roster.py` owns `static/data/players/finnish-roster.json` and
+preserves `lastTeam`/`gamesPlayed` from the previous output; the prebuild
+scripts enrich stats; the shared `save_json` writer replaces files atomically
+so failed writes never truncate an existing snapshot. Pull requests are
+checked by the `Verify` workflow (lint, Svelte check, Vitest, Python tests).
 
 ## Project Structure
 
@@ -119,7 +130,6 @@ static/
 scripts/
   data_collection/  # Python data pipeline
   prebuild/         # Node.js prebuild scripts
-  node_utils/       # CLI tools for player management
 ```
 
 ## Deployment
