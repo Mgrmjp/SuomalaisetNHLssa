@@ -5,7 +5,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { isValidDateFormat, isWithinNhlSeasonRange } from '../../nhl-api-node.js'
+import { isValidDateFormat, isWithinNhlSeasonRange } from '../api/nhlApi.js'
 import {
     assertValidGameData,
     assertValidPlayer,
