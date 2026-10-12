@@ -1,38 +1,6 @@
 {
-  "updatedAt": "2026-10-12T14:14:29Z",
+  "updatedAt": "2026-10-12T17:30:45Z",
   "games": [
-    {
-      "gameId": 2026020087,
-      "startTime": "2026-10-12T17:00:00Z",
-      "awayTeam": "FLA",
-      "homeTeam": "BUF",
-      "finnishPlayers": [
-        {
-          "name": "Aleksander Barkov",
-          "team": "FLA"
-        },
-        {
-          "name": "Anton Lundell",
-          "team": "FLA"
-        },
-        {
-          "name": "Eetu Luostarinen",
-          "team": "FLA"
-        },
-        {
-          "name": "Niko Mikkola",
-          "team": "FLA"
-        },
-        {
-          "name": "Konsta Helenius",
-          "team": "BUF"
-        },
-        {
-          "name": "Ukko-Pekka Luukkonen",
-          "team": "BUF"
-        }
-      ]
-    },
     {
       "gameId": 2026020088,
       "startTime": "2026-10-12T23:00:00Z",
@@ -158,6 +126,18 @@
         {
           "name": "Joonas Korpisalo",
           "team": "NYR"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020096,
+      "startTime": "2026-10-13T23:30:00Z",
+      "awayTeam": "STL",
+      "homeTeam": "OTT",
+      "finnishPlayers": [
+        {
+          "name": "Nikolas Matinpalo",
+          "team": "OTT"
         }
       ]
     }
