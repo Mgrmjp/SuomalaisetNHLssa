@@ -5,6 +5,25 @@ import { describe, expect, it } from 'vitest'
 
 const gamesDir = path.resolve(process.cwd(), 'static/data/prepopulated/games')
 const validPersistedStates = new Set(['OFF', 'FINAL', 'FUT', 'PRE'])
+// Realtime polling intentionally saves snapshots while games are in progress.
+// An in-progress state is only stale once the scheduled start is in the past by
+// more than this grace period (games last ~3h; the daily update finalizes them).
+const inProgressStates = new Set(['LIVE', 'CRIT'])
+const inProgressGraceMs = 24 * 60 * 60 * 1000
+
+/**
+ * @param {{gameState?: string, startTime?: string}} game
+ * @returns {boolean}
+ */
+function isStaleState(game) {
+    const state = game.gameState ?? ''
+    if (validPersistedStates.has(state)) return false
+    if (inProgressStates.has(state)) {
+        const startedMs = Date.parse(game.startTime || '')
+        return Number.isNaN(startedMs) || Date.now() - startedMs > inProgressGraceMs
+    }
+    return true
+}
 
 function readGameFiles() {
     return fs
@@ -22,7 +41,7 @@ describe('prepopulated game results', () => {
 
         for (const { file, data } of readGameFiles()) {
             for (const game of data.games || []) {
-                if (!validPersistedStates.has(game.gameState)) {
+                if (isStaleState(game)) {
                     staleGames.push(`${file}: ${game.gameId} ${game.gameState}`)
                 }
             }
