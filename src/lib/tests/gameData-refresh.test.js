@@ -17,6 +17,7 @@ async function setup() {
         vi.fn(async () => ({ ok: false }))
     )
     stores = await import('../stores/gameData.js')
+    stores.initializeGameData()
     vi.mocked(getResultsForDate).mockResolvedValue({
         players: [{ name: 'Finn', points: 1 }],
         games: { games: [{ gameId: 1, homeScore: 1 }], findGameById: () => null },
@@ -26,7 +27,7 @@ async function setup() {
 }
 
 afterEach(() => {
-    stores?.cleanupIntervals()
+    stores?.cleanupGameData()
     vi.restoreAllMocks()
     vi.clearAllMocks()
     vi.unstubAllGlobals()
@@ -95,5 +96,27 @@ describe('automatic results refresh', () => {
         await refreshing
         expect(get(stores.selectedDate)).toBe('2026-09-30')
         expect(get(stores.players)[0]?.name).toBe('Finn')
+    })
+
+    it('initializes once, disposes, and can be re-initialized', async () => {
+        vi.useFakeTimers()
+        vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('visible')
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => ({ ok: false }))
+        )
+        stores = await import('../stores/gameData.js')
+
+        const intervalSpy = vi.spyOn(globalThis, 'setInterval')
+        const cleanupFirst = stores.initializeGameData()
+        const cleanupSecond = stores.initializeGameData()
+        expect(intervalSpy).toHaveBeenCalledTimes(1)
+
+        cleanupSecond()
+        cleanupFirst()
+
+        const cleanupThird = stores.initializeGameData()
+        expect(intervalSpy).toHaveBeenCalledTimes(2)
+        cleanupThird()
     })
 })

@@ -1,355 +1,274 @@
 // @ts-nocheck
 /**
  * Finnish Players API Tests
- * Tests for /api/finnish-players endpoint
+ * Exercises the real /api/finnish-players GET handler against an isolated
+ * filesystem sandbox, so assertions cover the production response format
+ * without mocking the handler or the node:fs module graph.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 
-// Mock the server endpoint
-const mockGet = vi.fn()
-vi.doMock('../../../src/routes/api/finnish-players/+server.js', () => ({
-    GET: mockGet,
-}))
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import {
-    assertValidPlayer,
-    createMockFetch,
-    createMockResponse,
-    measureResponseTime,
-    mockFinnishPlayers,
-    setupApiTestEnvironment,
-} from '../apiTestUtils.js'
+import { GET } from '../../../routes/api/finnish-players/+server.js'
 
-describe('Finnish Players API', () => {
-    let originalConsole
-    let mockFetch
+const originalCwd = process.cwd()
 
-    beforeEach(() => {
-        const setup = setupApiTestEnvironment()
-        originalConsole = setup
-        mockFetch = createMockFetch(mockFinnishPlayers)
-        global.fetch = mockFetch
+/** Roster record in the cache format produced by the Python pipeline. */
+const cacheFormatRoster = {
+    8477476: {
+        playerId: 8477476,
+        name: 'Sebastian Aho',
+        position: 'C',
+        teamAbbrev: 'CAR',
+        sweaterNumber: 20,
+        shootsCatches: 'L',
+        heightInches: 71,
+        weightLbs: 182,
+        birthDate: '1997-07-26',
+        birthCity: { default: 'Rauma' },
+        birthCountry: 'FIN',
+        draftYear: 2015,
+        draftRound: 2,
+        draftOverall: 35,
+        isRookie: false,
+        isActive: true,
+        headshot: 'https://assets.nhle.com/mugs/nhl/20252026/CAR/8477476.png',
+    },
+    8478483: {
+        playerId: 8478483,
+        name: 'Mikko Rantanen',
+        position: 'R',
+        teamAbbrev: 'DAL',
+        sweaterNumber: 96,
+        isActive: false,
+        gamesPlayed: 82,
+        lastTeam: 'COL',
+        headshot: 'https://assets.nhle.com/mugs/nhl/20252026/DAL/8478483.png',
+    },
+}
 
-        // Set up default mock response for API calls
-        mockGet.mockResolvedValue(
-            createMockResponse({
-                success: true,
-                data: mockFinnishPlayers,
-            })
+/** Legacy array format, used by a few older snapshots. */
+const arrayFormatRoster = [
+    {
+        id: 8477476,
+        name: 'Sebastian Aho',
+        position: 'C',
+        team: 'CAR',
+        is_active: true,
+    },
+]
+
+let sandbox
+
+/**
+ * Point the handler's process.cwd()-based lookup at a sandbox directory and
+ * write the given roster content (or nothing at all for the missing case).
+ */
+function serveRoster(content) {
+    sandbox = fs.mkdtempSync(path.join(os.tmpdir(), 'finnish-players-api-'))
+    if (content !== undefined) {
+        const playersDir = path.join(sandbox, 'static', 'data', 'players')
+        fs.mkdirSync(playersDir, { recursive: true })
+        fs.writeFileSync(
+            path.join(playersDir, 'finnish-roster.json'),
+            typeof content === 'string' ? content : JSON.stringify(content)
         )
+    }
+    process.chdir(sandbox)
+}
+
+function requestFor(query = '') {
+    return GET({ url: new URL(`http://localhost/api/finnish-players${query}`) })
+}
+
+describe('GET /api/finnish-players (real handler)', () => {
+    beforeEach(() => {
+        sandbox = null
     })
 
     afterEach(() => {
-        Object.assign(console, originalConsole)
-        vi.clearAllMocks()
+        process.chdir(originalCwd)
+        if (sandbox) fs.rmSync(sandbox, { recursive: true, force: true })
     })
 
-    describe('GET /api/finnish-players', () => {
-        beforeEach(() => {
-            // Reset mock before each test
-            mockGet.mockClear()
-        })
-
-        it('should return Finnish players successfully', async () => {
-            // Default mock response is set up in beforeEach
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
+    describe('full format (default)', () => {
+        it('returns a bare array of players, not a success envelope', async () => {
+            serveRoster(cacheFormatRoster)
+            const response = await requestFor()
 
             expect(response.status).toBe(200)
-            expect(response.json).toBeTruthy()
-
             const data = await response.json()
-            expect(data).toHaveProperty('success', true)
-            expect(data).toHaveProperty('data')
-            expect(Array.isArray(data.data)).toBe(true)
+            expect(Array.isArray(data)).toBe(true)
+            expect(data).toHaveLength(2)
+        })
 
-            if (data.data.length > 0) {
-                data.data.forEach((player) => {
-                    expect(player).toHaveProperty('name')
-                    expect(player).toHaveProperty('nationality', 'FIN')
-                })
+        it('maps cache aliases to the serialized response contract', async () => {
+            serveRoster(cacheFormatRoster)
+            const data = await (await requestFor()).json()
+            const aho = data.find((player) => player.name === 'Sebastian Aho')
+
+            expect(aho).toMatchObject({
+                id: 8477476,
+                name: 'Sebastian Aho',
+                position: 'C',
+                team: 'CAR',
+                team_abbrev: 'CAR',
+                jersey_number: 20,
+                shoots_catches: 'L',
+                height: 71,
+                weight: 182,
+                birth_date: '1997-07-26',
+                birth_city: 'Rauma',
+                birth_country: 'FIN',
+                draft_year: 2015,
+                draft_round: 2,
+                draft_overall: 35,
+                is_rookie: false,
+                is_active: true,
+            })
+        })
+
+        it('preserves explicit inactive flags and keeps active default true', async () => {
+            serveRoster(cacheFormatRoster)
+            const data = await (await requestFor()).json()
+
+            const active = data.find((player) => player.name === 'Sebastian Aho')
+            const inactive = data.find((player) => player.name === 'Mikko Rantanen')
+            expect(active.is_active).toBe(true)
+            expect(inactive.is_active).toBe(false)
+        })
+
+        it('supports the legacy array roster format', async () => {
+            serveRoster(arrayFormatRoster)
+            const response = await requestFor()
+            const data = await response.json()
+
+            expect(response.status).toBe(200)
+            expect(data).toEqual([
+                expect.objectContaining({
+                    id: 8477476,
+                    name: 'Sebastian Aho',
+                    team: 'CAR',
+                    is_active: true,
+                }),
+            ])
+        })
+    })
+
+    describe('format parameter', () => {
+        beforeEach(() => {
+            serveRoster(cacheFormatRoster)
+        })
+
+        it('simple format returns a name-to-position mapping', async () => {
+            const data = await (await requestFor('?format=simple')).json()
+
+            expect(data).toEqual({
+                'Sebastian Aho': 'C',
+                'Mikko Rantanen': 'R',
+            })
+        })
+
+        it('names format returns an array of names', async () => {
+            const data = await (await requestFor('?format=names')).json()
+
+            expect(data).toEqual(['Sebastian Aho', 'Mikko Rantanen'])
+        })
+
+        it('falls back to full format for unknown or dangerous values', async () => {
+            for (const value of ['invalid', 'full;rm', '../../etc']) {
+                const response = await requestFor(`?format=${encodeURIComponent(value)}`)
+                expect(response.status).toBe(200)
+                expect(Array.isArray(await response.json())).toBe(true)
             }
         })
+    })
 
-        it('should handle different format parameters', async () => {
-            // Test simple format
-            mockGet.mockResolvedValueOnce(
-                createMockResponse({
-                    'Artturi Lehkonen': 'L',
-                    'Sebastian Aho': 'C',
-                    'Mikko Rantanen': 'R',
-                })
-            )
-            let url = new URL('http://localhost/api/finnish-players?format=simple')
-            let response = await mockGet({ url })
-            let data = await response.json()
+    describe('filesystem and data errors', () => {
+        it('returns an empty array when the roster file is missing', async () => {
+            serveRoster()
+            const response = await requestFor()
 
             expect(response.status).toBe(200)
-            expect(typeof data).toBe('object')
+            expect(await response.json()).toEqual([])
+        })
 
-            // Test names format
-            mockGet.mockResolvedValueOnce(
-                createMockResponse(['Artturi Lehkonen', 'Sebastian Aho', 'Mikko Rantanen'])
-            )
-            url = new URL('http://localhost/api/finnish-players?format=names')
-            response = await mockGet({ url })
-            data = await response.json()
+        it('returns an empty array when the roster file is malformed JSON', async () => {
+            serveRoster('{not json')
+            const response = await requestFor()
 
             expect(response.status).toBe(200)
-            expect(Array.isArray(data)).toBe(true)
+            expect(await response.json()).toEqual([])
         })
 
-        it('should handle empty player list gracefully', async () => {
-            mockGet.mockResolvedValue(
-                createMockResponse({
-                    success: true,
-                    data: [],
-                })
-            )
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
+        it('returns an empty array when the roster is empty', async () => {
+            serveRoster({})
+            const response = await requestFor()
 
             expect(response.status).toBe(200)
-            expect(Array.isArray(data.data || data)).toBe(true)
+            expect(await response.json()).toEqual([])
+        })
+    })
+
+    describe('normalization rules', () => {
+        it('infers the team from the headshot URL when no team field exists', async () => {
+            serveRoster({
+                8477476: {
+                    playerId: 8477476,
+                    name: 'Kaapo Kakko',
+                    position: 'R',
+                    headshot: 'https://assets.nhle.com/mugs/nhl/20252026/SEA/8477476.png',
+                },
+            })
+            const data = await (await requestFor()).json()
+
+            expect(data[0].team).toBe('SEA')
+            expect(data[0].team_abbrev).toBe('SEA')
         })
 
-        it('should handle API errors gracefully', async () => {
-            mockGet.mockResolvedValue(
-                createMockResponse(
-                    {
-                        error: 'Failed to fetch Finnish players',
-                    },
-                    { status: 500 }
-                )
-            )
+        it('keeps zero-valued and explicit-false fields intact', async () => {
+            serveRoster({
+                8477476: {
+                    playerId: 8477476,
+                    name: 'Zero Stats',
+                    position: 'C',
+                    teamAbbrev: 'CAR',
+                    draftRound: 0,
+                    isRookie: false,
+                    isActive: false,
+                    gamesPlayed: 0,
+                },
+            })
+            const data = await (await requestFor()).json()
 
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            expect(response.status).toBe(500)
-            expect(data).toHaveProperty('error')
-            expect(data.error).toContain('Failed to fetch Finnish players')
+            expect(data[0]).toMatchObject({
+                draft_round: 0,
+                is_rookie: false,
+                is_active: false,
+            })
         })
+    })
 
-        it('should handle malformed API response', async () => {
-            mockGet.mockResolvedValue(
-                createMockResponse(
-                    {
-                        error: 'Invalid data format from API',
-                    },
-                    { status: 500 }
-                )
-            )
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            expect(response.status).toBe(500)
-            expect(data).toHaveProperty('error')
-        })
-
-        it('should include proper cache headers', async () => {
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
+    describe('response basics', () => {
+        it('includes cache headers', async () => {
+            serveRoster(cacheFormatRoster)
+            const response = await requestFor()
 
             expect(response.headers.get('Cache-Control')).toBeDefined()
         })
 
-        it('should measure response time within acceptable limits', async () => {
-            mockFetch = createMockFetch(mockFinnishPlayers, { delay: 100 })
-            global.fetch = mockFetch
+        it('handles concurrent requests consistently', async () => {
+            serveRoster(cacheFormatRoster)
+            const responses = await Promise.all([requestFor(), requestFor(), requestFor()])
+            const payloads = await Promise.all(responses.map((response) => response.json()))
 
-            const url = new URL('http://localhost/api/finnish-players')
-            const { result, duration } = await measureResponseTime(() => mockGet({ url }))
-
-            expect(result.status).toBe(200)
-            expect(duration).toBeLessThan(1000) // Should complete within 1 second
-        })
-
-        it('should handle concurrent requests', async () => {
-            const url = new URL('http://localhost/api/finnish-players')
-
-            const promises = Array.from({ length: 5 }, () => mockGet({ url }))
-            const responses = await Promise.all(promises)
-
-            responses.forEach((response) => {
-                expect(response.status).toBe(200)
-            })
-        })
-    })
-
-    describe('Player Data Validation', () => {
-        it('should return players with all required fields', async () => {
-            mockFetch = createMockFetch(mockFinnishPlayers)
-            global.fetch = mockFetch
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            if (data.data && data.data.length > 0) {
-                data.data.forEach((player) => {
-                    assertValidPlayer(player)
-                    expect(player.name).toBeTruthy()
-                    expect(player.position).toBeTruthy()
-                    expect(player.team).toBeTruthy()
-                })
+            for (const data of payloads) {
+                expect(Array.isArray(data)).toBe(true)
+                expect(data).toHaveLength(2)
             }
-        })
-
-        it('should filter out non-Finnish players', async () => {
-            const mixedPlayers = [
-                ...mockFinnishPlayers,
-                { name: 'John Doe', nationality: 'USA' },
-                { name: 'Jane Smith', nationality: 'CAN' },
-            ]
-            mockFetch = createMockFetch(mixedPlayers)
-            global.fetch = mockFetch
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            expect(response.status).toBe(200)
-            // The backend should filter to only Finnish players
-            if (data.data) {
-                data.data.forEach((player) => {
-                    expect(['FIN', 'FI'].includes(player.nationality?.toUpperCase())).toBe(true)
-                })
-            }
-        })
-
-        it('should handle players with missing optional fields', async () => {
-            const playersWithMissingFields = mockFinnishPlayers.map((player) => ({
-                name: player.name,
-                position: player.position,
-                team: player.team,
-                team_full: player.team_full,
-                // Missing optional fields
-            }))
-            mockFetch = createMockFetch(playersWithMissingFields)
-            global.fetch = mockFetch
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            expect(response.status).toBe(200)
-            expect(Array.isArray(data.data || data)).toBe(true)
-        })
-    })
-
-    describe('Error Handling', () => {
-        it('should handle network timeout', async () => {
-            mockGet.mockResolvedValue(
-                createMockResponse(
-                    {
-                        error: 'Request timeout',
-                    },
-                    { status: 500 }
-                )
-            )
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            expect(response.status).toBe(500)
-            expect(data).toHaveProperty('error')
-        })
-
-        it('should handle API rate limiting', async () => {
-            mockGet.mockResolvedValue(
-                createMockResponse(
-                    {
-                        error: 'Rate limit exceeded',
-                    },
-                    { status: 500 }
-                )
-            )
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            expect(response.status).toBe(500)
-            expect(data).toHaveProperty('error')
-        })
-
-        it('should handle invalid URL parameters', async () => {
-            const url = new URL('http://localhost/api/finnish-players?format=invalid')
-            const response = await mockGet({ url })
-            const _data = await response.json()
-
-            // Should fall back to default format
-            expect(response.status).toBe(200)
-        })
-
-        it('should handle Python script execution errors', async () => {
-            mockGet.mockResolvedValue(
-                createMockResponse(
-                    {
-                        error: 'Python script execution failed',
-                    },
-                    { status: 500 }
-                )
-            )
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const response = await mockGet({ url })
-            const data = await response.json()
-
-            expect(response.status).toBe(500)
-            expect(data).toHaveProperty('error')
-        })
-    })
-
-    describe('Performance Tests', () => {
-        it('should handle large player datasets efficiently', async () => {
-            const largePlayerList = Array.from({ length: 100 }, (_, i) => ({
-                ...mockFinnishPlayers[0],
-                id: 8477476 + i,
-                name: `Player ${i + 1}`,
-            }))
-            mockFetch = createMockFetch(largePlayerList)
-            global.fetch = mockFetch
-
-            const url = new URL('http://localhost/api/finnish-players')
-            const { result, duration } = await measureResponseTime(() => mockGet({ url }))
-
-            expect(result.status).toBe(200)
-            expect(duration).toBeLessThan(2000) // Should handle 100 players within 2 seconds
-        })
-
-        it('should maintain consistent response format', async () => {
-            const url = new URL('http://localhost/api/finnish-players')
-
-            // Make multiple requests and ensure consistent format
-            const responses = await Promise.all([
-                mockGet({ url }),
-                mockGet({ url }),
-                mockGet({ url }),
-            ])
-
-            const responseData = await Promise.all(responses.map((response) => response.json()))
-
-            responseData.forEach((data) => {
-                expect(typeof data).toBe('object')
-                if (Array.isArray(data)) {
-                    // Simple format case
-                    expect(Array.isArray(data)).toBe(true)
-                } else {
-                    // Full format case
-                    expect(data).toHaveProperty('data')
-                    expect(Array.isArray(data.data)).toBe(true)
-                }
-            })
         })
     })
 })

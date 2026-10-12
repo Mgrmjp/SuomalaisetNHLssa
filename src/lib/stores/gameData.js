@@ -76,10 +76,7 @@ async function fetchAvailableDates() {
     logger.debug(`📅 Loaded ${manifestDates.length} available game dates from manifest fallback`)
 }
 
-// Initialize available dates on client side
-if (browser) {
-    fetchAvailableDates()
-}
+// Initialization is explicit (see initializeGameData); nothing starts at import time.
 
 // Combine available dates with break dates so users can navigate to breaks
 export const availableDates = derived(
@@ -143,27 +140,42 @@ export const yesterdayDate = derived(currentDate, ($currentDate) => {
 
 // Memory Management: Store interval ID for cleanup
 let currentDateInterval = null
+let initialized = false
 
-// Update currentDate every minute to keep it current
-if (browser) {
+/**
+ * Start date loading and the minute-based refresh cycle.
+ * Owned by the root layout; safe to call repeatedly. Returns a cleanup
+ * function that stops the timers and allows re-initialization.
+ * @returns {() => void}
+ */
+export function initializeGameData() {
+    if (!browser || initialized) return () => {}
+    initialized = true
+
+    fetchAvailableDates()
+
+    // Keep currentDate current and refresh visible results every minute
     currentDateInterval = setInterval(() => {
         currentDate.set(new Date())
         refreshWhenVisible()
-    }, 60000) // Update every minute
+    }, 60000)
     document.addEventListener('visibilitychange', refreshWhenVisible)
+
+    return cleanupGameData
 }
 
 function refreshWhenVisible() {
     if (document.visibilityState === 'visible') refreshSelectedDate()
 }
 
-// Memory Management: Cleanup function for intervals
-export function cleanupIntervals() {
+/** Stop timers and listeners so the module can be re-initialized later. */
+export function cleanupGameData() {
     if (currentDateInterval) {
         clearInterval(currentDateInterval)
         currentDateInterval = null
     }
     if (browser) document.removeEventListener('visibilitychange', refreshWhenVisible)
+    initialized = false
 }
 
 // Core stores

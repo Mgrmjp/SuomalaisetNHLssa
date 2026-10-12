@@ -8,6 +8,7 @@ import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import ViewState from '$lib/components/ui/ViewState.svelte'
 import { fetchLocalJSON } from '$lib/utils/apiHelpers.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { normalizeRosterData } from '$lib/utils/rosterNormalization.js'
 import teamMapping from '$lib/utils/teamMapping.js'
 
 // State
@@ -16,13 +17,6 @@ let _teamsMap = $state(new Map())
 let _inactivePlayers = $state([])
 let _loading = $state(true)
 let _error = $state(null)
-
-// Extract team abbreviation from headshot URL
-function extractTeamFromHeadshot(headshot) {
-    if (!headshot || typeof headshot !== 'string') return ''
-    const match = headshot.match(/\/mugs\/nhl\/\d+\/([A-Z]+)\/\d+\.png/)
-    return match ? match[1] : ''
-}
 
 // Load and process Finnish players data
 async function loadFinnishRoster() {
@@ -37,33 +31,12 @@ async function loadFinnishRoster() {
             throw new Error('Failed to load Finnish players data')
         }
 
-        // Handle cache format (object keyed by player ID)
-        let playerList
-        if (Array.isArray(rawData)) {
-            playerList = rawData.map((p) => ({
-                ...p,
-                name: correctFullName(p.name),
-            }))
-        } else {
-            // Convert object to array and normalize
-            playerList = Object.values(rawData).map((p) => {
-                const teamFromHeadshot = extractTeamFromHeadshot(p.headshot)
-                const originalName = p.name
-                const correctedName = correctFullName(originalName)
-                return {
-                    id: p.playerId || p.id,
-                    name: correctedName,
-                    position: p.position,
-                    team: p.teamAbbrev || p.team || teamFromHeadshot || '',
-                    team_abbrev: p.teamAbbrev || p.team || teamFromHeadshot || '',
-                    jersey_number: p.sweaterNumber || p.jersey_number,
-                    birth_date: p.birthDate || p.birth_date || null,
-                    is_active: p.isActive !== false,
-                    games_played: p.gamesPlayed ?? null,
-                    lastTeam: p.lastTeam || null,
-                }
-            })
-        }
+        // Normalize both cache formats (object keyed by ID, legacy array) and
+        // apply Finnish display-name correction for this component.
+        const playerList = normalizeRosterData(rawData).map((player) => ({
+            ...player,
+            name: correctFullName(player.name),
+        }))
 
         // Group active players by team and move UNKNOWN/non-active into inactive list
         const teams = new Map()

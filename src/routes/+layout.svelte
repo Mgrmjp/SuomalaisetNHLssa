@@ -1,13 +1,18 @@
 <script>
 // @ts-nocheck
 import '../app.css'
+import { onMount } from 'svelte'
 import { base } from '$app/paths'
 import { page } from '$app/stores'
 import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
 import VerticalAd from '$lib/components/ui/VerticalAd.svelte'
 import VerticalAdLeft from '$lib/components/ui/VerticalAdLeft.svelte'
+import { initializeGameData } from '$lib/stores/gameData.js'
 
 const { children } = $props()
+
+// Own the app-wide data lifecycle: start on mount, stop on dispose.
+onMount(() => initializeGameData())
 
 const _siteUrl = 'https://suomalaisetnhlssa.fi'
 const _siteName = 'Suomalaiset NHL:ssä'

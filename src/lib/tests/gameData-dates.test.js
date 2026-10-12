@@ -14,7 +14,7 @@ vi.mock('$lib/services/standingsService.js', () => ({
 let stores
 
 afterEach(() => {
-    stores?.cleanupIntervals()
+    stores?.cleanupGameData()
     vi.unstubAllGlobals()
     vi.resetModules()
 })
@@ -34,6 +34,7 @@ describe('game file dates', () => {
 
         const loadedStores = await import('../stores/gameData.js')
         stores = loadedStores
+        stores.initializeGameData()
         await vi.waitFor(() => {
             expect(get(loadedStores.availableDates)).toContain('2026-09-28')
         })
