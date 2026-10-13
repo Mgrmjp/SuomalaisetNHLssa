@@ -1,34 +1,6 @@
 {
-  "updatedAt": "2026-10-12T17:30:45Z",
+  "updatedAt": "2026-10-13T13:26:40Z",
   "games": [
-    {
-      "gameId": 2026020088,
-      "startTime": "2026-10-12T23:00:00Z",
-      "awayTeam": "OTT",
-      "homeTeam": "NJD",
-      "finnishPlayers": [
-        {
-          "name": "Nikolas Matinpalo",
-          "team": "OTT"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020089,
-      "startTime": "2026-10-13T00:00:00Z",
-      "awayTeam": "VGK",
-      "homeTeam": "MIN",
-      "finnishPlayers": [
-        {
-          "name": "Ville Heinola",
-          "team": "VGK"
-        },
-        {
-          "name": "Olli Määttä",
-          "team": "MIN"
-        }
-      ]
-    },
     {
       "gameId": 2026020091,
       "startTime": "2026-10-13T22:15:00Z",
@@ -138,6 +110,46 @@
         {
           "name": "Nikolas Matinpalo",
           "team": "OTT"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020097,
+      "startTime": "2026-10-13T23:45:00Z",
+      "awayTeam": "VAN",
+      "homeTeam": "NYI",
+      "finnishPlayers": [
+        {
+          "name": "Aatu Raty",
+          "team": "VAN"
+        },
+        {
+          "name": "Kevin Lankinen",
+          "team": "VAN"
+        },
+        {
+          "name": "Leevi Meriläinen",
+          "team": "VAN"
+        },
+        {
+          "name": "Matias Maccelli",
+          "team": "NYI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020098,
+      "startTime": "2026-10-14T00:00:00Z",
+      "awayTeam": "PIT",
+      "homeTeam": "CHI",
+      "finnishPlayers": [
+        {
+          "name": "Ville Koivunen",
+          "team": "PIT"
+        },
+        {
+          "name": "Teuvo Teravainen",
+          "team": "CHI"
         }
       ]
     }
