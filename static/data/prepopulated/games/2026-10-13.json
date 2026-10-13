@@ -7,7 +7,7 @@
       "awayTeam": "NJD",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-10-13T22:00:00Z",
       "isOT": false,
@@ -22,7 +22,7 @@
       "awayTeam": "FLA",
       "homeScore": 0,
       "awayScore": 0,
-      "gameState": "FUT",
+      "gameState": "PRE",
       "gameType": 2,
       "startTime": "2026-10-13T22:15:00Z",
       "isOT": false,
@@ -244,6 +244,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-10-13T13:25:16.834014",
+  "generated_at": "2026-10-13T21:58:09.621483",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
