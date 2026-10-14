@@ -1,12 +1,120 @@
 {
-  "updatedAt": "2026-10-13T13:26:40Z",
+  "updatedAt": "2026-10-14T11:06:51Z",
   "games": [
     {
-      "gameId": 2026020091,
-      "startTime": "2026-10-13T22:15:00Z",
-      "awayTeam": "FLA",
-      "homeTeam": "CBJ",
+      "gameId": 2026020106,
+      "startTime": "2026-10-14T23:30:00Z",
+      "awayTeam": "MTL",
+      "homeTeam": "WSH",
       "finnishPlayers": [
+        {
+          "name": "Oliver Kapanen",
+          "team": "MTL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020107,
+      "startTime": "2026-10-15T00:30:00Z",
+      "awayTeam": "DAL",
+      "homeTeam": "COL",
+      "finnishPlayers": [
+        {
+          "name": "Arttu Hyry",
+          "team": "DAL"
+        },
+        {
+          "name": "Esa Lindell",
+          "team": "DAL"
+        },
+        {
+          "name": "Joel Kiviranta",
+          "team": "DAL"
+        },
+        {
+          "name": "Mikko Rantanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Miro Heiskanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Roope Hintz",
+          "team": "DAL"
+        },
+        {
+          "name": "Artturi Lehkonen",
+          "team": "COL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020108,
+      "startTime": "2026-10-15T23:00:00Z",
+      "awayTeam": "BUF",
+      "homeTeam": "TOR",
+      "finnishPlayers": [
+        {
+          "name": "Konsta Helenius",
+          "team": "BUF"
+        },
+        {
+          "name": "Ukko-Pekka Luukkonen",
+          "team": "BUF"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020109,
+      "startTime": "2026-10-15T23:00:00Z",
+      "awayTeam": "NYI",
+      "homeTeam": "OTT",
+      "finnishPlayers": [
+        {
+          "name": "Matias Maccelli",
+          "team": "NYI"
+        },
+        {
+          "name": "Nikolas Matinpalo",
+          "team": "OTT"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020111,
+      "startTime": "2026-10-15T23:00:00Z",
+      "awayTeam": "SEA",
+      "homeTeam": "TBL",
+      "finnishPlayers": [
+        {
+          "name": "Kaapo Kakko",
+          "team": "SEA"
+        },
+        {
+          "name": "Ville Ottavainen",
+          "team": "SEA"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020112,
+      "startTime": "2026-10-15T23:00:00Z",
+      "awayTeam": "VAN",
+      "homeTeam": "FLA",
+      "finnishPlayers": [
+        {
+          "name": "Aatu Raty",
+          "team": "VAN"
+        },
+        {
+          "name": "Kevin Lankinen",
+          "team": "VAN"
+        },
+        {
+          "name": "Leevi Meriläinen",
+          "team": "VAN"
+        },
         {
           "name": "Aleksander Barkov",
           "team": "FLA"
@@ -26,70 +134,10 @@
       ]
     },
     {
-      "gameId": 2026020092,
-      "startTime": "2026-10-13T22:30:00Z",
-      "awayTeam": "BUF",
-      "homeTeam": "MTL",
-      "finnishPlayers": [
-        {
-          "name": "Konsta Helenius",
-          "team": "BUF"
-        },
-        {
-          "name": "Ukko-Pekka Luukkonen",
-          "team": "BUF"
-        },
-        {
-          "name": "Oliver Kapanen",
-          "team": "MTL"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020093,
-      "startTime": "2026-10-13T22:45:00Z",
-      "awayTeam": "WSH",
-      "homeTeam": "CAR",
-      "finnishPlayers": [
-        {
-          "name": "Jesperi Kotkaniemi",
-          "team": "CAR"
-        },
-        {
-          "name": "Juuso Välimäki",
-          "team": "CAR"
-        },
-        {
-          "name": "Sebastian Aho",
-          "team": "CAR"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020094,
-      "startTime": "2026-10-13T23:00:00Z",
-      "awayTeam": "SEA",
-      "homeTeam": "PHI",
-      "finnishPlayers": [
-        {
-          "name": "Kaapo Kakko",
-          "team": "SEA"
-        },
-        {
-          "name": "Ville Ottavainen",
-          "team": "SEA"
-        },
-        {
-          "name": "Rasmus Ristolainen",
-          "team": "PHI"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020095,
-      "startTime": "2026-10-13T23:15:00Z",
-      "awayTeam": "TBL",
-      "homeTeam": "NYR",
+      "gameId": 2026020113,
+      "startTime": "2026-10-15T23:00:00Z",
+      "awayTeam": "NYR",
+      "homeTeam": "NJD",
       "finnishPlayers": [
         {
           "name": "Eeli Tolvanen",
@@ -102,54 +150,14 @@
       ]
     },
     {
-      "gameId": 2026020096,
-      "startTime": "2026-10-13T23:30:00Z",
-      "awayTeam": "STL",
-      "homeTeam": "OTT",
+      "gameId": 2026020110,
+      "startTime": "2026-10-15T23:30:00Z",
+      "awayTeam": "PHI",
+      "homeTeam": "DET",
       "finnishPlayers": [
         {
-          "name": "Nikolas Matinpalo",
-          "team": "OTT"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020097,
-      "startTime": "2026-10-13T23:45:00Z",
-      "awayTeam": "VAN",
-      "homeTeam": "NYI",
-      "finnishPlayers": [
-        {
-          "name": "Aatu Raty",
-          "team": "VAN"
-        },
-        {
-          "name": "Kevin Lankinen",
-          "team": "VAN"
-        },
-        {
-          "name": "Leevi Meriläinen",
-          "team": "VAN"
-        },
-        {
-          "name": "Matias Maccelli",
-          "team": "NYI"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020098,
-      "startTime": "2026-10-14T00:00:00Z",
-      "awayTeam": "PIT",
-      "homeTeam": "CHI",
-      "finnishPlayers": [
-        {
-          "name": "Ville Koivunen",
-          "team": "PIT"
-        },
-        {
-          "name": "Teuvo Teravainen",
-          "team": "CHI"
+          "name": "Rasmus Ristolainen",
+          "team": "PHI"
         }
       ]
     }
