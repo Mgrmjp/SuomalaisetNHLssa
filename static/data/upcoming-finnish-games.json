@@ -1,54 +1,6 @@
 {
-  "updatedAt": "2026-10-14T11:06:51Z",
+  "updatedAt": "2026-10-15T10:47:42Z",
   "games": [
-    {
-      "gameId": 2026020106,
-      "startTime": "2026-10-14T23:30:00Z",
-      "awayTeam": "MTL",
-      "homeTeam": "WSH",
-      "finnishPlayers": [
-        {
-          "name": "Oliver Kapanen",
-          "team": "MTL"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020107,
-      "startTime": "2026-10-15T00:30:00Z",
-      "awayTeam": "DAL",
-      "homeTeam": "COL",
-      "finnishPlayers": [
-        {
-          "name": "Arttu Hyry",
-          "team": "DAL"
-        },
-        {
-          "name": "Esa Lindell",
-          "team": "DAL"
-        },
-        {
-          "name": "Joel Kiviranta",
-          "team": "DAL"
-        },
-        {
-          "name": "Mikko Rantanen",
-          "team": "DAL"
-        },
-        {
-          "name": "Miro Heiskanen",
-          "team": "DAL"
-        },
-        {
-          "name": "Roope Hintz",
-          "team": "DAL"
-        },
-        {
-          "name": "Artturi Lehkonen",
-          "team": "COL"
-        }
-      ]
-    },
     {
       "gameId": 2026020108,
       "startTime": "2026-10-15T23:00:00Z",
@@ -158,6 +110,38 @@
         {
           "name": "Rasmus Ristolainen",
           "team": "PHI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020114,
+      "startTime": "2026-10-16T00:00:00Z",
+      "awayTeam": "WPG",
+      "homeTeam": "CHI",
+      "finnishPlayers": [
+        {
+          "name": "Brad Lambert",
+          "team": "WPG"
+        },
+        {
+          "name": "Teuvo Teravainen",
+          "team": "CHI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020115,
+      "startTime": "2026-10-16T00:00:00Z",
+      "awayTeam": "SJS",
+      "homeTeam": "NSH",
+      "finnishPlayers": [
+        {
+          "name": "Justus Annunen",
+          "team": "NSH"
+        },
+        {
+          "name": "Juuse Saros",
+          "team": "NSH"
         }
       ]
     }
