@@ -5,14 +5,14 @@
       "gameId": 2026020121,
       "homeTeam": "WSH",
       "awayTeam": "NJD",
-      "homeScore": 0,
-      "awayScore": 0,
-      "gameState": "FUT",
+      "homeScore": 1,
+      "awayScore": 1,
+      "gameState": "LIVE",
       "gameType": 2,
       "startTime": "2026-10-17T17:00:00Z",
       "isOT": false,
       "isSO": false,
-      "period": 3,
+      "period": 1,
       "finnish_players_count": 0,
       "empty_net_goals": 0
     },
@@ -214,6 +214,6 @@
   ],
   "players": [],
   "total_players": 0,
-  "generated_at": "2026-10-17T15:46:27.074268",
+  "generated_at": "2026-10-17T17:57:34.701048",
   "source": "NHL API - Enhanced with Empty Net Goal Tracking"
 }
