@@ -1,38 +1,6 @@
 {
-  "updatedAt": "2026-10-16T10:36:05Z",
+  "updatedAt": "2026-10-17T10:05:14Z",
   "games": [
-    {
-      "gameId": 2026020119,
-      "startTime": "2026-10-17T01:00:00Z",
-      "awayTeam": "PIT",
-      "homeTeam": "COL",
-      "finnishPlayers": [
-        {
-          "name": "Ville Koivunen",
-          "team": "PIT"
-        },
-        {
-          "name": "Artturi Lehkonen",
-          "team": "COL"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020120,
-      "startTime": "2026-10-17T02:00:00Z",
-      "awayTeam": "BOS",
-      "homeTeam": "ANA",
-      "finnishPlayers": [
-        {
-          "name": "Mikael Granlund",
-          "team": "ANA"
-        },
-        {
-          "name": "Ville Husso",
-          "team": "ANA"
-        }
-      ]
-    },
     {
       "gameId": 2026020122,
       "startTime": "2026-10-17T19:30:00Z",
@@ -150,6 +118,58 @@
         {
           "name": "Rasmus Ristolainen",
           "team": "PHI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020129,
+      "startTime": "2026-10-17T23:00:00Z",
+      "awayTeam": "NYR",
+      "homeTeam": "CBJ",
+      "finnishPlayers": [
+        {
+          "name": "Eeli Tolvanen",
+          "team": "NYR"
+        },
+        {
+          "name": "Joonas Korpisalo",
+          "team": "NYR"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020130,
+      "startTime": "2026-10-17T23:00:00Z",
+      "awayTeam": "DAL",
+      "homeTeam": "CHI",
+      "finnishPlayers": [
+        {
+          "name": "Arttu Hyry",
+          "team": "DAL"
+        },
+        {
+          "name": "Esa Lindell",
+          "team": "DAL"
+        },
+        {
+          "name": "Joel Kiviranta",
+          "team": "DAL"
+        },
+        {
+          "name": "Mikko Rantanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Miro Heiskanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Roope Hintz",
+          "team": "DAL"
+        },
+        {
+          "name": "Teuvo Teravainen",
+          "team": "CHI"
         }
       ]
     }
