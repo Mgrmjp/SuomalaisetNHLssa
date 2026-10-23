@@ -40,6 +40,35 @@ Inactive players need `lastTeam` and `gamesPlayed` fields, populated by:
 
 If inactive players show "-" for GP or "Ei NHL:ssa" for team, re-run: `node scripts/prebuild/fetch-last-teams.cjs`
 
+## File Writes on WSL (agent tooling)
+
+This repo lives inside WSL at `/home/miikka/dev/suomalaisetnhlssa`, reached from
+Windows through the `\\wsl.localhost\Ubuntu-24.04\...` UNC share.
+
+That share does not support hard links: `link()` fails with
+`ENOTSUP` / "The request is not supported", while `rename()` works. Tools that
+write atomically via link-then-rename therefore fail, even though reads are
+fine. DSH's `write` and `edit` tools are affected; `read`, `grep` and `glob` are not.
+
+Write through WSL instead of a UNC path:
+
+```powershell
+# run project commands in the Linux environment
+wsl.exe -d Ubuntu-24.04 --cd /home/miikka/dev/suomalaisetnhlssa -- npm run dev
+
+# apply edits from a script that runs inside WSL
+wsl.exe -d Ubuntu-24.04 --cd /home/miikka/dev/suomalaisetnhlssa -- python3 /tmp/apply.py
+```
+
+Practical rules:
+
+- Use the **Linux** `node`/`npm`. Running the Windows ones against this repo fails,
+  because `node_modules` contains Linux binaries.
+- Make file edits with `python3`, `sed -i`, or a staged script executed inside WSL,
+  then confirm with `git diff`.
+- Quote bash bodies from PowerShell with **single** quotes; `wsl.exe` strips double
+  quotes out of arguments.
+
 <!-- headroom:rtk-instructions -->
 # RTK (Rust Token Killer) - Token-Optimized Commands
 
