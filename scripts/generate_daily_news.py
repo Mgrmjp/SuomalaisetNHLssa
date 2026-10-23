@@ -67,6 +67,17 @@ NOISE_TEXT_PATTERNS = [
     re.compile(r"\bissues by year\b", re.IGNORECASE),
 ]
 
+# Raw debug/var_dump output that crawlers sometimes capture instead of page text.
+DEBUG_DUMP_PATTERNS = [
+    re.compile(r"\bstring\(\d+\)"),
+    re.compile(r"\bbool\((?:true|false)\)"),
+    re.compile(r"\bint\(\d+\)"),
+    re.compile(r"\bfloat\(\d+\)"),
+    re.compile(r"\barray\(\d+\)\s*\{"),
+    re.compile(r'\["[a-z0-9_]+"\]\s*=>'),
+    re.compile(r"\]\s*=>\s*"),
+]
+
 NOISE_TITLE_PATTERNS = [
     re.compile(r"^schedule\s*\|", re.IGNORECASE),
     re.compile(r"^nhl scores\b", re.IGNORECASE),
@@ -94,7 +105,16 @@ NOISE_URL_PATTERNS = [
 
 SOURCE_LABELS = {
     "archive": "Archive",
+    "bleacherreport.com": "Bleacher Report",
+    "cbssports": "CBS Sports",
+    "cbssports.com": "CBS Sports",
+    "dailyfaceoff.com": "Daily Faceoff",
+    "espn": "ESPN",
+    "espn com": "ESPN",
+    "espn.com": "ESPN",
     "espnpressroom": "ESPN Press Room",
+    "foxsports": "Fox Sports",
+    "foxsports.com": "Fox Sports",
     "headlinehockey": "Headline Hockey",
     "hockey-reference": "Hockey-Reference",
     "insidetherink": "Inside the Rink",
@@ -106,25 +126,72 @@ SOURCE_LABELS = {
     "plaintextsports": "Plain Text Sports",
     "prohockeynews": "Pro Hockey News",
     "prohockeyrumors": "Pro Hockey Rumors",
+    "si.com": "Sports Illustrated",
     "spectorshockey": "Spectors Hockey",
+    "sports.yahoo.com": "Yahoo Sports",
+    "sportsnet": "Sportsnet",
+    "sportsnet.ca": "Sportsnet",
     "sportsnews-365": "SportsNews 365",
     "thehockeynews": "The Hockey News",
     "thehockeywriters": "The Hockey Writers",
+    "thescore.com": "theScore",
+    "tsn": "TSN",
+    "tsn.ca": "TSN",
+    "usatoday.com": "USA Today",
+    "yahoo": "Yahoo Sports",
+    "yahoo.com": "Yahoo Sports",
     "youtube": "YouTube",
 }
 
 TRUSTED_NEWS_DOMAINS = {
-    "nhl.com",
-    "media.nhl.com",
-    "sportsnet.ca",
-    "nytimes.com",
-    "theathletic.com",
+    "bleacherreport.com",
+    "blueshirtbanter.com",
+    "cbssports.com",
+    "centraloregondaily.com",
+    "chl.ca",
+    "collegehockeynews.com",
+    "dailycampus.com",
+    "dailyfaceoff.com",
+    "deseret.com",
+    "eliteprospects.com",
     "espn.com",
-    "thehockeywriters.com",
-    "spectorshockey.net",
-    "thehockeynews.com",
+    "espnpressroom.com",
+    "fieldlevelmedia.com",
+    "flohockey.tv",
+    "foxsports.com",
+    "headlinehockey.com",
+    "hockey-reference.com",
+    "hockeybuzz.com",
+    "illegalcurve.com",
+    "lighthousehockey.com",
+    "macon.com",
+    "media.nhl.com",
+    "nhl.com",
+    "northeasttimes.com",
+    "nytimes.com",
+    "pensburgh.com",
+    "prohockeynews.com",
     "prohockeyrumors.com",
-    "insidetherink.com",
+    "puckpedia.com",
+    "rogersplace.com",
+    "si.com",
+    "spectorshockey.net",
+    "sports.yahoo.com",
+    "sportslogos.net",
+    "sportsnet.ca",
+    "sportsnews-365.com",
+    "sportsnewshistory.com",
+    "theahl.com",
+    "theathletic.com",
+    "thehockeynews.com",
+    "thehockeywriters.com",
+    "theintelligencer.net",
+    "thescore.com",
+    "tsn.ca",
+    "usahockey.com",
+    "usatoday.com",
+    "valleynewslive.com",
+    "yahoo.com",
 }
 
 LOW_VALUE_TITLE_HINTS = [
@@ -310,6 +377,17 @@ def is_generic_fallback_summary(summary):
     return matches_any_pattern(summary, GENERIC_SUMMARY_PATTERNS)
 
 
+COMMON_TLDS = {"com", "net", "org", "ca", "fi", "io", "co", "news", "se", "uk"}
+
+
+def format_hostname_label(hostname):
+    labels = [label for label in (hostname or "").split(".") if label and label != "www"]
+    if len(labels) > 1 and labels[-1] in COMMON_TLDS:
+        labels = labels[:-1]
+    if not labels:
+        return ""
+    return " ".join(labels).title()
+
 def infer_source_label(source, url=""):
     normalized_source = normalize_whitespace(source)
     source_key = normalized_source.lower()
@@ -331,12 +409,15 @@ def infer_source_label(source, url=""):
     if hostname in SOURCE_LABELS:
         return SOURCE_LABELS[hostname]
 
+    registrable = ".".join(hostname.split(".")[-2:])
+    if registrable in SOURCE_LABELS:
+        return SOURCE_LABELS[registrable]
+
     primary = hostname.split(".")[0]
     if primary in SOURCE_LABELS:
         return SOURCE_LABELS[primary]
 
-    label = " ".join(hostname.split(".")[:2]).strip()
-    return label.title()
+    return format_hostname_label(hostname)
 
 
 def infer_category(*parts):
@@ -424,6 +505,26 @@ def _hostname(url):
     if host.startswith("www."):
         return host[4:]
     return host
+
+
+def is_homepage_url(url):
+    """True when a URL points at a site root instead of an article."""
+    if not url:
+        return False
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return False
+    if not parsed.hostname:
+        return False
+    return (parsed.path or "").strip() in {"", "/"}
+
+
+def is_trusted_news_url(url):
+    host = _hostname(url)
+    if not host:
+        return False
+    return any(host == domain or host.endswith("." + domain) for domain in TRUSTED_NEWS_DOMAINS)
 
 
 def score_news_item(item):
@@ -546,6 +647,9 @@ def is_noise_news_item(title="", summary="", translated_title="", translated_sum
     if matches_any_pattern(combined_text, NOISE_TEXT_PATTERNS):
         return True
 
+    if matches_any_pattern(combined_text, DEBUG_DUMP_PATTERNS):
+        return True
+
     if matches_any_pattern(title_text, NOISE_TITLE_PATTERNS):
         return True
 
@@ -599,6 +703,12 @@ def normalize_news_entry(item, matched_date=None):
     url = item.get("url", "")
     source = infer_source_label(item.get("source", ""), url)
     effective_date = matched_date or item.get("matchedDate")
+
+    if is_homepage_url(url):
+        return None
+
+    if not is_trusted_news_url(url):
+        return None
 
     if is_noise_news_item(title, summary, translated_title, translated_summary, url):
         return None
@@ -700,9 +810,13 @@ def fetch_daily_news_tavily(date_str, daily_cache):
             if (normalized := normalize_news_entry(item, date_str))
         ]
         if cached_items != daily_cache[date_str]:
-            daily_cache[date_str] = cached_items
+            if cached_items:
+                daily_cache[date_str] = cached_items
+            else:
+                daily_cache.pop(date_str, None)
             save_daily_cache(daily_cache)
-        return cached_items
+        if cached_items:
+            return cached_items
 
     try:
         from tavily import TavilyClient
