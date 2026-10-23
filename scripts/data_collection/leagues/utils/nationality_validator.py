@@ -1,23 +1,17 @@
 import json
 from pathlib import Path
 from typing import Dict, Any
-import requests
 import unicodedata
 from datetime import datetime
 
 class NationalityValidator:
     """
-    Validates the nationality of players using a combination of local cache
-    and external search lookups.
+    Tracks heuristic candidates and manual nationality decisions in a local cache.
     """
     
     def __init__(self, cache_path: str = "scripts/static/data/checks/nationality_cache.json"):
         self.cache_path = Path(cache_path)
         self.cache: Dict[str, Dict[str, Any]] = self._load_cache()
-        self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        })
 
     def _load_cache(self) -> Dict[str, Dict[str, Any]]:
         """Load the nationality cache from disk."""
@@ -44,10 +38,11 @@ class NationalityValidator:
         clean_name = "".join([c for c in nfkd_form if not unicodedata.combining(c)]).lower().strip()
         return clean_name.replace(" ", "_")
 
-    def verify(self, player_name: str, league: str = "", team: str = "", force_check: bool = False) -> bool:
+    def verify(self, player_name: str, league: str = "", team: str = "") -> bool:
         """
-        Verify if a player is Finnish. 
-        Returns True if confirmed Finnish, False otherwise.
+        Return whether a player is a Finnish candidate under the stored decisions.
+
+        Pending candidates remain eligible until manually confirmed or rejected.
         """
         norm_name = self._normalize_name(player_name)
         cache_key = f"{norm_name}_{league.lower()}"

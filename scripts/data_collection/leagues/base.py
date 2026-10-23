@@ -184,24 +184,17 @@ class BaseLeagueAdapter(ABC):
         finnish_indicators = ['FIN', 'Finland', 'Suomi']
         filtered = []
         for p in players:
-            # Check validator first for any explicit REJECTION (overrides everything)
-            if not validator.verify(p.name, self.league_name, p.team):
+            is_officially_finnish = p.nationality in finnish_indicators
+            is_likely_finnish = bool(
+                p.name and self._is_likely_finnish_name(p.name)
+            )
+            if not is_officially_finnish and not is_likely_finnish:
                 continue
-                
-            # If we were rejected, we already continued. 
-            # Now check if it's a confirmed Finn or matches heuristic.
-            
-            # If specifically marked as Finnish in official source, trust it 
-            # (unless it was rejected above, which it wasn't)
-            if p.nationality in finnish_indicators:
+
+            # Cached rejections override official data and name heuristics.
+            if validator.verify(p.name, self.league_name, p.team):
                 filtered.append(p)
-                continue
-                
-            # If it's a likely name, we already called validator.verify above 
-            # and it returned True (either confirmed, pending, or new).
-            if p.name and self._is_likely_finnish_name(p.name):
-                filtered.append(p)
-                    
+
         return filtered
     
     def _is_likely_finnish_name(self, name: str) -> bool:
