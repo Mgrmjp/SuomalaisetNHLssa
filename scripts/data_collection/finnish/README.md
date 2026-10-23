@@ -43,12 +43,12 @@ python3 scripts/data_collection/finnish/build_cache.py
 1. Scans 30 days of NHL games (~224 games)
 2. Checks 800+ unique players
 3. Filters for Finnish nationality (birthCountry == "FIN")
-4. Builds complete cache with ~34 players
+4. Builds a cache of Finnish NHL players
 
 ### `cache/finnish-players.json`
 Complete Finnish players cache.
 
-**Contents:** 34 Finnish players with:
+**Contents:** Finnish players with:
 - Player ID, name, position
 - Birth date, birthplace
 - Jersey number, height, weight
@@ -124,31 +124,7 @@ python3 scripts/data_collection/finnish/build_prospects_cache.py
 }
 ```
 
-## 🏆 Current Cache (2025-11-22)
-
-**Total Players:** 34 Finnish players
-
-**By Position:**
-- Forwards (C/L/R): 21 players
-- Defense (D): 10 players
-- Goalies (G): 3 players
-
-**Star Players:**
-- Sebastian Aho (CAR)
-- Mikko Rantanen (DAL)
-- Miro Heiskanen (DAL)
-- Roope Hintz (DAL)
-- Erik Haula (NSH)
-
-**Goalies:**
-- Juuse Saros (NSH)
-- Joonas Korpisalo
-- Kevin Lankinen
-- And 3 more
-
-## 📈 Typical Results
-
-### November 2025 Games
+## 📈 Example Results (November 2025)
 - **Total Finnish players:** 28 active
 - **Players per game date:** 10-20 (depending on schedule)
 - **Games with Finnish players:** 8-12 per date
@@ -216,6 +192,4 @@ Run `build_cache.py` when:
 
 ---
 
-**Status:** ✅ Working (2025-11-22)
-**Cache:** 34 players (complete)
-**Performance:** 30-60 seconds per date
+Cache contents and player counts change over time; inspect the generated files for current data.

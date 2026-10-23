@@ -72,11 +72,11 @@ python3 scripts/python_utils/test_api.py
 
 ## 🗑️ Deprecated Files
 
-Old/broken files have been removed. See [deprecated/deprecated_files.md](deprecated/deprecated_files.md) for details.
+Deprecated scripts are removed from this directory; use the commands listed above.
 
 ## 📝 Requirements
 
-- Python 3.9+
+- Python 3.10+
 - `requests` library (`pip install requests`)
 
 ## 🎯 Choosing the Right Script
@@ -95,15 +95,6 @@ Old/broken files have been removed. See [deprecated/deprecated_files.md](depreca
 1. **Cache First**: Always run `build_cache.py` after NHL roster changes
 2. **Rate Limiting**: Scripts include delays to respect API limits
 3. **Date Format**: Use `YYYY-MM-DD` format
-4. **Current Season**: Scripts target 2025-26 NHL season
+4. **Current Season**: The NHL prospects cache derives its season from the current date; third-party league feeds may use provider-specific season IDs.
 
-## 🏆 Current Status (2025-11-22)
-
-- ✅ Finnish cache: **34 players** (complete)
-- ✅ Data collection: **Working**
-- ✅ Tests: **Passing**
-
----
-
-**Last Updated:** 2025-11-22
 **System:** Finnish NHL Players Tracker

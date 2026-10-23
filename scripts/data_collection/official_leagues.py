@@ -15,6 +15,7 @@ from datetime import datetime
 from typing import List, Dict, Optional
 from pathlib import Path
 from bs4 import BeautifulSoup
+from config import current_nhl_season_label
 from leagues import DELAdapter, SwissNLAdapter, CzechExtraligaAdapter, ICEHLAdapter
 
 CHL_TEAM_SITE_BASES = {
@@ -922,8 +923,9 @@ class OfficialLeagueCollector:
             print(f"  ICEHL error: {e}")
             return []
 
-    def collect_all(self, season: str = "2025-2026") -> Dict:
+    def collect_all(self, season: str = None) -> Dict:
         """Collect from all leagues."""
+        season = season or current_nhl_season_label()
         results = {
             "generated_at": datetime.now().isoformat(),
             "season": season,
@@ -1139,16 +1141,7 @@ def main():
 
     collector = OfficialLeagueCollector()
 
-    # Get current season: NHL/hockey seasons run Sept-June
-    # So if current month < 9 (September), we're in the season PREV-CURRENT year
-    current_year = datetime.now().year
-    current_month = datetime.now().month
-    if current_month < 9:  # Jan-Aug: still in the season that started last fall
-        season = f"{current_year - 1}-{current_year}"
-    else:  # Sept-Dec: new season has started
-        season = f"{current_year}-{current_year + 1}"
-
-    results = collector.collect_all(season)
+    results = collector.collect_all()
 
     # Print summary
     print("\n" + "=" * 70)

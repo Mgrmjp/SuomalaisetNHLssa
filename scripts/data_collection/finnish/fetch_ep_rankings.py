@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Fetch draft rankings from EliteProspects for 2026.
+Fetch draft rankings from EliteProspects for the upcoming NHL draft.
 Uses the Next.js data API to get filtered rankings for Finnish players.
 """
 
@@ -13,10 +13,10 @@ from datetime import datetime
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config import DATA_DIR
+from config import DATA_DIR, upcoming_nhl_draft_year
 from utils import save_json
 
-DRAFT_YEAR = 2026
+DRAFT_YEAR = upcoming_nhl_draft_year()
 BASE_URL = "https://www.eliteprospects.com"
 RANKINGS_OUTPUT = DATA_DIR / "finnish_draft_rankings_ep.json"
 
@@ -79,8 +79,7 @@ def fetch_ranking(build_id, slug, name):
 def main():
     build_id = get_build_id()
     if not build_id:
-        print("Could not find buildId, aborting.")
-        return
+        raise SystemExit("Could not find EliteProspects buildId; rankings were not updated.")
 
     print(f"Build ID: {build_id}")
     
@@ -122,7 +121,7 @@ def main():
         save_json(all_rankings, RANKINGS_OUTPUT)
         print(f"Saved {len(all_rankings['sources'])} ranking sources to {RANKINGS_OUTPUT}")
     else:
-        print("No rankings found.")
+        raise SystemExit("No draft rankings were fetched; existing data was left untouched.")
 
 if __name__ == "__main__":
     main()

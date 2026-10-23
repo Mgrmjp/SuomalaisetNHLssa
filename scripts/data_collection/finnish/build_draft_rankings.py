@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build Finnish draft rankings cache for 2026 NHL Draft.
+Build Finnish draft rankings cache for the upcoming NHL Draft.
 Fetches North American and International skater rankings and filters for Finns.
 """
 
@@ -13,10 +13,10 @@ from datetime import datetime
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config import DATA_DIR
+from config import DATA_DIR, upcoming_nhl_draft_year
 from utils import save_json
 
-DRAFT_YEAR = 2026
+DRAFT_YEAR = upcoming_nhl_draft_year()
 RANKINGS_CACHE_FILE = DATA_DIR / "finnish_draft_rankings.json"
 EP_RANKINGS_FILE = DATA_DIR / "finnish_draft_rankings_ep.json"
 
@@ -50,13 +50,23 @@ def main():
     
     # Process NA Skaters
     na_data = fetch_rankings(CATEGORIES["north_american_skaters"])
+    int_data = fetch_rankings(CATEGORIES["international_skaters"])
+    if (
+        not isinstance(na_data, dict)
+        or "rankings" not in na_data
+        or not isinstance(int_data, dict)
+        or "rankings" not in int_data
+    ):
+        raise SystemExit(
+            "Both NHL draft ranking categories are required; existing data was left untouched."
+        )
+
     if na_data and "rankings" in na_data:
         finns = [p for p in na_data["rankings"] if p.get("birthCountry") == "FIN"]
         print(f"Found {len(finns)} Finnish NA skaters")
         combined_data["north_american_skaters"] = finns
     
     # Process International Skaters
-    int_data = fetch_rankings(CATEGORIES["international_skaters"])
     if int_data and "rankings" in int_data:
         finns = [p for p in int_data["rankings"] if p.get("birthCountry") == "FIN"]
         print(f"Found {len(finns)} Finnish International skaters")
@@ -68,8 +78,14 @@ def main():
         try:
             with open(EP_RANKINGS_FILE, 'r') as f:
                 ep_data = json.load(f)
-                ep_sources = ep_data.get("sources", [])
-                print(f"Loaded {len(ep_sources)} EP ranking sources")
+                if ep_data.get("year") == DRAFT_YEAR:
+                    ep_sources = ep_data.get("sources", [])
+                    print(f"Loaded {len(ep_sources)} EP ranking sources")
+                else:
+                    print(
+                        f"Skipping EliteProspects rankings for {ep_data.get('year')}; "
+                        f"expected {DRAFT_YEAR}"
+                    )
         except Exception as e:
             print(f"Error loading EP rankings: {e}")
 

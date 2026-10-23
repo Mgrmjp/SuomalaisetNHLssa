@@ -5,6 +5,26 @@ Provides consistent paths, API settings, and constants across all data fetchers.
 """
 
 from pathlib import Path
+from datetime import date
+
+
+def current_nhl_season_id(today=None):
+    """Return the NHL season ID for the current date."""
+    today = today or date.today()
+    season_start = today.year if today.month >= 9 else today.year - 1
+    return season_start * 10000 + season_start + 1
+
+
+def current_nhl_season_label(today=None):
+    """Return the current NHL season as YYYY-YYYY."""
+    season_id = current_nhl_season_id(today)
+    return f"{season_id // 10000}-{season_id % 10000}"
+
+
+def upcoming_nhl_draft_year(today=None):
+    """Return the next NHL draft year, switching after the June draft window."""
+    today = today or date.today()
+    return today.year + (today.month >= 7)
 
 # =============================================================================
 # Project Paths

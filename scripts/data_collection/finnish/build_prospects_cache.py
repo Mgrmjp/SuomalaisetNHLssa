@@ -14,26 +14,27 @@ import time
 import sys
 import os
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config import DATA_DIR
+from config import DATA_DIR, current_nhl_season_id, current_nhl_season_label
 from utils import save_json
 
 # NHL API endpoints
 NHL_API_BASE = "https://api-web.nhle.com"
 NHL_SEARCH_API = "https://search.d3.nhle.com/api/v1/search/player"
 PROSPECTS_CACHE_FILE = DATA_DIR / "finnish_prospects.json"
-CURRENT_SEASON_ID = 20252026
+CURRENT_SEASON_ID = current_nhl_season_id()
 EXTERNAL_PROSPECTS_FILE = DATA_DIR / "external_prospects.json"
 LEAGUE_PROSPECTS_FILES = (
     DATA_DIR / "leagues" / "league_prospects_official.json",
     DATA_DIR / "leagues" / "league_prospects_advanced.json",
     DATA_DIR / "leagues" / "league_prospects_na.json",
 )
+MAX_LEAGUE_SNAPSHOT_AGE = timedelta(days=45)
 THE_SPORTS_DB_BASE = "https://www.thesportsdb.com/api/v1/json"
 WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 
@@ -330,6 +331,52 @@ def normalize_season_stats(stats_list):
     return stats_list[-1] if stats_list else None
 
 
+def _load_current_season_league_payload(source_file):
+    """Load a league snapshot only when its declared season is current."""
+    import json
+
+    try:
+        payload = json.loads(source_file.read_text(encoding="utf-8"))
+    except Exception as error:
+        print(f"Failed to parse {source_file}: {error}")
+        return None
+
+    if isinstance(payload, dict):
+        season = payload.get("season")
+        current_season = current_nhl_season_label()
+        if season != current_season:
+            print(
+                f"Skipping stale league snapshot {source_file}: "
+                f"season {season}, expected {current_season}"
+            )
+            return None
+
+        generated_at = payload.get("generated_at")
+        if not generated_at:
+            print(f"Skipping league snapshot without generated_at: {source_file}")
+            return None
+
+        try:
+            generated_at = datetime.fromisoformat(
+                str(generated_at).replace("Z", "+00:00")
+            )
+        except ValueError:
+            print(f"Skipping league snapshot with invalid generated_at: {source_file}")
+            return None
+
+        if generated_at.tzinfo is None:
+            generated_at = generated_at.replace(tzinfo=timezone.utc)
+        age = datetime.now(timezone.utc) - generated_at
+        if age > MAX_LEAGUE_SNAPSHOT_AGE or age < timedelta(0):
+            print(
+                f"Skipping stale league snapshot {source_file}: "
+                f"generated {age.days} days ago"
+            )
+            return None
+
+    return payload
+
+
 def get_draft_class(year):
     """Fetch all players drafted in a specific year."""
     url = f"{NHL_API_BASE}/v1/draft/picks/{year}/all"
@@ -544,17 +591,14 @@ def _is_headshot_url_consistent(headshot_url, source_league):
 
 def _build_league_player_lookups():
     """Build lookup tables mapping player IDs to names for each league file."""
-    import json
-
     lookups = {}
 
     for source_file in LEAGUE_PROSPECTS_FILES:
         if not source_file.exists():
             continue
 
-        try:
-            payload = json.loads(source_file.read_text(encoding="utf-8"))
-        except Exception:
+        payload = _load_current_season_league_payload(source_file)
+        if payload is None:
             continue
 
         rows = payload.get("players") if isinstance(payload, dict) else payload
@@ -690,8 +734,6 @@ def _validate_headshot_assignment(
 
 def ingest_league_prospects_files(candidates, by_name):
     """Merge non-NHL league prospect photos and metadata from generated JSON files."""
-    import json
-
     added = 0
     merged = 0
 
@@ -702,10 +744,8 @@ def ingest_league_prospects_files(candidates, by_name):
             print(f"No league prospects file at {source_file}, skipping")
             continue
 
-        try:
-            payload = json.loads(source_file.read_text(encoding="utf-8"))
-        except Exception as e:
-            print(f"Failed to parse {source_file}: {e}")
+        payload = _load_current_season_league_payload(source_file)
+        if payload is None:
             continue
 
         rows = payload.get("players") if isinstance(payload, dict) else payload
@@ -968,7 +1008,10 @@ def main():
 
     # 1) Team prospect lists
     teams = get_all_teams()
+    if not teams:
+        raise SystemExit("No NHL teams were fetched; existing prospect data was left untouched.")
     print(f"Scanning {len(teams)} teams for Finnish prospects...")
+    failed_teams = []
 
     for i, team in enumerate(teams, 1):
         print(f"[{i}/{len(teams)}] Checking {team}...", end=" ")
@@ -976,6 +1019,7 @@ def main():
         prospects_data = get_team_prospects(team)
         if not prospects_data:
             print("Failed to fetch")
+            failed_teams.append(team)
             continue
 
         team_finnish_count = 0
@@ -1196,6 +1240,14 @@ def main():
         time.sleep(0.05)
 
     final_list = dedupe_final_players(final_list)
+
+    if failed_teams:
+        failed = ", ".join(failed_teams)
+        raise SystemExit(
+            f"Prospect fetch failed for {failed}; existing prospect data was left untouched."
+        )
+    if not final_list:
+        raise SystemExit("No prospects were fetched; existing prospect data was left untouched.")
 
     final_list.sort(
         key=lambda p: (-(p.get("stats", {}).get("points", 0)), p.get("name", ""))

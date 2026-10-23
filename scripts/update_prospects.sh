@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # suomalaisetnhlssa - Prospects & Draft Rankings Update Script
 # This script updates:
 # 1. Draft rankings from EliteProspects (multiple sources)
@@ -9,7 +11,6 @@
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Determine project root and virtual environment
@@ -31,27 +32,18 @@ echo ""
 
 # Step 1: Update EP Rankings
 echo -e "${GREEN}[1/3] Fetching EliteProspects Rankings...${NC}"
-$VENV_PYTHON scripts/data_collection/finnish/fetch_ep_rankings.py
-if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}Warning: EP rankings fetch failed.${NC}"
-fi
+"$VENV_PYTHON" scripts/data_collection/finnish/fetch_ep_rankings.py
 echo ""
 
 # Step 2: Build Unified Rankings
 echo -e "${GREEN}[2/3] Building Unified Draft Rankings...${NC}"
-$VENV_PYTHON scripts/data_collection/finnish/build_draft_rankings.py
-if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}Warning: Draft rankings build failed.${NC}"
-fi
+"$VENV_PYTHON" scripts/data_collection/finnish/build_draft_rankings.py
 echo ""
 
 # Step 3: Update Prospects Cache (Stats)
 echo -e "${GREEN}[3/3] Updating Prospects Stats Cache...${NC}"
 # Note: build_prospects_cache.py is the existing script for this
-$VENV_PYTHON scripts/data_collection/finnish/build_prospects_cache.py
-if [ $? -ne 0 ]; then
-    echo -e "${YELLOW}Warning: Prospects cache build failed.${NC}"
-fi
+"$VENV_PYTHON" scripts/data_collection/finnish/build_prospects_cache.py
 
 echo ""
 echo -e "${BLUE}================================================================${NC}"

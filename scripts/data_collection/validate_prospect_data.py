@@ -23,6 +23,9 @@ import unicodedata
 from datetime import datetime, date
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent))
+from config import current_nhl_season_id
+
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 DATA_FILES = {
     "finnish": PROJECT_ROOT / "static" / "data" / "finnish_prospects.json",
@@ -324,7 +327,7 @@ def validate_data_freshness(player):
     points = stats.get("points", 0)
 
     if last_season:
-        current_season = 20252026
+        current_season = current_nhl_season_id()
         if last_season >= current_season and gp == 0 and points == 0:
             issues.append(f"active_no_stats: lastSeason={last_season}")
 
