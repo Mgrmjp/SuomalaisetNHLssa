@@ -234,9 +234,10 @@ export async function correctFullNameWithLLM(fullName, apiKey) {
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini',
+                model: 'gpt-6-luna',
+                reasoning_effort: 'none',
                 temperature: 0,
-                max_tokens: 40,
+                max_completion_tokens: 40,
                 messages: [
                     {
                         role: 'user',

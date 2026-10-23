@@ -1,6 +1,6 @@
 """
 Finnish text normalization utilities for player and city names.
-Handles auto-correction of ASCII approximations to proper Finnish letters (ä, ö, å) using OpenAI gpt-5-nano.
+Handles auto-correction of ASCII approximations to proper Finnish letters (ä, ö, å) using OpenAI gpt-6-luna.
 """
 
 import json
@@ -59,7 +59,7 @@ def get_openai_client():
 
 def correct_with_openai(text, context_type="city"):
     """
-    Use OpenAI gpt-5-nano to validate/correct Finnish text.
+    Use OpenAI gpt-6-luna to validate/correct Finnish text.
 
     Args:
         text: Text to validate/correct
@@ -114,10 +114,11 @@ Juuse -> Juuse
 Output:"""
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.1,
-        max_tokens=50,
+        max_completion_tokens=50,
     )
 
     if not response.choices or not response.choices[0].message.content:

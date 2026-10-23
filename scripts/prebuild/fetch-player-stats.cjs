@@ -141,7 +141,8 @@ async function correctNameWithOpenAI(name) {
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini',
+                model: 'gpt-6-luna',
+                reasoning_effort: 'none',
                 messages: [{
                     role: 'user',
                     content: `Correct this Finnish name if needed. Only fix obvious Finnish letter patterns (ä, ö, å).
@@ -151,7 +152,7 @@ Name: "${name}"
 Return ONLY the corrected name. If correct, return unchanged.`
                 }],
                 temperature: 0.1,
-                max_tokens: 50
+                max_completion_tokens: 50
             })
         });
 
