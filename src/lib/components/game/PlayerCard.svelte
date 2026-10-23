@@ -340,11 +340,13 @@ $effect(() => {
                                     size="22"
                                     className="card__team-logo-vis"
                                 />
-                                <span>{player.position || player.positionCode || "N/A"}</span>
-                                {#if player.jersey_number || player.jerseyNumber}
-                                    <span class="card__dot">·</span>
-                                    <span>#{player.jersey_number || player.jerseyNumber}</span>
-                                {/if}
+                                <span class="card__team-text">
+                                    {player.position || player.positionCode || "N/A"}
+                                    {#if player.jersey_number || player.jerseyNumber}
+                                        <span class="card__dot">·</span>
+                                        <span>#{player.jersey_number || player.jerseyNumber}</span>
+                                    {/if}
+                                </span>
                             </p>
                         </div>
                     </div>
