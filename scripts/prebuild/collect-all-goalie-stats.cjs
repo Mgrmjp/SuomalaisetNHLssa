@@ -114,7 +114,7 @@ async function main() {
     console.log('📊 Loading European league goalies...');
     const leagueData = loadJson(leagueFile);
     let leagueGoalies = [];
-    if (leagueData && leagueData.players) {
+    if (leagueData?.players) {
         leagueGoalies = leagueData.players.filter(p => 
             p.position === 'G' && 
             (p.save_percentage || p.goals_against_average || p.shutouts)
@@ -162,11 +162,11 @@ async function main() {
 
     // Show some examples
     console.log('\n📋 Sample goalies:');
-    finnishGoalies.slice(0, 5).forEach(g => {
+    for (const g of finnishGoalies.slice(0, 5)) {
         const sv = g.savePct ? g.savePct.toFixed(3) : 'N/A';
         const ga = g.gaa ? g.gaa.toFixed(2) : 'N/A';
         console.log(`   ${g.name} (${g.league}): GP=${g.gp}, SV%=${sv}, GAA=${ga}, SO=${g.shutouts} [${g.source}]`);
-    });
+    }
 
     console.log('\n✅ Done!');
 }

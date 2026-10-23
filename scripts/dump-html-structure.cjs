@@ -126,7 +126,7 @@ async function analyzeLeague(browser, league) {
                 tableInfo.rowCount = rows.length;
                 
                 const sampleRows = Array.from(rows).slice(0, 3);
-                sampleRows.forEach((row) => {
+                for (const row of sampleRows) {
                     const cells = row.querySelectorAll('th, td');
                     const rowData = [];
                     cells.forEach((cell, cIdx) => {
@@ -139,7 +139,7 @@ async function analyzeLeague(browser, league) {
                         });
                     });
                     tableInfo.sampleRows.push(rowData);
-                });
+                }
                 
                 result.tableDetails.push(tableInfo);
                 
@@ -190,14 +190,14 @@ async function analyzeLeague(browser, league) {
             
             // Look for search forms
             const searchInputs = document.querySelectorAll('input[type="search"], input[name*="search"], input[placeholder*="search"]');
-            searchInputs.forEach(input => {
+            for (const input of searchInputs) {
                 result.searchForms.push({
                     name: input.name,
                     id: input.id,
                     placeholder: input.placeholder,
                     classes: input.className
                 });
-            });
+            }
             
             return result;
         });
@@ -285,13 +285,13 @@ async function analyzeLeague(browser, league) {
         if (report.nationalityFilters.length > 0) {
             htmlContent += '    \n';
             htmlContent += '    <h2>Nationality Filters Found</h2>\n';
-            report.nationalityFilters.forEach(f => {
+            for (const f of report.nationalityFilters) {
                 htmlContent += '    <div class="filter-info">\n';
                 htmlContent += '        <p><strong>Selector:</strong> ' + f.selector + '</p>\n';
                 htmlContent += '        <p><strong>Type:</strong> ' + f.type + '</p>\n';
                 htmlContent += '        <p><strong>Options:</strong> ' + f.options.join(', ') + '</p>\n';
                 htmlContent += '    </div>\n';
-            });
+            }
         } else {
             htmlContent += '    <p><em>No nationality filters found</em></p>\n';
         }
@@ -299,13 +299,13 @@ async function analyzeLeague(browser, league) {
         if (report.searchForms.length > 0) {
             htmlContent += '    \n';
             htmlContent += '    <h2>Search Forms</h2>\n';
-            report.searchForms.forEach(s => {
+            for (const s of report.searchForms) {
                 htmlContent += '    <div>\n';
                 htmlContent += '        <p><strong>Name:</strong> ' + (s.name || 'none') + '</p>\n';
                 htmlContent += '        <p><strong>ID:</strong> ' + (s.id || 'none') + '</p>\n';
                 htmlContent += '        <p><strong>Placeholder:</strong> ' + (s.placeholder || 'none') + '</p>\n';
                 htmlContent += '    </div>\n';
-            });
+            }
         }
         
         htmlContent += '    \n';

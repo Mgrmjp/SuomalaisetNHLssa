@@ -18,7 +18,7 @@ function isFinnish(name) {
     
     const parts = name.split(' ');
     const lastName = parts[parts.length - 1];
-    if (lastName && lastName.endsWith('nen')) return true;
+    if (lastName?.endsWith('nen')) return true;
     if (lastName && ['lä', 'lä', 'kkä', 'kkö', 'pää', 'rvi'].some(e => lastName.endsWith(e))) return true;
     
     return false;

@@ -598,16 +598,16 @@ async function debugPage(page, leagueName, config) {
             // Get unique class names that might be player-related
             const allElements = document.querySelectorAll('*');
             const classSet = new Set();
-            allElements.forEach(el => {
+            for (const el of allElements) {
                 if (el.className && typeof el.className === 'string') {
                     const classes = el.className.split(/\s+/).filter(c => c.length > 3);
-                    classes.forEach(c => {
-                        if (/player|stats|table|row|data/i.test(c)) {
-                            classSet.add(c);
+                    for (const className of classes) {
+                        if (/player|stats|table|row|data/i.test(className)) {
+                            classSet.add(className);
                         }
-                    });
+                    }
                 }
-            });
+            }
             result.classes = Array.from(classSet).slice(0, 30);
             
             // Sample table headers
@@ -623,19 +623,17 @@ async function debugPage(page, leagueName, config) {
             // Check for consent/cookie elements
             result.cookieElements = [];
             const cookieSelectors = ['[class*="cookie"]', '[id*="cookie"]', '[class*="consent"]', '[id*="consent"]'];
-            cookieSelectors.forEach(sel => {
-                const els = document.querySelectorAll(sel);
-                if (els.length > 0) {
-                    els.forEach(el => {
-                        result.cookieElements.push({
-                            tag: el.tagName,
-                            id: el.id,
-                            class: el.className,
-                            text: el.textContent?.substring(0, 100)
-                        });
+            for (const selector of cookieSelectors) {
+                const els = document.querySelectorAll(selector);
+                for (const el of els) {
+                    result.cookieElements.push({
+                        tag: el.tagName,
+                        id: el.id,
+                        class: el.className,
+                        text: el.textContent?.substring(0, 100)
                     });
                 }
-            });
+            }
             
             // Check for React root
             const reactRoot = document.querySelector('#root, #__next, [data-reactroot]');
@@ -667,9 +665,9 @@ async function debugPage(page, leagueName, config) {
     );
     if (apiRequests.length > 0) {
         console.log('\n  API/XHR Requests:');
-        apiRequests.slice(0, 10).forEach(req => {
+        for (const req of apiRequests.slice(0, 10)) {
             console.log(`    - ${req.method} ${req.url.substring(0, 80)}`);
-        });
+        }
     }
     
     return debugInfo;
