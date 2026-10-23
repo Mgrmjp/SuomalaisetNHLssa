@@ -1,0 +1,7 @@
+target-version = "py310"
+
+[lint]
+# Keep the initial gate focused on Python errors while older style and unused
+# import/variable findings are cleaned up separately.
+select = ["E9", "F"]
+ignore = ["F401", "F541", "F841"]

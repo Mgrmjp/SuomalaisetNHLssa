@@ -15,9 +15,10 @@
     "test:sync": ".venv/bin/python3 scripts/data_collection/finnish/test_sync_roster.py",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "biome check src",
+    "lint": "biome check src && biome lint scripts --reporter=summary",
+    "lint:python": ".venv/bin/python -m ruff check scripts",
     "format": "biome format --write src",
-    "validate": "npm run lint && npm run check && npm run test",
+    "validate": "npm run lint && npm run lint:python && npm run check && npm run test",
     "validate:seo": "npm run build:quick && npm run test:seo",
     "validate:fix": "npm run format && npm run validate",
     "validate:watch": "concurrently \"npm run check:watch\" \"npm run lint -- --watch\" \"npm run test:watch\"",
@@ -47,6 +48,12 @@
     ],
     "src/**/*.{json,css}": [
       "biome format --write"
+    ],
+    "scripts/**/*.{js,cjs,mjs}": [
+      "biome lint --no-errors-on-unmatched --reporter=summary"
+    ],
+    "scripts/**/*.py": [
+      ".venv/bin/ruff check"
     ]
   },
   "devDependencies": {

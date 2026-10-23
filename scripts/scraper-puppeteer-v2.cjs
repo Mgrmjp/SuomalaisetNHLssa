@@ -94,7 +94,9 @@ function httpGet(url) {
         const client = url.startsWith('https') ? https : http;
         client.get(url, (res) => {
             let data = '';
-            res.on('data', chunk => data += chunk);
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
             res.on('end', () => resolve(data));
         }).on('error', reject);
     });

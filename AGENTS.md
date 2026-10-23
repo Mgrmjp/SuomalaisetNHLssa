@@ -14,10 +14,11 @@
 - `npm run test:sync` - Run sync_roster field preservation tests (Python)
 
 ### Linting & Validation
-- `npm run lint` - Biome lint check
+- `npm run lint` - Biome check for frontend and JavaScript scripts
+- `npm run lint:python` - Ruff check for Python scripts (install `requirements-dev.txt` in `.venv`)
 - `npm run format` - Biome format
 - `npm run check` - Svelte type checking
-- `npm run validate` - Run lint + check + test
+- `npm run validate` - Run JavaScript and Python lint + check + test
 
 ### Data Pipeline
 - `npm run prebuild` - Fetch player stats + inactive player lastTeam/GP

@@ -59,7 +59,10 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r scripts/data_collection/requirements.txt
+        run: pip install -r scripts/data_collection/requirements.txt -r requirements-dev.txt
+
+      - name: Lint Python scripts
+        run: python -m ruff check scripts
 
       - name: Roster sync field-preservation tests
         run: python scripts/data_collection/finnish/test_sync_roster.py

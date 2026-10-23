@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent))

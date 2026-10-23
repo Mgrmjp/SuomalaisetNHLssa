@@ -922,59 +922,6 @@ class OfficialLeagueCollector:
             print(f"  ICEHL error: {e}")
             return []
 
-        try:
-            response = self.session.get(url, headers=headers, timeout=30)
-            if response.status_code == 200:
-                data = response.json()
-                for player in data if isinstance(data, list) else []:
-                    nat = player.get("nationality", "")
-                    name = player.get(
-                        "name",
-                        f"{player.get('firstname', '')} {player.get('surname', '')}",
-                    ).strip()
-
-                    if not name:
-                        continue
-                    if not self.is_finnish(name, nat):
-                        continue
-
-                    stats = player.get("statistics", {})
-
-                    def sum_stat(key):
-                        v = stats.get(key, {})
-                        if isinstance(v, dict):
-                            return int(
-                                (v.get("home", 0) or 0) + (v.get("away", 0) or 0)
-                            )
-                        return int(v or 0)
-
-                    players.append(
-                        {
-                            "player_id": f"icehl_{player.get('id', '')}",
-                            "name": name,
-                            "team": stats.get("teamShortcut", "Unknown"),
-                            "league": "ICEHL",
-                            "position": player.get("position", "F"),
-                            "games_played": int(stats.get("games", 0) or 0),
-                            "goals": sum_stat("goals"),
-                            "assists": sum_stat("assists"),
-                            "points": sum_stat("points"),
-                            "plus_minus": int(stats.get("plusMinus", 0) or 0),
-                            "penalty_minutes": int(stats.get("penaltyMinutes", 0) or 0),
-                            "nationality": "FIN",
-                            "source": "icehl-hokejovyzapis",
-                            "source_league": "icehl",
-                            "scraped_at": datetime.now().isoformat(),
-                        }
-                    )
-            else:
-                print(f"  ICEHL HTTP {response.status_code}")
-        except Exception as e:
-            print(f"  ICEHL error: {e}")
-
-        print(f"  ICEHL: {len(players)} Finnish players")
-        return players
-
     def collect_all(self, season: str = "2025-2026") -> Dict:
         """Collect from all leagues."""
         results = {

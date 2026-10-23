@@ -44,10 +44,12 @@ A comprehensive web app for tracking Finnish NHL players — daily stats, standi
 git clone https://github.com/Mgrmjp/SuomalaisetNHLssa.git
 cd SuomalaisetNHLssa
 npm install
+python3.10 -m venv .venv
+.venv/bin/python -m pip install -r scripts/data_collection/requirements.txt -r requirements-dev.txt
 npm run dev
 ```
 
-Available at `http://localhost:5173`.
+Available at `http://localhost:3000`.
 
 ## Commands
 
@@ -59,8 +61,9 @@ npm run build:quick      # Production build without prebuild
 npm run preview          # Preview production build
 
 # Validation
-npm run validate         # Lint + type check + tests
-npm run lint             # Biome lint
+npm run validate         # JS and Python lint + type check + tests
+npm run lint             # Biome check for src and JS scripts
+npm run lint:python      # Ruff check for Python scripts
 npm run format           # Biome format
 npm run check            # Svelte type checking
 npm run test             # Vitest tests

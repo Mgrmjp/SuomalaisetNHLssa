@@ -145,7 +145,9 @@ function httpGet(url) {
             }
         }, (res) => {
             let data = '';
-            res.on('data', chunk => data += chunk);
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
             res.on('end', () => resolve({ status: res.statusCode, data }));
         });
         req.on('error', reject);
