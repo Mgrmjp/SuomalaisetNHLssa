@@ -396,6 +396,16 @@ def infer_source_label(source, url=""):
         return SOURCE_LABELS[source_key]
 
     if normalized_source:
+        # Labels are stored in the cache and re-read on every rebuild, so an old
+        # "Bleacherreport Com" style label has to be re-derived, not trusted.
+        as_host = source_key.replace(" ", ".")
+        if as_host in SOURCE_LABELS:
+            return SOURCE_LABELS[as_host]
+
+        head, _, tld = source_key.rpartition(" ")
+        if head and tld in COMMON_TLDS:
+            return format_hostname_label(as_host)
+
         return normalized_source
 
     try:

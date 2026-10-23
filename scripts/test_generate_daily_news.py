@@ -69,6 +69,12 @@ class NewsEntryFilterTests(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual(result["source"], "ESPN")
 
+    def test_mangled_hostname_source_is_cleaned(self):
+        self.assertEqual(news.infer_source_label("Espn Com"), "ESPN")
+        self.assertEqual(news.infer_source_label("Bleacherreport Com"), "Bleacher Report")
+        self.assertEqual(news.infer_source_label("Centraloregondaily Com"), "Centraloregondaily")
+        self.assertEqual(news.infer_source_label("Yahoo Sports"), "Yahoo Sports")
+
     def test_source_label_drops_tld(self):
         self.assertEqual(news.format_hostname_label("www.somehockeyblog.com"), "Somehockeyblog")
 
