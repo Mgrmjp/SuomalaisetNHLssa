@@ -34,14 +34,15 @@ jobs:
 
       - name: Run Prospects Update
         run: |
-          chmod +x scripts/update_prospects.sh
-          ./scripts/update_prospects.sh
+          bash scripts/update_prospects.sh
 
       - name: Commit and push updated prospect data
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add static/data/finnish_draft_rankings.json static/data/finnish_draft_rankings_ep.json static/data/finnish_prospects.json
-          git commit -m "chore: automated daily prospects update $(date +%Y-%m-%d)" || echo "No changes to commit"
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: automated daily prospects update $(date +%Y-%m-%d)"
+          fi
           git pull --rebase origin main
           git push
