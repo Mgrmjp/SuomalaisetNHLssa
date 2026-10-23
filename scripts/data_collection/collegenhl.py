@@ -11,7 +11,6 @@ import requests
 import urllib3
 import json
 import time
-import os
 import re
 from datetime import datetime
 from typing import List, Dict, Optional

@@ -2,7 +2,6 @@ import json
 import os
 from datetime import datetime, timedelta
 from collections import defaultdict
-import subprocess
 import random
 
 DATA_DIR = "static/data/prepopulated/games"

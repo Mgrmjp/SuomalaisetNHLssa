@@ -7,7 +7,6 @@ from typing import Optional, List, Dict, Any
 from .utils.nationality_validator import validator
 import requests
 import time
-import json
 
 HEADSHOT_CANDIDATE_KEYS = (
     'headshot_url', 'headshotUrl', 'headshot',

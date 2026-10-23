@@ -2,7 +2,6 @@
 Real AHL data collector using theahl.com API
 """
 import requests
-import json
 from datetime import datetime
 from typing import List, Dict, Optional
 

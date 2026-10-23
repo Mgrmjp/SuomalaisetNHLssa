@@ -4,9 +4,7 @@ Test NHL API endpoints with same approach as working script
 """
 
 import requests
-import json
 import time
-from datetime import datetime
 
 NHL_API_BASE = "https://api-web.nhle.com"
 

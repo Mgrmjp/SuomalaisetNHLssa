@@ -2,9 +2,7 @@
 Liiga.fi scraper using requests-html for JavaScript rendering
 This can handle React/Vue apps that load data dynamically
 """
-import json
 from typing import List, Dict
-from datetime import datetime
 
 try:
     from requests_html import HTMLSession

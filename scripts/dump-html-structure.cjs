@@ -126,7 +126,7 @@ async function analyzeLeague(browser, league) {
                 tableInfo.rowCount = rows.length;
                 
                 const sampleRows = Array.from(rows).slice(0, 3);
-                sampleRows.forEach((row, rIdx) => {
+                sampleRows.forEach((row) => {
                     const cells = row.querySelectorAll('th, td');
                     const rowData = [];
                     cells.forEach((cell, cIdx) => {

@@ -184,11 +184,11 @@ function setupNetworkInterception(page, leagueName) {
             
             // Extract potential API endpoints
             try {
-                const urlObj = new URL(url);
+                new URL(url);
                 if (url.includes('/api/') || url.includes('json') || url.includes('stats')) {
                     apiEndpoints.add(url);
                 }
-            } catch (e) {
+            } catch {
                 // Invalid URL, skip
             }
         }
@@ -225,7 +225,7 @@ function setupNetworkInterception(page, leagueName) {
                         console.log(`    [Intercept] Captured JSON payload from ${url.substring(0, 80)}...`);
                     }
                 }
-            } catch (err) {
+            } catch {
                 // Ignore errors reading body (e.g. CORS or navigation aborted)
             }
         }
@@ -263,7 +263,7 @@ async function handleCookieConsentAdvanced(page, config) {
             try {
                 await page.setCookie(cookie);
                 console.log(`    Set cookie: ${cookie.name}`);
-            } catch (e) {
+            } catch {
                 // Cookie might not be applicable
             }
         }
@@ -314,9 +314,9 @@ async function handleCookieConsentAdvanced(page, config) {
         
         // Try using CDP to find and click buttons
         try {
-            const domResult = await client.send('DOM.getDocument');
+            await client.send('DOM.getDocument');
             // This is a simplified approach - CDP can do more advanced DOM manipulation
-        } catch (e) {
+        } catch {
             // CDP DOM might not be available
         }
         
@@ -334,7 +334,7 @@ async function waitForContent(page, config) {
     // Wait for network to be idle
     try {
         await page.waitForNetworkIdle({ idleTime: 2000, timeout: 10000 });
-    } catch (e) {
+    } catch {
         console.log('  Network idle timeout, continuing...');
     }
     
@@ -351,13 +351,13 @@ async function waitForContent(page, config) {
             window.scrollTo(0, 0);
         });
         await new Promise(r => setTimeout(r, 1000));
-    } catch (e) {
+    } catch {
         // Scroll might fail
     }
 }
 
 // Extract Finnish players from page
-async function extractPlayers(page, leagueName) {
+async function extractPlayers(page) {
     const players = await page.evaluate(() => {
         const players = [];
         
@@ -543,7 +543,7 @@ async function extractPlayers(page, leagueName) {
                             }
                         }
                     }
-                } catch (e) {
+                } catch {
                     // Not valid JSON
                 }
             }
@@ -572,14 +572,14 @@ async function debugPage(page, leagueName, config) {
     // Get cookies
     try {
         debugInfo.cookies = await page.cookies();
-    } catch (e) {
+    } catch {
         debugInfo.cookies = [];
     }
     
     // Get page title
     try {
         debugInfo.title = await page.title();
-    } catch (e) {
+    } catch {
         debugInfo.title = '';
     }
     
@@ -676,7 +676,7 @@ async function debugPage(page, leagueName, config) {
 }
 
 // Try to call API endpoints directly
-async function tryApiEndpoints(leagueName, config) {
+async function tryApiEndpoints(leagueName) {
     console.log(`\n=== API Discovery: ${leagueName} ===`);
     
     const foundPlayers = [];
@@ -822,7 +822,7 @@ async function tryApiEndpoints(leagueName, config) {
                         }
                     }
                 }
-            } catch (e) {
+            } catch {
                 // Skip invalid payload formats
             }
         }
@@ -838,7 +838,7 @@ async function tryApiEndpoints(leagueName, config) {
                     if (response.status >= 200 && response.status < 300 && response.data) {
                         console.log(`    ✓ ${url.substring(0, 60)}...`);
                     }
-                } catch (e) {
+                } catch {
                     // Skip failed requests
                 }
             }
@@ -1075,12 +1075,12 @@ async function scrapeLeague(browser, config) {
         }
         
         // Extract players
-        players = await extractPlayers(page, config.name);
+        players = await extractPlayers(page);
         console.log(`  Found ${players.length} Finnish players via scraping`);
         
         // Try API endpoints if no players found or in find-apis mode
         if (findApisOnly || players.length === 0) {
-            const apiPlayers = await tryApiEndpoints(config.name, config);
+            const apiPlayers = await tryApiEndpoints(config.name);
             if (apiPlayers.length > 0) {
                 console.log(`  Found ${apiPlayers.length} players via API`);
                 players = [...players, ...apiPlayers];

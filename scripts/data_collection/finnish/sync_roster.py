@@ -14,7 +14,6 @@ Usage: python sync_roster.py
 """
 
 import json
-import shutil
 import sys
 from pathlib import Path
 

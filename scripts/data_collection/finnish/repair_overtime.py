@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 import json
-import os
 import time
 import requests
 from pathlib import Path
-from datetime import datetime
 
 NHL_API_BASE = "https://api-web.nhle.com"
 GAMES_DIR = Path("static/data/prepopulated/games")

@@ -4,7 +4,6 @@ Fetch draft rankings from EliteProspects for 2026.
 Uses the Next.js data API to get filtered rankings for Finnish players.
 """
 
-import json
 import requests
 import re
 import sys

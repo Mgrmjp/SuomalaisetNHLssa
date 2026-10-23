@@ -947,8 +947,6 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
         player = move["player"]
         pid = str(player["playerId"])
         name = player["name"]
-        first = player.get("firstName", "")
-        last = player.get("lastName", "")
         slug = normalize_name_key(name).replace(" ", "-")
 
         formatted_moves.append({

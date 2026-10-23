@@ -7,10 +7,9 @@ Manages state transitions and scheduling for real-time updates.
 """
 
 import json
-import os
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Set, Optional, List
+from typing import Dict, Set, List
 
 
 class GameStateManager:

@@ -12,7 +12,6 @@ for players on active NHL rosters.
 Usage: python build_cache.py [--dry-run]
 """
 
-import json
 import requests
 import time
 import sys
@@ -382,7 +381,6 @@ def main():
     # Process in batches to show progress and manage rate limiting
     for batch_start in range(0, len(missing_from_cache), batch_size):
         batch = missing_from_cache[batch_start : batch_start + batch_size]
-        batch_results = {}
 
         # Use thread pool for concurrent fetching
         with ThreadPoolExecutor(max_workers=max_workers) as executor:

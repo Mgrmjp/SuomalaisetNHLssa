@@ -5,7 +5,6 @@ This allows the frontend to dynamically discover available dates
 instead of relying on a hardcoded list.
 """
 
-import json
 import sys
 from pathlib import Path
 

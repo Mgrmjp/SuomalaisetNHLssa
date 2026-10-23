@@ -7,10 +7,9 @@ Preserves batch-collected data, adds real-time fields.
 """
 
 import json
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 
 class DataUpdater:

@@ -3,7 +3,6 @@ Real SHL (Swedish Hockey League) data collector
 Uses shl.se API endpoints
 """
 import requests
-import json
 from datetime import datetime
 from typing import List, Dict, Optional
 

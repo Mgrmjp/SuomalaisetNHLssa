@@ -63,7 +63,7 @@ async function fetchPlayerInfo(playerId, position) {
             const teamAbbrevs = sorted[0].teamAbbrevs || ''
             lastTeam = teamAbbrevs.split(',')[0].trim() || null
         }
-    } catch (e) {
+    } catch {
         // Fall through
     }
 
@@ -74,7 +74,7 @@ async function fetchPlayerInfo(playerId, position) {
         if (careerData?.data && careerData.data.length > 0) {
             gamesPlayed = careerData.data[0].gamesPlayed || null
         }
-    } catch (e) {
+    } catch {
         // Fall through
     }
 

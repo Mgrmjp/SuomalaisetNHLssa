@@ -1,7 +1,6 @@
 """Czech Extraliga data adapter."""
 
-import re
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Any
 from bs4 import BeautifulSoup
 from .base import BaseLeagueAdapter, PlayerStats
 

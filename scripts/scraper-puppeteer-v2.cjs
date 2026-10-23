@@ -14,8 +14,6 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
-const https = require('https');
-const http = require('http');
 
 const OUTPUT_DIR = path.join(__dirname, '../static/data/leagues');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'league_prospects_v2.json');
@@ -68,40 +66,6 @@ const leagueConfigs = [
     // { name: 'KHL', type: 'api', url: 'https://en.khl.ru/', waitTime: 5000 }
 ];
 
-// Finnish name patterns
-const finnishPatterns = [
-    /nen$/, /lä$/, /kkä$/, /pää$/, /sörum$/, /sorum$/, /kangas$/, 
-    /koivu$/, /mäki$/, /vuori$/, /salmi$/, /lahti$/, /aho$/, /niemi$/, 
-    /järvi$/, /linna$/, /koski$/, /lampi$/, /kari$/, /selänne$/,
-    /granlund$/, /laine$/, /riano$/, /rantanen$/, /hintz$/, /kotkaniemi$/,
-    /lundell$/, /heiskanen$/, /pulkkinen$/, /teräväinen$/, /kapanen$/,
-    /leppänen$/, /tuulola$/, /rasanen$/, /hyry$/, /sandin$/, /brodzinski$/
-];
-
-const finnishChars = /[äöåÄÖÅ]/;
-
-// Detect if a name is likely Finnish
-function isFinnishName(name) {
-    if (!name || name.length < 3) return false;
-    const nl = name.toLowerCase().trim();
-    if (finnishChars.test(nl)) return true;
-    return finnishPatterns.some(p => p.test(nl));
-}
-
-// HTTP helper for API calls
-function httpGet(url) {
-    return new Promise((resolve, reject) => {
-        const client = url.startsWith('https') ? https : http;
-        client.get(url, (res) => {
-            let data = '';
-            res.on('data', (chunk) => {
-                data += chunk;
-            });
-            res.on('end', () => resolve(data));
-        }).on('error', reject);
-    });
-}
-
 // Cookie consent handler - improved version
 async function handleCookieConsent(page) {
     try {
@@ -124,7 +88,7 @@ async function handleCookieConsent(page) {
                     await new Promise(r => setTimeout(r, 1500));
                     break;
                 }
-            } catch (e) {
+            } catch {
                 // Continue
             }
         }

@@ -235,9 +235,6 @@ async function scrapeLeague(browser, league) {
         // Wait for tables to load
         await page.waitForSelector(league.tableSelector, { timeout: 10000 }).catch(() => {});
         
-        // Get page content after JS rendering
-        const html = await page.content();
-        
         // Parse with DOM
         const players = await page.evaluate((leagueCfg) => {
             const tables = document.querySelectorAll(leagueCfg.tableSelector);

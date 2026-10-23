@@ -21,7 +21,6 @@ from config import (
 )
 from utils import (
     fetch_from_api,
-    rate_limit,
     save_json,
     load_json,
     schedule_url,
@@ -29,7 +28,6 @@ from utils import (
     play_by_play_url,
     player_landing_url,
     extract_team_name,
-    get_player_name,
 )
 # Import Finnish text correction utilities
 from finnish_text_utils import normalize_finnish_player_data
@@ -616,23 +614,14 @@ def normalize_game_state(game_details: dict, schedule_game: dict) -> str:
     """
     Get and normalize game state from NHL API.
 
-    Rules:
-    - OFF and FINAL both mean game is over - normalize to OFF
-    - CRIT means overtime/shootout situation - only accept if period > 3
-    - For preseason (gameType=1), FINAL is acceptable
-    - For regular season (gameType=2), only accept OFF or FINAL
+    Normalize FINAL to OFF and preserve other states for the caller.
     """
     raw_state = game_details.get("gameState", schedule_game.get("gameState", "UNKNOWN"))
-    game_type = schedule_game.get("gameType", 2)
-    pd = game_details.get("periodDescriptor", {})
-    period = pd.get("number", 3)
 
     # Normalize FINAL to OFF for consistency
     if raw_state == "FINAL":
         return "OFF"
 
-    # CRIT state with period <= 3 means incomplete data (API hasn't updated yet)
-    # We still return CRIT but the caller should handle it appropriately
     return raw_state
 
 

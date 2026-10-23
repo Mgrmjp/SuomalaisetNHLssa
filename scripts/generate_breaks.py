@@ -2,7 +2,6 @@
 #!/usr/bin/env python3
 import requests
 import json
-import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 

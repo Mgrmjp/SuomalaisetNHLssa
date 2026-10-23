@@ -4,8 +4,6 @@ Check what NHL season data is available
 """
 
 import requests
-import json
-from datetime import datetime, timedelta
 
 NHL_API_BASE = "https://api-web.nhle.com"
 

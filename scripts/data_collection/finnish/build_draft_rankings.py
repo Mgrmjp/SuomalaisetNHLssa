@@ -6,7 +6,6 @@ Fetches North American and International skater rankings and filters for Finns.
 
 import json
 import requests
-import time
 import sys
 from pathlib import Path
 from datetime import datetime

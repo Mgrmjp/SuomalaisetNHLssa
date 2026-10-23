@@ -229,8 +229,6 @@ def demo_live_monitoring_simulation():
         ("2025-11-22 22:15:00", "OFF", "Game finished"),
     ]
 
-    mgr = GameStateManager()
-
     for timestamp, state, description in timeline:
         print(f"[{timestamp}] State: {state:6} - {description}")
 

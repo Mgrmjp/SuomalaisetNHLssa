@@ -8,9 +8,7 @@ Usage: python fetch-season-games.py [start_date] [end_date]
 Date format: YYYY-MM-DD (defaults to current season)
 """
 
-import json
 import sys
-import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -20,7 +18,7 @@ _parent_dir = str(Path(__file__).parent.parent)
 if _parent_dir not in sys.path:
     sys.path.insert(0, _parent_dir)
 
-from config import SEASON_DIR, NHL_API_BASE
+from config import SEASON_DIR
 from utils import fetch_from_api, rate_limit, save_json, schedule_url, game_boxscore_url
 
 def get_schedule_for_date(date):

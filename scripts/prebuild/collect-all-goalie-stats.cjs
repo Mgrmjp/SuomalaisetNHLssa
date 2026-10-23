@@ -29,7 +29,7 @@ function loadJson(filePath) {
     }
     try {
         return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    } catch (e) {
+    } catch {
         console.warn(`  ⚠️  Failed to parse: ${filePath}`);
         return null;
     }

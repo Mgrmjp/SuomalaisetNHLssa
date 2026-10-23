@@ -4,7 +4,6 @@ Public endpoints available without API key
 """
 
 import requests
-import json
 from datetime import datetime
 from typing import List, Dict, Optional
 

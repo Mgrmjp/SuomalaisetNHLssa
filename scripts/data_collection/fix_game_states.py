@@ -14,9 +14,8 @@ Usage:
 import json
 import sys
 import time
-from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Tuple
 
 # NHL API Base
 NHL_API_BASE = "https://api-web.nhle.com"
@@ -149,7 +148,6 @@ def update_player_scores_in_file(
         if player.get("game_id") == game_id:
             # Update game_score field
             player_team = player.get("team")
-            opponent = player.get("opponent")
 
             if player_team == home_team:
                 player_score = correct_home_score

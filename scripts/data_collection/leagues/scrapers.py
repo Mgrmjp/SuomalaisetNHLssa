@@ -4,7 +4,6 @@ Uses BeautifulSoup to extract player data from HTML tables
 """
 import requests
 import re
-from datetime import datetime
 from typing import List, Dict, Optional
 
 try:

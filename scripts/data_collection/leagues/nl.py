@@ -74,9 +74,6 @@ class SwissNLAdapter(BaseLeagueAdapter):
             position = position_map.get(raw_pos, raw_pos)
             is_goalie = position == 'G'
             
-            # Team name is often in 'team_name' or similar
-            team_name = data.get('team_name', data.get('team', {}).get('name', "Unknown"))
-            
             player_id = str(data.get('playerId', '') or '')
             headshot_url = f"{self.base_url}/player/{player_id}/image" if player_id else None
 

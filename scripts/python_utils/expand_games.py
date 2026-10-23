@@ -5,7 +5,6 @@ This uses the game IDs we already discovered to get comprehensive data
 """
 
 import json
-import os
 import requests
 import time
 from datetime import datetime

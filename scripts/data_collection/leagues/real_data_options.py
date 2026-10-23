@@ -5,9 +5,7 @@ This module documents and implements various approaches to get real
 hockey data from public sources.
 """
 import requests
-import json
-from datetime import datetime
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict
 
 
 class DataSource:

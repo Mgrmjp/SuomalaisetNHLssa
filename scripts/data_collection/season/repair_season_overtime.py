@@ -6,11 +6,9 @@ Prefers using local daily game data to avoid API calls.
 """
 
 import json
-import sys
 import time
 import requests
 from pathlib import Path
-from datetime import datetime
 
 # NHL API Base
 NHL_API_BASE = "https://api-web.nhle.com"

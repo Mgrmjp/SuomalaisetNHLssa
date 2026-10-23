@@ -6,7 +6,6 @@ This script reads all game files, fetches boxscore data for games
 missing period/OT information, and updates the files with complete data.
 """
 
-import json
 import sys
 import time
 from pathlib import Path

@@ -9,9 +9,7 @@ Run: python scripts/data_collection/finnish/test_fetch_offseason_moves.py
 """
 
 import io
-import json
 import sys
-import tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import patch

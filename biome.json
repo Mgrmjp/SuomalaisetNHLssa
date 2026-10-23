@@ -123,10 +123,6 @@
             "formatter": { "enabled": false },
             "linter": {
                 "rules": {
-                    "correctness": {
-                        "noUnusedVariables": "off",
-                        "noUnusedFunctionParameters": "off"
-                    },
                     "style": {
                         "useTemplate": "off",
                         "useConst": "off",

@@ -18,7 +18,6 @@ Usage:
 
 import argparse
 import json
-import re
 import sys
 import unicodedata
 from datetime import datetime, date
@@ -322,8 +321,6 @@ def validate_data_freshness(player):
     last_season = player.get("lastSeason")
 
     gp = stats.get("gp", 0)
-    goals = stats.get("goals", 0)
-    assists = stats.get("assists", 0)
     points = stats.get("points", 0)
 
     if last_season:
