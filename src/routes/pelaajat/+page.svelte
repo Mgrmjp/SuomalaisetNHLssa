@@ -10,6 +10,7 @@ import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import ViewMetadata from '$lib/components/ui/ViewMetadata.svelte'
 import ViewState from '$lib/components/ui/ViewState.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { fiGames } from '$lib/utils/finnishPlural.js'
 
 /** @type {{ data: { skaters: any[], goalies: any[], seasonId: string, error: string | null, updatedAt: string } }} */
 const { data } = $props()
@@ -148,7 +149,7 @@ function getPlayerSlug(player) {
                                 {/if}
                             </div>
                             <div class="text-xs text-slate-400 mt-2">
-                                {player.gamesPlayed} ottelua
+                                {fiGames(player.gamesPlayed)}
                             </div>
                         </div>
                     </a>

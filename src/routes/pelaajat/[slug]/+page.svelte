@@ -9,6 +9,7 @@ import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import ViewMetadata from '$lib/components/ui/ViewMetadata.svelte'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { fiAssists, fiGames, fiGoals, fiPoints } from '$lib/utils/finnishPlural.js'
 import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
 /** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
@@ -92,12 +93,12 @@ const ogTitle = $derived(
 )
 const playerDescription = $derived(
     hasSeasonStats
-        ? `Katso pelaajan ${displayName} tilastot kaudella ${formattedSeason}. ${teamFullName}, ${position}, ${player.gamesPlayed || 0} ottelua, ${player.goals || 0}+${player.assists || 0}=${player.points || 0}.`
+        ? `Katso pelaajan ${displayName} tilastot kaudella ${formattedSeason}. ${teamFullName}, ${position}, ${fiGames(player.gamesPlayed || 0)}, ${player.goals || 0}+${player.assists || 0}=${player.points || 0}.`
         : `Katso pelaajan ${displayName} NHL-profiili. Suomalainen ${position}, ${teamFullName}.`
 )
 const ogDescription = $derived(
     hasSeasonStats
-        ? `${displayName} - ${teamFullName}: ${player.gamesPlayed || 0} ottelua, ${player.goals || 0} maalia, ${player.assists || 0} syöttöä, ${player.points || 0} pistettä kaudella ${formattedSeason}.`
+        ? `${displayName} - ${teamFullName}: ${fiGames(player.gamesPlayed || 0)}, ${fiGoals(player.goals || 0)}, ${fiAssists(player.assists || 0)}, ${fiPoints(player.points || 0)} kaudella ${formattedSeason}.`
         : `${displayName} - suomalainen NHL-pelaaja. ${teamFullName}.`
 )
 const playerImage = $derived(
@@ -348,7 +349,7 @@ function getPlayerSlug(p) {
                                     {getPlayerName(teammate)}
                                 </h3>
                                 <div class="text-sm text-gray-500">
-                                    {teammate.points} pistettä • {teammate.positionCode}
+                                    {fiPoints(teammate.points)} • {teammate.positionCode}
                                 </div>
                             </div>
                         </a>

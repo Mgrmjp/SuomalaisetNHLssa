@@ -7,6 +7,7 @@ import { base } from '$app/paths'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { games } from '$lib/stores/gameData.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
+import { fiAssists, fiGoals } from '$lib/utils/finnishPlural.js'
 import {
     formatGameMatchup,
     formatGameScore,
@@ -253,10 +254,10 @@ const _primaryStat = $derived.by(() => {
 const _statBreakdown = $derived.by(() => {
     if (isGoalie) return `${player.saves}/${player.shots_against || player.shotsAgainst}`
     if (player.points > 0 && player.goals > 0 && player.assists > 0) {
-        return `${player.goals} maalia + ${player.assists} syöttöä`
+        return `${fiGoals(player.goals)} + ${fiAssists(player.assists)}`
     }
-    if (player.points > 0 && player.goals > 0) return `${player.goals} maalia`
-    if (player.points > 0 && player.assists > 0) return `${player.assists} syöttöä`
+    if (player.points > 0 && player.goals > 0) return fiGoals(player.goals)
+    if (player.points > 0 && player.assists > 0) return fiAssists(player.assists)
     return ''
 })
 

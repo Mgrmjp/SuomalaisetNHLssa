@@ -12,6 +12,7 @@ import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { games, isLoading, players, resetToDefault, selectedDate } from '$lib/stores/gameData.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
+import { fiGames } from '$lib/utils/finnishPlural.js'
 import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 
 /** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number }, playoffStats: { season: string, skaters: Array<{ name: string, team: string, gamesPlayed: number, goals: number, assists: number, points: number }>, goalies: Array<{ name: string, team: string, gamesPlayed: number, wins: number, savePct: number }> } } }} */
@@ -79,7 +80,7 @@ const selectedDateSummary = $derived.by(() => {
 
     const count = $games?.games?.length || 0
     const label = buildDateLabel($selectedDate)
-    const summary = count > 0 ? `${count} ottelua ${label}` : `Ei otteluita ${label}`
+    const summary = count > 0 ? `${fiGames(count)} ${label}` : `Ei otteluita ${label}`
 
     return { label, count, summary }
 })
@@ -257,7 +258,7 @@ onMount(() => {
                             <h2 id="hero-stats-title" class="panel__hero-heading">Päivän yhteistilastot</h2>
                             <p class="panel__hero-sub">
                                 <span>{formatFinnishDateWithRelative($selectedDate || data.initialDate).formatted}</span>
-                                <span class="hero-game-count">{selectedDateSummary?.count || 0} ottelua</span>
+                                <span class="hero-game-count">{fiGames(selectedDateSummary?.count || 0)}</span>
                             </p>
                         </div>
                         <dl class="hero-stats">

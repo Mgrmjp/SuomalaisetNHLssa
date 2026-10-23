@@ -2,6 +2,7 @@
 // @ts-nocheck
 import DataTable from '$lib/components/ui/DataTable.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
+import { fiNoun } from '$lib/utils/finnishPlural.js'
 
 const { summary } = $props()
 let showAllScorers = $state(false)
@@ -43,7 +44,7 @@ function resultSuffix(game) {
             <div class="preseason-heading">
                 <h2 id="preseason-title">Suomalaisten harjoituskausi {summary.seasonYear}–{String(summary.seasonYear + 1).slice(-2)}</h2>
                 <p class="preseason-counts">
-                    <span><strong>{summary.completedGames}</strong> ottelua</span>
+                    <span><strong>{summary.completedGames}</strong> {fiNoun(summary.completedGames, 'ottelu', 'ottelua')}</span>
                     <span><strong>{summary.finnishGames}</strong> ottelussa suomalaisia</span>
                 </p>
             </div>

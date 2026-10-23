@@ -3,6 +3,7 @@ import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { loadPlayoffStatsFromDisk } from '$lib/server/playerStats.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
+import { fiGames } from '$lib/utils/finnishPlural.js'
 
 export const prerender = true
 
@@ -53,7 +54,7 @@ function buildSeo(data, date) {
     const playerCount = data?.total_players ?? data?.players?.length ?? 0
     const dateLabel = buildDateLabel(date)
     const summary =
-        gameCount > 0 ? `${gameCount} ottelua ${dateLabel}` : `Ei otteluita ${dateLabel}`
+        gameCount > 0 ? `${fiGames(gameCount)} ${dateLabel}` : `Ei otteluita ${dateLabel}`
     const playerText =
         playerCount > 0
             ? `Seuraa ${playerCount} suomalaisen NHL-tilastoja.`
