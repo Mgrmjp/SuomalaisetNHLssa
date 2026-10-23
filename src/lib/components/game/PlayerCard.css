@@ -252,7 +252,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.2rem;
+    gap: 0.35rem;
+}
+
+.card__team-logo-vis {
+    flex: 0 0 auto;
 }
 
 .card__dot {
@@ -689,11 +693,6 @@
 
     .card__name {
         font-size: 0.95rem;
-    }
-
-    .card__team-logo-vis {
-        width: 28px;
-        height: 28px;
     }
 
     .card__gamebar {

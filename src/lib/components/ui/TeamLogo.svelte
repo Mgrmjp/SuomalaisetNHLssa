@@ -91,7 +91,7 @@ const _normalizedTeam = $derived(normalizeTeamAbbreviation(team))
 const _teamFullName = $derived(teamFullNames[_normalizedTeam] || _normalizedTeam || team)
 </script>
 
-<div class="team-logo-wrapper {className}" style={`--logo-size: ${size}px`}>
+<span class="team-logo-wrapper {className}" style={`--logo-size: ${size}px`}>
     <img
         src={_logoUrl}
         alt="{_teamFullName} logo"
@@ -103,7 +103,7 @@ const _teamFullName = $derived(teamFullNames[_normalizedTeam] || _normalizedTeam
             e.currentTarget.src = `${base}/nhl-logos/placeholder.svg`;
         }}
     />
-</div>
+</span>
 
 <style>
     .team-logo-wrapper {
