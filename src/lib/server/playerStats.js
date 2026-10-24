@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { calculateAge } from '$lib/utils/dateUtils.js'
 
 /**
  * @typedef {{ [key: string]: any, playerId?: string | number | undefined, birthDate?: string | undefined, age?: number | undefined, heightInches?: number | undefined, weightLbs?: number | undefined, birthplace?: string | undefined, headshot?: string | undefined }} StatsPlayer
@@ -54,6 +55,28 @@ export function getRosterPath() {
  */
 export function getStatsFilePath(type, seasonId) {
     return join(getPlayerStatsDir(), `${type}-${seasonId}.json`)
+}
+
+/**
+ * Return the oldest collection time among the stats used by a page.
+ * @param {string} seasonId
+ * @param {string[]} types
+ * @returns {string | null}
+ */
+export function getStatsUpdatedAt(seasonId, types) {
+    try {
+        const metadata = readJsonFileSync(join(getPlayerStatsDir(), 'metadata.json'))
+        if (metadata.seasonId !== seasonId) return null
+        const timestamps = /** @type {string[]} */ (
+            types.map((type) => metadata[`${type}UpdatedAt`] ?? metadata.updatedAt)
+        )
+        if (timestamps.some((value) => !value || !Number.isFinite(Date.parse(value)))) return null
+        return timestamps.reduce((oldest, value) =>
+            Date.parse(value) < Date.parse(oldest) ? value : oldest
+        )
+    } catch {
+        return null
+    }
 }
 
 /**
@@ -133,7 +156,7 @@ export function mergeRosterInfo(players, rosterLookup, asOfDate = new Date()) {
 
         if (birthDate !== undefined) {
             mergedPlayer.birthDate = birthDate
-            mergedPlayer.age = asOfDate.getFullYear() - new Date(birthDate).getFullYear()
+            mergedPlayer.age = calculateAge(birthDate, asOfDate) ?? undefined
         }
 
         if (rosterInfo.heightInches !== undefined) {
@@ -192,7 +215,8 @@ export async function fetchStats(fetchFn, options) {
     }
 
     const data = await response.json()
-    return Array.isArray(data?.data) ? data.data : []
+    if (!Array.isArray(data?.data)) throw new Error(`Invalid ${options.statType} stats response`)
+    return data.data
 }
 
 /**

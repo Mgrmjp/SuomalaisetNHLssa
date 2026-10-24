@@ -8,11 +8,12 @@ import PageHeader from '$lib/components/ui/PageHeader.svelte'
 import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import ViewMetadata from '$lib/components/ui/ViewMetadata.svelte'
+import { calculateAge } from '$lib/utils/dateUtils.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { fiAssists, fiGames, fiGoals, fiPoints } from '$lib/utils/finnishPlural.js'
 import { jsonLdScript } from '$lib/utils/jsonLd.js'
 
-/** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string } }} */
+/** @type {{ data: { player: any, sameTeamPlayers: any[], seasonId: string, slug: string, updatedAt: string | null } }} */
 const { data } = $props()
 
 const { player, sameTeamPlayers, seasonId, slug } = $derived(data)
@@ -219,9 +220,9 @@ function getPlayerSlug(p) {
                             <span>{position}</span>
                             <span>•</span>
                             <span>#{player.jerseyNumber || player.sweaterNumber || player.playerId}</span>
-                            {#if player.age}
+                            {#if player.birthDate || player.age}
                                 <span>•</span>
-                                <span>{player.age}v</span>
+                                <span>{player.birthDate ? calculateAge(player.birthDate) : player.age}v</span>
                             {/if}
                         </div>
                         {#if player.latestMove}
@@ -359,9 +360,11 @@ function getPlayerSlug(p) {
         {/if}
 
         <!-- Updated timestamp -->
-        <ViewMetadata class="mt-8">
-            Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}
-        </ViewMetadata>
+        {#if data.updatedAt}
+            <ViewMetadata class="mt-8">
+                Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}
+            </ViewMetadata>
+        {/if}
     </PageShell>
 </div>
 

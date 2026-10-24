@@ -1,17 +1,21 @@
-import { fetchStats, getCurrentSeasonId, loadSkaterStatsFromDisk } from '$lib/server/playerStats.js'
+import {
+    fetchStats,
+    getCurrentSeasonId,
+    getStatsUpdatedAt,
+    loadSkaterStatsFromDisk,
+} from '$lib/server/playerStats.js'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch }) {
+    const seasonId = getCurrentSeasonId()
     try {
-        const seasonId = getCurrentSeasonId()
-
         try {
             const players = loadSkaterStatsFromDisk(seasonId)
 
             return {
                 players,
                 seasonId,
-                updatedAt: new Date().toISOString(),
+                updatedAt: getStatsUpdatedAt(seasonId, ['skaters']),
                 source: 'prebuilt',
             }
         } catch (_fileError) {
@@ -38,6 +42,8 @@ export async function load({ fetch }) {
         console.error('Error fetching leaderboard data:', error)
         return {
             players: [],
+            seasonId,
+            updatedAt: null,
             error: 'Tilastojen lataus epäonnistui',
         }
     }

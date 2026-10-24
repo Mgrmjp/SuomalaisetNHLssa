@@ -4,6 +4,30 @@
  * Provides consistent Finnish date formatting for the NHL app
  */
 
+/** Return a player's age on the visitor's local calendar date. */
+export function calculateAge(birthDate, asOfDate = new Date()) {
+    const birth = new Date(birthDate)
+    if (Number.isNaN(birth.getTime())) return null
+
+    const birthMonth = birth.getUTCMonth()
+    const birthDay = birth.getUTCDate()
+    const birthdayHasPassed =
+        asOfDate.getMonth() > birthMonth ||
+        (asOfDate.getMonth() === birthMonth && asOfDate.getDate() >= birthDay)
+    return asOfDate.getFullYear() - birth.getUTCFullYear() - (birthdayHasPassed ? 0 : 1)
+}
+
+/** Move to the adjacent month, retaining the day when that month has it. */
+export function shiftMonthPreservingDay(date, offset) {
+    const shifted = new Date(date)
+    const day = shifted.getDate()
+    shifted.setDate(1)
+    shifted.setMonth(shifted.getMonth() + offset)
+    const lastDay = new Date(shifted.getFullYear(), shifted.getMonth() + 1, 0).getDate()
+    shifted.setDate(Math.min(day, lastDay))
+    return shifted
+}
+
 /**
  * Format date in Finnish format with proper localization
  * @param {string | Date} date - Date to format

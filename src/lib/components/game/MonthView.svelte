@@ -10,6 +10,7 @@ import {
     setDate,
     showCalendarView,
 } from '$lib/stores/gameData.js'
+import { shiftMonthPreservingDay } from '$lib/utils/dateUtils.js'
 
 function isSameMonth(date1, date2) {
     return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth()
@@ -58,19 +59,11 @@ $: monthYearDisplay = currentMonth.toLocaleDateString('fi-FI', {
 // Navigate between months
 /** @param {'prev' | 'next'} direction */
 function _navigateMonth(direction) {
-    const newMonth = new Date(currentMonth)
-    if (direction === 'prev') {
-        newMonth.setMonth(newMonth.getMonth() - 1)
-    } else {
-        newMonth.setMonth(newMonth.getMonth() + 1)
-        // Don't go beyond current date
-        if (newMonth > $currentDateReadOnly) return
+    const newMonth = shiftMonthPreservingDay(currentMonth, direction === 'prev' ? -1 : 1)
+    if (direction === 'next' && newMonth > $currentDateReadOnly) {
+        if (!isSameMonth(newMonth, $currentDateReadOnly)) return
+        newMonth.setDate($currentDateReadOnly.getDate())
     }
-
-    // Keep the same day of month if possible, otherwise go to last day of month
-    const originalDay = currentMonth.getDate()
-    const daysInNewMonth = new Date(newMonth.getFullYear(), newMonth.getMonth() + 1, 0).getDate()
-    newMonth.setDate(Math.min(originalDay, daysInNewMonth))
 
     // Update the selected date
     setDate(formatDate(newMonth))

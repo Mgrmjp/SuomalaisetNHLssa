@@ -5,11 +5,13 @@ import {
     fetchRegularSeasonStats,
     getCurrentSeasonId,
     getRosterPath,
+    getStatsUpdatedAt,
     loadRegularSeasonStatsFromDisk,
     loadRosterLookupFromDisk,
     mergeRosterInfo,
     readJsonFileSync,
 } from '$lib/server/playerStats.js'
+import { calculateAge } from '$lib/utils/dateUtils.js'
 import { correctFullName, correctFullNameWithLLM } from '$lib/utils/finnishNameUtils.js'
 import { sanitizeImageUrl } from '$lib/utils/playerHeadshots.js'
 
@@ -47,9 +49,7 @@ function rosterToPlayer(player) {
         positionCode: player.position,
         jerseyNumber: player.sweaterNumber,
         headshot: sanitizeImageUrl(player.headshot),
-        age: player.birthDate
-            ? new Date().getFullYear() - new Date(player.birthDate).getFullYear()
-            : undefined,
+        age: player.birthDate ? calculateAge(player.birthDate) : undefined,
         hasSeasonStats: false,
         isRosterProfile: true,
     }
@@ -165,9 +165,11 @@ export async function load({ params, fetch }) {
         /** @type {any[]} */
         let allPlayers = []
 
+        let statsUpdatedAt = null
         try {
             const { skaters: skatersData, goalies: goaliesData } =
                 loadRegularSeasonStatsFromDisk(seasonId)
+            statsUpdatedAt = getStatsUpdatedAt(seasonId, ['skaters', 'goalies'])
             allPlayers = [...skatersData, ...goaliesData]
 
             // Find player by slug (name-based URL)
@@ -193,6 +195,7 @@ export async function load({ params, fetch }) {
                 fetch,
                 seasonId
             )
+            statsUpdatedAt = new Date().toISOString()
             allPlayers = [...skatersData, ...goaliesData]
 
             player = findPlayerByDeterministicSlug(allPlayers, normalizedSlug)
@@ -253,7 +256,7 @@ export async function load({ params, fetch }) {
             sameTeamPlayers,
             seasonId,
             slug,
-            updatedAt: new Date().toISOString(),
+            updatedAt: statsUpdatedAt,
         }
     } catch (err) {
         if (err && typeof err === 'object' && 'status' in err && err.status !== 404) throw err
@@ -285,7 +288,7 @@ export async function load({ params, fetch }) {
                 sameTeamPlayers: [],
                 seasonId,
                 slug,
-                updatedAt: new Date().toISOString(),
+                updatedAt: null,
             }
         } catch (rosterError) {
             if (rosterError && typeof rosterError === 'object' && 'status' in rosterError) {

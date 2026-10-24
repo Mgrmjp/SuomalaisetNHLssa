@@ -208,11 +208,11 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                 </Card>
             </div>
 
-            <ViewMetadata class="mt-8">
-                <p class="mt-2 text-xs">
-                    Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}
-                </p>
-            </ViewMetadata>
+            {#if data.updatedAt}
+                <ViewMetadata class="mt-8">
+                    <p class="mt-2 text-xs">Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}</p>
+                </ViewMetadata>
+            {/if}
         {/if}
     </PageShell>
 </div>

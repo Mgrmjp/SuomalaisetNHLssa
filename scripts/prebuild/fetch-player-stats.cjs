@@ -72,7 +72,7 @@ function getCachedDataPath(seasonId, type) {
 /**
  * Load cached data as fallback
  */
-function loadCachedData(seasonId, type) {
+function loadCachedData(seasonId, type, quiet = false) {
     if (!CACHE_FALLBACK_ENABLED) return null;
 
     const cachePath = getCachedDataPath(seasonId, type);
@@ -80,8 +80,18 @@ function loadCachedData(seasonId, type) {
 
     try {
         const data = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
-        console.warn(`   📦 Using cached data from ${path.basename(cachePath)} (${data.length} ${type})`);
+        if (!Array.isArray(data)) return null;
+        if (!quiet) console.warn(`   📦 Using cached data from ${path.basename(cachePath)} (${data.length} ${type})`);
         return data;
+    } catch {
+        return null;
+    }
+}
+
+function loadPreviousMetadata(seasonId) {
+    try {
+        const metadata = JSON.parse(fs.readFileSync(path.join(OUTPUT_DIR, 'metadata.json'), 'utf8'));
+        return metadata.seasonId === seasonId ? metadata : null;
     } catch {
         return null;
     }
@@ -226,16 +236,28 @@ async function processPlayers(players, nameField) {
     return corrected;
 }
 
-async function fetchWithFallback(url, seasonId, dataType, nameField) {
+async function fetchWithFallback(url, seasonId, dataType, nameField, previousMetadata) {
     try {
         const data = await fetchNHLData(url);
-        return await processPlayers(data.data || [], nameField);
+        if (!Array.isArray(data?.data)) {
+            throw new Error(`Malformed ${dataType} stats response`);
+        }
+        const cachedData = loadCachedData(seasonId, dataType, true);
+        if (cachedData && data.data.length < cachedData.length) {
+            throw new Error(`Incomplete ${dataType} stats response would replace existing results`);
+        }
+        return { players: await processPlayers(data.data, nameField), updatedAt: new Date().toISOString() };
     } catch (error) {
         if (CACHE_FALLBACK_ENABLED) {
             console.error(`   ❌ API failed: ${error.message}`);
             console.warn(`   ↩️  Falling back to cached ${dataType} data...`);
             const cachedData = loadCachedData(seasonId, dataType);
-            if (cachedData) return cachedData;
+            if (cachedData) {
+                return {
+                    players: cachedData,
+                    updatedAt: previousMetadata?.[`${dataType}UpdatedAt`] ?? previousMetadata?.updatedAt ?? null,
+                };
+            }
         }
         throw error;
     }
@@ -248,6 +270,7 @@ async function main() {
     console.log('🏒 Starting pre-build: Fetching player stats with Finnish name corrections...\n');
 
     const seasonId = getSeasonId();
+    const previousMetadata = loadPreviousMetadata(seasonId);
     console.log(`📅 Season: ${seasonId}`);
 
     // Ensure output directory exists
@@ -259,56 +282,56 @@ async function main() {
     console.log('\n📊 Fetching skaters...');
     const skaterUrl = `https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=500&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D2%20and%20seasonId%3D${seasonId}`;
 
-    const correctedSkaters = await fetchWithFallback(skaterUrl, seasonId, 'skaters', 'skaterFullName');
-    console.log(`   ✅ ${correctedSkaters.length} skaters processed`);
-
-    // Save skaters
-    const skatersFile = path.join(OUTPUT_DIR, `skaters-${seasonId}.json`);
-    fs.writeFileSync(skatersFile, JSON.stringify(correctedSkaters, null, 2));
-    console.log(`   💾 Saved: ${skatersFile}`);
+    const skatersResult = await fetchWithFallback(skaterUrl, seasonId, 'skaters', 'skaterFullName', previousMetadata);
+    console.log(`   ✅ ${skatersResult.players.length} skaters processed`);
 
     // Fetch Finnish goalies
     console.log('\n📊 Fetching goalies...');
     const goalieUrl = `https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22wins%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=100&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D2%20and%20seasonId%3D${seasonId}`;
 
-    const correctedGoalies = await fetchWithFallback(goalieUrl, seasonId, 'goalies', 'goalieFullName');
-    console.log(`   ✅ ${correctedGoalies.length} goalies processed`);
-
-    // Save goalies
-    const goaliesFile = path.join(OUTPUT_DIR, `goalies-${seasonId}.json`);
-    fs.writeFileSync(goaliesFile, JSON.stringify(correctedGoalies, null, 2));
-    console.log(`   💾 Saved: ${goaliesFile}`);
+    const goaliesResult = await fetchWithFallback(goalieUrl, seasonId, 'goalies', 'goalieFullName', previousMetadata);
+    console.log(`   ✅ ${goaliesResult.players.length} goalies processed`);
 
     // Fetch Finnish playoff skaters
     console.log('\n🏆 Fetching playoff skaters...');
     const playoffSkaterUrl = `https://api.nhle.com/stats/rest/en/skater/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22points%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=500&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D3%20and%20seasonId%3D${seasonId}`;
 
-    const correctedPlayoffSkaters = await fetchWithFallback(playoffSkaterUrl, seasonId, 'playoff-skaters', 'skaterFullName');
-    console.log(`   ✅ ${correctedPlayoffSkaters.length} playoff skaters processed`);
-
-    const playoffSkatersFile = path.join(OUTPUT_DIR, `playoff-skaters-${seasonId}.json`);
-    fs.writeFileSync(playoffSkatersFile, JSON.stringify(correctedPlayoffSkaters, null, 2));
-    console.log(`   💾 Saved: ${playoffSkatersFile}`);
+    const playoffSkatersResult = await fetchWithFallback(playoffSkaterUrl, seasonId, 'playoff-skaters', 'skaterFullName', previousMetadata);
+    console.log(`   ✅ ${playoffSkatersResult.players.length} playoff skaters processed`);
 
     // Fetch Finnish playoff goalies
     console.log('\n🏆 Fetching playoff goalies...');
     const playoffGoalieUrl = `https://api.nhle.com/stats/rest/en/goalie/summary?isAggregate=false&isGame=false&sort=%5B%7B%22property%22:%22wins%22,%22direction%22:%22DESC%22%7D%5D&start=0&limit=100&cayenneExp=nationalityCode%3D%22FIN%22%20and%20gameTypeId%3D3%20and%20seasonId%3D${seasonId}`;
 
-    const correctedPlayoffGoalies = await fetchWithFallback(playoffGoalieUrl, seasonId, 'playoff-goalies', 'goalieFullName');
-    console.log(`   ✅ ${correctedPlayoffGoalies.length} playoff goalies processed`);
+    const playoffGoaliesResult = await fetchWithFallback(playoffGoalieUrl, seasonId, 'playoff-goalies', 'goalieFullName', previousMetadata);
+    console.log(`   ✅ ${playoffGoaliesResult.players.length} playoff goalies processed`);
 
-    const playoffGoaliesFile = path.join(OUTPUT_DIR, `playoff-goalies-${seasonId}.json`);
-    fs.writeFileSync(playoffGoaliesFile, JSON.stringify(correctedPlayoffGoalies, null, 2));
-    console.log(`   💾 Saved: ${playoffGoaliesFile}`);
+    // Collect every response before writing; a missing fallback leaves the previous snapshot intact.
+    const results = [
+        ['skaters', skatersResult],
+        ['goalies', goaliesResult],
+        ['playoff-skaters', playoffSkatersResult],
+        ['playoff-goalies', playoffGoaliesResult],
+    ];
+    for (const [type, result] of results) {
+        const file = path.join(OUTPUT_DIR, `${type}-${seasonId}.json`);
+        fs.writeFileSync(file, JSON.stringify(result.players, null, 2));
+        console.log(`   💾 Saved: ${file}`);
+    }
 
     // Save metadata
+    const timestamps = results.map(([, result]) => result.updatedAt);
     const metadata = {
         seasonId,
-        updatedAt: new Date().toISOString(),
-        skaterCount: correctedSkaters.length,
-        goalieCount: correctedGoalies.length,
-        playoffSkaterCount: correctedPlayoffSkaters.length,
-        playoffGoalieCount: correctedPlayoffGoalies.length
+        updatedAt: timestamps.every(Boolean) ? timestamps.sort()[0] : null,
+        skatersUpdatedAt: skatersResult.updatedAt,
+        goaliesUpdatedAt: goaliesResult.updatedAt,
+        'playoff-skatersUpdatedAt': playoffSkatersResult.updatedAt,
+        'playoff-goaliesUpdatedAt': playoffGoaliesResult.updatedAt,
+        skaterCount: skatersResult.players.length,
+        goalieCount: goaliesResult.players.length,
+        playoffSkaterCount: playoffSkatersResult.players.length,
+        playoffGoalieCount: playoffGoaliesResult.players.length
     };
 
     const metaFile = path.join(OUTPUT_DIR, 'metadata.json');
@@ -318,7 +341,11 @@ async function main() {
     console.log('\n✅ Pre-build complete!');
 }
 
-main().catch(error => {
-    console.error('\n❌ Pre-build failed:', error);
-    process.exit(1);
-});
+module.exports = { main };
+
+if (require.main === module) {
+    main().catch(error => {
+        console.error('\n❌ Pre-build failed:', error);
+        process.exit(1);
+    });
+}

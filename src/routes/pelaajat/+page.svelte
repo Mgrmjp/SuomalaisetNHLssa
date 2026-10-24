@@ -9,10 +9,11 @@ import PageShell from '$lib/components/ui/PageShell.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import ViewMetadata from '$lib/components/ui/ViewMetadata.svelte'
 import ViewState from '$lib/components/ui/ViewState.svelte'
+import { calculateAge } from '$lib/utils/dateUtils.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { fiGames } from '$lib/utils/finnishPlural.js'
 
-/** @type {{ data: { skaters: any[], goalies: any[], seasonId: string, error: string | null, updatedAt: string } }} */
+/** @type {{ data: { skaters: any[], goalies: any[], seasonId: string, error: string | null, updatedAt: string | null } }} */
 const { data } = $props()
 
 const { skaters, goalies, seasonId, error: _error } = $derived(data)
@@ -145,7 +146,7 @@ function getPlayerSlug(player) {
                             <div class="text-sm text-slate-500 mt-1">
                                 {player.teamAbbrevs} • {player.positionCode}
                                 {#if player.birthDate || player.age}
-                                    • {player.age || (new Date().getFullYear() - new Date(player.birthDate).getFullYear())}v
+                                    • {player.birthDate ? calculateAge(player.birthDate) : player.age}v
                                 {/if}
                             </div>
                             <div class="text-xs text-slate-400 mt-2">
@@ -157,7 +158,7 @@ function getPlayerSlug(player) {
             </div>
 
             <ViewMetadata class="mt-8">
-                Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")} <br />
+                {#if data.updatedAt}Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")} <br />{/if}
                 Yhteensä {filteredPlayers.length} pelaajaa
             </ViewMetadata>
         {/if}

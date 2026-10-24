@@ -1,6 +1,7 @@
 import {
     fetchRegularSeasonStats,
     getCurrentSeasonId,
+    getStatsUpdatedAt,
     loadRegularSeasonStatsFromDisk,
     loadRosterLookupFromDisk,
     mergeRosterInfo,
@@ -26,9 +27,8 @@ function augmentPlayersWithRoster(skatersData, goaliesData) {
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch }) {
+    const seasonId = getCurrentSeasonId()
     try {
-        const seasonId = getCurrentSeasonId()
-
         try {
             const { skaters: skatersData, goalies: goaliesData } =
                 loadRegularSeasonStatsFromDisk(seasonId)
@@ -38,7 +38,7 @@ export async function load({ fetch }) {
                 skaters,
                 goalies,
                 seasonId,
-                updatedAt: new Date().toISOString(),
+                updatedAt: getStatsUpdatedAt(seasonId, ['skaters', 'goalies']),
                 source: 'prebuilt',
             }
         } catch (_fileError) {
@@ -64,6 +64,8 @@ export async function load({ fetch }) {
         return {
             skaters: [],
             goalies: [],
+            seasonId,
+            updatedAt: null,
             error: 'Pelaajaliistan lataus epäonnistui',
         }
     }
