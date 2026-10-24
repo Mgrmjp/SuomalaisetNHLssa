@@ -12,7 +12,14 @@ import PageShell from '$lib/components/ui/PageShell.svelte'
 import PlayerHeadshot from '$lib/components/ui/PlayerHeadshot.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import ViewState from '$lib/components/ui/ViewState.svelte'
-import { draftRankings, loadProspects, prospects, prospectsLoading } from '$lib/stores/gameData'
+import {
+    currentDateReadOnly,
+    draftRankings,
+    loadProspects,
+    prospects,
+    prospectsLoading,
+} from '$lib/stores/gameData'
+import { calculateAge } from '$lib/utils/dateUtils.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 import { normalizeTeamAbbreviation } from '$lib/utils/teamMapping.js'
 
@@ -361,7 +368,7 @@ function _buildSeasonData(player, fallbackStats = null) {
 
 // Filter active prospects based on season data and age
 // A prospect is considered active if they:
-// 1. Are 26 or younger
+// 1. Are under 24
 // 2. Are NOT established NHL regulars (20+ NHL games this season)
 const ACTIVE_AGE_CUTOFF = 24
 const NHL_REGULAR_GP_THRESHOLD = 20 // Players with 20+ NHL games are considered regulars, not prospects
@@ -409,7 +416,7 @@ const activeProspects = $derived(
         // Check age
         let age = null
         if (p.birthDate) {
-            age = new Date().getFullYear() - new Date(p.birthDate).getFullYear()
+            age = calculateAge(p.birthDate, $currentDateReadOnly)
         }
         const ageOk = age === null || age < ACTIVE_AGE_CUTOFF
 
@@ -1077,7 +1084,7 @@ function _dedupeProspects(players) {
                                                 <div class="truncate">{selectedSeason?.team || player.currentTeam}</div>
                                                 <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                                                     {#if player.birthDate}
-                                                        <span>{new Date().getFullYear() - new Date(player.birthDate).getFullYear()} vuotta</span>
+                                                        <span>{calculateAge(player.birthDate, $currentDateReadOnly)} vuotta</span>
                                                     {/if}
                                                 </div>
                                             </div>
@@ -1236,7 +1243,7 @@ function _dedupeProspects(players) {
                                                     <div class="truncate">{selectedSeason?.team || goalie.currentTeam}</div>
                                                     <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
                                                         {#if goalie.birthDate}
-                                                            <span>{new Date().getFullYear() - new Date(goalie.birthDate).getFullYear()} vuotta</span>
+                                                            <span>{calculateAge(goalie.birthDate, $currentDateReadOnly)} vuotta</span>
                                                         {/if}
                                                     </div>
                                                 </div>

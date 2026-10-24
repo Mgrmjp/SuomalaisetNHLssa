@@ -129,16 +129,14 @@ export function formatAccessibleFinnishDate(date) {
 export function getRelativeFinnishDate(date, referenceDate = new Date()) {
     const dateObj = typeof date === 'string' ? new Date(`${date}T00:00:00`) : date
 
-    // Normalize both dates to start of day
-    const normalizedDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate())
-    const normalizedRef = new Date(
+    // Compare local calendar dates without counting the 23- or 25-hour days at DST changes.
+    const dateDay = Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate())
+    const referenceDay = Date.UTC(
         referenceDate.getFullYear(),
         referenceDate.getMonth(),
         referenceDate.getDate()
     )
-
-    const diffTime = normalizedDate.getTime() - normalizedRef.getTime()
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+    const diffDays = (dateDay - referenceDay) / (1000 * 60 * 60 * 24)
 
     switch (diffDays) {
         case 0:

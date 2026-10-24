@@ -53,6 +53,7 @@ const ads = [
 let currentAdIndex = 0
 let _isPaused = false
 let interval
+let startTimeout
 let failedAds = {}
 
 function pauseAds() {
@@ -73,12 +74,13 @@ function setAdFailed(index, failed) {
 }
 
 onMount(() => {
-    setTimeout(() => {
+    startTimeout = setTimeout(() => {
         interval = setInterval(nextAd, 20000)
     }, 4000)
 })
 
 onDestroy(() => {
+    if (startTimeout) clearTimeout(startTimeout)
     if (interval) clearInterval(interval)
 })
 </script>

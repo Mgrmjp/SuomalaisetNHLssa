@@ -13,6 +13,7 @@ const ads = getMobileAds()
 let currentAdIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, ads)
 let _isPaused = false
 let interval
+let startTimeout
 let failedAds = {}
 
 // Mark this spot as active
@@ -37,12 +38,13 @@ function setAdFailed(id, failed) {
 }
 
 onMount(() => {
-    setTimeout(() => {
+    startTimeout = setTimeout(() => {
         interval = setInterval(nextAd, 20000)
     }, 16000)
 })
 
 onDestroy(() => {
+    if (startTimeout) clearTimeout(startTimeout)
     if (interval) clearInterval(interval)
 })
 </script>
