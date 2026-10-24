@@ -54,7 +54,17 @@ describe('automatic results refresh', () => {
         await vi.advanceTimersByTimeAsync(60000)
         expect(get(stores.players)[0]?.points).toBe(1)
         expect(get(stores.games).games[0].homeScore).toBe(1)
+        expect(get(stores.error)).toBeNull()
+        expect(get(stores.refreshError)).toBeTruthy()
         expect(get(stores.isLoading)).toBe(false)
+
+        vi.mocked(getResultsForDate).mockResolvedValue({
+            players: [{ name: 'Finn', points: 2 }],
+            games: { games: [{ gameId: 1, homeScore: 2 }], findGameById: () => null },
+        })
+        await stores.refreshSelectedDate()
+        expect(get(stores.refreshError)).toBeNull()
+        expect(get(stores.players)[0]?.points).toBe(2)
     })
 
     it('refreshes on returning to the tab', async () => {
@@ -63,6 +73,17 @@ describe('automatic results refresh', () => {
         document.dispatchEvent(new Event('visibilitychange'))
         await vi.advanceTimersByTimeAsync(0)
         expect(getResultsForDate).toHaveBeenCalledWith('2026-10-01')
+    })
+
+    it('shows results after recovering from an initial load failure', async () => {
+        const stores = await setup()
+        vi.mocked(getResultsForDate).mockRejectedValueOnce(new Error('Network unavailable'))
+        await stores.setDate('2026-09-30')
+        expect(get(stores.error)).toBeTruthy()
+
+        await stores.refreshSelectedDate()
+        expect(get(stores.error)).toBeNull()
+        expect(get(stores.players)[0]?.name).toBe('Finn')
     })
 
     it('follows yesterday across midnight but preserves a manually chosen date', async () => {

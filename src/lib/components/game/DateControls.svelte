@@ -14,7 +14,7 @@ import MonthView from './MonthView.svelte'
 
 // Convert reactive statements to $derived
 const currentDateValue = $derived($selectedDate || formatLocalDate($currentDateReadOnly))
-const todayIso = formatLocalDate(new Date())
+const todayIso = $derived(formatLocalDate($currentDateReadOnly))
 
 /** @param {string} a
  * @param {string} b */

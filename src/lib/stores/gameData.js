@@ -16,7 +16,9 @@ const browser = typeof window !== 'undefined'
 const availableDatesStore = writable([])
 // Only dates backed by game files; availableDates also includes calendar breaks.
 export const prepopulatedDates = readonly(availableDatesStore)
-let availableDatesLoaded = false
+let availableDatesFetchedAt = 0
+let datesFetchInFlight = false
+const DATES_REFRESH_INTERVAL = 5 * 60 * 1000
 
 import { base } from '$app/paths'
 
@@ -38,7 +40,9 @@ async function fetchBreaks() {
 
 async function fetchAvailableDatesFromManifest() {
     try {
-        const response = await fetch(`${base}/data/games_manifest.json`)
+        const response = await fetch(`${base}/data/games_manifest.json?refresh=${Date.now()}`, {
+            cache: 'no-store',
+        })
         if (!response.ok) return []
 
         const manifest = await response.json()
@@ -51,29 +55,39 @@ async function fetchAvailableDatesFromManifest() {
 }
 
 async function fetchAvailableDates() {
-    if (availableDatesLoaded) return
-
-    // Load breaks in parallel
-    fetchBreaks()
+    if (datesFetchInFlight || Date.now() - availableDatesFetchedAt < DATES_REFRESH_INTERVAL) return
+    datesFetchInFlight = true
 
     try {
-        // Try server API first (for dev mode or prerendered static API)
-        const response = await fetch(`${base}/api/available-dates`)
-        if (response.ok) {
-            const dates = await response.json()
-            availableDatesStore.set(dates)
-            availableDatesLoaded = true
-            logger.debug(`📅 Loaded ${dates.length} available game dates from API`)
-            return
+        try {
+            // Try server API first (for dev mode or prerendered static API)
+            const response = await fetch(`${base}/api/available-dates?refresh=${Date.now()}`, {
+                cache: 'no-store',
+            })
+            if (response.ok) {
+                const dates = await response.json()
+                if (Array.isArray(dates) && dates.length > 0) {
+                    availableDatesStore.set(dates)
+                    availableDatesFetchedAt = Date.now()
+                    logger.debug(`📅 Loaded ${dates.length} available game dates from API`)
+                    return
+                }
+            }
+        } catch (_error) {
+            logger.debug('API not available, using fallback dates...')
         }
-    } catch (_error) {
-        logger.debug('API not available, using fallback dates...')
-    }
 
-    const manifestDates = await fetchAvailableDatesFromManifest()
-    availableDatesStore.set(manifestDates)
-    availableDatesLoaded = true
-    logger.debug(`📅 Loaded ${manifestDates.length} available game dates from manifest fallback`)
+        const manifestDates = await fetchAvailableDatesFromManifest()
+        if (manifestDates.length > 0) {
+            availableDatesStore.set(manifestDates)
+            availableDatesFetchedAt = Date.now()
+            logger.debug(
+                `📅 Loaded ${manifestDates.length} available game dates from manifest fallback`
+            )
+        }
+    } finally {
+        datesFetchInFlight = false
+    }
 }
 
 // Initialization is explicit (see initializeGameData); nothing starts at import time.
@@ -152,12 +166,14 @@ export function initializeGameData() {
     if (!browser || initialized) return () => {}
     initialized = true
 
+    fetchBreaks()
     fetchAvailableDates()
 
     // Keep currentDate current and refresh visible results every minute
     currentDateInterval = setInterval(() => {
         currentDate.set(new Date())
         refreshWhenVisible()
+        fetchAvailableDates()
     }, 60000)
     document.addEventListener('visibilitychange', refreshWhenVisible)
 
@@ -165,7 +181,10 @@ export function initializeGameData() {
 }
 
 function refreshWhenVisible() {
-    if (document.visibilityState === 'visible') refreshSelectedDate()
+    if (document.visibilityState === 'visible') {
+        refreshSelectedDate()
+        fetchAvailableDates()
+    }
 }
 
 /** Stop timers and listeners so the module can be re-initialized later. */
@@ -182,11 +201,13 @@ export function cleanupGameData() {
 const selectedDateStore = writable('')
 const isLoadingStore = writable(false)
 const errorStore = writable(/** @type {string|null} */ (null))
+const refreshErrorStore = writable(/** @type {string|null} */ (null))
 
 // Public readonly stores
 export const selectedDate = readonly(selectedDateStore)
 export const isLoading = readonly(isLoadingStore)
 export const error = readonly(errorStore)
+export const refreshError = readonly(refreshErrorStore)
 // Re-export currentDate as readonly for external use
 export { currentDate as currentDateReadOnly }
 
@@ -401,7 +422,7 @@ export async function loadPlayersForDate(date, { background = false } = {}) {
 
     const requestId = ++resultsRequestId
     if (!background) isLoadingStore.set(true)
-    errorStore.set(null)
+    if (!background) errorStore.set(null)
 
     try {
         // Get data from prepopulated JSON files only
@@ -414,6 +435,8 @@ export async function loadPlayersForDate(date, { background = false } = {}) {
 
         // Update the games store
         games.set(gamesData)
+        errorStore.set(null)
+        refreshErrorStore.set(null)
 
         logger.success(
             `Loaded ${fetchedPlayers.length} players and ${gamesData.games.length} games from prepopulated data for ${date}`
@@ -435,7 +458,8 @@ export async function loadPlayersForDate(date, { background = false } = {}) {
             errorMessage = 'Unable to load prepopulated data. Please try again.'
         }
 
-        errorStore.set(errorMessage)
+        if (background) refreshErrorStore.set(errorMessage)
+        else errorStore.set(errorMessage)
         return []
     } finally {
         if (requestId === resultsRequestId) isLoadingStore.set(false)
@@ -452,6 +476,7 @@ export async function setDate(date, { followYesterday = false } = {}) {
     if (date !== get(selectedDateStore)) {
         players.set([])
         games.set({ games: [], findGameById: () => null })
+        refreshErrorStore.set(null)
     }
     selectedDateStore.set(date)
     return await loadPlayersForDate(date)

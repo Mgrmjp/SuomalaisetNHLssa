@@ -5,9 +5,10 @@ import { onMount } from 'svelte'
 import Swiper from 'swiper'
 import { FreeMode, Mousewheel } from 'swiper/modules'
 import { base } from '$app/paths'
-import ErrorBoundary from '$lib/components/ui/ErrorBoundary.svelte'
+import Button from '$lib/components/ui/Button.svelte'
 import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
+import Notice from '$lib/components/ui/Notice.svelte'
 import { getDailyFallbackNews } from '$lib/services/dailyNewsService.js'
 import {
     currentBreak,
@@ -18,6 +19,8 @@ import {
     isLoading,
     players,
     prepopulatedDates,
+    refreshError,
+    refreshSelectedDate,
     selectedDate,
     setDate,
 } from '$lib/stores/gameData.js'
@@ -127,8 +130,7 @@ $effect(() => {
 })
 
 function _handleRetry() {
-    const currentDate = new Date().toISOString().split('T')[0]
-    setDate(currentDate)
+    setDate($selectedDate)
 }
 
 /**
@@ -441,6 +443,13 @@ $effect(() => {
 })
 </script>
 
+{#if $refreshError && !$isLoading && !$error}
+    <Notice variant="warning">
+        <span>Päivitys epäonnistui. Näytetään viimeisimmät tulokset.</span>
+        <Button onclick={refreshSelectedDate}>Yritä uudelleen</Button>
+    </Notice>
+{/if}
+
 {#if $isLoading}
     <div class="py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9">
@@ -450,14 +459,10 @@ $effect(() => {
         </div>
     </div>
 {:else if $error}
-    <div class="text-center py-8">
-        <ErrorBoundary
-            error={$error}
-            retryAction="Yritä uudelleen"
-            onRetry={_handleRetry}
-            variant="error"
-        />
-    </div>
+    <Notice variant="error">
+        <span>{$error}</span>
+        <Button onclick={_handleRetry}>Yritä uudelleen</Button>
+    </Notice>
 {:else if !hasAnyPlayers}
     <EmptyState
         variant={emptyStateVariant}

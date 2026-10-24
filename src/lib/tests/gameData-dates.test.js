@@ -16,6 +16,7 @@ let stores
 afterEach(() => {
     stores?.cleanupGameData()
     vi.unstubAllGlobals()
+    vi.useRealTimers()
     vi.resetModules()
 })
 
@@ -61,5 +62,34 @@ describe('game file dates', () => {
         expect(get(stores.displayDate)).toBe('01.10.2026 (Viime yönä)')
         expect(get(stores.activeButton)).toBe('yesterday')
         expect(getResultsForDate).toHaveBeenCalledWith('2026-10-01')
+    })
+
+    it('retries a failed date index and picks up new dates in an open tab', async () => {
+        vi.useFakeTimers()
+        vi.setSystemTime(new Date(2026, 9, 22, 12))
+        /** @type {string[] | null} */
+        let dates = null
+        const fetch = vi.fn(async (url) => {
+            if (url.includes('breaks.json')) return { ok: true, json: async () => [] }
+            return dates ? { ok: true, json: async () => dates } : { ok: false, status: 503 }
+        })
+        vi.stubGlobal('fetch', fetch)
+
+        stores = await import('../stores/gameData.js')
+        stores.initializeGameData()
+        await vi.advanceTimersByTimeAsync(0)
+        expect(get(stores.prepopulatedDates)).toEqual([])
+
+        dates = ['2026-10-22']
+        await vi.advanceTimersByTimeAsync(60000)
+        expect(get(stores.prepopulatedDates)).toEqual(['2026-10-22'])
+
+        dates = ['2026-10-22', '2026-10-23']
+        await vi.advanceTimersByTimeAsync(5 * 60000)
+        expect(get(stores.prepopulatedDates)).toEqual(dates)
+
+        dates = null
+        await vi.advanceTimersByTimeAsync(5 * 60000)
+        expect(get(stores.prepopulatedDates)).toEqual(['2026-10-22', '2026-10-23'])
     })
 })
