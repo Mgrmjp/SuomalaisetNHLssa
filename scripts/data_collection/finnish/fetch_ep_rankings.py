@@ -20,6 +20,12 @@ DRAFT_YEAR = upcoming_nhl_draft_year()
 BASE_URL = "https://www.eliteprospects.com"
 RANKINGS_OUTPUT = DATA_DIR / "finnish_draft_rankings_ep.json"
 
+# The HTML pages sit behind a Cloudflare managed challenge, but /rss is served
+# to feed readers and still carries the Next.js build id. The data route itself
+# is open, so the rankings stay reachable without a browser. /draft-center is
+# kept as a fallback for when the challenge policy changes again.
+BUILD_ID_PAGES = ("/rss", "/draft-center")
+
 # Ranking slugs to fetch
 SOURCES = {
     "eliteprospects.com": "EliteProspects.com",
@@ -30,18 +36,87 @@ SOURCES = {
     "consolidated-ranking": "Consolidated Ranking"
 }
 
+
+def build_id_from_html(text):
+    """Extract the Next.js build id from a page's HTML."""
+    match = re.search(r'"buildId":"(.*?)"', text or "")
+    return match.group(1) if match else None
+
+
 def get_build_id():
-    """Extract Next.js buildId from the site source."""
-    try:
-        r = requests.get(f"{BASE_URL}/draft-center", timeout=15)
-        r.raise_for_status()
-        # Look for "buildId":"..."
-        match = re.search(r'"buildId":"(.*?)"', r.text)
-        if match:
-            return match.group(1)
-    except Exception as e:
-        print(f"Error getting buildId: {e}")
+    """Find the current Next.js build id from an unprotected page."""
+    for path in BUILD_ID_PAGES:
+        try:
+            r = requests.get(f"{BASE_URL}{path}", timeout=15)
+            r.raise_for_status()
+        except Exception as e:
+            print(f"Error getting buildId from {path}: {e}")
+            continue
+
+        build_id = build_id_from_html(r.text)
+        if build_id:
+            print(f"Build ID: {build_id} (from {path})")
+            return build_id
+
+        print(f"No buildId found in {path}")
+
     return None
+
+
+def extract_ranking_rows(payload):
+    """Pull the ranking rows out of the Next.js page props."""
+    page_props = payload.get("pageProps", {})
+    draft_rankings = page_props.get("draftRankings", {})
+    rows = draft_rankings.get("rankings", [])
+
+    if not rows:
+        # Fallback for consolidated or other variations
+        data_field = page_props.get("data", {})
+        rows = data_field.get("picks", []) or data_field.get("rankings", [])
+
+    return rows
+
+
+def _metric_value(value):
+    """Height and weight arrive either as numbers or as {'metrics': ..., ...}."""
+    if isinstance(value, dict):
+        return value.get("metrics")
+    return value
+
+
+def normalize_ranking_row(row):
+    """Map an EliteProspects ranking row onto our stored player schema.
+
+    The payload shape has changed before: position, team and league used to be
+    top level and now live on player.detailedPosition and playerStats, while
+    height and weight became objects. Read every known layout so a schema
+    change degrades to a partial row instead of raising.
+    """
+    player = row.get("player") or {}
+    stats = row.get("playerStats") or {}
+    latest = player.get("latestStats") or {}
+
+    team = row.get("team") or stats.get("team") or latest.get("team") or {}
+    league = row.get("league") or stats.get("league") or latest.get("league") or {}
+
+    position = player.get("position") or player.get("detailedPosition")
+    if isinstance(position, (list, tuple)):
+        position = position[0] if position else None
+
+    return {
+        "rank": row.get("rank") or row.get("midtermRank"),
+        "name": player.get("name"),
+        "firstName": player.get("firstName"),
+        "lastName": player.get("lastName"),
+        "position": position,
+        "team": team.get("name"),
+        "league": league.get("name"),
+        "birthDate": player.get("dateOfBirth") or player.get("birthDate"),
+        "height": _metric_value(player.get("height")),
+        "weight": _metric_value(player.get("weight")),
+        "playerId": player.get("id"),
+    }
+
 
 def fetch_ranking(build_id, slug, name):
     """Fetch a specific ranking from the Next.js data API."""
@@ -52,69 +127,45 @@ def fetch_ranking(build_id, slug, name):
         "nation": "FIN",
         "sort": "rank"
     }
-    
+
     try:
         print(f"Fetching {name} rankings...")
         r = requests.get(url, params=params, timeout=15)
         r.raise_for_status()
-        data = r.json()
-        
-        # Extract players from the Next.js pageProps structure
-        # Exact path according to inspection: pageProps.draftRankings.rankings
-        page_props = data.get("pageProps", {})
-        draft_rankings = page_props.get("draftRankings", {})
-        players = draft_rankings.get("rankings", [])
-        
-        if not players:
-            # Fallback for consolidated or other variations
-            data_field = page_props.get("data", {})
-            players = data_field.get("picks", []) or data_field.get("rankings", [])
-            
+        rows = extract_ranking_rows(r.json())
+
+        players = []
+        for row in rows:
+            player = normalize_ranking_row(row)
+            if not player["name"]:
+                continue
+            players.append(player)
+
         print(f"  Found {len(players)} Finnish players")
         return players
     except Exception as e:
         print(f"  Error fetching {name}: {e}")
         return []
 
+
 def main():
     build_id = get_build_id()
     if not build_id:
         raise SystemExit("Could not find EliteProspects buildId; rankings were not updated.")
 
-    print(f"Build ID: {build_id}")
-    
     all_rankings = {
         "year": DRAFT_YEAR,
         "updatedAt": datetime.now().isoformat(),
         "sources": []
     }
-    
+
     for slug, name in SOURCES.items():
         players = fetch_ranking(build_id, slug, name)
         if players:
-            # Normalize players for our use
-            normalized_players = []
-            for p in players:
-                # EP structure mapping
-                player_info = p.get("player", {})
-                normalized_players.append({
-                    "rank": p.get("rank") or p.get("midtermRank"),
-                    "name": player_info.get("name"),
-                    "firstName": player_info.get("firstName"),
-                    "lastName": player_info.get("lastName"),
-                    "position": player_info.get("position"),
-                    "team": p.get("team", {}).get("name") or player_info.get("latestStats", {}).get("team", {}).get("name"),
-                    "league": p.get("league", {}).get("name") or player_info.get("latestStats", {}).get("league", {}).get("name"),
-                    "birthDate": player_info.get("dateOfBirth"),
-                    "height": player_info.get("height"),
-                    "weight": player_info.get("weight"),
-                    "playerId": player_info.get("id")
-                })
-            
             all_rankings["sources"].append({
                 "name": name,
                 "slug": slug,
-                "players": normalized_players
+                "players": players
             })
 
     if all_rankings["sources"]:
@@ -122,6 +173,7 @@ def main():
         print(f"Saved {len(all_rankings['sources'])} ranking sources to {RANKINGS_OUTPUT}")
     else:
         raise SystemExit("No draft rankings were fetched; existing data was left untouched.")
+
 
 if __name__ == "__main__":
     main()

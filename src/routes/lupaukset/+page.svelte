@@ -36,6 +36,9 @@ const selectedRankingSource = $derived(
     $draftRankings.sources?.find((s) => s.slug === selectedRankingSlug) ||
         $draftRankings.sources?.[0]
 )
+// The selected source can cover a different draft class than the primary list
+// (EliteProspects publishes the next class before NHL Central Scouting does).
+const draftYearLabel = $derived(String(selectedRankingSource?.year ?? $draftRankings.year ?? 2026))
 let _officialSeasonStatsByName = $state(new Map())
 const _epSeasonStatsByName = $state(new Map())
 let _nhlSeasonStatsById = $state(new Map())
@@ -495,12 +498,12 @@ const allPlayers = $derived(() => {
             const primarySeason = seasonData.primaryEntry
 
             players.push({
-                id: `draft2026-${selectedRankingSource.slug}-${rank}`,
+                id: `draft2026-${selectedRankingSource.slug}-${rank ?? p.playerId ?? draftName}`,
                 name: correctFullName(draftName),
                 position: p.positionCode || p.position,
                 birthDate: p.birthDate,
                 birthCity: p.birthCity,
-                nhlRights: '2026',
+                nhlRights: draftYearLabel,
                 league: primarySeason.league || draftLeague,
                 currentTeam: primarySeason.team || p.lastAmateurClub || p.team,
                 draftRank: rank,
@@ -954,7 +957,7 @@ function _dedupeProspects(players) {
                         selected={activeFilter === 'draft2026'}
                         onclick={() => activeFilter = 'draft2026'}
                     >
-                        Draft 2026
+                        Draft {draftYearLabel}
                     </Button>
                 </ControlGroup>
             </div>
@@ -1059,7 +1062,7 @@ function _dedupeProspects(players) {
                                                 <div class="absolute -bottom-1 -right-1 z-20 border border-slate-100 bg-white p-1">
                                                     <div class="w-7 h-7 flex items-center justify-center">
                                                         {#if player.type === 'draft2026'}
-                                                            <span class="text-[10px] font-black text-amber-600">#{player.draftRank}</span>
+                                                            <span class="text-[10px] font-black text-amber-600">{player.draftRank ? `#${player.draftRank}` : '–'}</span>
                                                         {:else if _getDisplayNhlRights(player.nhlRights)}
                                                             <TeamLogo team={_getDisplayNhlRights(player.nhlRights)} size="24" />
                                                         {/if}
@@ -1075,7 +1078,7 @@ function _dedupeProspects(players) {
                                                 </div>
                                                 {#if player.type === 'draft2026'}
                                                     <div class="inline-block bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                                                        Draft 2026
+                                                        Draft {draftYearLabel}
                                                     </div>
                                                 {/if}
                                             </div>

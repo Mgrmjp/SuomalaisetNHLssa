@@ -70,6 +70,9 @@ jobs:
       - name: Prospects cache guard tests
         run: python scripts/data_collection/finnish/test_prospects_cache.py
 
+      - name: EliteProspects rankings fetcher tests
+        run: python scripts/data_collection/finnish/test_fetch_ep_rankings.py
+
       - name: Standings collector tests
         run: python scripts/data_collection/test_fetch_standings.py
 

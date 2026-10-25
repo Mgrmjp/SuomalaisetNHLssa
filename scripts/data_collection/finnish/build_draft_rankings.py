@@ -96,22 +96,28 @@ def main():
         print(f"Found {len(finns)} Finnish International skaters")
         combined_data["international_skaters"] = finns
 
-    # Load EP rankings if available
+    # Load EP rankings if available. They can cover a newer draft class than the
+    # NHL Central Scouting list, because EliteProspects publishes ahead of the
+    # NHL, so keep the class on every source instead of dropping the snapshot.
     ep_sources = []
+    ep_year = None
     if EP_RANKINGS_FILE.exists():
         try:
             with open(EP_RANKINGS_FILE, 'r') as f:
                 ep_data = json.load(f)
-                if ep_data.get("year") == draft_year:
-                    ep_sources = ep_data.get("sources", [])
-                    print(f"Loaded {len(ep_sources)} EP ranking sources")
+                ep_sources = ep_data.get("sources", [])
+                ep_year = ep_data.get("year")
+                if ep_year == draft_year:
+                    print(f"Loaded {len(ep_sources)} EP ranking sources for {ep_year}")
                 else:
                     print(
-                        f"Skipping EliteProspects rankings for {ep_data.get('year')}; "
-                        f"expected {draft_year}"
+                        f"Keeping {len(ep_sources)} EP ranking sources for {ep_year} "
+                        f"alongside the {draft_year} Central Scouting class"
                     )
         except Exception as e:
             print(f"Error loading EP rankings: {e}")
+            ep_sources = []
+            ep_year = None
 
     # Build multi-source structure
     final_data = {
@@ -122,6 +128,7 @@ def main():
                 "name": "NHL Central Scouting",
                 "slug": "nhl-central",
                 "type": "official",
+                "year": draft_year,
                 "categories": {
                     "north_american": combined_data["north_american_skaters"],
                     "international": combined_data["international_skaters"]
@@ -136,6 +143,7 @@ def main():
             "name": source["name"],
             "slug": source["slug"],
             "type": "independent",
+            "year": ep_year,
             "players": source["players"]
         })
 
