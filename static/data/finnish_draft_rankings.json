@@ -1,11 +1,12 @@
 {
   "year": 2026,
-  "updatedAt": "2026-10-25T14:14:19.937398",
+  "updatedAt": "2026-10-25T16:12:57.819385",
   "sources": [
     {
       "name": "NHL Central Scouting",
       "slug": "nhl-central",
       "type": "official",
+      "year": 2026,
       "categories": {
         "north_american": [
           {
@@ -401,26 +402,19 @@
       "name": "EliteProspects.com",
       "slug": "eliteprospects.com",
       "type": "independent",
+      "year": 2027,
       "players": [
         {
           "rank": null,
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-25",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 194,
-            "metrics": 88
-          },
+          "height": 187,
+          "weight": 88,
           "playerId": "1113813"
         },
         {
@@ -428,20 +422,12 @@
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-04-08",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 187,
+          "weight": 78,
           "playerId": "1032870"
         },
         {
@@ -449,20 +435,12 @@
           "name": "Olli Kylmälä",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-06",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 184,
+          "weight": 78,
           "playerId": "1033455"
         },
         {
@@ -470,20 +448,12 @@
           "name": "Miska Liljeberg",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "F",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-02-20",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 184,
+          "weight": 86,
           "playerId": "1032879"
         },
         {
@@ -491,20 +461,12 @@
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "London Knights",
+          "league": "OHL",
           "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 189,
+          "weight": 86,
           "playerId": "1009106"
         },
         {
@@ -512,20 +474,12 @@
           "name": "Max Syrjäläinen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Jokerit U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-01-30",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'4\"",
-            "metrics": 192
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 187,
-            "metrics": 85
-          },
+          "height": 192,
+          "weight": 85,
           "playerId": "1008855"
         }
       ]
@@ -534,26 +488,19 @@
       "name": "McKeen's Hockey",
       "slug": "mckeen-s-hockey",
       "type": "independent",
+      "year": 2027,
       "players": [
         {
           "rank": null,
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-25",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 194,
-            "metrics": 88
-          },
+          "height": 187,
+          "weight": 88,
           "playerId": "1113813"
         },
         {
@@ -561,20 +508,12 @@
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-04-08",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 187,
+          "weight": 78,
           "playerId": "1032870"
         },
         {
@@ -582,20 +521,12 @@
           "name": "Miska Liljeberg",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "F",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-02-20",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 184,
+          "weight": 86,
           "playerId": "1032879"
         },
         {
@@ -603,20 +534,12 @@
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "London Knights",
+          "league": "OHL",
           "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 189,
+          "weight": 86,
           "playerId": "1009106"
         },
         {
@@ -624,20 +547,12 @@
           "name": "Max Syrjäläinen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Jokerit U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-01-30",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'4\"",
-            "metrics": 192
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 187,
-            "metrics": 85
-          },
+          "height": 192,
+          "weight": 85,
           "playerId": "1008855"
         },
         {
@@ -645,20 +560,12 @@
           "name": "Olli Kylmälä",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-06",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 184,
+          "weight": 78,
           "playerId": "1033455"
         }
       ]
@@ -667,26 +574,19 @@
       "name": "TSN (Craig Button)",
       "slug": "tsn-craig-button",
       "type": "independent",
+      "year": 2027,
       "players": [
         {
           "rank": 12,
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "London Knights",
+          "league": "OHL",
           "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 189,
+          "weight": 86,
           "playerId": "1009106"
         },
         {
@@ -694,20 +594,12 @@
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-25",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 194,
-            "metrics": 88
-          },
+          "height": 187,
+          "weight": 88,
           "playerId": "1113813"
         },
         {
@@ -715,20 +607,12 @@
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-04-08",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 187,
+          "weight": 78,
           "playerId": "1032870"
         },
         {
@@ -736,20 +620,12 @@
           "name": "Miska Liljeberg",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "F",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-02-20",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 184,
+          "weight": 86,
           "playerId": "1032879"
         },
         {
@@ -757,20 +633,12 @@
           "name": "Max Syrjäläinen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Jokerit U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-01-30",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'4\"",
-            "metrics": 192
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 187,
-            "metrics": 85
-          },
+          "height": 192,
+          "weight": 85,
           "playerId": "1008855"
         },
         {
@@ -778,20 +646,12 @@
           "name": "Olli Kylmälä",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-06",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 184,
+          "weight": 78,
           "playerId": "1033455"
         }
       ]
@@ -800,26 +660,19 @@
       "name": "Draft Prospects Hockey",
       "slug": "draft-prospects-hockey",
       "type": "independent",
+      "year": 2027,
       "players": [
         {
           "rank": 12,
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "London Knights",
+          "league": "OHL",
           "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 189,
+          "weight": 86,
           "playerId": "1009106"
         },
         {
@@ -827,20 +680,12 @@
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-25",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 194,
-            "metrics": 88
-          },
+          "height": 187,
+          "weight": 88,
           "playerId": "1113813"
         },
         {
@@ -848,20 +693,12 @@
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-04-08",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 187,
+          "weight": 78,
           "playerId": "1032870"
         },
         {
@@ -869,20 +706,12 @@
           "name": "Olli Kylmälä",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-06",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 184,
+          "weight": 78,
           "playerId": "1033455"
         },
         {
@@ -890,20 +719,12 @@
           "name": "Miska Liljeberg",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "F",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-02-20",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 184,
+          "weight": 86,
           "playerId": "1032879"
         },
         {
@@ -911,20 +732,12 @@
           "name": "Max Syrjäläinen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Jokerit U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-01-30",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'4\"",
-            "metrics": 192
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 187,
-            "metrics": 85
-          },
+          "height": 192,
+          "weight": 85,
           "playerId": "1008855"
         }
       ]
@@ -933,26 +746,19 @@
       "name": "Daily Faceoff",
       "slug": "daily-faceoff",
       "type": "independent",
+      "year": 2027,
       "players": [
         {
-          "rank": 12,
+          "rank": 18,
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "London Knights",
+          "league": "OHL",
           "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 189,
+          "weight": 86,
           "playerId": "1009106"
         },
         {
@@ -960,20 +766,12 @@
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-25",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 194,
-            "metrics": 88
-          },
+          "height": 187,
+          "weight": 88,
           "playerId": "1113813"
         },
         {
@@ -981,20 +779,12 @@
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-04-08",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 187,
+          "weight": 78,
           "playerId": "1032870"
         },
         {
@@ -1002,20 +792,12 @@
           "name": "Miska Liljeberg",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "F",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-02-20",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 184,
+          "weight": 86,
           "playerId": "1032879"
         },
         {
@@ -1023,20 +805,12 @@
           "name": "Max Syrjäläinen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Jokerit U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-01-30",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'4\"",
-            "metrics": 192
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 187,
-            "metrics": 85
-          },
+          "height": 192,
+          "weight": 85,
           "playerId": "1008855"
         },
         {
@@ -1044,20 +818,12 @@
           "name": "Olli Kylmälä",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-06",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 184,
+          "weight": 78,
           "playerId": "1033455"
         }
       ]
@@ -1066,68 +832,45 @@
       "name": "Consolidated Ranking",
       "slug": "consolidated-ranking",
       "type": "independent",
+      "year": 2027,
       "players": [
         {
-          "rank": 17,
+          "rank": 18,
           "name": "Luca Santala",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "London Knights",
+          "league": "OHL",
           "birthDate": "2009-07-28",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 189
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 189,
+          "weight": 86,
           "playerId": "1009106"
         },
         {
-          "rank": 44,
+          "rank": 46,
           "name": "Lenni Kokkonen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-25",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 194,
-            "metrics": 88
-          },
+          "height": 187,
+          "weight": 88,
           "playerId": "1113813"
         },
         {
-          "rank": 53,
+          "rank": 52,
           "name": "Roni Kuukasjärvi",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-04-08",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'2\"",
-            "metrics": 187
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 187,
+          "weight": 78,
           "playerId": "1032870"
         },
         {
@@ -1135,20 +878,12 @@
           "name": "Olli Kylmälä",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "C",
+          "team": "Kärpät U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-03-06",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 172,
-            "metrics": 78
-          },
+          "height": 184,
+          "weight": 78,
           "playerId": "1033455"
         },
         {
@@ -1156,20 +891,12 @@
           "name": "Miska Liljeberg",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "F",
+          "team": "Ilves U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-02-20",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'0\"",
-            "metrics": 184
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 190,
-            "metrics": 86
-          },
+          "height": 184,
+          "weight": 86,
           "playerId": "1032879"
         },
         {
@@ -1177,20 +904,12 @@
           "name": "Max Syrjäläinen",
           "firstName": null,
           "lastName": null,
-          "position": null,
-          "team": null,
-          "league": null,
+          "position": "D",
+          "team": "Jokerit U20",
+          "league": "U20 SM-sarja",
           "birthDate": "2009-01-30",
-          "height": {
-            "__typename": "Height",
-            "imperial": "6'4\"",
-            "metrics": 192
-          },
-          "weight": {
-            "__typename": "Weight",
-            "imperial": 187,
-            "metrics": 85
-          },
+          "height": 192,
+          "weight": 85,
           "playerId": "1008855"
         }
       ]
