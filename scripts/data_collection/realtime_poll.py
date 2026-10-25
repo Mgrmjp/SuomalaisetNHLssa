@@ -137,6 +137,40 @@ def poll_once(dates, force=False):
     return updated
 
 
+def poll_attempts():
+    """How many times a single poll run is attempted before it reports failure."""
+    try:
+        return max(1, int(os.getenv("REALTIME_POLL_ATTEMPTS", "3")))
+    except ValueError:
+        return 3
+
+
+def poll_once_with_retries(dates, force=False, attempts=None, base_delay=15):
+    """Poll once, retrying transient NHL API failures with exponential backoff.
+
+    The NHL API intermittently times out or returns 5xx, mostly around the
+    late-night final-result recovery window. A single blip used to fail the
+    whole workflow run, which made the schedule look broken, so retry a few
+    times (15s, 30s, ...) before giving up and failing loudly.
+    """
+    if attempts is None:
+        attempts = poll_attempts()
+
+    last_error = None
+    for attempt in range(1, attempts + 1):
+        try:
+            return poll_once(dates, force)
+        except Exception as error:
+            last_error = error
+            print(f"Polling attempt {attempt}/{attempts} failed: {error}")
+            if attempt < attempts:
+                delay = base_delay * (2 ** (attempt - 1))
+                print(f"Retrying in {delay}s...")
+                time.sleep(delay)
+
+    raise last_error
+
+
 def main():
     parser = argparse.ArgumentParser(description="Realtime NHL Polling Script")
     parser.add_argument("--date", help="Date to check (YYYY-MM-DD), defaults to yesterday and today UTC")
@@ -150,9 +184,9 @@ def main():
         updated = False
         failed = False
         try:
-            updated = poll_once(poll_dates(args.date), args.force)
+            updated = poll_once_with_retries(poll_dates(args.date), args.force)
         except Exception as error:
-            print(f"Polling failed: {error}")
+            print(f"Polling failed after {poll_attempts()} attempt(s): {error}")
             failed = True
         
         # Set GitHub Action output if running in GA

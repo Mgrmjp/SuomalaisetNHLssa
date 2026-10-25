@@ -35,16 +35,21 @@ jobs:
           pip install --upgrade pip
           pip install -r scripts/data_collection/requirements.txt
 
-      - name: Poll for live games
-        id: poll
+      # Guard checks run as their own step so a broken guard test is reported
+      # as such instead of looking like a failed NHL poll.
+      - name: Guard checks for final-result recovery
         run: |
-          # Guard final-result recovery before polling the NHL feed.
           python scripts/data_collection/test_realtime_poll.py
           python scripts/data_collection/finnish/test_fetch_results.py
           python scripts/test_check_deployment.py
           python scripts/data_collection/test_fetch_standings.py
+
+      - name: Poll for live games
+        id: poll
+        run: |
           # Check for live games and missing final results.
-          # It automatically handles the late-night/early-morning date logic
+          # It automatically handles the late-night/early-morning date logic.
+          # Transient NHL API errors are retried with backoff inside the script.
           python scripts/data_collection/realtime_poll.py --once
 
       - name: Refresh official standings hourly and after result updates
