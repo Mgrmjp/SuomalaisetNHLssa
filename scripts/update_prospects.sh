@@ -11,6 +11,7 @@ set -euo pipefail
 # Colors
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
 # Determine project root and virtual environment
@@ -25,14 +26,46 @@ fi
 
 cd "$PROJECT_ROOT"
 
+EP_FAILED=0
+
+# Age of the EliteProspects snapshot, so staleness stays visible in the output.
+ep_snapshot_age() {
+    "$VENV_PYTHON" - <<'PY' 2>/dev/null || echo "unknown"
+import json
+from datetime import datetime
+from pathlib import Path
+
+path = Path("static/data/finnish_draft_rankings_ep.json")
+try:
+    updated_at = datetime.fromisoformat(json.loads(path.read_text())["updatedAt"])
+    age = datetime.now() - updated_at
+    print(f"{age.days} day(s) old, updated {updated_at:%Y-%m-%d}")
+except Exception:
+    print("unknown")
+PY
+}
+
 echo -e "${BLUE}================================================================${NC}"
 echo -e "${BLUE}🏒 SUOMALAISET NHL:SSÄ - PROSPECTS UPDATE${NC}"
 echo -e "${BLUE}================================================================${NC}"
 echo ""
 
 # Step 1: Update EP Rankings
+# eliteprospects.com sits behind a Cloudflare managed challenge, so this fetch
+# can fail with HTTP 403 through no fault of the repository. That must not stop
+# the NHL rankings and prospects stats below: the previous snapshot is kept and
+# the run reports a warning instead of failing.
 echo -e "${GREEN}[1/3] Fetching EliteProspects Rankings...${NC}"
-"$VENV_PYTHON" scripts/data_collection/finnish/fetch_ep_rankings.py
+if "$VENV_PYTHON" scripts/data_collection/finnish/fetch_ep_rankings.py; then
+    echo -e "${GREEN}EliteProspects rankings refreshed.${NC}"
+else
+    EP_FAILED=1
+    EP_AGE="$(ep_snapshot_age)"
+    echo -e "${YELLOW}EliteProspects rankings were not refreshed; keeping the last snapshot (${EP_AGE}).${NC}"
+    if [ -n "${GITHUB_ACTIONS:-}" ]; then
+        echo "::warning title=EliteProspects rankings stale::The EliteProspects fetch failed (likely a Cloudflare challenge). The last snapshot was kept (${EP_AGE}). NHL rankings and prospects stats were still updated."
+    fi
+fi
 echo ""
 
 # Step 2: Build Unified Rankings
@@ -47,4 +80,8 @@ echo -e "${GREEN}[3/3] Updating Prospects Stats Cache...${NC}"
 
 echo ""
 echo -e "${BLUE}================================================================${NC}"
-echo -e "${GREEN}✅ Prospects update completed!${NC}"
+if [ "$EP_FAILED" -eq 1 ]; then
+    echo -e "${YELLOW}⚠️  Prospects update completed with a warning: EliteProspects rankings are stale ($(ep_snapshot_age)).${NC}"
+else
+    echo -e "${GREEN}✅ Prospects update completed!${NC}"
+fi
