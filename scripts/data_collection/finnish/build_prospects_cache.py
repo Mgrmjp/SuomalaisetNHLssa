@@ -35,6 +35,12 @@ LEAGUE_PROSPECTS_FILES = (
     DATA_DIR / "leagues" / "league_prospects_na.json",
 )
 MAX_LEAGUE_SNAPSHOT_AGE = timedelta(days=45)
+# The pipeline scans this many past draft classes; nobody drafted in that
+# window can be born before the oldest class minus the oldest draft age.
+DRAFT_HISTORY_YEARS = 10
+MAX_DRAFT_AGE = 20
+# Refuse to publish a snapshot that is much smaller than the current one.
+MIN_SNAPSHOT_RATIO = 0.6
 THE_SPORTS_DB_BASE = "https://www.thesportsdb.com/api/v1/json"
 WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
 
@@ -90,6 +96,79 @@ def _append_source(player_obj, source):
     sources = player_obj.setdefault("sources", [])
     if source and source not in sources:
         sources.append(source)
+
+
+def _birth_year(birth_date):
+    """Return the birth year of an ISO date string, or None when unknown."""
+    try:
+        return int(str(birth_date)[:4])
+    except (TypeError, ValueError):
+        return None
+
+
+def draft_history_start_year(today=None):
+    """Return the oldest draft class this pipeline scans."""
+    today = today or datetime.now()
+    return max(2005, today.year - DRAFT_HISTORY_YEARS)
+
+
+def prospect_min_birth_year(today=None):
+    """Return the earliest birth year that can still be a prospect."""
+    return draft_history_start_year(today) - MAX_DRAFT_AGE
+
+
+def is_prospect_birth_date(birth_date):
+    """Return False only when a known birth date rules out a prospect."""
+    year = _birth_year(birth_date)
+    return year is None or year >= prospect_min_birth_year()
+
+
+def count_prospects_in_window(players):
+    """Count rows whose birth date does not rule out a prospect."""
+    return sum(1 for player in players if is_prospect_birth_date(player.get("birthDate")))
+
+
+def load_previous_snapshot():
+    """Load the snapshot that is currently published, if any."""
+    import json
+
+    try:
+        payload = json.loads(PROSPECTS_CACHE_FILE.read_text())
+    except Exception:
+        return []
+    return payload if isinstance(payload, list) else []
+
+
+def assert_snapshot_growth(final_list, previous_players, min_ratio=MIN_SNAPSHOT_RATIO):
+    """Refuse to replace a snapshot with a much smaller one than expected."""
+    previous_in_window = count_prospects_in_window(previous_players)
+    if previous_in_window == 0:
+        return
+
+    minimum = max(1, int(previous_in_window * min_ratio))
+    if len(final_list) < minimum:
+        raise SystemExit(
+            f"Prospect snapshot would shrink from {previous_in_window} to "
+            f"{len(final_list)}, below {int(min_ratio * 100)}% of the current "
+            "snapshot; existing prospect data was left untouched."
+        )
+
+
+def merge_conflict(existing, name, normalized, fields):
+    """Return a reason when an incoming record describes a different person."""
+    existing_name = normalize_person_name(existing.get("name"))
+    if existing_name and normalized and existing_name != normalized:
+        return f"id already belongs to '{existing.get('name')}'"
+
+    existing_birth = _birth_year(existing.get("birthDate"))
+    incoming_birth = _birth_year(fields.get("birthDate"))
+    if existing_birth and incoming_birth and existing_birth != incoming_birth:
+        return (
+            f"birth date {existing.get('birthDate')} does not match "
+            f"{fields.get('birthDate')}"
+        )
+
+    return None
 
 
 def validate_player_merge(
@@ -167,6 +246,22 @@ def upsert_candidate(candidates, by_name, player_id, name, **fields):
         effective_id = str(effective_id)
     if not effective_id:
         return None
+
+    if not is_prospect_birth_date(fields.get("birthDate")):
+        print(
+            f"  SKIP: {name} born {fields.get('birthDate')} is outside the "
+            f"prospect window (>= {prospect_min_birth_year()})"
+        )
+        return None
+
+    existing = candidates.get(effective_id)
+    if existing:
+        conflict = merge_conflict(existing, name, normalized, fields)
+        if conflict:
+            print(
+                f"  SKIP: not merging '{name}' into id {effective_id}: {conflict}"
+            )
+            return None
 
     warnings = validate_player_merge(
         effective_id, name, normalized, candidates, by_name, **fields
@@ -425,7 +520,23 @@ def search_player_id(name, birth_date=None):
                 if birth_match:
                     return birth_match[0].get("playerId")
 
-            return pool[0].get("playerId")
+                # A same-name hit with another birth date is a different player,
+                # and a fallback search hit cannot be confirmed at all. Never
+                # invent an id: a wrong id is far worse than a missing prospect.
+                exact_without_birth = [
+                    row for row in exact_name if not row.get("birthDate")
+                ]
+                if exact_without_birth:
+                    return exact_without_birth[0].get("playerId")
+
+                print(f"  No birth date match for {name}; skipping id lookup")
+                return None
+
+            if exact_name:
+                return exact_name[0].get("playerId")
+
+            print(f"  No exact name match for {name}; skipping id lookup")
+            return None
     except Exception as e:
         print(f"Error searching for {name}: {e}")
     return None
@@ -1052,7 +1163,7 @@ def main():
 
     # 2) Draft history
     current_year = datetime.now().year
-    draft_start_year = max(2005, current_year - 10)
+    draft_start_year = draft_history_start_year()
     draft_years = range(draft_start_year, current_year + 1)
 
     print(
@@ -1240,6 +1351,15 @@ def main():
         time.sleep(0.05)
 
     final_list = dedupe_final_players(final_list)
+    window_before = len(final_list)
+    final_list = [
+        player for player in final_list if is_prospect_birth_date(player.get("birthDate"))
+    ]
+    if len(final_list) != window_before:
+        print(
+            f"\nDropped {window_before - len(final_list)} players outside the "
+            f"prospect window (born before {prospect_min_birth_year()})"
+        )
 
     if failed_teams:
         failed = ", ".join(failed_teams)
@@ -1254,6 +1374,7 @@ def main():
     )
 
     print(f"\nFinal count: {len(final_list)}")
+    assert_snapshot_growth(final_list, load_previous_snapshot())
     save_json(final_list, PROSPECTS_CACHE_FILE)
     print(f"Saved to {PROSPECTS_CACHE_FILE}")
 

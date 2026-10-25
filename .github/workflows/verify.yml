@@ -67,6 +67,9 @@ jobs:
       - name: Roster sync field-preservation tests
         run: python scripts/data_collection/finnish/test_sync_roster.py
 
+      - name: Prospects cache guard tests
+        run: python scripts/data_collection/finnish/test_prospects_cache.py
+
       - name: Standings collector tests
         run: python scripts/data_collection/test_fetch_standings.py
 
