@@ -853,30 +853,6 @@
     "hasCurrentSeasonStats": {}
   },
   {
-    "id": "8480038",
-    "name": "Joni Ikonen",
-    "nhlRights": "MTL",
-    "sources": [
-      "draft_picks:2017"
-    ],
-    "currentTeam": "SÃ¶dertÃ¤lje SK",
-    "league": "HockeyAllsvenskan",
-    "stats": {
-      "gp": 14,
-      "goals": 3,
-      "assists": 4,
-      "points": 7,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {},
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8480038.png",
-    "position": "C",
-    "birthDate": "1999-04-14"
-  },
-  {
     "id": "8485076",
     "name": "Joona Väisänen",
     "nhlRights": "PIT",
@@ -1067,6 +1043,30 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20262027/CAR/8480829.png",
     "position": "C",
     "birthDate": "2000-07-06"
+  },
+  {
+    "id": "8480038",
+    "name": "Joni Ikonen",
+    "nhlRights": "MTL",
+    "sources": [
+      "draft_picks:2017"
+    ],
+    "currentTeam": "SÃ¶dertÃ¤lje SK",
+    "league": "HockeyAllsvenskan",
+    "stats": {
+      "gp": 14,
+      "goals": 2,
+      "assists": 4,
+      "points": 6,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {},
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8480038.png",
+    "position": "C",
+    "birthDate": "1999-04-14"
   },
   {
     "id": "8484773",
@@ -1602,7 +1602,7 @@
     "currentTeam": "New York Rangers",
     "league": "NHL",
     "stats": {
-      "gp": 13,
+      "gp": 14,
       "goals": 3,
       "assists": 1,
       "points": 4,
@@ -1895,8 +1895,7 @@
     "birthDate": "2003-05-08",
     "sources": [
       "team_prospects:CAR",
-      "draft_picks:2021",
-      "thesportsdb"
+      "draft_picks:2021"
     ],
     "currentTeam": "Chicago Wolves",
     "league": "AHL",
@@ -3071,33 +3070,6 @@
     "birthDate": "2003-10-26"
   },
   {
-    "id": "8485041",
-    "name": "Niilopekka Muhonen",
-    "nhlRights": "DAL",
-    "position": "D",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/DAL/8485041.png",
-    "height": 196,
-    "weight": 94,
-    "birthDate": "2006-02-28",
-    "sources": [
-      "team_prospects:DAL",
-      "draft_picks:2024"
-    ],
-    "currentTeam": "Idaho Steelheads",
-    "league": "ECHL",
-    "stats": {
-      "gp": 5,
-      "goals": 0,
-      "assists": 1,
-      "points": 1,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {}
-  },
-  {
     "id": "8479355",
     "name": "Olli Juolevi",
     "nhlRights": "VAN",
@@ -3787,6 +3759,33 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8479338.png",
     "position": "D",
     "birthDate": "1998-06-08"
+  },
+  {
+    "id": "8485041",
+    "name": "Niilopekka Muhonen",
+    "nhlRights": "DAL",
+    "position": "D",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/DAL/8485041.png",
+    "height": 196,
+    "weight": 94,
+    "birthDate": "2006-02-28",
+    "sources": [
+      "team_prospects:DAL",
+      "draft_picks:2024"
+    ],
+    "currentTeam": "Idaho Steelheads",
+    "league": "ECHL",
+    "stats": {
+      "gp": 5,
+      "goals": 0,
+      "assists": 0,
+      "points": 0,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {}
   },
   {
     "id": "8483668",
