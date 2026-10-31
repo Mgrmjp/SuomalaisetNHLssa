@@ -1,66 +1,6 @@
 {
-  "updatedAt": "2026-10-30T12:09:58Z",
+  "updatedAt": "2026-10-31T11:39:52Z",
   "games": [
-    {
-      "gameId": 2026020214,
-      "startTime": "2026-10-30T22:00:00Z",
-      "awayTeam": "NJD",
-      "homeTeam": "VGK",
-      "finnishPlayers": [
-        {
-          "name": "Ville Heinola",
-          "team": "VGK"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020215,
-      "startTime": "2026-10-30T23:00:00Z",
-      "awayTeam": "WPG",
-      "homeTeam": "FLA",
-      "finnishPlayers": [
-        {
-          "name": "Brad Lambert",
-          "team": "WPG"
-        },
-        {
-          "name": "Aleksander Barkov",
-          "team": "FLA"
-        },
-        {
-          "name": "Anton Lundell",
-          "team": "FLA"
-        },
-        {
-          "name": "Eetu Luostarinen",
-          "team": "FLA"
-        },
-        {
-          "name": "Niko Mikkola",
-          "team": "FLA"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020216,
-      "startTime": "2026-10-31T00:00:00Z",
-      "awayTeam": "SEA",
-      "homeTeam": "CGY",
-      "finnishPlayers": [
-        {
-          "name": "Jani Nyman",
-          "team": "SEA"
-        },
-        {
-          "name": "Kaapo Kakko",
-          "team": "SEA"
-        },
-        {
-          "name": "Ville Ottavainen",
-          "team": "SEA"
-        }
-      ]
-    },
     {
       "gameId": 2026020217,
       "startTime": "2026-10-31T17:00:00Z",
@@ -142,6 +82,50 @@
         {
           "name": "Samuel Helenius",
           "team": "LAK"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020222,
+      "startTime": "2026-10-31T20:00:00Z",
+      "awayTeam": "OTT",
+      "homeTeam": "SJS",
+      "finnishPlayers": [
+        {
+          "name": "Nikolas Matinpalo",
+          "team": "OTT"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020223,
+      "startTime": "2026-10-31T23:00:00Z",
+      "awayTeam": "PIT",
+      "homeTeam": "MTL",
+      "finnishPlayers": [
+        {
+          "name": "Ville Koivunen",
+          "team": "PIT"
+        },
+        {
+          "name": "Oliver Kapanen",
+          "team": "MTL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020224,
+      "startTime": "2026-10-31T23:00:00Z",
+      "awayTeam": "TOR",
+      "homeTeam": "VAN",
+      "finnishPlayers": [
+        {
+          "name": "Kevin Lankinen",
+          "team": "VAN"
+        },
+        {
+          "name": "Leevi Meriläinen",
+          "team": "VAN"
         }
       ]
     }
