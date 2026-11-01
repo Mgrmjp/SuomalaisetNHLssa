@@ -1,30 +1,6 @@
 {
-  "updatedAt": "2026-11-01T14:39:19Z",
+  "updatedAt": "2026-11-01T18:22:55Z",
   "games": [
-    {
-      "gameId": 2026020227,
-      "startTime": "2026-11-01T18:00:00Z",
-      "awayTeam": "WPG",
-      "homeTeam": "CAR",
-      "finnishPlayers": [
-        {
-          "name": "Brad Lambert",
-          "team": "WPG"
-        },
-        {
-          "name": "Jesperi Kotkaniemi",
-          "team": "CAR"
-        },
-        {
-          "name": "Juuso Välimäki",
-          "team": "CAR"
-        },
-        {
-          "name": "Sebastian Aho",
-          "team": "CAR"
-        }
-      ]
-    },
     {
       "gameId": 2026020228,
       "startTime": "2026-11-01T20:30:00Z",
@@ -90,18 +66,6 @@
       ]
     },
     {
-      "gameId": 2026020232,
-      "startTime": "2026-11-03T00:00:00Z",
-      "awayTeam": "VGK",
-      "homeTeam": "BOS",
-      "finnishPlayers": [
-        {
-          "name": "Ville Heinola",
-          "team": "VGK"
-        }
-      ]
-    },
-    {
       "gameId": 2026020233,
       "startTime": "2026-11-03T00:00:00Z",
       "awayTeam": "DET",
@@ -138,6 +102,42 @@
         {
           "name": "Teuvo Teravainen",
           "team": "CHI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020237,
+      "startTime": "2026-11-04T00:00:00Z",
+      "awayTeam": "WPG",
+      "homeTeam": "MTL",
+      "finnishPlayers": [
+        {
+          "name": "Brad Lambert",
+          "team": "WPG"
+        },
+        {
+          "name": "Oliver Kapanen",
+          "team": "MTL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020240,
+      "startTime": "2026-11-04T00:00:00Z",
+      "awayTeam": "STL",
+      "homeTeam": "NYR",
+      "finnishPlayers": [
+        {
+          "name": "Aleksanteri Kaskimaki",
+          "team": "STL"
+        },
+        {
+          "name": "Eeli Tolvanen",
+          "team": "NYR"
+        },
+        {
+          "name": "Joonas Korpisalo",
+          "team": "NYR"
         }
       ]
     }
