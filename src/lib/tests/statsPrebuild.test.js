@@ -3,7 +3,7 @@ import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { runInNewContext } from 'node:vm'
-import { afterEach, expect, it } from 'vitest'
+import { afterEach, expect, it, vi } from 'vitest'
 
 /** @type {string[]} */
 const tempDirs = []
@@ -78,3 +78,30 @@ function requireNodeModule(name) {
     if (name === 'path') return nodeRequire('node:path')
     throw new Error(`Unexpected require: ${name}`)
 }
+
+it.each(['', 'test-key'])(
+    'preserves Maccelli before optional AI correction (key: %s)',
+    async (apiKey) => {
+        const source = readFileSync(
+            join(process.cwd(), 'scripts/prebuild/fetch-player-stats.cjs'),
+            'utf8'
+        )
+        /** @type {{ exports: { correctName?: (name: string) => Promise<string> } }} */
+        const module = { exports: {} }
+        const fetch = vi.fn(async () => ({
+            ok: true,
+            json: async () => ({ choices: [{ message: { content: 'Mäccelli' } }] }),
+        }))
+        runInNewContext(`${source}\nmodule.exports.correctName = correctNameWithOpenAI;`, {
+            module,
+            require: requireNodeModule,
+            process: { cwd: () => '/nonexistent-name-test', env: { OPENAI_API_KEY: apiKey } },
+            console: { log() {}, warn() {}, error() {} },
+            fetch,
+        })
+        if (!module.exports.correctName) throw new Error('Name corrector was not loaded')
+        expect(await module.exports.correctName('Maccelli')).toBe('Maccelli')
+        expect(await module.exports.correctName('Mäccelli')).toBe('Maccelli')
+        expect(fetch).not.toHaveBeenCalled()
+    }
+)

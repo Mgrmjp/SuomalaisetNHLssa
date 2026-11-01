@@ -8,6 +8,8 @@
 // In-memory cache with common corrections
 const defaultCorrections = {
     Armiä: 'Armia',
+    Maccelli: 'Maccelli',
+    Mäccelli: 'Maccelli',
     Pyyhtia: 'Pyyhtiä',
     Kaskimaki: 'Kaskimäki',
     Kivenmaki: 'Kivenmäki',
@@ -263,7 +265,7 @@ Name: "${fullName}"`,
         const content = data?.choices?.[0]?.message?.content?.trim()
         const corrected = content ? content.replace(/^"|"$/g, '').split('\n')[0].trim() : ''
 
-        const finalName = corrected || deterministic
+        const finalName = correctFullName(corrected || deterministic)
         llmCorrectionCache.set(cacheKey, finalName)
         return finalName
     } catch (_error) {

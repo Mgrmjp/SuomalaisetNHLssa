@@ -134,6 +134,9 @@ let openaiWarned = false;
  * Correct Finnish name using OpenAI
  */
 async function correctNameWithOpenAI(name) {
+    // Verified spelling: Finnish nationality does not imply Finnish diacritics.
+    if (name === 'Maccelli' || name === 'Mäccelli') return 'Maccelli';
+
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
         if (!openaiWarned) {
