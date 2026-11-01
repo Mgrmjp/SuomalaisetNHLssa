@@ -1,113 +1,46 @@
-# SuomalaisetNHLssa - Development Guide
+# SuomalaisetNHLssa development guide
+
+Start with the [documentation index](docs/README.md). Use [Development](docs/DEVELOPMENT.md) for setup, [Data pipeline](docs/DATA_PIPELINE.md) for collection, and [Testing](docs/TESTING.md) for validation.
 
 ## Commands
 
-### Development
-- `npm run dev` - Start dev server
-- `npm run build` - Production build (runs prebuild first)
-- `npm run build:quick` - Production build without prebuild
+Run commands from the repository root using Linux Node/npm and the project `.venv`.
 
-### Testing
-- `npm test` - Run all vitest tests
-- `npm run test:watch` - Run vitest in watch mode
-- `npm run test:roster` - Run Finnish roster data integrity tests (JS)
-- `npm run test:sync` - Run sync_roster field preservation tests (Python)
+| Task | Command |
+| --- | --- |
+| Start development server | `npm run dev` |
+| Production build with data collection | `npm run build` |
+| Build using existing data | `npm run build:quick` |
+| Refresh season statistics | `npm run data:stats` |
+| Refresh season stats and inactive-player history | `npm run prebuild` |
+| Fetch today through seven days ahead | `npm run data:fetch` |
+| Fetch a date or inclusive date range | `npm run data:fetch:date -- YYYY-MM-DD [YYYY-MM-DD]` |
+| Run Vitest tests | `npm test` |
+| Watch Vitest tests | `npm run test:watch` |
+| Check roster integrity | `npm run test:roster` |
+| Test roster field preservation | `npm run test:sync` |
+| Check JavaScript/Svelte with Biome | `npm run lint` |
+| Check Python with Ruff | `npm run lint:python` |
+| Format frontend files | `npm run format` |
+| Check Svelte types | `npm run check` |
+| Check documentation | `npm run docs:check` |
+| Run docs, lint, type checks and Vitest | `npm run validate` |
 
-### Linting & Validation
-- `npm run lint` - Biome check for frontend and JavaScript scripts
-- `npm run lint:python` - Ruff check for Python scripts (install `requirements-dev.txt` in `.venv`)
-- `npm run format` - Biome format
-- `npm run check` - Svelte type checking
-- `npm run validate` - Run JavaScript and Python lint + check + test
+`npm run dev` and `npm run build:quick` do not refresh season statistics. If a local leaderboard is stale, run `npm run data:stats` and reload. Python tooling requires `requirements-dev.txt` installed in `.venv`.
 
-### Data Pipeline
-- `npm run prebuild` - Fetch player stats + inactive player lastTeam/GP
-- `npm run data:fetch` - Fetch Finnish players for today
-- `npm run data:fetch:date` - Fetch for specific date (pass date as arg)
-- `.venv/bin/python3 scripts/data_collection/finnish/build_cache.py` - Rebuild player cache from NHL API
-- `.venv/bin/python3 scripts/data_collection/finnish/sync_roster.py` - Sync cache to static roster file
+## Data files and preservation
 
-## Key Data Files
-- `static/data/players/finnish-roster.json` - Master roster (277 players, keyed by ID)
-- `scripts/data_collection/finnish/cache/finnish-players.json` - Internal cache
-- `static/data/player-stats/` - Per-season skater/goalie stats
+- `static/data/players/finnish-roster.json`: master roster, keyed by player ID; includes active and inactive players.
+- `scripts/data_collection/finnish/cache/finnish-players.json`: internal player cache.
+- `static/data/player-stats/`: season statistics and collection metadata.
+- `static/data/prepopulated/games/`: daily results; regenerate the manifest after manual collection.
 
-## Inactive Player Data
-Inactive players need `lastTeam` and `gamesPlayed` fields, populated by:
-1. `scripts/prebuild/fetch-last-teams.cjs` - Fetches from NHL Stats API during prebuild
-2. `build_cache.py` - Preserves these fields from existing roster when rebuilding
-3. `sync_roster.py` - Preserves these fields from existing roster when syncing
+Rebuild the cache with `.venv/bin/python3 scripts/data_collection/finnish/build_cache.py`, then publish it with `.venv/bin/python3 scripts/data_collection/finnish/sync_roster.py`.
 
-If inactive players show "-" for GP or "Ei NHL:ssa" for team, re-run: `node scripts/prebuild/fetch-last-teams.cjs`
+Inactive-player `lastTeam` and `gamesPlayed` are collected by `scripts/prebuild/fetch-last-teams.cjs`. Both cache rebuilding and roster syncing must preserve these fields. If inactive players show missing GP or “Ei NHL:ssa” incorrectly, run `node scripts/prebuild/fetch-last-teams.cjs`.
 
-## File Writes on WSL (agent tooling)
+## WSL file access
 
-This repo lives inside WSL at `/home/miikka/dev/suomalaisetnhlssa`, reached from
-Windows through the `\\wsl.localhost\Ubuntu-24.04\...` UNC share.
-
-That share does not support hard links: `link()` fails with
-`ENOTSUP` / "The request is not supported", while `rename()` works. Tools that
-write atomically via link-then-rename therefore fail, even though reads are
-fine. DSH's `write` and `edit` tools are affected; `read`, `grep` and `glob` are not.
-
-Write through WSL instead of a UNC path:
-
-```powershell
-# run project commands in the Linux environment
-wsl.exe -d Ubuntu-24.04 --cd /home/miikka/dev/suomalaisetnhlssa -- npm run dev
-
-# apply edits from a script that runs inside WSL
-wsl.exe -d Ubuntu-24.04 --cd /home/miikka/dev/suomalaisetnhlssa -- python3 /tmp/apply.py
-```
-
-Practical rules:
-
-- Use the **Linux** `node`/`npm`. Running the Windows ones against this repo fails,
-  because `node_modules` contains Linux binaries.
-- Make file edits with `python3`, `sed -i`, or a staged script executed inside WSL,
-  then confirm with `git diff`.
-- Quote bash bodies from PowerShell with **single** quotes; `wsl.exe` strips double
-  quotes out of arguments.
-
-<!-- headroom:rtk-instructions -->
-# RTK (Rust Token Killer) - Token-Optimized Commands
-
-When running shell commands, **always prefix with `rtk`**. This reduces context
-usage by 60-90% with zero behavior change. If rtk has no filter for a command,
-it passes through unchanged — so it is always safe to use.
-
-## Key Commands
-```bash
-# Git (59-80% savings)
-rtk git status          rtk git diff            rtk git log
-
-# Files & Search (60-75% savings)
-rtk ls <path>           rtk read <file>         rtk grep <pattern>
-rtk find <pattern>      rtk diff <file>
-
-# Test (90-99% savings) — shows failures only
-rtk pytest tests/       rtk cargo test          rtk test <cmd>
-
-# Build & Lint (80-90% savings) — shows errors only
-rtk tsc                 rtk lint                rtk cargo build
-rtk prettier --check    rtk mypy                rtk ruff check
-
-# Analysis (70-90% savings)
-rtk err <cmd>           rtk log <file>          rtk json <file>
-rtk summary <cmd>       rtk deps                rtk env
-
-# GitHub (26-87% savings)
-rtk gh pr view <n>      rtk gh run list         rtk gh issue list
-
-# Infrastructure (85% savings)
-rtk docker ps           rtk kubectl get         rtk docker logs <c>
-
-# Package managers (70-90% savings)
-rtk pip list            rtk pnpm install        rtk npm run <script>
-```
-
-## Rules
-- In command chains, prefix each segment: `rtk git add . && rtk git commit -m "msg"`
-- For debugging, use raw command without rtk prefix
-- `rtk proxy <cmd>` runs command without filtering but tracks usage
-<!-- /headroom:rtk-instructions -->
+- Work inside Linux at `/home/miikka/dev/suomalaisetnhlssa`; use Linux Node/npm because dependencies contain Linux binaries.
+- Windows UNC access through `\\wsl.localhost\Ubuntu-24.04\...` does not support hard links. Tools using link-based atomic writes can fail even when reads work; write through WSL using `python3`, `sed -i`, or a Linux-native editor, then inspect `git diff`.
+- From PowerShell, invoke commands through `wsl.exe -d Ubuntu-24.04 --cd /home/miikka/dev/suomalaisetnhlssa -- <command>`. Use single quotes for Bash bodies to preserve quoting.

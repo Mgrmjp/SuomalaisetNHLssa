@@ -18,10 +18,11 @@
     "lint": "biome check src && biome lint scripts --reporter=summary",
     "lint:python": ".venv/bin/python -m ruff check scripts",
     "format": "biome format --write src",
-    "validate": "npm run lint && npm run lint:python && npm run check && npm run test",
+    "validate": "npm run docs:check && npm run lint && npm run lint:python && npm run check && npm run test",
     "validate:seo": "npm run build:quick && npm run test:seo",
     "validate:fix": "npm run format && npm run validate",
     "validate:watch": "concurrently \"npm run check:watch\" \"npm run lint -- --watch\" \"npm run test:watch\"",
+    "data:stats": "node scripts/prebuild/fetch-player-stats.cjs",
     "data:fetch": ".venv/bin/python3 scripts/data_collection/finnish/fetch.py",
     "data:fetch:date": ".venv/bin/python3 scripts/data_collection/finnish/fetch.py",
     "data:fetch:season": ".venv/bin/python3 scripts/data_collection/season/fetch_season_games.py",
@@ -40,7 +41,8 @@
     "prospects:leagues:update": "npm run prospects:scrape && npm run prospects:na && npm run prospects:mestis && npm run prospects:headshots:sync && npm run prospects:cache:build && npm run goalies:collect",
     "prepare": "husky",
     "data:standings": ".venv/bin/python3 scripts/data_collection/fetch_standings.py",
-    "test:standings": ".venv/bin/python3 scripts/data_collection/test_fetch_standings.py && vitest run src/lib/tests/standingsSnapshot.test.js"
+    "test:standings": ".venv/bin/python3 scripts/data_collection/test_fetch_standings.py && vitest run src/lib/tests/standingsSnapshot.test.js",
+    "docs:check": "python3 scripts/check_docs.py"
   },
   "lint-staged": {
     "src/**/*.{js,svelte}": [

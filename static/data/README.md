@@ -1,24 +1,9 @@
-# Application data
+# Published data
 
-This directory contains the datasets served by the static SvelteKit application.
+This directory is served by the static application and copied into production builds. [Data pipeline](../../docs/DATA_PIPELINE.md#ownership-and-outputs) documents ownership and refresh commands; [Player data](../../docs/PLAYER_DATA.md) documents roster/game schemas.
 
-## Primary locations
+Primary datasets include daily snapshots under `prepopulated/games/`, the master roster under `players/`, season statistics under `player-stats/`, plus the games manifest, standings, upcoming Finnish games, verified news and prospect inputs/caches.
 
-- `prepopulated/games/` — daily game and Finnish-player data keyed by date
-- `players/finnish-roster.json` — master Finnish NHL roster
-- `player-stats/` — season-level skater and goalie statistics
-- `leagues/league_prospects_official.json` — official league prospect data
-- `leagues/league_prospects_advanced.json` — supplemental prospect data
-- `leagues/league_prospects_na.json` — North American prospect data
-- `finnish_prospects.json` — application-ready prospect cache
-- `finnish_draft_rankings.json` — merged draft rankings
-- `games_manifest.json` — dates available under `prepopulated/games/`
+Treat collection timestamps and source state as evidence of freshness. Fixed file/player totals are not configuration. Preserve good snapshots on upstream failure, regenerate the date manifest after dated-file changes, and publish the complete intended data revision.
 
-## Data flow
-
-1. Collectors write daily games to `prepopulated/games/` and source-specific data files.
-2. Cache builders merge source data into the application-ready datasets.
-3. `generate_manifest.py` updates `games_manifest.json` from the daily game files.
-4. SvelteKit copies this directory into the static production build.
-
-Timestamped season exports, backups, debugging captures, and one-off expanded datasets are generated artifacts and intentionally excluded from Git and production builds.
+Research exports, backups and debugging captures are not authoritative homepage inputs. Review repository ignore rules before adding generated artifacts.

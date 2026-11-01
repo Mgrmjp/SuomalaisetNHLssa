@@ -1,144 +1,41 @@
-# Suomalaiset NHL:ssä — Finnish NHL Player Tracker
+# Suomalaiset NHL:ssä
 
-[![Svelte](https://img.shields.io/badge/Svelte-5-orange)](https://svelte.dev/)
-[![SvelteKit](https://img.shields.io/badge/SvelteKit-2-blue)](https://kit.svelte.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-blue)](https://tailwindcss.com/)
+A Finnish NHL dashboard for daily player performances, official standings, teams and season scoring leaders. The site is built with Svelte 5, SvelteKit 2 and Tailwind CSS 4, then published as static files to GitHub Pages.
 
-A comprehensive web app for tracking Finnish NHL players — daily stats, standings, prospects, scouting reports, weekly recaps, and more. Automatically updated via GitHub Actions and deployed to GitHub Pages.
+Live site: [suomalaisetnhlssa.fi](https://suomalaisetnhlssa.fi).
 
-**Live:** [suomalaisetnhlssa.fi](https://suomalaisetnhlssa.fi)
+## Start locally
 
-## Features
-
-- **Dashboard** — daily Finnish player stats, live game tracking, scoring summaries
-- **Player profiles** — detailed season stats, career history, headshots, transfer history
-- **Standings** — NHL conference/division standings with playoff indicators
-- **Points leaderboard** (Pistepörssi) — season scoring leaders among Finnish players
-- **Teams** (Joukkueet) — Finnish players grouped by NHL team
-- **Prospects** (Lupaukset) — draft rankings, prospect stats, scouting reports
-- **Scouting reports** — in-depth analysis of top Finnish prospects
-- **Weekly recaps** (Viikkokatsaus) — editorial weekly summaries with featured players
-- **Draft history** — Finnish NHL draft picks through the years
-- **Championships** (Mestaruudet) — Stanley Cup winners with Finnish players
-- **Realtime updates** — live polling during games, every 10 minutes via GitHub Actions
-- **Calendar** — browse past games and stats by date
-- **Ad system** — sponsor banners with adblock-friendly fallback messaging
-
-## Tech Stack
-
-- **Svelte 5** + **SvelteKit 2** (static adapter)
-- **Tailwind CSS 4** via PostCSS
-- **TypeScript** (with `@ts-nocheck` in most components)
-- **lucide-svelte** for icons
-- **Swiper** for player card carousels
-- **marked** for markdown rendering (weekly recaps, scouting reports)
-- **Python** — data collection, scraping, roster management
-- **Biome** — linting and formatting
-- **Vitest** — testing
-- **Husky** + lint-staged — pre-commit hooks
-- **GitHub Actions** — daily data updates, realtime polling, deployment
-
-## Local Development
+Use Linux Node/npm when working in WSL. CI uses Node 25; Python collectors run on Python 3.10 or newer.
 
 ```bash
-git clone https://github.com/Mgrmjp/SuomalaisetNHLssa.git
-cd SuomalaisetNHLssa
-npm install
-python3.10 -m venv .venv
-.venv/bin/python -m pip install -r scripts/data_collection/requirements.txt -r requirements-dev.txt
+npm ci
 npm run dev
 ```
 
-Available at `http://localhost:3000`.
+The dev server uses `http://localhost:3000`. Existing snapshots work without API keys or Python setup. See [Development](docs/DEVELOPMENT.md) before collecting data or running a full production build.
 
-## Commands
+## Common commands
 
-```bash
-# Development
-npm run dev              # Dev server
-npm run build            # Production build (runs prebuild first)
-npm run build:quick      # Production build without prebuild
-npm run preview          # Preview production build
+| Task | Command |
+| --- | --- |
+| Develop against existing data | `npm run dev` |
+| Build without fetching data | `npm run build:quick` |
+| Build with season-stat prebuild collection | `npm run build` |
+| Preview the build on port 4173 | `npm run preview` |
+| Check documentation | `npm run docs:check` |
+| Check Svelte types | `npm run check` |
+| Run Vitest | `npm test` |
+| Run lint, type checks and tests | `npm run validate` |
 
-# Validation
-npm run validate         # JS and Python lint + type check + tests
-npm run lint             # Biome check for src and JS scripts
-npm run lint:python      # Ruff check for Python scripts
-npm run format           # Biome format
-npm run check            # Svelte type checking
-npm run test             # Vitest tests
+`package.json` is the command source of truth. `npm run build` automatically runs `prebuild`; `build:quick` skips that network step.
 
-# Data pipeline
-npm run data:fetch       # Fetch Finnish players for today
-npm run data:fetch:date  # Fetch for specific date
-npm run data:news:daily  # Generate daily news summary
-npm run data:realtime    # Poll for live game updates
-npm run goalies:collect  # Collect goalie stats
+## How updates reach the site
 
-# Player roster (Python pipeline is authoritative)
-.venv/bin/python3 scripts/data_collection/finnish/build_cache.py  # Rebuild cache from NHL API
-.venv/bin/python3 scripts/data_collection/finnish/sync_roster.py  # Sync cache to static roster
+Python collectors save JSON snapshots under `static/data/`. Scheduled GitHub Actions commit data and publish a static build. The browser refreshes published snapshots; it does not collect live results from the NHL API itself. Local data changes are not automatically deployed.
 
-# Prospects
-npm run prospects:leagues:update  # Full prospects data refresh
-npm run prospects:scrape          # Scrape official league stats
-npm run prospects:na              # College/NCAA stats
-npm run prospects:mestis          # Mestis league stats
-```
+## Documentation
 
-## Data Pipeline
+Start at the [documentation index](docs/README.md) for setup, configuration, architecture, data operations, deployment, testing and UI conventions. [AGENTS.md](AGENTS.md) adds repository-specific instructions for coding agents and WSL tooling.
 
-The site runs on a multi-layer data pipeline:
-
-1. **Daily update** (06:00 UTC) — fetches game results, updates roster, generates news, rebuilds and deploys
-2. **Realtime polling** (every 10 min) — checks for live games during NHL game windows
-3. **Prospects update** (07:00 UTC) — scrapes league stats for Finnish prospects
-4. **Prebuild** — fetches season stats and inactive player data before each build (`npm run build` triggers it automatically via the npm `prebuild` lifecycle; use `build:quick` to skip)
-
-Data is stored as static JSON files in `static/data/` and committed to the repo. The site is fully static — no server-side rendering at runtime.
-
-### Snapshot production order
-
-Both data workflows follow the same sequence; the manifest is always
-regenerated before the data is committed as one snapshot:
-
-1. Collect (games, standings, news) → 2. Reconcile roster (`sync_roster.py`)
-→ 3. Enrich (prebuild at build time) → 4. Regenerate `games_manifest.json`
-→ 5. Commit the complete snapshot → 6. Build and deploy.
-
-Ownership: `sync_roster.py` owns `static/data/players/finnish-roster.json` and
-preserves `lastTeam`/`gamesPlayed` from the previous output; the prebuild
-scripts enrich stats; the shared `save_json` writer replaces files atomically
-so failed writes never truncate an existing snapshot. Pull requests are
-checked by the `Verify` workflow (lint, Svelte check, Vitest, Python tests).
-
-## Project Structure
-
-```
-src/
-  routes/           # SvelteKit pages (one per route)
-  lib/
-    components/     # Shared UI components
-      game/         # Game-related (DateControls, PlayerList, etc.)
-      ui/           # Generic UI (NavTabs, AdContainer, etc.)
-      standings/    # Standings components
-    stores/         # Svelte stores (gameData, ads, etc.)
-    server/         # Server-side load functions
-    utils/          # Helpers (dates, headshots, team mapping)
-    tests/          # Component tests
-  app.css           # Global styles + design tokens
-static/
-  data/             # Static JSON data (roster, games, stats)
-  nhl-logos/        # Team logos
-scripts/
-  data_collection/  # Python data pipeline
-  prebuild/         # Node.js prebuild scripts
-```
-
-## Deployment
-
-The site is deployed to GitHub Pages via the `Daily Data Update and Deploy` workflow. Every push to `main` and every scheduled run triggers a full build and deploy.
-
-## License
-
-Personal project. Feel free to browse or fork.
+Editorial Markdown under `content/` is website content, not development documentation.
