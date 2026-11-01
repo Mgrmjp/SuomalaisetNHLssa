@@ -50,6 +50,7 @@ jobs:
           .venv/bin/python scripts/data_collection/finnish/test_fetch_results.py
           .venv/bin/python scripts/test_check_deployment.py
           .venv/bin/python scripts/test_daily_update.py
+          .venv/bin/python scripts/test_generate_daily_news.py
           .venv/bin/python scripts/data_collection/test_fetch_standings.py
 
       - name: Validate Finnish players cache

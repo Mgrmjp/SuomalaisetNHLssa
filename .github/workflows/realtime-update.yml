@@ -43,6 +43,7 @@ jobs:
           python scripts/data_collection/finnish/test_fetch_results.py
           python scripts/test_check_deployment.py
           python scripts/data_collection/test_fetch_standings.py
+          python scripts/test_generate_daily_news.py
 
       - name: Poll for live games
         id: poll
@@ -63,18 +64,25 @@ jobs:
             python scripts/data_collection/fetch_standings.py || echo "::warning::Standings refresh failed; previous snapshot preserved"
           fi
 
+      - name: Refresh verified Finnish news hourly
+        id: news
+        env:
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/generate_daily_news.py
+
       - name: Sync Finnish players roster
         if: steps.poll.outputs.updated == 'true'
         run: |
           python scripts/data_collection/finnish/sync_roster.py
 
       - name: Commit and push updated data
-        if: steps.poll.outputs.updated == 'true' || steps.standings.outputs.updated == 'true'
+        if: steps.poll.outputs.updated == 'true' || steps.standings.outputs.updated == 'true' || steps.news.outputs.updated == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           # The poll also regenerates the manifest; commit it before rebasing.
-          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/games_manifest.json static/data/standings.json
+          git add static/data/prepopulated/games/ static/data/players/finnish-roster.json static/data/games_manifest.json static/data/standings.json static/data/daily-news.json static/data/daily-news-source-cache.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else

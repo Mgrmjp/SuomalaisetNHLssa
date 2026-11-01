@@ -1,216 +1,84 @@
+// @ts-nocheck
 import { describe, expect, it } from 'vitest'
+import { normalizeDailyNewsItem, selectDailyNews } from '$lib/utils/dailyNews.js'
 
-import { getIsoWeekKey, normalizeDailyNewsItem, selectDailyNews } from '$lib/utils/dailyNews.js'
+const now = new Date('2026-11-01T12:00:00Z')
+const article = (extra = {}) => ({
+    title: 'Aleksander Barkov returns to practice',
+    summary: 'Barkov returned to Panthers practice after an injury.',
+    url: 'https://www.nhl.com/panthers/news/barkov-update',
+    source: 'NHL.com',
+    publishedAt: '2026-11-01T09:00:00Z',
+    publicationVerified: true,
+    publicationSource: 'article:published_time',
+    matchedPlayers: ['Aleksander Barkov'],
+    ...extra,
+})
+const select = (items) => selectDailyNews({ byDate: { '2026-11-01': items } }, '2026-11-01', 2, now)
 
-describe('dailyNews helpers', () => {
-    it('builds ISO week keys from daily dates', () => {
-        expect(getIsoWeekKey('2026-04-13')).toBe('2026-W16')
-        expect(getIsoWeekKey('2025-12-31')).toBe('2026-W01')
-    })
-
-    it('prefers exact-date news over weekly fallback', () => {
-        const newsIndex = {
-            byDate: {
-                '2026-04-13': [{ id: 'exact-1' }, { id: 'exact-2' }],
-            },
-            byWeek: {
-                '2026-W16': [{ id: 'week-1' }],
-            },
+describe('verified Finnish NHL news', () => {
+    it('rejects missing, unverified, old, future and date-only publication dates', () => {
+        for (const extra of [
+            { publishedAt: undefined },
+            { publicationVerified: false },
+            { publishedAt: '2026-10-30T11:59:59Z' },
+            { publishedAt: '2026-11-01T12:00:01Z' },
+            { publishedAt: '2026-11-01' },
+        ]) {
+            expect(select([article(extra)])).toEqual([])
         }
-
-        expect(selectDailyNews(newsIndex, '2026-04-13')).toEqual([
-            { id: 'exact-1' },
-            { id: 'exact-2' },
-        ])
+        expect(select([article({ publishedAt: '2026-10-30T12:00:00Z' })])).toHaveLength(1)
     })
-
-    it('falls back to weekly news when the exact date is missing', () => {
-        const newsIndex = {
-            byDate: {},
-            byWeek: {
-                '2026-W16': [
-                    { id: 'week-1' },
-                    { id: 'week-2' },
-                    { id: 'week-3' },
-                    { id: 'week-4' },
-                ],
-            },
-        }
-
-        expect(selectDailyNews(newsIndex, '2026-04-15')).toEqual([
-            { id: 'week-1' },
-            { id: 'week-2' },
-            { id: 'week-3' },
-        ])
+    it('requires a Finnish player in the headline, not a passing summary mention', () => {
+        expect(select([article({ title: 'NHL morning roundup' })])).toEqual([])
+        expect(select([article({ matchedPlayers: [] })])).toEqual([])
+        expect(select([article({ url: 'javascript:alert(1)' })])).toEqual([])
     })
-
-    it('normalizes generic fallback translations into readable news cards', () => {
-        const normalized = normalizeDailyNewsItem({
-            title: 'NHL Rumor Mill – May 6, 2026',
-            summary:
-                "Check out the latest on the Penguins, Bruins, Blue Jackets, and Sharks in today's NHL Rumor Mill.",
-            source: '',
-            url: 'https://www.spectorshockey.net/2026/05/nhl-rumor-mill-may-6-2026/',
-            matchedDate: '2026-05-09',
-            translatedTitle: 'NHL-lähde julkaisi NHL-uutisen 9.5.2026',
-            translatedSummary:
-                " julkaisi 9.5.2026 NHL-aiheisen jutun. Alkuperäinen kuvaus: Check out the latest on the Penguins, Bruins, Blue Jackets, and Sharks in today's NHL Rumor Mill.",
-        })
-
-        expect(normalized).toMatchObject({
-            source: 'Spectors Hockey',
-            translatedTitle: 'NHL:n huhukatsaus 9.5.2026',
-            translatedSummary: 'Kooste päivän siirtohuhuista ja puheenaiheista NHL:ssä.',
-        })
-    })
-
-    it('filters cookie banners, betting promos, and stat pages out of the fallback news', () => {
-        const newsIndex = {
-            byDate: {
-                '2026-05-16': [
-                    {
-                        title: 'NHL betting',
-                        summary:
-                            'Discover a winning edge at VSiN! Gain expert insights, exclusive tips, betting splits, real-time odds, and live broadcasts.',
-                        url: 'https://www.nhl.com/partner/vsin',
-                    },
-                    {
-                        title: 'NHL cookie notice',
-                        summary:
-                            'We and our third-party partners may use cookies and similar technologies to enhance site navigation.',
-                        url: 'https://www.nhl.com/info/cookies',
-                    },
-                    {
-                        title: 'NHL live leaders',
-                        summary:
-                            'Get the latest NHL live scoring leaders on May 16, 2026. Play fantasy hockey, follow players from around the NHL, and more.',
-                        url: 'https://www.nhl.com/stats/skaters',
-                    },
-                    {
-                        title: '2025-26 NHL Scores and Schedule 20/10/2025 - The Athletic',
-                        summary:
-                            'Full schedule for the 2025-26 NHL season with a list of matchups, game times, TV channels, scores, and stadium information.',
-                        url: 'https://www.nytimes.com/athletic/nhl/schedule/2025-10-20/',
-                    },
-                ],
-            },
-            byWeek: {},
-        }
-
-        expect(selectDailyNews(newsIndex, '2026-05-16')).toEqual([])
-    })
-
-    it('uses weekly fallback when exact-date items are filtered out as junk', () => {
-        const newsIndex = {
-            byDate: {
-                '2026-05-16': [
-                    {
-                        title: 'NHL cookie notice',
-                        summary:
-                            'We and our third-party partners may use cookies and similar technologies to enhance site navigation.',
-                        url: 'https://www.nhl.com/info/cookies',
-                    },
-                ],
-            },
-            byWeek: {
-                '2026-W20': [
-                    {
-                        title: 'NHL Morning Recap – May 16, 2026',
-                        summary:
-                            'Today, we will be looking at the scores of all NHL games played on May 15, 2026.',
-                        source: 'Thehockeywriters',
-                        url: 'https://thehockeywriters.com/nhl-morning-recap-may-16-2026/',
-                        matchedDate: '2026-05-16',
-                    },
-                ],
-            },
-        }
-
-        expect(selectDailyNews(newsIndex, '2026-05-16')).toMatchObject([
-            {
-                translatedTitle: 'NHL:n kierroskatsaus 16.5.2026',
-                translatedSummary: 'Yhteenveto päivän NHL-otteluista ja käännekohdista.',
-            },
-        ])
-    })
-
-    it('prioritizes higher-quality trusted stories over promo-like entries', () => {
-        const newsIndex = {
-            byDate: {
-                '2026-05-27': [
-                    {
-                        title: 'NHL Free Picks and Predictions for Today 5/27/2026',
-                        summary: 'Dawg of the Day and best bets for tonight.',
-                        source: 'YouTube',
-                        url: 'https://www.youtube.com/watch?v=dKt_SVMmC54',
-                    },
-                    {
-                        title: 'Stanley Cup Playoffs Edition – May 27, 2026',
-                        summary:
-                            "Undrafted forward Cole Smith scored the series-clinching goal to propel the Golden Knights to a sweep of the Presidents' Trophy winners.",
-                        source: 'NHL Media',
-                        url: 'https://media.nhl.com/public/news/19859',
-                        matchedDate: '2026-05-27',
-                    },
-                ],
-            },
-            byWeek: {},
-        }
-
-        const selected = selectDailyNews(newsIndex, '2026-05-27')
-        expect(selected).toHaveLength(1)
-        expect(selected[0]).toMatchObject({
-            source: 'NHL Media',
-            url: 'https://media.nhl.com/public/news/19859',
-        })
-    })
-
-    it('dedupes equivalent stories with tracking query differences', () => {
-        const newsIndex = {
-            byDate: {
-                '2026-05-30': [
-                    {
-                        title: 'NHL Morning Recap – May 30, 2026',
-                        summary: 'Daily NHL recap with key game takeaways and player performances.',
-                        source: 'The Hockey Writers',
-                        url: 'https://thehockeywriters.com/nhl-morning-recap-may-30-2026/?utm_source=x',
-                    },
-                    {
-                        title: 'NHL Morning Recap – May 30, 2026',
-                        summary: 'Daily NHL recap with key game takeaways and player performances.',
-                        source: 'The Hockey Writers',
-                        url: 'https://www.thehockeywriters.com/nhl-morning-recap-may-30-2026/',
-                    },
-                ],
-            },
-            byWeek: {},
-        }
-
-        const selected = selectDailyNews(newsIndex, '2026-05-30')
-        expect(selected).toHaveLength(1)
-    })
-
-    it('keeps mainstream non-promo stories available for fallback cards', () => {
-        const newsIndex = {
-            byDate: {
-                '2026-05-27': [
-                    {
-                        title: "NHL's top 12 UFAs of 2026: Latest rumours, reports - Sportsnet",
-                        summary:
-                            'Consider the long list of star talent who had the option of going to the highest bidder on Canada Day but instead elected to re-up with their current team.',
-                        source: 'Sportsnet Ca',
-                        url: 'https://www.sportsnet.ca/nhl/article/nhls-top-12-ufas-of-2026-latest-rumours-reports',
-                        matchedDate: '2026-05-27',
-                    },
-                ],
-            },
-            byWeek: {},
-        }
-
-        const selected = selectDailyNews(newsIndex, '2026-05-27')
-        expect(selected).toHaveLength(1)
-        expect(selected[0].translatedTitle).toBe(
-            "NHL's top 12 UFAs of 2026: Latest rumours, reports - Sportsnet"
+    it('never uses generic dated titles or summaries as translations', () => {
+        const result = normalizeDailyNewsItem(
+            article({
+                translatedTitle: 'NHL:n päivän puheenaiheet 1.11.2026',
+                translatedSummary: 'Kooste päivän tärkeimmistä NHL-uutisista.',
+            })
         )
+        expect(result.translatedTitle).toBe(article().title)
+        expect(result.translatedSummary).toBe(article().summary)
+    })
+    it('preserves verified faithful translations tied to the original text', () => {
+        const item = article({
+            translatedTitle: 'Aleksander Barkov palasi harjoituksiin',
+            translatedSummary: 'Barkov palasi Panthersin harjoituksiin loukkaantumisen jälkeen.',
+            translationSourceTitle: article().title,
+            translationSourceSummary: article().summary,
+        })
+        expect(normalizeDailyNewsItem(item).translatedTitle).toBe(item.translatedTitle)
+    })
+    it('deduplicates stories and shows at most two, newest first', () => {
+        const items = [
+            article({ publishedAt: '2026-11-01T08:00:00Z' }),
+            article({ url: `${article().url}?utm_source=test` }),
+            article({
+                title: 'Sebastian Aho scores',
+                matchedPlayers: ['Sebastian Aho'],
+                url: 'https://www.nhl.com/hurricanes/news/aho',
+                publishedAt: '2026-11-01T10:00:00Z',
+            }),
+            article({
+                title: 'Barkov speaks after practice',
+                url: 'https://www.nhl.com/panthers/news/interview',
+            }),
+        ]
+        const result = select(items)
+        expect(result).toHaveLength(2)
+        expect(result[0].title).toBe('Sebastian Aho scores')
+        expect(new Set(result.map((item) => item.url)).size).toBe(2)
+    })
+    it('does not use unverified weekly fallbacks or display articles on dates before publication', () => {
+        expect(
+            selectDailyNews({ byWeek: { '2026-W44': [article()] } }, '2026-11-01', 2, now)
+        ).toEqual([])
+        expect(
+            selectDailyNews({ byDate: { '2026-11-01': [article()] } }, '2026-10-31', 2, now)
+        ).toEqual([])
     })
 })
