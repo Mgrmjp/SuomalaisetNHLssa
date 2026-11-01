@@ -1,7 +1,8 @@
 <script>
 // @ts-nocheck
 
-import { Calendar, ChevronLeft, ChevronRight } from 'lucide-svelte'
+import { Calendar, ChevronLeft, ChevronRight, X } from 'lucide-svelte'
+import { tick } from 'svelte'
 import {
     availableDates,
     currentDateReadOnly,
@@ -11,6 +12,10 @@ import {
     showCalendarView,
 } from '$lib/stores/gameData.js'
 import MonthView from './MonthView.svelte'
+
+let controlsElement = $state(null)
+let pickerButton = $state(null)
+let closeButton = $state(null)
 
 // Convert reactive statements to $derived
 const currentDateValue = $derived($selectedDate || formatLocalDate($currentDateReadOnly))
@@ -59,10 +64,6 @@ function _goToToday() {
 
     if (todayOrClosest.length > 0 && todayOrClosest[0]) {
         setDate(formatLocalDate(todayOrClosest[0]))
-    } else if (availableDateObjects.length > 0) {
-        // If no dates are available up to today, use the latest available date
-        const latestAvailable = availableDateObjects.sort((a, b) => b.getTime() - a.getTime())[0]
-        setDate(formatLocalDate(latestAvailable))
     }
 }
 
@@ -72,7 +73,7 @@ function _goToNextDay() {
 
     // Find the next available date
     const nextDates = availableDateObjects
-        .filter((d) => d.getTime() > currentDateObj.getTime())
+        .filter((d) => d.getTime() > currentDateObj.getTime() && formatLocalDate(d) <= maxDate)
         .sort((a, b) => a.getTime() - b.getTime())
 
     if (nextDates.length > 0 && nextDates[0]) {
@@ -98,12 +99,39 @@ function _formatDotted(date) {
     })
 }
 
-function _toggleCalendar() {
-    showCalendarView.update((v) => !v)
+function _closeCalendar() {
+    showCalendarView.set(false)
+    pickerButton?.focus()
+}
+
+async function _toggleCalendar() {
+    if ($showCalendarView) {
+        _closeCalendar()
+        return
+    }
+    showCalendarView.set(true)
+    await tick()
+    closeButton?.focus()
+}
+
+function _dismissOutside(event) {
+    if ($showCalendarView && controlsElement && !controlsElement.contains(event.target)) {
+        // Keep focus on the outside control the visitor chose.
+        showCalendarView.set(false)
+    }
+}
+
+function _handleEscape(event) {
+    if ($showCalendarView && event.key === 'Escape') {
+        event.preventDefault()
+        _closeCalendar()
+    }
 }
 </script>
 
-<div class="date-controls">
+<svelte:window onpointerdown={_dismissOutside} onfocusin={_dismissOutside} onkeydown={_handleEscape} />
+
+<div class="date-controls" bind:this={controlsElement}>
     <div class="date-controls__card">
         <div class="date-controls__label">Valittu päivämäärä</div>
         <div class="date-controls__navigation-row">
@@ -121,8 +149,12 @@ function _toggleCalendar() {
             <button
                 type="button"
                 onclick={_toggleCalendar}
+                bind:this={pickerButton}
                 class="date-controls__picker-input picker-input"
-                aria-label="Avaa kalenteri"
+                aria-label={$showCalendarView ? 'Sulje kalenteri' : 'Avaa kalenteri'}
+                aria-expanded={$showCalendarView}
+                aria-haspopup="dialog"
+                aria-controls={$showCalendarView ? 'date-controls-calendar' : undefined}
             >
                 <span>
                     {#if currentDateValue}
@@ -131,7 +163,11 @@ function _toggleCalendar() {
                         Valitse päivämäärä
                     {/if}
                 </span>
-                <Calendar aria-hidden="true" />
+                {#if $showCalendarView}
+                    <X aria-hidden="true" />
+                {:else}
+                    <Calendar aria-hidden="true" />
+                {/if}
             </button>
 
             <button
@@ -155,8 +191,25 @@ function _toggleCalendar() {
         </div>
 
         {#if $showCalendarView}
-            <div class="date-controls__calendar">
-                <MonthView />
+            <div
+                id="date-controls-calendar"
+                class="date-controls__calendar"
+                role="dialog"
+                aria-labelledby="date-controls-calendar-title"
+            >
+                <div class="date-controls__calendar-header">
+                    <span id="date-controls-calendar-title">Valitse päivämäärä</span>
+                    <button
+                        type="button"
+                        class="date-controls__close"
+                        bind:this={closeButton}
+                        onclick={_closeCalendar}
+                        aria-label="Sulje kalenteri"
+                    >
+                        Sulje <X aria-hidden="true" />
+                    </button>
+                </div>
+                <MonthView onSelect={_closeCalendar} />
             </div>
         {/if}
     </div>
@@ -283,9 +336,59 @@ function _toggleCalendar() {
     }
 
     .date-controls__calendar {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        z-index: 20;
+        width: min(22.5rem, calc(100vw - 2rem));
+        max-height: min(34rem, calc(100dvh - 10rem));
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: 0.5rem;
+        border: var(--card-border);
+        border-radius: var(--toolbar-radius, 14px);
+        background: var(--card-bg);
+        box-shadow: 0 12px 32px rgba(31, 83, 141, 0.22);
+    }
+
+    .date-controls__calendar-header {
+        position: sticky;
+        top: -0.5rem;
+        z-index: 1;
         display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.25rem 0.25rem 0.5rem;
+        background: var(--card-bg);
+        color: var(--color-ink);
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .date-controls__close {
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
-        margin-top: 1rem;
+        gap: 0.35rem;
+        min-height: 2.5rem;
+        padding: 0.4rem 0.6rem;
+        border: var(--card-border);
+        background: var(--accent-ice);
+        color: var(--accent);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .date-controls__close :global(svg) { width: 1rem; height: 1rem; }
+    .date-controls__close:hover { background: var(--accent-tint); }
+    .date-controls .date-controls__calendar :global(.calendar-month) {
+        max-width: none;
+        padding: 0.25rem;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
     }
 
     @media (max-width: 480px) {

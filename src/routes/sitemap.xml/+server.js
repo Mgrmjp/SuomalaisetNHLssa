@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
-import { isProspectsPath, PROSPECTS_ENABLED } from '$lib/config/features.js'
+import { isProspectsPath, PROSPECTS_ENABLED, TRANSFERS_ENABLED } from '$lib/config/features.js'
 import { loadRegularSeasonStatsFromDisk } from '$lib/server/playerStats.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
 
@@ -89,6 +89,7 @@ function getStaticPages() {
         { path: '/', priority: '1.0', changefreq: 'daily', lastmod: gamesLastMod || statsLastMod },
         {
             path: '/siirrot',
+            enabled: TRANSFERS_ENABLED,
             priority: '0.8',
             changefreq: 'daily',
             lastmod: fileLastMod(join(process.cwd(), 'static/data/offseason-moves.json')),
@@ -118,7 +119,7 @@ function getStaticPages() {
         { path: '/lupaukset', priority: '0.7', changefreq: 'daily', lastmod: prospectsLastMod },
         { path: '/drafts', priority: '0.7', changefreq: 'weekly', lastmod: draftLastMod },
         { path: '/scouting', priority: '0.7', changefreq: 'weekly', lastmod: scoutingLastMod },
-    ].filter((page) => PROSPECTS_ENABLED || !isProspectsPath(page.path))
+    ].filter((page) => page.enabled !== false && (PROSPECTS_ENABLED || !isProspectsPath(page.path)))
 }
 
 function getWeeklyReviewRoutes() {

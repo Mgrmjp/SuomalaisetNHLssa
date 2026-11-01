@@ -12,7 +12,7 @@ import {
 import { base } from '$app/paths'
 import { page } from '$app/stores'
 import ControlGroup from '$lib/components/ui/ControlGroup.svelte'
-import { PROSPECTS_ENABLED } from '$lib/config/features.js'
+import { PROSPECTS_ENABLED, TRANSFERS_ENABLED } from '$lib/config/features.js'
 
 // Navigation items
 const _navItems = [
@@ -25,6 +25,7 @@ const _navItems = [
         href: `${base}/siirrot`,
         label: 'Siirrot',
         Icon: SiirrotIcon,
+        enabled: TRANSFERS_ENABLED,
     },
     {
         href: `${base}/sarjataulukko`,
@@ -74,6 +75,10 @@ const currentPath = $derived($page.url.pathname)
 
 <style>
     .nav-tabs-container {
+        --toolbar-control-height: 2.5rem;
+        --toolbar-radius: 14px;
+        --toolbar-padding: 0.25rem;
+        --card-radius-sm: calc(var(--toolbar-radius) - var(--toolbar-padding) - 1px);
         display: flex;
         justify-content: center;
         width: fit-content;
@@ -83,7 +88,14 @@ const currentPath = $derived($page.url.pathname)
         padding: 0;
     }
 
-    .nav-tabs-container :global(.nav-tabs-list) { gap: 0.2rem; }
+    .nav-tabs-container :global(.nav-tabs-list) {
+        gap: 0.2rem;
+        padding: var(--toolbar-padding);
+        border: 1px solid white;
+        border-radius: var(--toolbar-radius);
+        background: rgba(245, 250, 255, 0.96);
+        box-shadow: 0 5px 18px rgba(31, 83, 141, 0.2), 0 0 0 1px #bdd9f7;
+    }
 
     .nav-tab-item {
         position: relative;
@@ -92,8 +104,9 @@ const currentPath = $derived($page.url.pathname)
         align-items: center;
         justify-content: center;
         gap: 0.4rem;
-        min-height: 2.4rem;
-        padding: 0.5rem 0.75rem;
+        height: var(--toolbar-control-height);
+        min-height: var(--toolbar-control-height);
+        padding: 0 1.25rem;
         border-radius: var(--card-radius-sm);
         color: #475467;
         font-size: 0.8125rem;
@@ -101,10 +114,7 @@ const currentPath = $derived($page.url.pathname)
         line-height: 1;
         text-decoration: none;
         white-space: nowrap;
-        transition:
-            background 0.16s ease,
-            color 0.16s ease,
-            transform 0.16s ease;
+        transition: background 0.16s ease, color 0.16s ease;
     }
 
     .nav-tab-item:hover {
@@ -117,59 +127,44 @@ const currentPath = $derived($page.url.pathname)
         outline-offset: 2px;
     }
 
-    .nav-tab-item--active {
+    .nav-tab-item--active,
+    .nav-tab-item--active:hover {
         background: var(--accent);
-        color: #ffffff;
+        color: white;
+        box-shadow: 0 2px 5px #00358030;
     }
 
     .nav-tab-item :global(.nav-tab-icon) {
         width: 1.05rem;
         height: 1.05rem;
         color: #98a2b3;
-        transition:
-            color 0.16s ease,
-            transform 0.16s ease;
+        flex-shrink: 0;
+        transition: color 0.16s ease;
     }
 
-    .nav-tab-item:hover :global(.nav-tab-icon) {
-        color: var(--accent);
-    }
-
-    .nav-tab-item--active :global(.nav-tab-icon) {
-        color: #ffffff;
-        transform: scale(1.04);
-    }
-
-    @media (min-width: 768px) {
-        .nav-tab-item {
-            padding-inline: 0.85rem;
-        }
-    }
+    .nav-tab-item:hover :global(.nav-tab-icon) { color: var(--accent); }
+    .nav-tab-item--active :global(.nav-tab-icon),
+    .nav-tab-item--active:hover :global(.nav-tab-icon) { color: white; }
 
     @media (max-width: 767px) {
         .nav-tabs-container {
-            max-width: 100%;
+            --toolbar-control-height: 2.75rem;
+            width: 100%;
         }
-
+        .nav-tabs-container :global(.nav-tabs-list) {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(0, 1fr);
+            width: 100%;
+            overflow: visible;
+        }
         .nav-tab-item {
-            gap: 0.3rem;
-            min-height: 2.25rem;
-            padding: 0.35rem 0.55rem;
-            font-size: 0.75rem;
+            min-width: 0;
+            padding-inline: 0;
+            flex-direction: column;
+            gap: 0.15rem;
+            font-size: clamp(0.6rem, 2.2vw, 0.75rem);
         }
-
-        .nav-tab-item :global(.nav-tab-icon) {
-            width: 0.82rem;
-            height: 0.82rem;
-            flex: 0 0 auto;
-        }
-    }
-
-    @media (max-width: 360px) {
-        .nav-tab-item {
-            gap: 0.25rem;
-            padding: 0.35rem 0.45rem;
-            font-size: 0.7rem;
-        }
+        .nav-tab-item :global(.nav-tab-icon) { width: 1rem; height: 1rem; }
     }
 </style>

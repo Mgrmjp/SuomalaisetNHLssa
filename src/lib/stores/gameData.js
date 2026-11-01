@@ -400,6 +400,11 @@ let resultsRequestId = 0
 let refreshInFlight = false
 let followsYesterday = false
 
+/** Whether the selected date follows the automatic yesterday default. */
+export function followsDefaultDate() {
+    return followsYesterday
+}
+
 export async function loadPlayersForDate(date, { background = false } = {}) {
     if (!date) {
         players.set([])
@@ -452,10 +457,10 @@ export async function loadPlayersForDate(date, { background = false } = {}) {
         }
 
         // Provide more specific error messages based on the error type
-        let errorMessage = 'Failed to load player data. Please try again.'
+        let errorMessage = 'Pelaajatilastojen lataaminen epäonnistui. Yritä uudelleen.'
 
         if (err.message?.includes('fetch')) {
-            errorMessage = 'Unable to load prepopulated data. Please try again.'
+            errorMessage = 'Ottelutietojen lataaminen epäonnistui. Yritä uudelleen.'
         }
 
         if (background) refreshErrorStore.set(errorMessage)

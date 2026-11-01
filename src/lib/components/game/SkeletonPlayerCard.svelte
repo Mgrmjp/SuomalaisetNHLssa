@@ -48,7 +48,7 @@
         background: var(--card-bg);
         border: 1px solid rgba(226, 232, 240, 0.8);
         box-shadow: var(--card-shadow);
-        min-height: 260px;
+        min-height: 315px;
         border-radius: var(--card-radius);
     }
 

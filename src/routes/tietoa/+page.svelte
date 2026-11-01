@@ -143,18 +143,14 @@ onMount(() => {
 
             <section class="info-section">
                 <Card>
-                    <h2>Mainosilmoitus</h2>
+                    <h2 id="mainosilmoitus">Mainosilmoitus</h2>
                     <div class="info-copy">
                         <p>
                             Tämä sivusto sisältää affiliate-mainoksia ja yhteistyölinkkejä. Sivusto
                             voi saada provission, jos käyttäjä klikkaa mainosta tai linkkiä ja tekee
                             oston.
                         </p>
-                        <p>Mainokset näkyvät mm. seuraavien mainosverkostojen kautta:</p>
-                        <ul>
-                            <li>Adtraction</li>
-                            <li>Muut affiliate-verkostot</li>
-                        </ul>
+                        <p>Affiliate-mainokset välitetään Adtractionin kautta.</p>
                         <p class="disclosure-note">
                             Affiliate-yhteistyöt eivät vaikuta sivuston sisältöön tai näytettäviin
                             tilastoihin.

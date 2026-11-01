@@ -12,6 +12,8 @@ import {
 } from '$lib/stores/gameData.js'
 import { shiftMonthPreservingDay } from '$lib/utils/dateUtils.js'
 
+export let onSelect = () => {}
+
 function isSameMonth(date1, date2) {
     return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth()
 }
@@ -74,6 +76,7 @@ function _navigateMonth(direction) {
 function _selectDate(dateStr) {
     setDate(dateStr)
     showCalendarView.set(false)
+    onSelect()
 }
 
 /** @param {string} selectedDateStr */

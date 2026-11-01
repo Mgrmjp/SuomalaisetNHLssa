@@ -1,237 +1,86 @@
 <script>
 // @ts-nocheck
-import { onMount } from 'svelte'
-// Swiper - only import core, handle CSS in scoped styles
-import Swiper from 'swiper'
-import { FreeMode, Mousewheel } from 'swiper/modules'
+import { Minus, Plus } from 'lucide-svelte'
 import { base } from '$app/paths'
 import Button from '$lib/components/ui/Button.svelte'
-import LoadingSpinner from '$lib/components/ui/LoadingSpinner.svelte'
-import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import Notice from '$lib/components/ui/Notice.svelte'
 import { getDailyFallbackNews } from '$lib/services/dailyNewsService.js'
 import {
     currentBreak,
     currentDate,
-    displayDate,
     error,
     games,
     isLoading,
     players,
-    prepopulatedDates,
     refreshError,
     refreshSelectedDate,
     selectedDate,
     setDate,
 } from '$lib/stores/gameData.js'
-import { getSavePercentage, hasPoints, isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
+import { didParticipate, getDailyHighlights, sortDailyPlayers } from '$lib/utils/dailyPlayers.js'
+import { formatDate } from '$lib/utils/dateUtils.js'
+import { isDefense, isGoalie } from '$lib/utils/positionHelpers.js'
 import { selectUpcomingFinnishGames } from '$lib/utils/upcomingFinnishGames.js'
+import { previousCalendarDate, shouldShowYesterdayResult } from '$lib/utils/yesterdayResult.js'
 import EmptyState from './EmptyState.svelte'
 import PlayerCard from './PlayerCard.svelte'
 import SkeletonPlayerCard from './SkeletonPlayerCard.svelte'
 
 const { upcomingGames = [] } = $props()
+let refreshedUpcomingGames = $state(null)
+const scheduleRefreshMinute = $derived(Math.floor($currentDate.getTime() / 60000))
 const scheduledFinnishGames = $derived(
-    selectUpcomingFinnishGames(upcomingGames, $selectedDate, $currentDate.getTime())
+    selectUpcomingFinnishGames(
+        refreshedUpcomingGames ?? upcomingGames,
+        $selectedDate,
+        $currentDate.getTime()
+    )
 )
 
-let forwardsSwiper = null
-let defendersSwiper = null
-let goaliesSwiper = null
-let isMobile = false
-let relatedFinnishGames = $state([])
-let relatedFinnishGamesLabel = $state('')
 let fallbackNews = $state([])
-let futureLookupToken = 0
 let newsLookupToken = 0
-
-function checkMobile() {
-    isMobile = typeof window !== 'undefined' && window.innerWidth < 768
-}
-
-function initSwipers() {
-    checkMobile()
-    if (!isMobile) return
-
-    const swiperConfig = {
-        modules: [FreeMode, Mousewheel],
-        slidesPerView: 'auto',
-        spaceBetween: 12,
-        freeMode: {
-            enabled: true,
-            sticky: false,
-            momentumRatio: 0.8,
-            momentumVelocityRatio: 0.8,
-        },
-        mousewheel: {
-            forceToAxis: true,
-        },
-        grabCursor: true,
-        cssMode: false,
-    }
-
-    const forwardsEl = document.querySelector('.swiper-forwards')
-    const defendersEl = document.querySelector('.swiper-defenders')
-    const goaliesEl = document.querySelector('.swiper-goalies')
-
-    if (forwardsEl && !forwardsSwiper) {
-        forwardsSwiper = new Swiper(forwardsEl, swiperConfig)
-    }
-    if (defendersEl && !defendersSwiper) {
-        defendersSwiper = new Swiper(defendersEl, swiperConfig)
-    }
-    if (goaliesEl && !goaliesSwiper) {
-        goaliesSwiper = new Swiper(goaliesEl, swiperConfig)
-    }
-}
-
-function destroySwipers() {
-    if (forwardsSwiper) {
-        forwardsSwiper.destroy(true, true)
-        forwardsSwiper = null
-    }
-    if (defendersSwiper) {
-        defendersSwiper.destroy(true, true)
-        defendersSwiper = null
-    }
-    if (goaliesSwiper) {
-        goaliesSwiper.destroy(true, true)
-        goaliesSwiper = null
-    }
-}
-
-function handleResize() {
-    const wasMobile = isMobile
-    checkMobile()
-    if (wasMobile !== isMobile) {
-        destroySwipers()
-        if (isMobile) {
-            setTimeout(initSwipers, 100)
-        }
-    }
-}
-
-onMount(() => {
-    checkMobile()
-    setTimeout(initSwipers, 100)
-    window.addEventListener('resize', handleResize)
-    return () => {
-        window.removeEventListener('resize', handleResize)
-        destroySwipers()
-    }
-})
-
-// Re-initialize swipers when players data changes
-$effect(() => {
-    if ($players && isMobile) {
-        destroySwipers()
-        setTimeout(initSwipers, 100)
-    }
-})
+let sortBy = $state('points')
+let positionFilter = $state('all')
+let expandedGroups = $state({ forwards: false, defenders: false, goalies: false })
 
 function _handleRetry() {
     setDate($selectedDate)
 }
 
-/**
- * Check if a goalie actually played in the game
- * Goalie must have logged time, faced shots, made saves, or allowed goals
- *
- * @param {Object} player - Player object
- * @returns {boolean} True if goalie participated in the game
- */
-function goalieHasPlayed(player) {
-    const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0)
-    const saves = Number(player.saves ?? player.goalie_saves ?? 0)
-    const goalsAgainst = Number(player.goals_against ?? player.goalsAgainst ?? 0)
-    const toi = player.time_on_ice || player.toi || ''
-
-    return (
-        shotsAgainst > 0 ||
-        saves > 0 ||
-        goalsAgainst > 0 ||
-        (toi && toi !== '00:00' && toi !== '0:00')
-    )
-}
-
-/**
- * Filter out invalid players that don't have required fields
- * This prevents duplicate key errors in the each blocks
- *
- * @param {Object[]} players - Array of player objects
- * @returns {Object[]} Filtered array of valid players
- */
-function getValidPlayers(players) {
-    if (!Array.isArray(players)) return []
-    return players.filter((player) => {
-        return (
-            player &&
-            typeof player === 'object' &&
-            player.playerId != null &&
-            player.game_id != null
-        )
-    })
-}
-
-/**
- * Filter players based on position and performance
- * - Goalies: must have actually played (faced shots, made saves, etc.)
- * - Skaters: must have recorded at least one point
- *
- * @param {Object[]} players - Array of player objects
- * @returns {Object[]} Filtered array of players
- */
 const filteredPlayers = $derived(
-    getValidPlayers($players || []).filter((player) => {
-        if (isGoalie(player)) {
-            return goalieHasPlayed(player)
-        }
-        return hasPoints(player)
-    })
+    ($players || []).filter((player) => didParticipate(player, $games))
 )
-
-/**
- * Sort skaters by points (primary), then goals, plus/minus, and assists
- *
- * @param {Object[]} list - Array of skater objects
- * @returns {Object[]} Sorted array
- */
-const sortSkatersByPoints = (list) =>
-    [...list].sort(
-        (a, b) =>
-            (b.points || 0) - (a.points || 0) ||
-            (b.goals || 0) - (a.goals || 0) ||
-            (b.plus_minus ?? -Infinity) - (a.plus_minus ?? -Infinity) ||
-            (b.assists || 0) - (a.assists || 0)
+const highlights = $derived(
+    new Map(
+        getDailyHighlights(filteredPlayers, $games).map((highlight) => [
+            `${highlight.playerId}-${highlight.gameId}`,
+            highlight,
+        ])
     )
-
-/**
- * Sort goalies by save percentage (best first)
- *
- * @param {Object[]} list - Array of goalie objects
- * @returns {Object[]} Sorted array
- */
-const sortGoalies = (list) =>
-    [...list].sort((a, b) => {
-        const aPct = getSavePercentage(a)
-        const bPct = getSavePercentage(b)
-
-        if (aPct === null && bPct === null) return 0
-        if (aPct === null) return 1
-        if (bPct === null) return -1
-
-        return bPct - aPct
-    })
-
+)
 const forwards = $derived(
-    sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)))
+    sortDailyPlayers(
+        filteredPlayers.filter((p) => !isGoalie(p) && !isDefense(p)),
+        sortBy
+    )
 )
 const defenders = $derived(
-    sortSkatersByPoints(filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)))
+    sortDailyPlayers(
+        filteredPlayers.filter((p) => !isGoalie(p) && isDefense(p)),
+        sortBy
+    )
 )
-const goalies = $derived(sortGoalies(filteredPlayers.filter((p) => isGoalie(p))))
-
-const hasAnyPlayers = $derived(forwards.length + defenders.length + goalies.length > 0)
+const goalies = $derived(
+    sortDailyPlayers(filteredPlayers.filter(isGoalie), sortBy === 'name' ? 'name' : 'time')
+)
+const hasAnyPlayers = $derived(filteredPlayers.length > 0)
+const yesterdayPreviewDate = $derived(
+    !hasAnyPlayers &&
+        !$currentBreak &&
+        shouldShowYesterdayResult($selectedDate, formatDate($currentDate), $games?.games || [])
+        ? previousCalendarDate($selectedDate)
+        : ''
+)
 
 const dressedCount = $derived($players?.length || 0)
 
@@ -245,183 +94,58 @@ const isBreak = $derived($currentBreak !== null)
 const emptyStateVariant = $derived.by(() => {
     if (isBreak && $currentBreak?.type === 'offseason') return 'offseason'
     if (isBreak) return 'break'
+    if (
+        ($games?.games || []).some((game) => ['FUT', 'PRE'].includes(game.gameState)) ||
+        scheduledFinnishGames.some((game) => game.startTime?.slice(0, 10) === $selectedDate)
+    )
+        return 'upcoming'
     if (hasNoGames) return 'no-games'
     return 'no-scorers'
 })
 
 function attachFinnishPlayers(games, allPlayers) {
-    if (!Array.isArray(games) || !Array.isArray(allPlayers)) return games
-    return games.map((game) => {
-        const names = allPlayers
-            .filter((p) => p?.game_id === game?.gameId)
-            .map((p) => p?.name)
-            .filter(Boolean)
-        return { ...game, finnishPlayers: names }
-    })
+    return games.map((game) => ({
+        ...game,
+        finnishPlayers: allPlayers
+            .filter((player) => String(player.game_id) === String(game.gameId))
+            .map((player) => player.name?.default || player.name || player.fullName || '')
+            .filter(Boolean),
+    }))
 }
 
-const upcomingFinnishGames = $derived.by(() => {
-    const sameDayGames = $games?.games?.length
-        ? attachFinnishPlayers(
-              [...$games.games].filter(
-                  (game) =>
-                      Number(game?.finnish_players_count || 0) > 0 &&
-                      ['FUT', 'PRE'].includes(game?.gameState)
-              ),
-              $players
-          )
-              .sort(
-                  (a, b) =>
-                      new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
-              )
-              .slice(0, 4)
-        : []
-
-    if (sameDayGames.length > 0) {
-        return sameDayGames
-    }
-
-    return scheduledFinnishGames.length > 0 ? scheduledFinnishGames : relatedFinnishGames
-})
-
-const sameDayUpcomingFinnishGames = $derived(
-    $games?.games?.length
-        ? [...$games.games]
-              .filter(
-                  (game) =>
-                      Number(game?.finnish_players_count || 0) > 0 &&
-                      ['FUT', 'PRE'].includes(game?.gameState)
-              )
-              .sort(
-                  (a, b) =>
-                      new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
-              )
-              .slice(0, 4)
-        : []
+const upcomingFinnishGames = $derived(
+    selectUpcomingFinnishGames(
+        [...attachFinnishPlayers($games?.games || [], $players || []), ...scheduledFinnishGames],
+        $selectedDate,
+        $currentDate.getTime()
+    )
 )
+const relatedGamesLabel =
+    'Tulevat ottelut suomalaispelaajien joukkueille. Kokoonpanot vahvistuvat lähempänä ottelua.'
 
-const relatedGamesLabel = $derived(
-    sameDayUpcomingFinnishGames.length > 0 || scheduledFinnishGames.length > 0
-        ? 'Seuraavat ottelut suomalaispelaajien joukkueille (kokoonpanot vahvistuvat myöhemmin):'
-        : relatedFinnishGamesLabel
-)
-
-async function loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesValue) {
-    const token = ++futureLookupToken
-
-    if (!selectedDateValue || !availableDatesValue?.length) {
-        relatedFinnishGames = []
-        relatedFinnishGamesLabel = ''
-        return
-    }
-
-    const futureDates = availableDatesValue.filter((date) => date > selectedDateValue).slice(0, 10)
-    const upcomingGames = []
-
-    for (const date of futureDates) {
-        try {
-            const response = await fetch(`${base}/data/prepopulated/games/${date}.json`)
-            if (!response.ok) continue
-
-            const data = await response.json()
-            const gamesWithFinns = attachFinnishPlayers(
-                (data?.games || []).filter(
-                    (game) =>
-                        Number(game?.finnish_players_count || 0) > 0 &&
-                        ['FUT', 'PRE'].includes(game?.gameState)
-                ),
-                data?.players || []
-            ).sort(
-                (a, b) =>
-                    new Date(a.startTime || 0).getTime() - new Date(b.startTime || 0).getTime()
-            )
-
-            upcomingGames.push(...gamesWithFinns)
-
-            if (upcomingGames.length >= 4) {
-                break
-            }
-        } catch {
-            // Ignore missing local future data files
-        }
-    }
-
-    if (token !== futureLookupToken) return
-
-    if (upcomingGames.length > 0) {
-        relatedFinnishGames = upcomingGames.slice(0, 4)
-        relatedFinnishGamesLabel = 'Seuraavaksi suomalaisia mukana näissä otteluissa:'
-        return
-    }
-
-    const hasFutureSchedule = availableDatesValue.some((date) => date > selectedDateValue)
-    if (!hasFutureSchedule) {
-        relatedFinnishGames = []
-        relatedFinnishGamesLabel = ''
-        return
-    }
-
-    const pastDates = [...availableDatesValue]
-        .filter((date) => date < selectedDateValue)
-        .sort((a, b) => b.localeCompare(a))
-        .slice(0, 10)
-    const recentGames = []
-    const recencyCutoff =
-        new Date(`${selectedDateValue}T00:00:00Z`).getTime() - 3 * 24 * 60 * 60 * 1000
-
-    for (const date of pastDates) {
-        try {
-            const response = await fetch(`${base}/data/prepopulated/games/${date}.json`)
-            if (!response.ok) continue
-
-            const data = await response.json()
-            const gamesWithFinns = attachFinnishPlayers(
-                (data?.games || []).filter(
-                    (game) =>
-                        Number(game?.finnish_players_count || 0) > 0 &&
-                        new Date(game?.startTime || 0).getTime() >= recencyCutoff
-                ),
-                data?.players || []
-            ).sort(
-                (a, b) =>
-                    new Date(b.startTime || 0).getTime() - new Date(a.startTime || 0).getTime()
-            )
-
-            recentGames.push(...gamesWithFinns)
-
-            if (recentGames.length >= 4) {
-                break
-            }
-        } catch {
-            // Ignore missing local past data files
-        }
-    }
-
-    if (token !== futureLookupToken) return
-    relatedFinnishGames = recentGames.slice(0, 4)
-    relatedFinnishGamesLabel =
-        recentGames.length > 0 ? 'Viimeksi suomalaisia oli mukana näissä otteluissa:' : ''
-}
-
+// Keep the roster-based schedule current even if the page stays open overnight.
 $effect(() => {
-    const selectedDateValue = $selectedDate
-    const availableDatesValue = $prepopulatedDates
-    const currentVariant = emptyStateVariant
-    const currentSameDayUpcomingGames = sameDayUpcomingFinnishGames
-
-    if (currentVariant !== 'no-scorers') {
-        relatedFinnishGames = []
-        relatedFinnishGamesLabel = ''
-        return
+    const needsSchedule = !hasAnyPlayers && !isBreak
+    scheduleRefreshMinute
+    if (!needsSchedule) return
+    const controller = new AbortController()
+    async function refreshSchedule() {
+        try {
+            const response = await fetch(`${base}/data/upcoming-finnish-games.json`, {
+                cache: 'no-store',
+                signal: controller.signal,
+            })
+            if (!response.ok) return
+            const snapshot = await response.json()
+            if (!controller.signal.aborted && Array.isArray(snapshot?.games)) {
+                refreshedUpcomingGames = snapshot.games
+            }
+        } catch {
+            // Keep the last schedule on transient refresh failures.
+        }
     }
-
-    if (currentSameDayUpcomingGames.length > 0 || scheduledFinnishGames.length > 0) {
-        relatedFinnishGames = []
-        relatedFinnishGamesLabel = ''
-        return
-    }
-
-    loadFutureUpcomingFinnishGames(selectedDateValue, availableDatesValue)
+    refreshSchedule()
+    return () => controller.abort()
 })
 
 async function loadFallbackNews(selectedDateValue, variant) {
@@ -439,6 +163,7 @@ async function loadFallbackNews(selectedDateValue, variant) {
 }
 
 $effect(() => {
+    scheduleRefreshMinute
     loadFallbackNews($selectedDate, emptyStateVariant)
 })
 </script>
@@ -451,8 +176,8 @@ $effect(() => {
 {/if}
 
 {#if $isLoading}
-    <div class="py-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9">
+    <div class="scoring-list">
+        <div class="scoring-list__grid">
             {#each [1,2,3,4,5,6] as _}
                 <SkeletonPlayerCard />
             {/each}
@@ -470,160 +195,89 @@ $effect(() => {
         relatedGamesLabel={relatedGamesLabel}
         newsItems={fallbackNews}
         lineupCount={dressedCount}
+        yesterdayDate={yesterdayPreviewDate}
     />
 {:else}
-    <section id="scoringList" class="scoring-list">
-        <div class="scoring-list__container w-full">
-            <div class="scoring-list__sections space-y-12">
-                {#if forwards.length}
-                    <div class="scoring-list__section space-y-4">
-                        <div
-                            class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
-                        >
-                            <h2
-                                class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
-                            >
-                                Hyökkääjät
-                            </h2>
-                        </div>
-                        <!-- Desktop Grid -->
-                        <div
-                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9"
-                        >
-                            {#each forwards as player, index (`${player.playerId}-${index}`)}
-                                <PlayerCard {player} />
-                            {/each}
-                        </div>
-                        <!-- Mobile Swiper -->
-                        <div class="swiper swiper-forwards md:hidden">
-                            <div class="swiper-wrapper">
-                                {#each forwards as player, index (`${player.playerId}-${index}-mobile`)}
-                                    <div class="swiper-slide mobile-card-slide">
-                                        <PlayerCard {player} />
-                                    </div>
-                                {/each}
-                            </div>
-                        </div>
-                    </div>
-                {/if}
-
-                {#if defenders.length}
-                    <div class="scoring-list__section space-y-4">
-                        <div
-                            class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
-                        >
-                            <h2
-                                class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
-                            >
-                                Puolustajat
-                            </h2>
-                        </div>
-                        <!-- Desktop Grid -->
-                        <div
-                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9"
-                        >
-                            {#each defenders as player, index (`${player.playerId}-${index}`)}
-                                <PlayerCard {player} />
-                            {/each}
-                        </div>
-                        <!-- Mobile Swiper -->
-                        <div class="swiper swiper-defenders md:hidden">
-                            <div class="swiper-wrapper">
-                                {#each defenders as player, index (`${player.playerId}-${index}-mobile`)}
-                                    <div class="swiper-slide mobile-card-slide">
-                                        <PlayerCard {player} />
-                                    </div>
-                                {/each}
-                            </div>
-                        </div>
-                    </div>
-                {/if}
-
-                {#if goalies.length}
-                    <div class="scoring-list__section space-y-4">
-                        <div
-                            class="scoring-list__section-header flex items-baseline gap-3 pb-2 border-b border-gray-200"
-                        >
-                            <h2
-                                class="scoring-list__section-title text-xl font-bold text-gray-900 tracking-tight"
-                            >
-                                Maalivahdit
-                            </h2>
-                        </div>
-                        <!-- Desktop Grid -->
-                        <div
-                            class="scoring-list__grid hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-x-7 gap-y-9"
-                        >
-                            {#each goalies as player, index (`${player.playerId}-${index}`)}
-                                <PlayerCard {player} />
-                            {/each}
-                        </div>
-                        <!-- Mobile Swiper -->
-                        <div class="swiper swiper-goalies md:hidden">
-                            <div class="swiper-wrapper">
-                                {#each goalies as player, index (`${player.playerId}-${index}-mobile`)}
-                                    <div class="swiper-slide mobile-card-slide">
-                                        <PlayerCard {player} />
-                                    </div>
-                                {/each}
-                            </div>
-                        </div>
-                    </div>
-                {/if}
+    <section id="scoringList" class="scoring-list" aria-label="Pelaajien ottelutilastot">
+        {#if filteredPlayers.length > 1}
+            <div class="scoring-list__controls">
+                <label>Pelipaikka
+                    <select bind:value={positionFilter}>
+                        <option value="all">Kaikki pelaajat</option>
+                        <option value="forwards">Hyökkääjät</option>
+                        <option value="defenders">Puolustajat</option>
+                        <option value="goalies">Maalivahdit</option>
+                    </select>
+                </label>
+                <label>Järjestä
+                    <select bind:value={sortBy}>
+                        <option value="points">Pisteet</option>
+                        <option value="goals">Maalit</option>
+                        <option value="assists">Syötöt</option>
+                        <option value="time">Peliaika</option>
+                        <option value="name">Nimi</option>
+                    </select>
+                </label>
             </div>
-        </div>
+        {/if}
+        {#each [{ key: 'forwards', title: 'Hyökkääjät', players: forwards }, { key: 'defenders', title: 'Puolustajat', players: defenders }, { key: 'goalies', title: 'Maalivahdit', players: goalies }] as group (group.key)}
+            {#if (positionFilter === 'all' || positionFilter === group.key) && group.players.length}
+                <div class="scoring-list__section">
+                    <h2 class="scoring-list__section-title" data-position={group.key}>{group.title}</h2>
+                    <div
+                        id={`players-${group.key}`}
+                        class="scoring-list__grid"
+                        class:scoring-list__grid--collapsed={positionFilter === 'all' && !expandedGroups[group.key]}
+                    >
+                        {#each group.players.slice(0, positionFilter === 'all' && !expandedGroups[group.key] ? 8 : undefined) as player (`${player.playerId}-${player.game_id}`)}
+                            <PlayerCard {player} highlight={highlights.get(`${player.playerId}-${player.game_id}`)} />
+                        {/each}
+                    </div>
+                    {#if positionFilter === 'all' && group.players.length > 2}
+                        <button
+                            type="button"
+                            class="scoring-list__more"
+                            class:scoring-list__more--mobile-only={group.players.length <= 8}
+                            aria-expanded={expandedGroups[group.key]}
+                            aria-controls={`players-${group.key}`}
+                            onclick={() => { expandedGroups[group.key] = !expandedGroups[group.key] }}
+                        >
+                            {#if expandedGroups[group.key]}<Minus size={16} aria-hidden="true" />{:else}<Plus size={16} aria-hidden="true" />{/if}
+                            {expandedGroups[group.key] ? 'Näytä vähemmän' : `Näytä kaikki ${group.players.length} pelaajaa`}
+                        </button>
+                    {/if}
+                </div>
+            {/if}
+        {/each}
+        {#if positionFilter !== 'all' && ((positionFilter === 'forwards' && !forwards.length) || (positionFilter === 'defenders' && !defenders.length) || (positionFilter === 'goalies' && !goalies.length))}
+            <p class="scoring-list__empty">Ei pelaajia tällä pelipaikalla valittuna päivänä.</p>
+        {/if}
     </section>
 {/if}
 
 <style>
-    .scoring-list {
-        min-width: 0;
-        padding: 0;
-        background: transparent;
-    }
-
-    .scoring-list__section-title {
-        font-family: var(--font-display);
-        letter-spacing: 0;
-    }
-
-    .scoring-list__grid {
-        align-items: stretch;
-    }
-
-    /* Mobile-only styles for swiper - prevents affecting desktop layout */
+    .scoring-list { min-width: 0; }
+    .scoring-list__controls { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-end; margin-bottom: 0.75rem; }
+    .scoring-list__controls label { display: flex; align-items: center; gap: 0.4rem; color: var(--color-muted); font-size: 0.75rem; font-weight: 600; }
+    .scoring-list__controls select { min-height: 2.5rem; max-width: 100%; padding: 0.4rem 1.6rem 0.4rem 0.6rem; border: var(--card-border); border-radius: var(--card-radius-sm); background: var(--card-bg); color: var(--color-ink); }
+    .scoring-list__section + .scoring-list__section { margin-top: 2.25rem; }
+    .scoring-list__section-title { margin: 0 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid #d5dce6; font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; display: flex; align-items: center; gap: 0.75rem; }
+    .scoring-list__section-title[data-position="forwards"] { --position-stripe: linear-gradient(#1275ff, #9563ff); }
+    .scoring-list__section-title[data-position="defenders"] { --position-stripe: linear-gradient(#0d9488, #38bdf8); }
+    .scoring-list__section-title[data-position="goalies"] { --position-stripe: linear-gradient(#fbbf24, #f97316); }
+    .scoring-list__section-title::before { content: ""; width: 0.3rem; height: 1.1rem; border-radius: 3px; transform: skew(-18deg); background: var(--position-stripe); }
+    .scoring-list__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: stretch; }
+    .scoring-list__empty { padding: 1rem; color: var(--color-muted); }
+    .scoring-list__more { display: flex; align-items: center; justify-content: center; gap: 0.4rem; width: fit-content; max-width: 100%; min-height: 2.5rem; margin: 1.5rem auto 1rem; padding: 0.5rem 1rem; border: var(--card-border); border-radius: var(--card-radius-sm); background: var(--card-bg); color: var(--color-ink); font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+    .scoring-list__more:hover { background: var(--color-table-hover); }
+    .scoring-list__more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     @media (max-width: 767px) {
-        .scoring-list {
-            padding: 0;
-        }
-
-        /* Essential Swiper styles - only applied on mobile */
-        .swiper {
-            overflow: hidden;
-            position: relative;
-            padding: 0.35rem 0 1.25rem;
-        }
-
-        .swiper-wrapper {
-            display: flex;
-            align-items: stretch;
-            box-sizing: content-box;
-            transition-property: transform;
-            transition-timing-function: ease-out;
-        }
-
-        .swiper-slide {
-            display: grid;
-            height: auto;
-            flex-shrink: 0;
-            position: relative;
-        }
-
-        /* Slides stretch to the tallest card in the carousel. */
-        .mobile-card-slide {
-            width: min(20rem, 100%) !important;
-            flex-shrink: 0;
-        }
-
+        .scoring-list__grid--collapsed :global(.game-player-card__container:nth-child(n+3)) { display: none; }
+        .scoring-list__controls label { flex: 1 1 0; min-width: 0; flex-direction: column; align-items: stretch; }
+        .scoring-list__controls select { width: 100%; }
     }
+    @media (min-width: 768px) { .scoring-list__more--mobile-only { display: none; } }
+    @media (min-width: 768px) { .scoring-list__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1024px) { .scoring-list__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (min-width: 1280px) { .scoring-list__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 </style>

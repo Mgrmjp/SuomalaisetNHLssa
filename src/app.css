@@ -108,13 +108,26 @@ body {
     isolation: isolate;
 }
 
+.dashboard-bg,
+.dashboard-theme {
+    --color-ink: #0b1830;
+    --color-muted: #506b90;
+    --color-panel-border: #bdd8f7;
+    --card-radius: 16px;
+    --card-radius-sm: 6px;
+    --card-bg: linear-gradient(125deg, rgba(255, 255, 255, 0.94), rgba(239, 247, 255, 0.94));
+    --card-shadow: 0 7px 16px rgba(40, 91, 145, 0.13), inset 0 0 0 1px white;
+}
+
 .dashboard-bg::before {
     content: "";
     position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(180deg, #eef3f9 0%, #e7eef7 100%);
+    background:
+        url("./lib/assets/ice-rink.svg") center / cover no-repeat,
+        radial-gradient(ellipse at 50% 35%, #f4f8ff 10%, #dfedfc 65%, #c2def5 100%);
 }
 
 /* Rink-line divider — thin double lines, calm hockey reference */

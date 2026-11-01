@@ -1,13 +1,15 @@
 <script>
 // @ts-nocheck
 
-import { Rotate3D, X } from 'lucide-svelte'
-import { fly, scale } from 'svelte/transition'
+import { MapPin, PanelsTopLeft, Rotate3D, X } from 'lucide-svelte'
+import { tick } from 'svelte'
+import { scale } from 'svelte/transition'
 import { base } from '$app/paths'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { games } from '$lib/stores/gameData.js'
+import { dailyPlayerPoints } from '$lib/utils/dailyPlayers.js'
 import { correctFullName } from '$lib/utils/finnishNameUtils.js'
-import { fiAssists, fiGoals } from '$lib/utils/finnishPlural.js'
+import { fiAssists, fiGoals, fiPoints } from '$lib/utils/finnishPlural.js'
 import {
     formatGameMatchup,
     formatGameScore,
@@ -18,7 +20,7 @@ import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/player
 import ComprehensivePlayerDetails from './ComprehensivePlayerDetails.svelte'
 import './PlayerCard.css'
 
-const { player } = $props()
+const { player, highlight = null } = $props()
 
 // Reactive variables for player photo
 let playerPhotoUrl = $state(null)
@@ -78,18 +80,20 @@ function loadPlayerImage(playerId) {
     img.src = localUrl
 }
 
-// Load image when player changes
+let showSeasonStats = $state(false)
+
+// Load season image only when it is needed.
 $effect(() => {
-    if (player?.playerId) {
+    if (showSeasonStats && player?.playerId) {
         loadPlayerImage(player.playerId)
     }
 })
 let _photoLoading = $state(true)
 
-let showSeasonStats = $state(false)
 let showComprehensiveDetails = $state(false)
 let isFlipped = $state(false)
-let expanded = $state(false)
+let frontCard = $state(null)
+let backCard = $state(null)
 let isPressed = $state(false)
 
 // Team names are now fetched from API and stored in team_full field
@@ -116,24 +120,21 @@ function _closeSeasonStats(event) {
     showSeasonStats = false
 }
 
-function _toggleComprehensiveDetails(event) {
-    event?.stopPropagation()
-    expanded = !expanded
-    if (expanded) {
-        showComprehensiveDetails = true
-    }
-}
-
 function _handleBackdropClick(event) {
     if (event.target === event.currentTarget) {
         showSeasonStats = false
         showComprehensiveDetails = false
-        expanded = false
     }
 }
 
 function toggleFlip() {
     isFlipped = !isFlipped
+}
+
+function _flipFromControl(event) {
+    event.stopPropagation()
+    toggleFlip()
+    tick().then(() => (isFlipped ? backCard : frontCard)?.focus())
 }
 
 function _handleCardClick(event) {
@@ -147,7 +148,7 @@ function _handleCardKeydown(event) {
     if (event.target !== event.currentTarget) return
     if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
-        toggleFlip()
+        _flipFromControl(event)
     }
 }
 
@@ -177,6 +178,13 @@ const _teamWithCity = $derived(getTeamWithCity(player.team || 'NHL'))
 const _formattedScore = $derived(formatGameScore(player, gamesData))
 const _venue = $derived(formatGameVenue(player))
 const _matchup = $derived(formatGameMatchup(player, gamesData))
+const _matchupTeams = $derived(_matchup.includes(' @ ') ? _matchup.split(' @ ') : null)
+// The stored score is player-relative; align it with the away/home logos here.
+const _matchupScore = $derived(
+    _matchupTeams && _matchupTeams[0] !== player.team
+        ? _formattedScore.split('-').reverse().join('–')
+        : _formattedScore.replace('-', '–')
+)
 const _playerInitials = $derived(
     displayName
         .split(' ')
@@ -224,7 +232,7 @@ function getSavePercentage(player) {
 
 const _skaterStatLine = $derived.by(() => {
     if (isGoalie) return ''
-    return `${player.goals || 0}+${player.assists || 0}`
+    return `${player.goals || 0} + ${player.assists || 0}`
 })
 
 // Derived stat values for the card
@@ -252,7 +260,8 @@ const _primaryStat = $derived.by(() => {
 
 // Sub-label with breakdown
 const _statBreakdown = $derived.by(() => {
-    if (isGoalie) return `${player.saves}/${player.shots_against || player.shotsAgainst}`
+    if (isGoalie)
+        return `${player.saves ?? player.goalie_saves ?? 0}/${player.shots_against ?? player.shotsAgainst ?? 0} torjuntaa`
     if (player.points > 0 && player.goals > 0 && player.assists > 0) {
         return `${fiGoals(player.goals)} + ${fiAssists(player.assists)}`
     }
@@ -308,8 +317,10 @@ $effect(() => {
             <!-- Front of Card -->
             <div
                 class="game-card ui-surface"
+                bind:this={frontCard}
+                class:game-card--win={_didWin}
+                class:game-card--loss={_didLose}
                 class:pressed={isPressed}
-                class:expanded
                 class:flipped={isFlipped}
                 onclick={_handleCardClick}
                 onpointerdown={_handlePressStart}
@@ -318,13 +329,10 @@ $effect(() => {
                 role="button"
                 tabindex="0"
                 onkeydown={_handleCardKeydown}
-                aria-label="Käännä pelaajakortti ja näytä lisää tilastoja"
+                aria-label={highlight ? `Päivän onnistuja: ${highlight.text}. Käännä pelaajakortti ja näytä lisää tilastoja` : "Käännä pelaajakortti ja näytä lisää tilastoja"}
                 in:scale={{ duration: 220, start: 0.96 }}
             >
 
-                <div class="card__watermark card__watermark--background" aria-hidden="true">
-                    <TeamLogo team={player.team || "NHL"} size="160" />
-                </div>
                 <div class="card__watermark" aria-hidden="true">
                     <TeamLogo team={player.team || "NHL"} size="160" />
                 </div>
@@ -333,61 +341,47 @@ $effect(() => {
                     <!-- Player name -->
                     <div class="card__top">
                         <div class="card__player-info">
-                            <h3 class="card__name">{displayName}</h3>
+                            <h3 class="card__name card__name--interactive">
+                                <button
+                                    type="button"
+                                    class="card__stats-btn"
+                                    aria-label={`Avaa pelaajan ottelutilastot: ${displayName}`}
+                                    aria-haspopup="dialog"
+                                    aria-expanded={showComprehensiveDetails}
+                                    title="Avaa ottelutilastot ikkunaan"
+                                    onclick={(e) => { e.stopPropagation(); showComprehensiveDetails = true; }}
+                                >
+                                    <span class="card__name-label">{displayName}</span>
+                                    <PanelsTopLeft class="card__name-icon" size={11} aria-hidden="true" />
+                                </button>
+                            </h3>
                             <p class="card__team">
-                                <TeamLogo
-                                    team={player.team || "NHL"}
-                                    size="22"
-                                    className="card__team-logo-vis"
-                                />
                                 <span class="card__team-text">
-                                    {player.position || player.positionCode || "N/A"}
                                     {#if player.jersey_number || player.jerseyNumber}
-                                        <span class="card__dot">·</span>
-                                        <span>#{player.jersey_number || player.jerseyNumber}</span>
+                                        #{player.jersey_number || player.jerseyNumber} <span class="card__dot">|</span>
                                     {/if}
+                                    {player.position || player.positionCode || "N/A"}
+                                    <span class="card__team-abbrev"> · {player.team || "NHL"}</span>
                                 </span>
                             </p>
                         </div>
                     </div>
 
                     {#if _venue}
-                        <div class="card__venue">{_venue}</div>
+                        <p class="card__venue"><MapPin aria-hidden="true" />{_venue}</p>
                     {/if}
 
-                    <!-- Game summary -->
-                    <div
-                        class="card__gamebar"
-                        class:card__gamebar--live={_isLive}
-                        class:card__gamebar--win={_didWin}
-                        class:card__gamebar--loss={_didLose}
-                    >
-                        <div class="card__gamebar-main">
-                            <span class="card__gamebar-matchup">{_matchup}</span>
-                            {#if _isLive}
-                                <span class="card__gamebar-status card__gamebar-status--live">LIVE</span>
-                            {/if}
-                        </div>
-                        {#if _formattedScore}
-                            <div class="card__gamebar-score-wrap">
-                                <span class="card__gamebar-score" aria-label={_didWin ? `Voitto ${_formattedScore}` : _didLose ? `Tappio ${_formattedScore}` : _formattedScore}>{_formattedScore}</span>
-                                {#if _gameExtraTimeLabel}
-                                    <span class="card__gamebar-extra-time">{_gameExtraTimeLabel}</span>
-                                {/if}
-                            </div>
-                        {/if}
-                    </div>
-
                     <!-- Primary stat -->
-                    {#if !isGoalie && _primaryStat}
-                        <div class="card__hero card__hero--skater">
-                            <div class="card__hero-meta">
-                                <strong>{_skaterStatLine}</strong>
-                                {#if _statBreakdown}
-                                    <small>{_statBreakdown}</small>
-                                {/if}
-                            </div>
-                        </div>
+                    {#if !isGoalie}
+                        <dl class="card__scoring">
+                            <div><dt>maalia</dt><dd>{player.goals || 0}</dd></div>
+                            <div><dt>syöttöä</dt><dd>{player.assists || 0}</dd></div>
+                            <div><dt>pistettä</dt><dd>{dailyPlayerPoints(player)}</dd></div>
+                            <div><dt>+/-</dt><dd class:card__scoring--positive={(player.plus_minus ?? player.plusMinus ?? 0) > 0} class:card__scoring--negative={(player.plus_minus ?? player.plusMinus ?? 0) < 0}>{(player.plus_minus ?? player.plusMinus ?? 0) > 0 ? '+' : ''}{player.plus_minus ?? player.plusMinus ?? 0}</dd></div>
+                            {#if (player.penalty_minutes ?? player.penaltyMinutes ?? 0) > 0}
+                                <div><dt>ran. min</dt><dd>{player.penalty_minutes ?? player.penaltyMinutes}</dd></div>
+                            {/if}
+                        </dl>
                     {:else if _primaryStat}
                         <div class="card__stat">
                             <strong class="card__stat-value">{_primaryStat.value}{_primaryStat.unit}</strong>
@@ -410,6 +404,12 @@ $effect(() => {
                     <!-- Supporting stats row -->
                     <div class="card__sub-stats">
                         {#if isGoalie}
+                            {#if player.time_on_ice || player.toi}
+                                <div class="card__sub-stat" title="Peliaika">
+                                    <span class="card__sub-stat-value">{player.time_on_ice || player.toi}</span>
+                                    <span class="card__sub-stat-label">peliaika</span>
+                                </div>
+                            {/if}
                             <div class="card__sub-stat" title="Päästetyt maalit">
                                 <span
                                     class="card__sub-stat-value"
@@ -423,82 +423,50 @@ $effect(() => {
                                     <span class="card__sub-stat-label">tyhjä</span>
                                 </div>
                             {/if}
-                        {:else}
-                            {#if player.goals > 0}
-                                <div class="card__sub-stat" title="Maalit">
-                                    <span class="card__sub-stat-value">{player.goals}</span>
-                                    <span class="card__sub-stat-label">maalit</span>
-                                </div>
-                            {/if}
-                            {#if player.assists > 0}
-                                <div class="card__sub-stat" title="Syötöt">
-                                    <span class="card__sub-stat-value">{player.assists}</span>
-                                    <span class="card__sub-stat-label">syötöt</span>
-                                </div>
-                            {/if}
-                            {#if (player.plus_minus ?? 0) !== 0}
-                                <div class="card__sub-stat" title="Plus-miinus">
-                                    <span
-                                        class="card__sub-stat-value"
-                                        style="color: {(player.plus_minus ?? 0) >= 0 ? '#10b981' : '#ef4444'}"
-                                    >{(player.plus_minus ?? 0) > 0 ? '+' : ''}{player.plus_minus ?? player.plusMinus}</span>
-                                    <span class="card__sub-stat-label">+/-</span>
-                                </div>
-                            {/if}
-                            {#if (player.penalty_minutes || 0) > 0}
-                                <div class="card__sub-stat" title="Rangaistusminuutit">
-                                    <span class="card__sub-stat-value text-amber-600">{player.penalty_minutes || player.penaltyMinutes}</span>
-                                    <span class="card__sub-stat-label">ran. min</span>
-                                </div>
-                            {/if}
                         {/if}
                     </div>
 
-                    <!-- Expanded details -->
-                    {#if expanded}
-                        <div class="card__details" transition:fly={{ y: 8, duration: 180 }}>
-                            {#if _venue}
-                                <div class="card__detail-row">
-                                    <span class="card__detail-label">Paikka</span>
-                                    <span>{_venue}</span>
-                                </div>
-                            {/if}
-                            {#if player.time_on_ice}
-                                <div class="card__detail-row">
-                                    <span class="card__detail-label">Aika</span>
-                                    <span>{player.time_on_ice}</span>
-                                </div>
-                            {/if}
-                            {#if !isGoalie && player.shots !== undefined}
-                                <div class="card__detail-row">
-                                    <span class="card__detail-label">Laukaukset</span>
-                                    <span>{player.shots}</span>
-                                </div>
-                            {/if}
-                            <div class="card__detail-actions">
-                                <button
-                                    class="card__detail-btn"
-                                    onclick={(e) => { e.stopPropagation(); showComprehensiveDetails = true; }}
-                                >
-                                    Avaa kaikki tiedot
-                                </button>
-                            </div>
-                        </div>
-                    {/if}
-
                     <!-- Footer -->
                     <div class="card__footer">
-                        <span class="card__footer-hint">
+                        <button type="button" class="card__footer-hint" onclick={_flipFromControl}>
                             <Rotate3D class="card__flip-icon" aria-hidden="true" />
-                            Käännä kortti · lisää tilastoja
-                        </span>
-                        <button
-                            class="card__footer-btn"
-                            onclick={(e) => { e.stopPropagation(); _toggleComprehensiveDetails(e); }}
-                            aria-label="Näytä pelikohtaiset tilastot ja viimeisimmät pelit"
-                        >
-                            Pelikohtaiset tilastot
+                            Käännä kortti · Lisää tilastoja
                         </button>
+                        <div
+                            class="card__gamebar"
+                            class:card__gamebar--live={_isLive}
+                            class:card__gamebar--win={_didWin}
+                            class:card__gamebar--loss={_didLose}
+                        >
+                            {#if _matchupTeams}
+                                <span class="card__gamebar-team" aria-label={`Vierasjoukkue ${_matchupTeams[0]}`}>
+                                    <span aria-hidden="true"><TeamLogo team={_matchupTeams[0]} size="28" /></span>
+                                    {_matchupTeams[0]}
+                                </span>
+                            {:else}
+                                <span class="card__gamebar-matchup">{_matchup}</span>
+                            {/if}
+                            <div class="card__gamebar-score-wrap">
+                                {#if _formattedScore}
+                                    <span class="card__gamebar-score" aria-label={_didWin ? `Voitto ${_matchupScore}` : _didLose ? `Tappio ${_matchupScore}` : _matchupScore}>{_matchupScore}</span>
+                                {:else if _matchupTeams}
+                                    <span class="card__gamebar-at" aria-label="vastaan">@</span>
+                                {/if}
+                                {#if _isLive}
+                                    <span class="card__gamebar-status card__gamebar-status--live">LIVE{#if Number.isInteger(_game?.period) && _game.period > 0} · {_game.isSO ? 'VL' : _game.period <= 3 ? `${_game.period}. erä` : 'JA'}{/if}</span>
+                                {:else if _showResult}
+                                    <span class="card__gamebar-result">{_didWin ? 'Voitto' : _didLose ? 'Tappio' : 'Päättynyt'}{#if _gameExtraTimeLabel} · {_gameExtraTimeLabel}{/if}</span>
+                                {:else}
+                                    <span class="card__gamebar-status">Tulossa</span>
+                                {/if}
+                            </div>
+                            {#if _matchupTeams}
+                                <span class="card__gamebar-team card__gamebar-team--home" aria-label={`Kotijoukkue ${_matchupTeams[1]}`}>
+                                    <span aria-hidden="true"><TeamLogo team={_matchupTeams[1]} size="28" /></span>
+                                    {_matchupTeams[1]}
+                                </span>
+                            {/if}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -506,8 +474,8 @@ $effect(() => {
             <!-- Back of Card -->
             <div
                 class="game-card ui-surface card--back"
+                bind:this={backCard}
                 class:pressed={isPressed}
-                class:expanded
                 class:flipped={isFlipped}
                 onclick={_handleCardClick}
                 onpointerdown={_handlePressStart}
@@ -520,9 +488,6 @@ $effect(() => {
             >
 
 
-                <div class="card__watermark card__watermark--background" aria-hidden="true">
-                    <TeamLogo team={player.team || "NHL"} size="160" />
-                </div>
                 <div class="card__watermark" aria-hidden="true">
                     <TeamLogo team={player.team || "NHL"} size="160" />
                 </div>
@@ -604,10 +569,10 @@ $effect(() => {
                         {/if}
                     </div>
                     <div class="card__footer">
-                        <span class="card__footer-hint">
+                        <button type="button" class="card__footer-hint" onclick={_flipFromControl}>
                             <Rotate3D class="card__flip-icon" aria-hidden="true" />
-                            Käännä takaisin
-                        </span>
+                            Takaisin
+                        </button>
                     </div>
                 </div>
             </div>
@@ -693,6 +658,7 @@ $effect(() => {
     <ComprehensivePlayerDetails
         {player}
         isOpen={showComprehensiveDetails}
+        venue={_venue}
         onclose={() => (showComprehensiveDetails = false)}
     />
 {/if}

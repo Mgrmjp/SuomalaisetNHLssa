@@ -1,19 +1,38 @@
 <script>
 // @ts-nocheck
 
-import { CheckCircle, Database, Menu, Trophy, X } from 'lucide-svelte'
+import {
+    CalendarDays,
+    CheckCircle,
+    CircleDot,
+    Database,
+    Goal,
+    Shield,
+    Trophy,
+    Users,
+} from 'lucide-svelte'
 import { onMount } from 'svelte'
+import { replaceState } from '$app/navigation'
 import { base } from '$app/paths'
+import { page } from '$app/stores'
 import DateControls from '$lib/components/game/DateControls.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
 import AdContainer from '$lib/components/ui/AdContainer.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import { games, isLoading, players, resetToDefault, selectedDate } from '$lib/stores/gameData.js'
+import {
+    followsDefaultDate,
+    games,
+    isLoading,
+    players,
+    resetToDefault,
+    selectedDate,
+    setDate,
+} from '$lib/stores/gameData.js'
+import { didParticipate } from '$lib/utils/dailyPlayers.js'
 import { formatFinnishDateWithRelative } from '$lib/utils/dateUtils.js'
 import { fiGames } from '$lib/utils/finnishPlural.js'
-import { hasPoints, isGoalie } from '$lib/utils/positionHelpers.js'
 
 /** @type {{ data: { initialDate: string, seo: { titleSuffix: string, description: string, summary: string, dateLabel: string, gameCount: number }, playoffStats: { season: string, skaters: Array<{ name: string, team: string, gamesPlayed: number, goals: number, assists: number, points: number }>, goalies: Array<{ name: string, team: string, gamesPlayed: number, wins: number, savePct: number }> } } }} */
 const { data } = $props()
@@ -28,32 +47,23 @@ const activeBreak = $derived.by(() => {
     return breaks.find((b) => date >= b.startDate && date <= b.endDate) || null
 })
 
-const _totalGoals = $derived($players?.reduce((sum, player) => sum + player.goals, 0) || 0)
-const _totalAssists = $derived($players?.reduce((sum, player) => sum + player.assists, 0) || 0)
-const _totalPoints = $derived($players?.reduce((sum, player) => sum + player.points, 0) || 0)
+const participatingPlayers = $derived(
+    ($players || []).filter((player) => didParticipate(player, $games))
+)
+const _totalGoals = $derived(
+    participatingPlayers.reduce((sum, player) => sum + (Number(player.goals) || 0), 0)
+)
+const _totalAssists = $derived(
+    participatingPlayers.reduce((sum, player) => sum + (Number(player.assists) || 0), 0)
+)
 const _totalPenaltyMinutes = $derived(
-    $players?.reduce((sum, player) => sum + (player.penalty_minutes || 0), 0) || 0
-)
-const totalPlayers = $derived($players?.length || 0)
-
-function _goaliePlayed(player) {
-    const shotsAgainst = Number(player.shots_against ?? player.shotsAgainst ?? 0)
-    const saves = Number(player.saves ?? player.goalie_saves ?? 0)
-    const goalsAgainst = Number(player.goals_against ?? player.goalsAgainst ?? 0)
-    const toi = player.time_on_ice || player.toi || ''
-    return (
-        shotsAgainst > 0 ||
-        saves > 0 ||
-        goalsAgainst > 0 ||
-        (toi && toi !== '00:00' && toi !== '0:00')
-    )
-}
-
-const _hasScoringPlayers = $derived(
-    ($players || []).some((player) =>
-        isGoalie(player) ? _goaliePlayed(player) : hasPoints(player)
+    participatingPlayers.reduce(
+        (sum, player) => sum + (Number(player.penalty_minutes ?? player.penaltyMinutes) || 0),
+        0
     )
 )
+const totalPlayers = $derived(participatingPlayers.length)
+const _hasScoringPlayers = $derived(totalPlayers > 0)
 
 function buildDateLabel(value) {
     if (!value) {
@@ -78,7 +88,8 @@ const selectedDateSummary = $derived.by(() => {
         }
     }
 
-    const count = $games?.games?.length || 0
+    const gameIds = new Set(participatingPlayers.map((player) => String(player.game_id)))
+    const count = gameIds.size
     const label = buildDateLabel($selectedDate)
     const summary = count > 0 ? `${fiGames(count)} ${label}` : `Ei otteluita ${label}`
 
@@ -106,14 +117,16 @@ const _metaDescription = $derived.by(() => {
 })
 
 let _showPlayoffStats = $state(false)
-let _hideFloatingHeader = $state(false)
 
 function togglePlayoffStats() {
     _showPlayoffStats = !_showPlayoffStats
 }
 
-function toggleFloatingHeader() {
-    _hideFloatingHeader = !_hideFloatingHeader
+function resetDashboard() {
+    const url = new URL(window.location.href)
+    url.searchParams.delete('date')
+    replaceState(url, $page.state)
+    resetToDefault()
 }
 
 function formatSavePct(value) {
@@ -122,9 +135,46 @@ function formatSavePct(value) {
 }
 
 onMount(() => {
-    if ($selectedDate) return
-    // The server date is prerendered; use the visitor's current date on arrival.
-    resetToDefault()
+    const requested = new URL(window.location.href).searchParams.get('date')
+    const parsed =
+        requested && /^\d{4}-\d{2}-\d{2}$/.test(requested)
+            ? new Date(`${requested}T00:00:00`)
+            : null
+    const valid =
+        parsed &&
+        !Number.isNaN(parsed.getTime()) &&
+        `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, '0')}-${String(parsed.getDate()).padStart(2, '0')}` ===
+            requested &&
+        parsed <= new Date()
+    if (valid) setDate(requested)
+    else if (!$selectedDate) resetToDefault()
+    function syncDateToUrl(date) {
+        if (!date) return
+        const url = new URL(window.location.href)
+        if (followsDefaultDate()) {
+            if (!url.searchParams.has('date')) return
+            url.searchParams.delete('date')
+        } else {
+            if (url.searchParams.get('date') === date) return
+            url.searchParams.set('date', date)
+        }
+        replaceState(url, $page.state)
+    }
+    let ready = false
+    let latestDate = ''
+    const unsubscribe = selectedDate.subscribe((date) => {
+        latestDate = date
+        if (ready) syncDateToUrl(date)
+    })
+    // SvelteKit initializes its client router after the initial mount.
+    const timer = setTimeout(() => {
+        ready = true
+        syncDateToUrl(latestDate)
+    }, 0)
+    return () => {
+        clearTimeout(timer)
+        unsubscribe()
+    }
 })
 </script>
 
@@ -138,51 +188,16 @@ onMount(() => {
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
 </svelte:head>
 
-<div class="page-shell dashboard-bg" class:page-shell--compact-header={_hideFloatingHeader}>
-    <div class="dashboard__floating-header" class:dashboard__floating-header--hidden={_hideFloatingHeader} aria-label="Päivämäärävalinta">
-        {#if !_hideFloatingHeader}
-            <div id="floating-header-content" class="dashboard__floating-content">
-                <div class="dashboard__floating-topline">
-                    <div class="dashboard__floating-date">
-                        <DateControls />
-                        <button
-                            type="button"
-                            class="dashboard__floating-toggle dashboard__floating-toggle--close"
-                            onclick={toggleFloatingHeader}
-                            aria-expanded={!_hideFloatingHeader}
-                            aria-controls="floating-header-content"
-                            aria-label="Piilota päivävalinta"
-                            title="Piilota päivävalinta"
-                        >
-                            <X class="dashboard__floating-toggle-icon" aria-hidden="true" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-        {:else}
-            <button
-                type="button"
-                class="dashboard__floating-toggle dashboard__floating-toggle--open"
-                onclick={toggleFloatingHeader}
-                aria-expanded={!_hideFloatingHeader}
-                aria-controls="floating-header-content"
-                aria-label="Näytä päivävalinta"
-                title="Näytä päivävalinta"
-            >
-                <Menu class="dashboard__floating-toggle-icon dashboard__floating-toggle-icon--left" aria-hidden="true" />
-                <span class="dashboard__floating-toggle-label">Näytä päivävalinta</span>
-            </button>
-        {/if}
-    </div>
-
-    <div class="dashboard__bottom-nav">
-        <NavTabs />
+<div class="page-shell dashboard-bg">
+    <div class="dashboard__toolbar">
+        <div class="dashboard__nav"><NavTabs /></div>
+        <div class="dashboard__date"><DateControls /></div>
     </div>
 
     <header class="hero-header">
         <div class="hero-header__inner">
             <button
-                onclick={resetToDefault}
+                onclick={resetDashboard}
                 class="logo-button"
                 aria-label="Palaa etusivulle ja nollaa valinnat"
             >
@@ -195,14 +210,8 @@ onMount(() => {
             <h1 class="hero-title">
                 Miten suomalaisilla kulkee NHL:ssä?
             </h1>
-            <p class="hero-subtitle">Tutki päivän ottelut, pisteet ja onnistumiset</p>
-            <button
-                onclick={() => document.getElementById('scoringList')?.scrollIntoView({ behavior: 'smooth' })}
-                class="hero-scroll-to-results md:hidden"
-            >
-                Tuloksiin
-            </button>
         </div>
+        <p class="hero-subtitle">Tutki päivän ottelut, pisteet ja onnistumiset</p>
     </header>
 
     <div class="dashboard">
@@ -242,7 +251,7 @@ onMount(() => {
                             <h2 class="panel__hero-heading">Päivän yhteistilastot</h2>
                         </div>
                         <div class="hero-stats-skeleton" aria-hidden="true">
-                            {#each [1,2,3,4,5] as _}
+                            {#each [1,2,3,4] as _}
                                 <div class="hero-stat-skel">
                                     <div class="hero-stat-skel__value"></div>
                                     <div class="hero-stat-skel__label"></div>
@@ -255,6 +264,7 @@ onMount(() => {
                 <section class="panel panel--hero" aria-labelledby="hero-stats-title">
                     <div class="panel__inner">
                         <div class="hero-stats-header">
+                            <CalendarDays class="hero-stats-header__icon" aria-hidden="true" />
                             <h2 id="hero-stats-title" class="panel__hero-heading">Päivän yhteistilastot</h2>
                             <p class="panel__hero-sub">
                                 <span>{formatFinnishDateWithRelative($selectedDate || data.initialDate).formatted}</span>
@@ -264,23 +274,19 @@ onMount(() => {
                         <dl class="hero-stats">
                             <div class="hero-stat">
                                 <dt class="hero-stat__label">Maalit</dt>
-                                <dd class="hero-stat__value">{_totalGoals}</dd>
+                                <dd class="hero-stat__value"><Goal aria-hidden="true" />{_totalGoals}</dd>
                             </div>
                             <div class="hero-stat">
                                 <dt class="hero-stat__label">Syötöt</dt>
-                                <dd class="hero-stat__value">{_totalAssists}</dd>
-                            </div>
-                            <div class="hero-stat hero-stat--primary">
-                                <dt class="hero-stat__label">Pisteet</dt>
-                                <dd class="hero-stat__value">{_totalPoints}</dd>
+                                <dd class="hero-stat__value"><CircleDot aria-hidden="true" />{_totalAssists}</dd>
                             </div>
                             <div class="hero-stat">
                                 <dt class="hero-stat__label">Jäähymin</dt>
-                                <dd class="hero-stat__value">{_totalPenaltyMinutes}</dd>
+                                <dd class="hero-stat__value"><Shield aria-hidden="true" />{_totalPenaltyMinutes}</dd>
                             </div>
                             <div class="hero-stat">
-                                <dt class="hero-stat__label">Pelaajia</dt>
-                                <dd class="hero-stat__value">{totalPlayers}</dd>
+                                <dt class="hero-stat__label">Pelaajaa</dt>
+                                <dd class="hero-stat__value"><Users aria-hidden="true" />{totalPlayers}</dd>
                             </div>
                         </dl>
                     </div>
@@ -365,28 +371,7 @@ onMount(() => {
                 </div>
             </section>
 
-            <!-- Info card — same card language as the rest -->
-            <section class="panel panel--info" aria-labelledby="data-source-title">
-                <div class="panel__inner panel__inner--info">
-                    <div class="info-grid">
-                        <div class="info-heading">
-                            <p class="info-card__eyebrow">Suomi NHL</p>
-                            <h2 id="data-source-title" class="info-card__title">Tietoa datasta</h2>
-                        </div>
-                        <div class="info-card__copy">
-                            <p>
-                                Sivusto kokoaa NHL:ssä pelaavien suomalaisten ottelukohtaiset tilastot yhteen näkymään: maalit, syötöt, pisteet, peliajan ja maalivahtien keskeiset luvut.
-                            </p>
-                            <p>
-                                Mukana ovat suomalaispelaajat läpi kauden, ja tiedot päivittyvät myös otteluiden aikana.
-                            </p>
-                            <p>
-                                Tilastot perustuvat NHL:n virallisiin lähteisiin.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <p class="dashboard__source">Tilastot: NHL:n viralliset lähteet · mukana myös pisteittä jääneet pelaajat. <a href={base + "/tietoa"}>Tietoa datasta</a></p>
 
             <!-- Ads follow the product content so navigation stays attached to its section. -->
             <div class="dashboard__ads">
@@ -397,7 +382,8 @@ onMount(() => {
     </div>
 
     <footer class="page-footer">
-        <a href={base + "/tietoa"} class="page-footer__link">Tietoa sivustosta</a>
+        <a href={base + "/tietoa"} class="page-footer__link">Tietoa ja tietolähteet</a>
+        <a href={base + "/tietoa#mainosilmoitus"} class="page-footer__link">Mainonta</a>
     </footer>
 </div>
 
@@ -411,195 +397,48 @@ onMount(() => {
         width: min(calc(100% - 2 * var(--page-gutter)), var(--rail-max));
         max-width: var(--rail-max);
         margin: 0 auto;
-        padding: 5.25rem 0 6.5rem;
+        padding: 0.75rem 0 2rem;
     }
 
-    .page-shell--compact-header {
-        padding-top: 3.75rem;
-    }
-
-    .dashboard__bottom-nav {
-        position: fixed;
-        bottom: 0.75rem;
-        left: 50%;
-        z-index: 100;
-        width: fit-content;
-        max-width: calc(100% - 1rem);
-        transform: translateX(-50%);
-        padding-bottom: env(safe-area-inset-bottom);
-    }
-
-    .dashboard__floating-header {
-        position: fixed;
-        top: 0.75rem;
-        left: 50%;
-        z-index: 100;
-        width: min(calc(100% - 1rem), 360px);
-        transform: translateX(-50%);
-        --floating-header-gap: 0.35rem;
-        --floating-header-control: 4.5rem;
-    }
-
-    .dashboard__floating-header--hidden {
-        width: auto;
+    .dashboard__toolbar {
+        --toolbar-control-height: 2.5rem;
+        --toolbar-radius: 14px;
+        --toolbar-padding: 0.25rem;
+        --card-radius-sm: calc(var(--toolbar-radius) - var(--toolbar-padding) - 1px);
         display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
         justify-content: center;
+        gap: 0.75rem 1rem;
+        margin-bottom: 1.25rem;
     }
-
-    .dashboard__floating-content {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        width: 100%;
-        gap: var(--floating-header-gap);
-        position: relative;
-    }
-
-    .dashboard__floating-topline {
-        display: contents;
-    }
-
-    .dashboard__floating-toggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 0.5rem;
-        border: 1px solid rgba(16, 24, 40, 0.14);
-        background: rgba(255, 255, 255, 0.92);
-        color: #475467;
-        font-size: 0.66rem;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        cursor: pointer;
-    }
-
-    .dashboard__floating-toggle:hover {
-        background: #ffffff;
-        color: var(--color-ink);
-    }
-
-    .dashboard__floating-header--hidden .dashboard__floating-toggle {
-        margin: 0;
-        min-height: 2.35rem;
-        padding: 0.55rem 1rem;
-        border-radius: 0;
-        background: rgba(0, 53, 128, 0.94);
-        color: #ffffff;
-    }
-
-    .dashboard__floating-date {
-        grid-column: 1;
-        grid-row: 1;
-        width: 100%;
+    .dashboard__nav {
+        width: max-content;
+        max-width: 100%;
         min-width: 0;
-        position: relative;
     }
-
-    .dashboard__floating-date > .dashboard__floating-toggle {
-        position: absolute;
-        top: 50%;
-        right: 0;
-        width: 2.25rem;
-        height: var(--floating-row-control-height);
-        padding: 0;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        color: #475467;
-        box-shadow: none;
-        z-index: 20;
-        transform: translateY(-50%);
+    .dashboard__toolbar .dashboard__date :global(.date-controls__card) {
+        padding: var(--toolbar-padding);
+        border: 1px solid white;
+        border-radius: var(--toolbar-radius);
+        background: rgba(245, 250, 255, 0.96);
+        box-shadow: 0 5px 18px rgba(31, 83, 141, 0.2), 0 0 0 1px #bdd9f7;
     }
-
-    :global(.dashboard__floating-toggle-icon) {
-        width: 1.1rem;
-        height: 1.1rem;
-        flex: 0 0 auto;
+    .dashboard__date { flex: 0 1 360px; width: min(100%, 360px); min-width: 0; margin: 0; }
+    .dashboard__date :global(.date-controls__label) { display: none; }
+    .dashboard__date :global(.date-controls__navigation-row) { grid-template-columns: 2.5rem minmax(0, 1fr) auto 2.5rem; gap: 0.25rem; }
+    .dashboard__toolbar :global(.date-controls__nav-btn),
+    .dashboard__toolbar :global(.date-controls__picker-input),
+    .dashboard__toolbar :global(.date-controls__today-btn) {
+        height: var(--toolbar-control-height);
+        min-height: var(--toolbar-control-height);
+        padding-block: 0;
+        line-height: 1;
     }
-
-    .dashboard__floating-toggle--open {
-        gap: 0.5rem;
-    }
-
-    .dashboard__floating-toggle--open .dashboard__floating-toggle-label {
-        font-size: var(--floating-row-font-size);
-        font-weight: 800;
-        letter-spacing: 0.02em;
-    }
-
-    .dashboard__floating-date > .dashboard__floating-toggle:hover {
-        background: rgba(16, 24, 40, 0.04);
-        color: var(--color-ink);
-    }
-
-    :global(.dashboard__floating-header) {
-        --floating-row-font-size: 0.8rem;
-        --floating-row-line-height: 1.2;
-        --floating-row-inner-padding-y: 0.3rem;
-        --floating-row-inner-padding-x: 0.5rem;
-        --floating-row-control-height: 2rem;
-        font-family:
-            var(--font-sans, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-    }
-
-    :global(.dashboard__floating-header .date-controls) {
-        max-width: none;
-    }
-
-    :global(.dashboard__floating-header .date-controls__card) {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0.25rem 2.25rem 0.25rem 0.25rem;
-        background: rgba(255, 255, 255, 0.92);
-        border-color: rgba(16, 24, 40, 0.14);
-    }
-
-    :global(.dashboard__floating-header .date-controls__navigation-row) {
-        height: 100%;
-        align-items: center;
-    }
-
-    :global(.dashboard__floating-header .date-controls .date-controls__label) {
-        display: none;
-    }
-
-    :global(.dashboard__floating-header .date-controls__navigation-row) {
-        grid-template-columns: var(--floating-row-control-height) minmax(0, 1fr) auto var(--floating-row-control-height);
-        gap: 0.25rem;
-    }
-
-    :global(.dashboard__floating-header .date-controls__nav-btn),
-    :global(.dashboard__floating-header .date-controls__picker-input),
-    :global(.dashboard__floating-header .date-controls__today-btn) {
-        min-height: var(--floating-row-control-height);
-        font-size: var(--floating-row-font-size);
-        line-height: var(--floating-row-line-height);
-        font-variant-numeric: tabular-nums;
-    }
-
-    :global(.dashboard__floating-header .date-controls__nav-btn) {
-        width: var(--floating-row-control-height);
-        height: var(--floating-row-control-height);
-    }
-
-    :global(.dashboard__floating-header .date-controls__picker-input) {
-        padding: var(--floating-row-inner-padding-y) var(--floating-row-inner-padding-x);
-    }
-
-    :global(.dashboard__floating-header .date-controls__today-btn) {
-        padding: var(--floating-row-inner-padding-y) 0.65rem;
-    }
-
-    :global(.dashboard__bottom-nav .nav-tabs-list) {
-        box-sizing: border-box;
-        padding: 0.25rem;
-        background: rgba(255, 255, 255, 0.92);
-        border-color: rgba(16, 24, 40, 0.14);
-        box-shadow: 0 4px 16px rgba(16, 24, 40, 0.08);
-    }
+    .dashboard__date :global(.date-controls__nav-btn) { width: 2.5rem; }
+    .dashboard__date :global(.date-controls__today-btn) { padding-inline: 0.65rem; }
+    .dashboard__source { margin: 0; text-align: center; color: var(--color-muted); font-size: 0.8rem; line-height: 1.5; }
+    .dashboard__source a { color: var(--accent); }
 
     .dashboard {
         display: block;
@@ -616,14 +455,14 @@ onMount(() => {
 
     .dashboard__results {
         display: grid;
-        gap: 2.25rem;
+        gap: 1.5rem;
         margin-bottom: 2.25rem;
         min-width: 0;
     }
 
     .dashboard__active-stack {
         display: grid;
-        gap: 2.25rem;
+        gap: 1.25rem;
         min-width: 0;
     }
 
@@ -637,52 +476,34 @@ onMount(() => {
        Hero header
        ============================================ */
     .hero-header {
-        margin: 0 auto 1.75rem;
+        margin: 0 auto 1rem;
         text-align: center;
     }
 
+    .hero-subtitle { margin: 0.3rem 0 0; color: var(--color-muted); font-size: 1rem; font-weight: 500; }
+
     .hero-header__inner {
-        max-width: 620px;
+        display: grid;
+        justify-items: center;
+        gap: 0.25rem;
+        max-width: 100%;
         margin: 0 auto;
         padding: 0;
     }
 
     .hero-title {
-        max-width: 580px;
-        margin: 0.4rem auto 0;
+        max-width: 100%;
+        margin: 0;
         color: var(--color-ink);
-        font-size: clamp(1.05rem, 2.6vw, 1.6rem);
+        font-size: clamp(1.3rem, 2.6vw, 2rem);
         line-height: 1.15;
         font-weight: 800;
         letter-spacing: -0.01em;
-        white-space: nowrap;
-    }
-
-    .hero-subtitle {
-        margin: 0.45rem auto 0;
-        max-width: 32rem;
-        color: var(--color-muted);
-        font-size: clamp(0.9rem, 1.3vw, 1rem);
-        line-height: 1.5;
-    }
-
-    .hero-scroll-to-results {
-        margin-top: 0.6rem;
-        border-radius: 0;
-        background: var(--accent);
-        color: #fff;
-        padding: 0.45rem 0.9rem;
-        font-size: 0.85rem;
-        font-weight: 700;
-        transition: background 0.15s ease, transform 0.15s ease;
-    }
-
-    .hero-scroll-to-results:hover {
-        background: var(--accent-strong);
-        transform: translateY(-1px);
+        white-space: normal;
     }
 
     .logo-button {
+        align-self: center;
         background: transparent;
         border: none;
         padding: 0;
@@ -692,8 +513,8 @@ onMount(() => {
     }
 
     .logo-img {
-        width: 2.25rem;
-        height: 2.25rem;
+        width: 2.5rem;
+        height: 2.5rem;
         margin: 0 auto;
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -740,12 +561,17 @@ onMount(() => {
 
     /* Daily totals: compact header and a single row at every width. */
     .panel--hero .panel__inner {
-        padding: 0.75rem 1rem;
+        display: grid;
+        grid-template-columns: minmax(240px, 1.5fr) 4fr;
+        align-items: center;
+        padding: 0.5rem;
     }
 
     .hero-stats-header {
-        margin-bottom: 0.75rem;
+        position: relative;
+        padding: 0.5rem 0.75rem 0.5rem 3.25rem;
     }
+    .hero-stats-header :global(.hero-stats-header__icon) { position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); width: 1.5rem; height: 1.5rem; color: var(--accent); }
 
     .panel__hero-heading {
         margin: 0;
@@ -795,10 +621,9 @@ onMount(() => {
     .hero-stats,
     .hero-stats-skeleton {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         margin: 0;
-        padding: 0.75rem 0 0;
-        border-top: var(--card-border);
+        padding: 0;
     }
 
     .hero-stat,
@@ -808,9 +633,11 @@ onMount(() => {
         align-items: center;
         gap: 0.25rem;
         min-width: 0;
-        padding: 0;
+        padding: 0.5rem 0.25rem;
         text-align: center;
     }
+
+    .hero-stat__value :global(svg) { width: 1.5rem; height: 1.5rem; color: #52739d; }
 
     .hero-stat + .hero-stat,
     .hero-stat-skel + .hero-stat-skel {
@@ -819,16 +646,16 @@ onMount(() => {
 
     .hero-stat__value {
         order: -1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
         margin: 0;
         color: var(--color-ink);
-        font-size: 1.4rem;
+        font-size: 1.65rem;
         font-weight: 800;
         line-height: 1.2;
         font-variant-numeric: tabular-nums;
-    }
-
-    .hero-stat--primary .hero-stat__value {
-        color: var(--accent);
     }
 
     .hero-stat__label {
@@ -986,52 +813,13 @@ onMount(() => {
     }
 
     /* ============================================
-       Info card — same card language
-       ============================================ */
-    .panel__inner--info {
-        padding: var(--card-padding-y) var(--card-padding-x);
-    }
-
-    .info-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
-        gap: 1.5rem;
-    }
-
-    .info-card__eyebrow {
-        margin: 0 0 0.4rem;
-        color: var(--eyebrow-color);
-        font-size: var(--eyebrow-size);
-        font-weight: var(--eyebrow-weight);
-        letter-spacing: var(--eyebrow-track);
-        text-transform: uppercase;
-    }
-
-    .info-card__title {
-        margin: 0;
-        color: var(--color-ink);
-        font-size: clamp(1.2rem, 2.2vw, 1.5rem);
-        line-height: 1.2;
-        font-weight: 800;
-    }
-
-    .info-card__copy {
-        display: grid;
-        gap: 0.6rem;
-        color: #475467;
-        font-size: 0.95rem;
-        line-height: 1.65;
-    }
-
-    .info-card__copy p {
-        margin: 0;
-    }
-
-    /* ============================================
        Footer
        ============================================ */
     .page-footer {
-        margin-top: 3.25rem;
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
         text-align: center;
         font-size: 0.85rem;
         color: var(--color-muted);
@@ -1052,105 +840,17 @@ onMount(() => {
        ============================================ */
     @media (max-width: 767px) {
         .page-shell {
-            padding: 5rem 0 5.25rem;
+            padding: 0.75rem 0 2rem;
         }
 
-        .page-shell--compact-header {
-            padding-top: 3.25rem;
-        }
-
-        .dashboard__floating-header {
-            top: 0.35rem;
-            width: min(calc(100% - 1rem), 360px);
-            --floating-header-gap: 0.2rem;
-            --floating-header-control: 2rem;
-            --floating-row-font-size: 0.78rem;
-            --floating-row-control-height: 2rem;
-            --floating-row-inner-padding-y: 0.28rem;
-        }
-
-        .dashboard__floating-header--hidden {
-            width: auto;
-        }
-
-        .dashboard__floating-content {
-            gap: var(--floating-header-gap);
-        }
-
-        .dashboard__floating-date > .dashboard__floating-toggle {
-            width: 2.5rem;
-            height: var(--floating-row-control-height);
-            padding: 0;
-        }
-
-        :global(.dashboard__floating-toggle-icon) {
-            width: 0.95rem;
-            height: 0.95rem;
-        }
-
-        .dashboard__floating-header--hidden .dashboard__floating-toggle {
-            position: static;
-            height: auto;
-            width: auto;
-            min-height: 2.35rem;
-            padding: 0.55rem 1rem;
-            gap: 0.4rem;
-            border-radius: 0;
-            background: rgba(0, 53, 128, 0.94);
-            color: #ffffff;
-        }
-
-        .dashboard__floating-header--hidden .dashboard__floating-toggle-label {
-            font-size: 0.78rem;
-            font-weight: 800;
-            letter-spacing: 0.04em;
-        }
-
-        :global(.dashboard__floating-header .date-controls__card) {
-            padding: 0.25rem 2.5rem 0.25rem 0.25rem;
-        }
-
-        :global(.dashboard__floating-header .date-controls__navigation-row) {
-            height: 100%;
-        }
-
-        :global(.dashboard__floating-header .date-controls__navigation-row) {
-            grid-template-columns: 2rem minmax(0, 1fr) 2rem;
-            gap: 0.2rem;
-        }
-
-        :global(.dashboard__floating-header .date-controls__today-btn) {
-            display: none !important;
-        }
-
-        :global(.dashboard__floating-header .date-controls__nav-btn) {
-            width: 2rem;
-            height: 2rem;
-        }
-
-        :global(.dashboard__floating-header .date-controls__nav-btn),
-        :global(.dashboard__floating-header .date-controls__picker-input),
-        :global(.dashboard__floating-header .date-controls__today-btn) {
-            min-height: 2rem;
-        }
-
-        :global(.dashboard__floating-header .date-controls__picker-input) {
-            justify-content: center;
-            padding-inline: 0.35rem;
-            font-size: var(--floating-row-font-size);
-            text-align: center;
-        }
-
-        :global(.dashboard__floating-header .date-controls__picker-input svg) {
-            display: none;
-        }
-
+        .dashboard__toolbar { --toolbar-control-height: 2.75rem; flex-direction: column; align-items: stretch; }
+        .dashboard__nav { width: 100%; }
+        .dashboard__date { flex: none; align-self: center; }
+        .dashboard__date :global(.date-controls__navigation-row) { grid-template-columns: 2.25rem minmax(0, 1fr) auto 2.25rem; }
+        .dashboard__date :global(.date-controls__nav-btn) { width: 2.25rem; }
+        .dashboard__date :global(.date-controls__today-btn) { padding-inline: 0.45rem; }
         .hero-header {
-            margin-bottom: 1.4rem;
-        }
-
-        .hero-header__inner {
-            max-width: 22rem;
+            margin-bottom: 1rem;
         }
 
         .logo-img {
@@ -1159,21 +859,9 @@ onMount(() => {
         }
 
         .hero-title {
-            margin-top: 0.35rem;
-            font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+            margin-top: 0;
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
             line-height: 1.15;
-        }
-
-        .hero-subtitle {
-            margin-top: 0.35rem;
-            font-size: 0.82rem;
-            line-height: 1.4;
-        }
-
-        .hero-scroll-to-results {
-            margin-top: 0.5rem;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
         }
 
         .panel__inner {
@@ -1181,18 +869,19 @@ onMount(() => {
         }
 
         .panel--hero .panel__inner {
-            padding: 0.75rem;
+            grid-template-columns: minmax(0, 1fr);
+            padding: 0.5rem;
         }
+        .hero-stats-header { margin-bottom: 0.5rem; }
+        .hero-subtitle { font-size: 0.8rem; }
+        .hero-stat__value { gap: 0.25rem; font-size: 1.25rem; }
+        .hero-stat__value :global(svg) { width: 1rem; height: 1rem; }
 
         .hero-stat__label {
             font-size: 0.7rem;
             letter-spacing: -0.02em;
         }
 
-        .info-grid {
-            grid-template-columns: 1fr;
-            gap: 0.85rem;
-        }
     }
 
 </style>

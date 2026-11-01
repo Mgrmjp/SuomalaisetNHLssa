@@ -3,28 +3,20 @@
 
 import { X } from 'lucide-svelte'
 import { base } from '$app/paths'
-import Button from '$lib/components/ui/Button.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
-import { games } from '$lib/stores/gameData.js'
-import { isPlayerGameLive } from '$lib/utils/gameStateHelpers.mjs'
 
-const { player, isOpen = false, onclose } = $props()
+const { player, isOpen = false, onclose, venue = '' } = $props()
 
 let _playerPhotoUrl = $state(null)
-let _photoError = $state(false)
-let _imageLoading = $state(true)
 let _lqipUrl = $state(null)
-let _imageLoaded = $state(false)
 
 function getLocalHeadshotUrl(playerId) {
     if (!playerId) return null
-    return `/headshots/${playerId}.webp`
+    return `${base}/headshots/${playerId}.webp`
 }
 
 function loadPlayerImage(playerId) {
     if (!playerId) return
-    _imageLoading = true
-    _photoError = false
     _lqipUrl = getLocalHeadshotUrl(playerId)
 
     const localUrl = getLocalHeadshotUrl(playerId)
@@ -32,19 +24,14 @@ function loadPlayerImage(playerId) {
 
     img.onload = () => {
         _playerPhotoUrl = localUrl
-        _photoError = false
-        _imageLoading = false
     }
 
     img.onerror = () => {
         if (player.headshot_url) {
             _playerPhotoUrl = player.headshot_url
-            _photoError = false
         } else {
-            _photoError = true
             _playerPhotoUrl = null
         }
-        _imageLoading = false
     }
 
     img.src = localUrl
@@ -62,7 +49,11 @@ function portal(node) {
     placeholder.style.cssText = 'display: none;'
     node.parentNode.insertBefore(placeholder, node)
     node._portalPlaceholder = placeholder
+    const previousFocus = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     document.body.appendChild(node)
+    node.querySelector('button')?.focus()
     return {
         update() {
             if (node.parentNode !== document.body) {
@@ -70,6 +61,8 @@ function portal(node) {
             }
         },
         destroy() {
+            document.body.style.overflow = previousOverflow
+            if (previousFocus?.isConnected) previousFocus.focus()
             if (document.body.contains(node)) {
                 document.body.removeChild(node)
             }
@@ -81,8 +74,6 @@ function portal(node) {
 }
 
 const displayName = $derived(player.name?.default || player.name || 'Unknown Player')
-const gamesData = $derived($games)
-const _isLive = $derived(isPlayerGameLive(player, gamesData))
 const _playerInitials = $derived(
     displayName
         .split(' ')
@@ -114,197 +105,104 @@ function handleBackdropClick(e) {
         onclose?.()
     }
 }
+
+function handleKeydown(event) {
+    if (event.key === 'Escape') {
+        event.preventDefault()
+        onclose?.()
+    }
+    if (event.key === 'Tab') {
+        const buttons = event.currentTarget.querySelectorAll('button, a[href], [tabindex="0"]')
+        const first = buttons[0]
+        const last = buttons[buttons.length - 1]
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault()
+            last?.focus()
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault()
+            first?.focus()
+        }
+    }
+}
 </script>
 
 {#if isOpen}
-    <div
-        use:portal
-        class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-[100]"
-        onclick={handleBackdropClick}
-        role="button"
-        tabindex="0"
-        onkeydown={(e) => e.key === "Escape" && onclose?.()}
-    >
-        <div class="player-details-dialog max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="p-6 md:p-7">
-                <!-- Header -->
-                <div class="flex items-start gap-4 mb-6">
-                    {#if _playerPhotoUrl || _lqipUrl}
-                        <img
-                            src={_playerPhotoUrl || _lqipUrl}
-                            alt={displayName}
-                            class="w-16 h-16 sm:w-24 sm:h-24 rounded-full object-cover shrink-0"
-                        />
-                    {:else}
-                        <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-gray-200 flex items-center justify-center text-4xl font-bold text-gray-500 shrink-0">
-                            {_playerInitials}
-                        </div>
-                    {/if}
-                    <div class="flex-1 min-w-0">
-                        <h2 class="text-xl font-bold text-gray-900">{displayName}</h2>
-                        <div class="text-gray-600">{player.team_full || player.team || "Unknown Team"}</div>
-                    </div>
-                    <Button
-                        type="button"
-                        aria-label="Sulje pelaajan lisätiedot"
-                        onclick={onclose}
-                        class="shrink-0 w-9 h-9"
-                    >
-                        <X class="w-5 h-5" aria-hidden="true" />
-                    </Button>
+    <div use:portal class="player-details-backdrop dashboard-theme" onclick={handleBackdropClick} onkeydown={handleKeydown} role="presentation">
+        <div class="player-details-dialog" role="dialog" aria-modal="true" aria-labelledby="player-details-title" tabindex="-1">
+            <header class="details-header">
+                {#if _playerPhotoUrl || _lqipUrl}
+                    <img src={_playerPhotoUrl || _lqipUrl} alt="" class="player-photo" onerror={() => { _playerPhotoUrl = null; _lqipUrl = null }} />
+                {:else}
+                    <div class="player-photo player-initials" aria-hidden="true">{_playerInitials}</div>
+                {/if}
+                <div class="player-identity">
+                    <p class="details-kicker">Pelaajan ottelutilastot</p>
+                    <h2 id="player-details-title">{displayName}</h2>
+                    <p class="player-team">{player.team_full || player.team}</p>
+                    {#if venue}<p class="player-venue">{venue}</p>{/if}
                 </div>
+                <button class="details-close" type="button" onclick={onclose} aria-label="Sulje pelaajan lisätiedot">Sulje <X size={16} aria-hidden="true" /></button>
+            </header>
 
-                <!-- Game Stats -->
-                <div class="player-details-panel p-4 mb-4">
-                    <h3 class="text-sm font-semibold text-gray-500 mb-3">Pelin tilastot</h3>
-
-                    {#if isGoalie}
-                        <!-- Main stat: Save % -->
-                        <div class="text-center mb-4 pb-4 border-b border-gray-200" title="pisteet / torjuntaprosentti">
-                            <div class="text-5xl font-bold text-gray-900 leading-none">
-                                {_goalieSavePct === null ? "—" : _goalieSavePct + "%"}
-                            </div>
-                            <div class="text-sm text-gray-500 mt-1.5">
-                                torjuntaprosentti
-                            </div>
-                        </div>
-                        <!-- Secondary stats -->
-                        <div class="flex justify-center gap-5 text-center flex-wrap">
-                            <div class="px-3 min-w-[4.5rem]" title="torjunnat">
-                                <div class="text-2xl font-bold text-gray-900">{player.saves || 0}</div>
-                                <div class="text-xs text-gray-500 mt-1">torjunnat</div>
-                            </div>
-                            {#if player.shots_against !== undefined}
-                                <div class="px-3 min-w-[4.5rem]" title="vastustajan laukaukset">
-                                    <div class="text-2xl font-bold text-gray-900">{player.shots_against}</div>
-                                    <div class="text-xs text-gray-500 mt-1">laukaukset</div>
-                                </div>
-                            {/if}
-                            <div class="px-3 min-w-[4.5rem]" title="päästetyt maalit">
-                                <div class="text-2xl font-bold text-gray-900">{player.goals_against || 0}</div>
-                                <div class="text-xs text-gray-500 mt-1">päästetyt</div>
-                            </div>
-                            {#if player.time_on_ice}
-                                <div class="px-3 min-w-[4.5rem]" title="aika kentällä">
-                                    <div class="text-2xl font-bold text-gray-900">{player.time_on_ice}</div>
-                                    <div class="text-xs text-gray-500 mt-1">aika</div>
-                                </div>
-                            {/if}
-                        </div>
-                    {:else}
-                        <!-- Main stat: Points -->
-                        <div class="text-center mb-4 pb-4 border-b border-gray-200" title="pisteet">
-                            <div class="text-5xl font-bold text-gray-900 leading-none">
-                                {player.points || 0}
-                            </div>
-                            <div class="text-sm text-gray-500 mt-1.5">
-                                {player.goals > 0 || player.assists > 0
-                                    ? `${player.goals || 0}+${player.assists || 0}`
-                                    : 'pistettä'}
-                            </div>
-                        </div>
-                        <!-- Secondary stats -->
-                        <div class="flex justify-center gap-5 text-center flex-wrap">
-                            <div class="px-3 min-w-[4.5rem]" title="maalit">
-                                <div class="text-2xl font-bold text-gray-900">{player.goals || 0}</div>
-                                <div class="text-xs text-gray-500 mt-1">maalit</div>
-                            </div>
-                            <div class="px-3 min-w-[4.5rem]" title="syötöt">
-                                <div class="text-2xl font-bold text-gray-900">{player.assists || 0}</div>
-                                <div class="text-xs text-gray-500 mt-1">syötöt</div>
-                            </div>
-                            <div class="px-3 min-w-[4.5rem]" title="plus-miinus">
-                                <div class="text-2xl font-bold {player.plus_minus >= 0 ? 'text-green-600' : 'text-red-600'}">
-                                    {player.plus_minus > 0 ? '+' : ''}{player.plus_minus ?? 0}
-                                </div>
-                                <div class="text-xs text-gray-500 mt-1">plus/miinus</div>
-                            </div>
-                            {#if player.time_on_ice}
-                                <div class="px-3 min-w-[4.5rem]" title="aika kentällä">
-                                    <div class="text-2xl font-bold text-gray-900">{player.time_on_ice}</div>
-                                    <div class="text-xs text-gray-500 mt-1">aika</div>
-                                </div>
-                            {/if}
-                        </div>
-                    {/if}
-                </div>
-
-                <!-- Additional Stats -->
-                {#if !isGoalie && (player.shots || player.hits || player.blocked_shots || player.takeaways || player.giveaways)}
-                    <div class="player-details-panel p-4 mb-4">
-                        <div class="flex justify-center gap-4 text-center flex-wrap">
-                            {#if player.shots > 0}
-                                <div class="px-3 min-w-[4rem]" title="laukaukset">
-                                    <div class="text-xl font-bold text-gray-900">{player.shots}</div>
-                                    <div class="text-xs text-gray-500 mt-1">laukaukset</div>
-                                </div>
-                            {/if}
-                            {#if player.hits > 0}
-                                <div class="px-3 min-w-[4rem]" title="taklaukset">
-                                    <div class="text-xl font-bold text-gray-900">{player.hits}</div>
-                                    <div class="text-xs text-gray-500 mt-1">taklaukset</div>
-                                </div>
-                            {/if}
-                            {#if player.blocked_shots > 0}
-                                <div class="px-3 min-w-[4rem]" title="blokatut laukaukset">
-                                    <div class="text-xl font-bold text-gray-900">{player.blocked_shots}</div>
-                                    <div class="text-xs text-gray-500 mt-1">blokit</div>
-                                </div>
-                            {/if}
-                            {#if player.takeaways > 0}
-                                <div class="px-3 min-w-[4rem]" title="riistot">
-                                    <div class="text-xl font-bold text-gray-900">{player.takeaways}</div>
-                                    <div class="text-xs text-gray-500 mt-1">riistot</div>
-                                </div>
-                            {/if}
-                            {#if player.giveaways > 0}
-                                <div class="px-3 min-w-[4rem]" title="menetykset">
-                                    <div class="text-xl font-bold text-gray-900">{player.giveaways}</div>
-                                    <div class="text-xs text-gray-500 mt-1">menetykset</div>
-                                </div>
-                            {/if}
-                        </div>
-                        {#if player.shots > 0 && player.goals > 0}
-                            {@const shPct = ((player.goals / player.shots) * 100).toFixed(1)}
-                            <div class="text-center text-xs text-gray-400 mt-2 pt-2 border-t border-gray-200">
-                                {player.goals}g / {player.shots} sh = {shPct}%
-                            </div>
+            <div class="details-body">
+                <section class="details-panel" aria-labelledby="game-stats-title">
+                    <h3 id="game-stats-title">Pelin tilastot</h3>
+                    <dl class="stats-grid">
+                        {#if isGoalie}
+                            <div><dt>Torjunta-%</dt><dd>{_goalieSavePct === null ? '—' : _goalieSavePct + '%'}</dd></div>
+                            <div><dt>Torjunnat</dt><dd>{player.saves || 0}</dd></div>
+                            {#if player.shots_against !== undefined}<div><dt>Laukaukset</dt><dd>{player.shots_against}</dd></div>{/if}
+                            <div><dt>Päästetyt</dt><dd>{player.goals_against || 0}</dd></div>
+                        {:else}
+                            <div><dt>Maalit</dt><dd>{player.goals || 0}</dd></div>
+                            <div><dt>Syötöt</dt><dd>{player.assists || 0}</dd></div>
+                            <div><dt>Pisteet</dt><dd>{player.points || 0}</dd></div>
+                            <div><dt>Plus/miinus</dt><dd class:positive={player.plus_minus > 0} class:negative={player.plus_minus < 0}>{player.plus_minus > 0 ? '+' : ''}{player.plus_minus ?? 0}</dd></div>
                         {/if}
-                    </div>
+                        {#if player.time_on_ice}<div><dt>Peliaika</dt><dd>{player.time_on_ice}</dd></div>{/if}
+                    </dl>
+                </section>
+
+                {#if !isGoalie && (player.shots || player.hits || player.blocked_shots || player.takeaways || player.giveaways)}
+                    <section class="details-panel" aria-labelledby="additional-stats-title">
+                        <h3 id="additional-stats-title">Muut tilastot</h3>
+                        <dl class="stats-grid secondary-stats">
+                            {#if player.shots > 0}<div><dt>Laukaukset</dt><dd>{player.shots}</dd></div>{/if}
+                            {#if player.hits > 0}<div><dt>Taklaukset</dt><dd>{player.hits}</dd></div>{/if}
+                            {#if player.blocked_shots > 0}<div><dt>Blokit</dt><dd>{player.blocked_shots}</dd></div>{/if}
+                            {#if player.takeaways > 0}<div><dt>Riistot</dt><dd>{player.takeaways}</dd></div>{/if}
+                            {#if player.giveaways > 0}<div><dt>Menetykset</dt><dd>{player.giveaways}</dd></div>{/if}
+                        </dl>
+                        {#if player.shots > 0 && player.goals > 0}
+                            <p class="shooting-percentage">Laukaisuprosentti <strong>{((player.goals / player.shots) * 100).toFixed(1).replace('.', ',')} %</strong></p>
+                        {/if}
+                    </section>
                 {/if}
 
-                <!-- Recent Games -->
-                {#if player.recent_results && player.recent_results.length > 0}
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-500 mb-3">Viimeisimmät pelit</h3>
-                        <div class="space-y-2">
+                {#if player.recent_results?.length > 0}
+                    <section class="recent-games" aria-labelledby="recent-games-title">
+                        <h3 id="recent-games-title">Viimeisimmät pelit <span class="game-count">{Math.min(player.recent_results.length, 5)}</span></h3>
+                        <div class="recent-games-list">
                             {#each player.recent_results.slice(0, 5) as game}
-                                {@const isWin = game.result === 'W' || game.result === 'OTW' || game.result === 'SOW'}
-                                {@const opponentCode = game.opponent?.toLowerCase()}
-                                <div class="flex flex-wrap items-center gap-x-3 gap-y-2 p-3 md:p-4 player-details-panel">
-                                    <div class="w-10 shrink-0 text-sm text-gray-500">{parseInt(game.date.split('-')[2])}.{parseInt(game.date.split('-')[1])}.</div>
-                                    <div class="w-8 shrink-0 text-center">
-                                        <img src="/nhl-logos/{opponentCode}.svg" alt={game.opponent} class="w-6 h-6 mx-auto" onerror={(e) => e.target.style.display = 'none'} />
-                                    </div>
-                                    <div class="min-w-0 flex-1 text-sm md:text-base text-gray-800">{game.opponent_full || game.opponent}</div>
-                                    <div class="text-sm md:text-base font-semibold {isWin ? 'text-green-600' : 'text-red-600'}">
-                                        {game.team_score} - {game.opponent_score}
-                                    </div>
-                                    <div class="w-4 h-4 shrink-0 rounded-full {isWin ? 'bg-green-500' : 'bg-red-500'}"></div>
-                                    <div class="w-full md:w-auto flex flex-wrap gap-x-3 gap-y-1 text-sm text-gray-500 md:ml-auto">
-                                        {#if !isGoalie}
-                                            <span>M: {game.goals ?? 0}</span>
-                                            <span>S: {game.assists ?? 0}</span>
-                                            <span>P: {game.points ?? 0}</span>
+                                {@const isWin = ['W', 'OTW', 'SOW'].includes(game.result)}
+                                <div class="recent-game">
+                                    <time datetime={game.date}>{parseInt(game.date.split('-')[2])}.{parseInt(game.date.split('-')[1])}.</time>
+                                    <div class="opponent"><TeamLogo team={game.opponent} size="28" /><span>{game.opponent_full || game.opponent}</span></div>
+                                    <span class="game-score" class:win={isWin} class:loss={!isWin} aria-label={`${isWin ? 'Voitto' : 'Tappio'} ${game.team_score}–${game.opponent_score}`}>{game.team_score}–{game.opponent_score}</span>
+                                    <dl class="recent-stats">
+                                        {#if isGoalie}
+                                            <div><dt>Torj.</dt><dd>{game.saves ?? 0}</dd></div>
+                                            <div><dt>Pääst.</dt><dd>{game.goals_against ?? 0}</dd></div>
                                         {:else}
-                                            <span>T: {game.saves ?? 0}</span>
-                                            <span>P: {game.goals_against ?? 0}</span>
+                                            <div><dt>M</dt><dd>{game.goals ?? 0}</dd></div>
+                                            <div><dt>S</dt><dd>{game.assists ?? 0}</dd></div>
+                                            <div><dt>P</dt><dd>{game.points ?? 0}</dd></div>
                                         {/if}
-                                    </div>
+                                    </dl>
                                 </div>
                             {/each}
                         </div>
-                    </div>
+                    </section>
                 {/if}
             </div>
         </div>
@@ -312,6 +210,87 @@ function handleBackdropClick(e) {
 {/if}
 
 <style>
-    .player-details-dialog { background: var(--card-bg); border: var(--card-border); border-radius: var(--card-radius); box-shadow: 0 16px 48px #10182829; }
-    .player-details-panel { background: var(--color-table-head); border: var(--card-border); border-radius: var(--card-radius-sm); }
+    .player-details-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: rgba(12, 36, 68, 0.32);
+        backdrop-filter: blur(6px);
+        color: var(--color-ink);
+    }
+    .player-details-dialog {
+        width: min(100%, 42rem);
+        max-height: calc(100dvh - 2rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: var(--card-bg);
+        border: 1px solid var(--color-panel-border);
+        border-radius: var(--card-radius);
+        box-shadow: 0 20px 60px rgba(25, 64, 113, 0.24), inset 0 0 0 1px white;
+    }
+    .details-header {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        padding: 1.25rem;
+        border-bottom: 1px solid var(--color-panel-border);
+        background: linear-gradient(115deg, #f8fbff, #e4f0ff);
+    }
+    .player-photo {
+        width: 64px;
+        height: 64px;
+        flex-shrink: 0;
+        object-fit: cover;
+        border-radius: 50%;
+        background: white;
+        border: 1px solid var(--color-panel-border);
+    }
+    .player-initials { display: grid; place-items: center; font-weight: 700; color: var(--accent); }
+    .player-identity { flex: 1; min-width: 0; }
+    .details-kicker { margin: 0 0 0.2rem; font-size: 0.65rem; font-weight: 700; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; }
+    h2 { margin: 0; font-family: var(--font-display); font-size: clamp(1rem, 3vw, 1.25rem); font-weight: 750; line-height: 1.3; }
+    .player-team, .player-venue { margin: 0.2rem 0 0; color: var(--color-muted); font-size: 0.8rem; line-height: 1.4; }
+    .player-venue { font-size: 0.72rem; }
+    .details-close { display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; align-self: flex-start; min-height: 2.25rem; padding: 0.4rem 0.65rem; border: 1px solid var(--color-panel-border); border-radius: 8px; background: #f8fbff; color: var(--accent); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
+    .details-close:hover { background: #deebfc; }
+    .details-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .details-body { padding: 1rem 1.25rem 1.25rem; display: grid; gap: 0.875rem; }
+    .details-panel { padding: 0.875rem; background: rgba(237, 246, 255, 0.7); border: 1px solid var(--color-panel-border); border-radius: 10px; }
+    h3 { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem; color: var(--accent-ink); font-size: 0.85rem; font-weight: 750; }
+    dl { margin: 0; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr)); gap: 0.5rem; }
+    .stats-grid > div { display: flex; flex-direction: column-reverse; align-items: center; justify-content: center; min-height: 3.5rem; padding: 0.4rem 0.2rem; border-radius: 6px; background: rgba(255,255,255,0.65); }
+    dt { color: var(--color-muted); font-size: 0.65rem; }
+    dd { margin: 0; font-size: 1.3rem; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .positive { color: #087a29; }
+    .negative { color: #c62828; }
+    .secondary-stats dd { font-size: 1.05rem; }
+    .shooting-percentage { display: flex; justify-content: space-between; margin: 0.75rem 0 0; padding-top: 0.65rem; border-top: 1px solid var(--color-panel-border); font-size: 0.72rem; color: var(--color-muted); }
+    .shooting-percentage strong { color: var(--color-ink); }
+    .game-count { display: inline-grid; place-items: center; min-width: 1.25rem; height: 1.25rem; border-radius: 5px; background: var(--accent); color: white; font-size: 0.7rem; }
+    .recent-games-list { border: 1px solid var(--color-panel-border); border-radius: 10px; overflow: hidden; background: rgba(255,255,255,0.45); }
+    .recent-game { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) auto 6.5rem; align-items: center; gap: 0.65rem; padding: 0.65rem 0.75rem; }
+    .recent-game + .recent-game { border-top: 1px solid #dce9f8; }
+    time { color: var(--color-muted); font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+    .opponent { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-size: 0.78rem; font-weight: 600; }
+    .opponent span { overflow-wrap: anywhere; }
+    .game-score { padding: 0.2rem 0.45rem; border-radius: 5px; font-size: 0.8rem; font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .win { color: #086227; background: #e1f7e5; border: 1px solid #c5edce; }
+    .loss { color: #b42323; background: #fff0f0; border: 1px solid #ffd4d4; }
+    .recent-stats { display: flex; justify-content: flex-end; gap: 0.65rem; }
+    .recent-stats > div { display: flex; align-items: baseline; gap: 0.2rem; }
+    .recent-stats dd { font-size: 0.8rem; }
+    @media (max-width: 480px) {
+        .details-header { padding: 1rem; gap: 0.65rem; flex-wrap: wrap; }
+        .player-photo { width: 48px; height: 48px; }
+        .details-close { margin-left: auto; }
+        .details-body { padding: 0.875rem; }
+        .recent-game { grid-template-columns: 2.5rem minmax(0, 1fr) auto; gap: 0.4rem; }
+        .recent-stats { grid-column: 2 / -1; justify-content: flex-start; }
+        .stats-grid { grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr)); }
+    }
 </style>

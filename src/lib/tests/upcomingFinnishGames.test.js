@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { describe, expect, it } from 'vitest'
 import { selectUpcomingFinnishGames } from '$lib/utils/upcomingFinnishGames.js'
 
@@ -34,6 +35,27 @@ describe('upcoming Finnish games in the empty state', () => {
                 new Date('2026-10-02T02:00:00Z').getTime()
             )
         ).toEqual([])
+    })
+
+    it('never turns a completed game into an upcoming game even if its time is in the future', () => {
+        const games = ['OFF', 'FINAL', 'LIVE', 'CRIT', 'IRT'].map((gameState, index) => ({
+            ...scheduled[0],
+            gameId: index,
+            gameState,
+        }))
+        expect(selectUpcomingFinnishGames(games, '2026-10-01', now)).toEqual([])
+    })
+
+    it('merges lineup and roster sources without duplicate games or unnamed players', () => {
+        const games = [
+            { ...scheduled[0], finnishPlayers: ['Player One'], gameState: 'PRE' },
+            scheduled[0],
+            { ...scheduled[1], finnishPlayers: [{ name: '' }] },
+        ]
+        const result = selectUpcomingFinnishGames(games, '2026-10-01', now)
+        expect(result).toHaveLength(1)
+        expect(result[0].finnishPlayers).toEqual(['Player One'])
+        expect(result[0].finnish_players_count).toBe(1)
     })
 
     it('sorts and limits games with known Finnish players', () => {
