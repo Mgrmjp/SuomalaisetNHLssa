@@ -1,70 +1,6 @@
 {
-  "updatedAt": "2026-11-01T18:22:55Z",
+  "updatedAt": "2026-11-02T14:43:25Z",
   "games": [
-    {
-      "gameId": 2026020228,
-      "startTime": "2026-11-01T20:30:00Z",
-      "awayTeam": "MIN",
-      "homeTeam": "WSH",
-      "finnishPlayers": [
-        {
-          "name": "Olli Määttä",
-          "team": "MIN"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020229,
-      "startTime": "2026-11-01T21:00:00Z",
-      "awayTeam": "UTA",
-      "homeTeam": "PHI",
-      "finnishPlayers": [
-        {
-          "name": "Rasmus Ristolainen",
-          "team": "PHI"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020230,
-      "startTime": "2026-11-01T23:00:00Z",
-      "awayTeam": "EDM",
-      "homeTeam": "NYR",
-      "finnishPlayers": [
-        {
-          "name": "Kasperi Kapanen",
-          "team": "EDM"
-        },
-        {
-          "name": "Eeli Tolvanen",
-          "team": "NYR"
-        },
-        {
-          "name": "Joonas Korpisalo",
-          "team": "NYR"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020231,
-      "startTime": "2026-11-02T01:00:00Z",
-      "awayTeam": "OTT",
-      "homeTeam": "ANA",
-      "finnishPlayers": [
-        {
-          "name": "Nikolas Matinpalo",
-          "team": "OTT"
-        },
-        {
-          "name": "Mikael Granlund",
-          "team": "ANA"
-        },
-        {
-          "name": "Ville Husso",
-          "team": "ANA"
-        }
-      ]
-    },
     {
       "gameId": 2026020233,
       "startTime": "2026-11-03T00:00:00Z",
@@ -138,6 +74,78 @@
         {
           "name": "Joonas Korpisalo",
           "team": "NYR"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020241,
+      "startTime": "2026-11-04T00:00:00Z",
+      "awayTeam": "MIN",
+      "homeTeam": "PHI",
+      "finnishPlayers": [
+        {
+          "name": "Olli Määttä",
+          "team": "MIN"
+        },
+        {
+          "name": "Rasmus Ristolainen",
+          "team": "PHI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020242,
+      "startTime": "2026-11-04T00:00:00Z",
+      "awayTeam": "VGK",
+      "homeTeam": "PIT",
+      "finnishPlayers": [
+        {
+          "name": "Ville Koivunen",
+          "team": "PIT"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020243,
+      "startTime": "2026-11-04T00:00:00Z",
+      "awayTeam": "DAL",
+      "homeTeam": "WSH",
+      "finnishPlayers": [
+        {
+          "name": "Arttu Hyry",
+          "team": "DAL"
+        },
+        {
+          "name": "Esa Lindell",
+          "team": "DAL"
+        },
+        {
+          "name": "Joel Kiviranta",
+          "team": "DAL"
+        },
+        {
+          "name": "Mikko Rantanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Miro Heiskanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Roope Hintz",
+          "team": "DAL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020244,
+      "startTime": "2026-11-04T00:00:00Z",
+      "awayTeam": "COL",
+      "homeTeam": "CBJ",
+      "finnishPlayers": [
+        {
+          "name": "Artturi Lehkonen",
+          "team": "COL"
         }
       ]
     }
