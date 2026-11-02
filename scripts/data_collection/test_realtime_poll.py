@@ -129,6 +129,8 @@ class RealtimePollTests(unittest.TestCase):
             "static/data/players/finnish-roster.json",
             "static/data/games_manifest.json",
             "static/data/standings.json",
+            "static/data/daily-news.json",
+            "static/data/daily-news-source-cache.json",
         ]
         for filename in files:
             path = checkout / filename
@@ -137,7 +139,7 @@ class RealtimePollTests(unittest.TestCase):
         git("add", ".", cwd=checkout)
         git("commit", "-m", "Initial data", cwd=checkout)
         git("push", "origin", "main", cwd=checkout)
-        for filename in (files[0], files[2], files[3]):
+        for filename in (files[0], files[2], files[3], files[4], files[5]):
             (checkout / filename).write_text('{"updated":true}\n')
 
         result = subprocess.run(
@@ -146,7 +148,7 @@ class RealtimePollTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(git("status", "--porcelain", cwd=checkout).stdout, "")
-        for filename in (files[0], files[2], files[3]):
+        for filename in (files[0], files[2], files[3], files[4], files[5]):
             self.assertEqual(
                 git("show", f"main:{filename}", cwd=remote).stdout,
                 '{"updated":true}\n',
