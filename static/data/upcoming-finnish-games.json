@@ -1,46 +1,6 @@
 {
-  "updatedAt": "2026-11-02T18:24:09Z",
+  "updatedAt": "2026-11-03T13:41:12Z",
   "games": [
-    {
-      "gameId": 2026020233,
-      "startTime": "2026-11-03T00:00:00Z",
-      "awayTeam": "DET",
-      "homeTeam": "FLA",
-      "finnishPlayers": [
-        {
-          "name": "Aleksander Barkov",
-          "team": "FLA"
-        },
-        {
-          "name": "Anton Lundell",
-          "team": "FLA"
-        },
-        {
-          "name": "Eetu Luostarinen",
-          "team": "FLA"
-        },
-        {
-          "name": "Niko Mikkola",
-          "team": "FLA"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020234,
-      "startTime": "2026-11-03T01:00:00Z",
-      "awayTeam": "COL",
-      "homeTeam": "CHI",
-      "finnishPlayers": [
-        {
-          "name": "Artturi Lehkonen",
-          "team": "COL"
-        },
-        {
-          "name": "Teuvo Teravainen",
-          "team": "CHI"
-        }
-      ]
-    },
     {
       "gameId": 2026020237,
       "startTime": "2026-11-04T00:00:00Z",
@@ -146,6 +106,46 @@
         {
           "name": "Artturi Lehkonen",
           "team": "COL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020239,
+      "startTime": "2026-11-04T00:30:00Z",
+      "awayTeam": "EDM",
+      "homeTeam": "NJD",
+      "finnishPlayers": [
+        {
+          "name": "Kasperi Kapanen",
+          "team": "EDM"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020245,
+      "startTime": "2026-11-04T01:00:00Z",
+      "awayTeam": "CAR",
+      "homeTeam": "NSH",
+      "finnishPlayers": [
+        {
+          "name": "Jesperi Kotkaniemi",
+          "team": "CAR"
+        },
+        {
+          "name": "Juuso Välimäki",
+          "team": "CAR"
+        },
+        {
+          "name": "Sebastian Aho",
+          "team": "CAR"
+        },
+        {
+          "name": "Justus Annunen",
+          "team": "NSH"
+        },
+        {
+          "name": "Juuse Saros",
+          "team": "NSH"
         }
       ]
     }
