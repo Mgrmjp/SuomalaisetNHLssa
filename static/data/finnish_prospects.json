@@ -1241,7 +1241,7 @@
     "currentTeam": "Florida Panthers",
     "league": "NHL",
     "stats": {
-      "gp": 14,
+      "gp": 15,
       "goals": 4,
       "assists": 2,
       "points": 6,
@@ -1801,7 +1801,7 @@
     "currentTeam": "Florida Panthers",
     "league": "NHL",
     "stats": {
-      "gp": 14,
+      "gp": 15,
       "goals": 2,
       "assists": 2,
       "points": 4,
@@ -3051,6 +3051,30 @@
     "birthDate": "2003-01-28"
   },
   {
+    "id": "8481027",
+    "name": "Lenni Killinen",
+    "nhlRights": "CAR",
+    "sources": [
+      "draft_picks:2018"
+    ],
+    "currentTeam": "IF BjÃ¶rklÃ¶ven",
+    "league": "SHL",
+    "stats": {
+      "gp": 14,
+      "goals": 0,
+      "assists": 1,
+      "points": 1,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {},
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8481027.png",
+    "position": "R",
+    "birthDate": "2000-06-15"
+  },
+  {
     "id": "8481573",
     "name": "Marcus Kallionkieli",
     "nhlRights": "VGK",
@@ -3714,25 +3738,6 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20262027/VAN/8482447.png",
     "position": "G",
     "birthDate": "2002-08-13"
-  },
-  {
-    "id": "8481027",
-    "name": "Lenni Killinen",
-    "nhlRights": "CAR",
-    "sources": [
-      "draft_picks:2018"
-    ],
-    "league": "Unknown",
-    "currentTeam": "Unknown",
-    "stats": {
-      "gp": 0,
-      "goals": 0,
-      "assists": 0,
-      "points": 0,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    }
   },
   {
     "id": "8479338",
