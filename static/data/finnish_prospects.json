@@ -517,7 +517,7 @@
     "currentTeam": "Dallas Stars",
     "league": "NHL",
     "stats": {
-      "gp": 14,
+      "gp": 15,
       "goals": 3,
       "assists": 8,
       "points": 11,
@@ -1036,7 +1036,7 @@
     "currentTeam": "Carolina Hurricanes",
     "league": "NHL",
     "stats": {
-      "gp": 14,
+      "gp": 15,
       "goals": 4,
       "assists": 3,
       "points": 7,
@@ -1254,6 +1254,30 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20262027/FLA/8482113.png",
     "position": "C",
     "birthDate": "2001-10-03"
+  },
+  {
+    "id": "8480009",
+    "name": "Eeli Tolvanen",
+    "nhlRights": "NSH",
+    "sources": [
+      "draft_picks:2017"
+    ],
+    "currentTeam": "New York Rangers",
+    "league": "NHL",
+    "stats": {
+      "gp": 16,
+      "goals": 4,
+      "assists": 2,
+      "points": 6,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": true,
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/NYR/8480009.png",
+    "position": "R",
+    "birthDate": "1999-04-22"
   },
   {
     "id": "8479408",
@@ -1729,7 +1753,7 @@
     "currentTeam": "Pittsburgh Penguins",
     "league": "NHL",
     "stats": {
-      "gp": 12,
+      "gp": 13,
       "goals": 2,
       "assists": 3,
       "points": 5,
@@ -1742,30 +1766,6 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20262027/PIT/8482758.png",
     "position": "R",
     "birthDate": "2003-06-13"
-  },
-  {
-    "id": "8480009",
-    "name": "Eeli Tolvanen",
-    "nhlRights": "NSH",
-    "sources": [
-      "draft_picks:2017"
-    ],
-    "currentTeam": "New York Rangers",
-    "league": "NHL",
-    "stats": {
-      "gp": 15,
-      "goals": 3,
-      "assists": 1,
-      "points": 4,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": true,
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/NYR/8480009.png",
-    "position": "R",
-    "birthDate": "1999-04-22"
   },
   {
     "id": "8480010",
@@ -1814,6 +1814,33 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20262027/FLA/8480185.png",
     "position": "C",
     "birthDate": "1998-09-02"
+  },
+  {
+    "id": "8484213",
+    "name": "Emil Pieniniemi",
+    "nhlRights": "FLA",
+    "position": "D",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/FLA/8484213.png",
+    "height": 191,
+    "weight": 87,
+    "birthDate": "2005-03-02",
+    "sources": [
+      "team_prospects:FLA",
+      "draft_picks:2023"
+    ],
+    "currentTeam": "Savannah Ghost Pirates",
+    "league": "ECHL",
+    "stats": {
+      "gp": 5,
+      "goals": 3,
+      "assists": 1,
+      "points": 4,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {}
   },
   {
     "id": "8480035",
@@ -1910,6 +1937,30 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8481574.png",
     "position": "R",
     "birthDate": "2001-01-11"
+  },
+  {
+    "id": "8485646",
+    "name": "Reko Alanko",
+    "nhlRights": "UTA",
+    "sources": [
+      "draft_picks:2025"
+    ],
+    "currentTeam": "Seattle Thunderbirds",
+    "league": "WHL",
+    "stats": {
+      "gp": 13,
+      "goals": 1,
+      "assists": 3,
+      "points": 4,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {},
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/UTA/8485646.png",
+    "position": "D",
+    "birthDate": "2007-07-15"
   },
   {
     "id": "8485377",
@@ -2084,33 +2135,6 @@
     "birthDate": "2002-04-03"
   },
   {
-    "id": "8484213",
-    "name": "Emil Pieniniemi",
-    "nhlRights": "FLA",
-    "position": "D",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/FLA/8484213.png",
-    "height": 191,
-    "weight": 87,
-    "birthDate": "2005-03-02",
-    "sources": [
-      "team_prospects:FLA",
-      "draft_picks:2023"
-    ],
-    "currentTeam": "Savannah Ghost Pirates",
-    "league": "ECHL",
-    "stats": {
-      "gp": 4,
-      "goals": 2,
-      "assists": 1,
-      "points": 3,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {}
-  },
-  {
     "id": "8482170",
     "name": "Joni Jurmo",
     "nhlRights": "VAN",
@@ -2144,7 +2168,7 @@
     "currentTeam": "Carolina Hurricanes",
     "league": "NHL",
     "stats": {
-      "gp": 6,
+      "gp": 7,
       "goals": 2,
       "assists": 1,
       "points": 3,
@@ -2349,30 +2373,6 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8483724.png",
     "position": "D",
     "birthDate": "2002-01-12"
-  },
-  {
-    "id": "8485646",
-    "name": "Reko Alanko",
-    "nhlRights": "UTA",
-    "sources": [
-      "draft_picks:2025"
-    ],
-    "currentTeam": "Seattle Thunderbirds",
-    "league": "WHL",
-    "stats": {
-      "gp": 13,
-      "goals": 1,
-      "assists": 2,
-      "points": 3,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {},
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/UTA/8485646.png",
-    "position": "D",
-    "birthDate": "2007-07-15"
   },
   {
     "id": "8486017",
