@@ -6,4 +6,4 @@ The main path is [build_cache.py](build_cache.py) → [fetch.py](fetch.py), with
 
 Upcoming-game, move, preseason, rankings and prospect-cache collectors are separate scripts. Their presence does not imply the corresponding public section is enabled; see [Architecture](../../../docs/ARCHITECTURE.md#public-sections).
 
-The active scheduled results poller is [../realtime_poll.py](../realtime_poll.py). The [realtime subdirectory](realtime/README.md) contains a separate legacy monitor, not the production Pages workflow.
+The active scheduled results poller is [../realtime_poll.py](../realtime_poll.py). See [Deployment](../../../docs/DEPLOYMENT.md) for the GitHub Actions and Pages workflow.
