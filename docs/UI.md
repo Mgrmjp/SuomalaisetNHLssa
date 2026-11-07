@@ -15,7 +15,7 @@
 | Player-card layout and interactions | [PlayerCard](../src/lib/components/game/PlayerCard.svelte), [PlayerCard.css](../src/lib/components/game/PlayerCard.css) |
 | Banner rotation and artwork | [Ad store](../src/lib/stores/ads.js), [AdContainer](../src/lib/components/ui/AdContainer.svelte), [SVG artwork](../src/lib/assets/ads/) |
 
-Reuse these components and tokens instead of creating a second design system or copying an outdated component signature. The public app forces a light color scheme. The main bundled body font is Onest; see the CSS for fallbacks.
+Reuse these components and tokens instead of creating a second design system or copying an outdated component signature. The public app forces a light color scheme. The main bundled body font is Onest. Player-card scores and goalie save percentages use locally bundled Chakra Petch Bold Italic through `--font-sport`; other text keeps the existing body and heading typography. See the CSS for fallbacks.
 
 ## Layout and content
 
@@ -24,6 +24,7 @@ Reuse these components and tokens instead of creating a second design system or 
 - Keep the dashboard compact and player-card-first. Use the shared rail/page-gutter variables; let wide screens show useful content.
 - Use Finnish labels and numeric dates. Preserve visible game/date context when showing yesterday's feature on today's pre-game view.
 - Player-card matchups sit at the bottom with team logos flanking the score. Completed wins/losses add a subtle circular green/red glow centered at the bottom edge, with a text result label.
+- Goalie save percentages use a semicircle gauge with the label above the exact percentage and the saves/shots breakdown beneath it. The arc is blue from 92% to below 100%, amber from 90% to below 92%, and red below 90%. Exactly 100% gets a metallic gold gradient and glow for a legendary finish. It fills from 0–100%; unavailable percentages keep the empty state. Each card owns its SVG gradient ID so multiple goalies render independently.
 - Team logos identify teams. Keep ordinary text and actions neutral/blue; reserve result colors for semantic states with text or accessible descriptions.
 - Bundle custom banner artwork through asset imports so image URLs respect the deployment base path. SVG banner text embeds the bundled Onest font and its license so standalone images match the site's typography across devices. Keep the affiliate tracking URL on the enclosing link and show the `Mainos` label.
 - Campaigns may define an `expiresAt` timestamp with an explicit timezone. Ads populate reserved slots after mounting so static HTML cannot retain expired images during hydration. The ad store filters expired campaigns; `AdContainer` and [MobileAd](../src/lib/components/ui/MobileAd.svelte) refresh at the next expiry and when the tab regains focus or changes visibility. Björn Borg Black Week ends at midnight after `30.11.2026` in Finland; evergreen banners continue rotating.

@@ -21,6 +21,7 @@ import ComprehensivePlayerDetails from './ComprehensivePlayerDetails.svelte'
 import './PlayerCard.css'
 
 const { player, highlight = null } = $props()
+const cardId = $props.id()
 
 // Reactive variables for player photo
 let playerPhotoUrl = $state(null)
@@ -382,13 +383,50 @@ $effect(() => {
                             {/if}
                         </dl>
                     {:else if _primaryStat}
-                        <div class="card__stat">
-                            <strong class="card__stat-value">{_primaryStat.value}{_primaryStat.unit}</strong>
-                            <div class="card__stat-meta">
-                                <strong>{_primaryStat.label}</strong>
-                                {#if _statBreakdown}
-                                    <small>{_statBreakdown}</small>
-                                {/if}
+                        <div class="card__stat card__stat--goalie">
+                            <div
+                                class="card__save-gauge"
+                                class:card__save-gauge--strong={goalieSavePct >= 92 && goalieSavePct < 100}
+                                class:card__save-gauge--legendary={goalieSavePct === 100}
+                                class:card__save-gauge--moderate={goalieSavePct >= 90 && goalieSavePct < 92}
+                                class:card__save-gauge--low={goalieSavePct < 90}
+                            >
+                                <svg class="card__save-arc" viewBox="0 0 260 150" fill="none" aria-hidden="true" focusable="false">
+                                    <defs>
+                                        <linearGradient id={`${cardId}-save-gradient`} x1="16" y1="132" x2="244" y2="132" gradientUnits="userSpaceOnUse">
+                                            {#if goalieSavePct === 100}
+                                                <stop stop-color="#fef3c7" />
+                                                <stop offset="0.22" stop-color="#d97706" />
+                                                <stop offset="0.45" stop-color="#fbbf24" />
+                                                <stop offset="0.55" stop-color="#fffbea" />
+                                                <stop offset="0.65" stop-color="#fbbf24" />
+                                                <stop offset="1" stop-color="#a16207" />
+                                            {:else}
+                                                <stop stop-color="var(--save-gauge-color)" stop-opacity="0.4" />
+                                                <stop offset="0.2" stop-color="var(--save-gauge-color)" />
+                                                <stop offset="0.6" stop-color="var(--save-gauge-color)" stop-opacity="0.85" />
+                                                <stop offset="1" stop-color="var(--save-gauge-color)" stop-opacity="0.5" />
+                                            {/if}
+                                        </linearGradient>
+                                    </defs>
+                                    <path class="card__save-track" d="M16 132a114 114 0 0 1 228 0" />
+                                    {#if goalieSavePct > 0}
+                                        <path
+                                            class="card__save-progress"
+                                            d="M16 132a114 114 0 0 1 228 0"
+                                            pathLength="100"
+                                            stroke={`url(#${cardId}-save-gradient)`}
+                                            stroke-dasharray={`${Math.min(100, Math.max(0, goalieSavePct))} 100`}
+                                        />
+                                    {/if}
+                                </svg>
+                                <div class="card__save-content">
+                                    <span class="card__save-label">{_primaryStat.label}</span>
+                                    <strong class="card__stat-value">{_primaryStat.value}{_primaryStat.unit}</strong>
+                                    {#if _statBreakdown}
+                                        <small class="card__save-breakdown">{_statBreakdown}</small>
+                                    {/if}
+                                </div>
                             </div>
                         </div>
                     {:else}
