@@ -5,13 +5,18 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "includes": ["src/**/*", "scripts/**/*.js", "scripts/**/*.cjs", "scripts/**/*.mjs"]
+        "includes": [
+            "src/**/*",
+            "scripts/**/*.js",
+            "scripts/**/*.cjs",
+            "scripts/**/*.mjs",
+            "*.js",
+            "*.json",
+            "!package-lock.json"
+        ]
     },
     "formatter": {
-        "enabled": true,
-        "indentStyle": "space",
-        "indentWidth": 4,
-        "lineWidth": 100
+        "enabled": false
     },
     "linter": {
         "enabled": true,
@@ -75,12 +80,6 @@
         }
     },
     "javascript": {
-        "formatter": {
-            "quoteStyle": "single",
-            "semicolons": "asNeeded",
-            "trailingCommas": "es5",
-            "bracketSpacing": true
-        },
         "globals": [
             "$:",
             "$",
@@ -96,19 +95,6 @@
             "clearInterval"
         ]
     },
-    "json": {
-        "formatter": {
-            "indentStyle": "space",
-            "indentWidth": 4
-        }
-    },
-    "css": {
-        "formatter": {
-            "enabled": true,
-            "indentStyle": "space",
-            "indentWidth": 4
-        }
-    },
     "assist": {
         "enabled": true,
         "actions": {
@@ -120,7 +106,6 @@
     "overrides": [
         {
             "includes": ["scripts/**/*.js", "scripts/**/*.cjs", "scripts/**/*.mjs"],
-            "formatter": { "enabled": false },
             "linter": {
                 "rules": {
                     "style": {

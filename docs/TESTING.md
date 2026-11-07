@@ -4,15 +4,16 @@
 
 ## Normal checks
 
-| Command | Scope |
-| --- | --- |
-| `npm run docs:check` | Engineering-doc links, anchors, source paths and npm commands |
-| `npm run lint` | Biome for frontend and JavaScript scripts |
-| `npm run lint:python` | Ruff for Python scripts; install development requirements |
-| `npm run check` | SvelteKit sync and Svelte type checking |
-| `npm test` | Vitest suites under `src/` |
-| `npm run validate` | Documentation, JS/Python lint, Svelte checks and Vitest |
-| `npm run build:quick` | Production build from existing data |
+| Command                | Scope                                                                       |
+| ---------------------- | --------------------------------------------------------------------------- |
+| `npm run docs:check`   | Engineering-doc links, anchors, source paths and npm commands               |
+| `npm run lint`         | Biome for frontend and JavaScript scripts                                   |
+| `npm run lint:python`  | Ruff for Python scripts; install development requirements                   |
+| `npm run format:check` | Prettier for web/docs/shell files and Ruff formatting for Python; no writes |
+| `npm run check`        | SvelteKit sync and Svelte type checking                                     |
+| `npm test`             | Vitest suites under `src/`                                                  |
+| `npm run validate`     | Documentation, formatting, JS/Python lint, Svelte checks and Vitest         |
+| `npm run build:quick`  | Production build from existing data                                         |
 
 Vitest's actual include pattern and mocks are in [vitest.config.js](../vitest.config.js). Current suites live in [src/lib/tests](../src/lib/tests/), including API handlers, snapshot validation, store recovery and news expiry. Files in the top-level `tests/` directory are not automatically included by that configuration.
 

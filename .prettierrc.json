@@ -1,0 +1,27 @@
+{
+    "plugins": ["prettier-plugin-svelte", "prettier-plugin-sh"],
+    "useTabs": false,
+    "tabWidth": 4,
+    "printWidth": 100,
+    "singleQuote": true,
+    "semi": false,
+    "trailingComma": "es5",
+    "endOfLine": "lf",
+    "proseWrap": "preserve",
+    "embeddedLanguageFormatting": "off",
+    "svelteIndentScriptAndStyle": false,
+    "svelteSortOrder": "none",
+    "overrides": [
+        {
+            "files": "*.svelte",
+            "options": { "parser": "svelte", "embeddedLanguageFormatting": "auto" }
+        },
+        { "files": "*.html", "options": { "embeddedLanguageFormatting": "auto" } },
+        { "files": ["*.yml", "*.yaml"], "options": { "tabWidth": 2 } },
+        { "files": "package.json", "options": { "tabWidth": 2 } },
+        {
+            "files": ["*.sh", ".husky/pre-commit"],
+            "options": { "parser": "sh", "simplify": false }
+        }
+    ]
+}

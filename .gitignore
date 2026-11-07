@@ -8,6 +8,7 @@ yarn-error.log*
 build/
 .svelte-kit/
 dist/
+*.timestamp-*.mjs
 
 # Environment files
 .env
@@ -112,6 +113,7 @@ scripts/test_*.py
 !scripts/test_check_deployment.py
 !scripts/test_check_docs.py
 !scripts/test_daily_update.py
+!scripts/test_generate_daily_news.py
 scripts/inspect_*.py
 scripts/find_undrafted.py
 scripts/deep_probe_*.py

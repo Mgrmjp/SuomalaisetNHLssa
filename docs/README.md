@@ -2,19 +2,20 @@
 
 These guides describe the current checkout. Each topic has one primary guide; source files linked from a guide define the actual behavior.
 
-| I want to… | Read |
-| --- | --- |
-| Run the app or contribute a change | [Development](DEVELOPMENT.md) |
-| Configure keys and local overrides | [Configuration](CONFIGURATION.md) |
-| Understand routes, stores and build boundaries | [Architecture](ARCHITECTURE.md) |
-| Refresh results, roster, schedules or prospects | [Data pipeline](DATA_PIPELINE.md) |
-| Understand game and roster records | [Player data](PLAYER_DATA.md) |
-| Understand news selection and expiry | [News](DAILY_NEWS.md) |
-| Understand standings collection and ordering | [Standings](STANDINGS.md) |
-| Trace Finnish name correction | [Name correction](NAME_CORRECTION.md) |
-| Publish or investigate a stale deployment | [Deployment](DEPLOYMENT.md) |
-| Choose validation commands | [Testing](TESTING.md) |
-| Change layouts, components or accessibility behavior | [UI conventions](UI.md) |
+| I want to…                                           | Read                                                  |
+| ---------------------------------------------------- | ----------------------------------------------------- |
+| Run the app or contribute a change                   | [Development](DEVELOPMENT.md)                         |
+| Configure keys and local overrides                   | [Configuration](CONFIGURATION.md)                     |
+| Understand routes, stores and build boundaries       | [Architecture](ARCHITECTURE.md)                       |
+| Refresh results, roster, schedules or prospects      | [Data pipeline](DATA_PIPELINE.md)                     |
+| Understand game and roster records                   | [Player data](PLAYER_DATA.md)                         |
+| Understand news selection and expiry                 | [News](DAILY_NEWS.md)                                 |
+| Understand standings collection and ordering         | [Standings](STANDINGS.md)                             |
+| Trace Finnish name correction                        | [Name correction](NAME_CORRECTION.md)                 |
+| Publish or investigate a stale deployment            | [Deployment](DEPLOYMENT.md)                           |
+| Choose validation commands                           | [Testing](TESTING.md)                                 |
+| Change layouts, components or accessibility behavior | [UI conventions](UI.md)                               |
+| Follow formatting rules or place a new file          | [Coding standards and structure](CODING_STANDARDS.md) |
 
 ## Maintaining these guides
 

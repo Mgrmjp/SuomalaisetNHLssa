@@ -1,4 +1,12 @@
 target-version = "py310"
+line-length = 100
+indent-width = 4
+include = ["*.py"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
 
 [lint]
 # Keep the initial gate focused on Python errors while older style findings

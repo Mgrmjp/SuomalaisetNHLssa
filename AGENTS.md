@@ -2,29 +2,32 @@
 
 Start with the [documentation index](docs/README.md). Use [Development](docs/DEVELOPMENT.md) for setup, [Data pipeline](docs/DATA_PIPELINE.md) for collection, and [Testing](docs/TESTING.md) for validation.
 
+Follow [Coding standards and structure](docs/CODING_STANDARDS.md) for formatting ownership, file placement and naming. Prettier owns web/docs/shell formatting, Ruff owns Python formatting, and Biome owns frontend/Node linting. Keep generated data and bundled assets outside manual formatting passes.
+
 ## Commands
 
 Run commands from the repository root using Linux Node/npm and the project `.venv`.
 
-| Task | Command |
-| --- | --- |
-| Start development server | `npm run dev` |
-| Production build with data collection | `npm run build` |
-| Build using existing data | `npm run build:quick` |
-| Refresh season statistics | `npm run data:stats` |
-| Refresh season stats and inactive-player history | `npm run prebuild` |
-| Fetch today through seven days ahead | `npm run data:fetch` |
-| Fetch a date or inclusive date range | `npm run data:fetch:date -- YYYY-MM-DD [YYYY-MM-DD]` |
-| Run Vitest tests | `npm test` |
-| Watch Vitest tests | `npm run test:watch` |
-| Check roster integrity | `npm run test:roster` |
-| Test roster field preservation | `npm run test:sync` |
-| Check JavaScript/Svelte with Biome | `npm run lint` |
-| Check Python with Ruff | `npm run lint:python` |
-| Format frontend files | `npm run format` |
-| Check Svelte types | `npm run check` |
-| Check documentation | `npm run docs:check` |
-| Run docs, lint, type checks and Vitest | `npm run validate` |
+| Task                                               | Command                                              |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| Start development server                           | `npm run dev`                                        |
+| Production build with data collection              | `npm run build`                                      |
+| Build using existing data                          | `npm run build:quick`                                |
+| Refresh season statistics                          | `npm run data:stats`                                 |
+| Refresh season stats and inactive-player history   | `npm run prebuild`                                   |
+| Fetch today through seven days ahead               | `npm run data:fetch`                                 |
+| Fetch a date or inclusive date range               | `npm run data:fetch:date -- YYYY-MM-DD [YYYY-MM-DD]` |
+| Run Vitest tests                                   | `npm test`                                           |
+| Watch Vitest tests                                 | `npm run test:watch`                                 |
+| Check roster integrity                             | `npm run test:roster`                                |
+| Test roster field preservation                     | `npm run test:sync`                                  |
+| Lint JavaScript/Svelte with Biome                  | `npm run lint`                                       |
+| Check Python with Ruff                             | `npm run lint:python`                                |
+| Format maintained code and documentation           | `npm run format`                                     |
+| Check formatting without writes                    | `npm run format:check`                               |
+| Check Svelte types                                 | `npm run check`                                      |
+| Check documentation                                | `npm run docs:check`                                 |
+| Run docs, formatting, lint, type checks and Vitest | `npm run validate`                                   |
 
 `npm run dev` and `npm run build:quick` do not refresh season statistics. If a local leaderboard is stale, run `npm run data:stats` and reload. Python tooling requires `requirements-dev.txt` installed in `.venv`.
 

@@ -15,10 +15,10 @@
     "test:sync": ".venv/bin/python3 scripts/data_collection/finnish/test_sync_roster.py",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "lint": "biome check src && biome lint scripts --reporter=summary",
+    "lint": "biome lint src scripts *.js *.json --reporter=summary",
     "lint:python": ".venv/bin/python -m ruff check scripts",
-    "format": "biome format --write src",
-    "validate": "npm run docs:check && npm run lint && npm run lint:python && npm run check && npm run test",
+    "format": "npm run format:code && npm run format:python",
+    "validate": "npm run docs:check && npm run format:check && npm run lint && npm run lint:python && npm run check && npm run test",
     "validate:seo": "npm run build:quick && npm run test:seo",
     "validate:fix": "npm run format && npm run validate",
     "validate:watch": "concurrently \"npm run check:watch\" \"npm run lint -- --watch\" \"npm run test:watch\"",
@@ -43,20 +43,24 @@
     "prepare": "husky",
     "data:standings": ".venv/bin/python3 scripts/data_collection/fetch_standings.py",
     "test:standings": ".venv/bin/python3 scripts/data_collection/test_fetch_standings.py && vitest run src/lib/tests/standingsSnapshot.test.js",
-    "docs:check": "python3 scripts/check_docs.py"
+    "docs:check": "python3 scripts/check_docs.py",
+    "format:code": "prettier --write .",
+    "format:code:check": "prettier --check .",
+    "format:python": ".venv/bin/python -m ruff format scripts",
+    "format:python:check": ".venv/bin/python -m ruff format --check scripts",
+    "format:check": "npm run format:code:check && npm run format:python:check"
   },
   "lint-staged": {
-    "src/**/*.{js,svelte}": [
-      "biome check --write --no-errors-on-unmatched"
-    ],
-    "src/**/*.{json,css}": [
-      "biome format --write"
-    ],
-    "scripts/**/*.{js,cjs,mjs}": [
+    "*.{js,ts,cjs,mjs,svelte,css,html,json,jsonc,md,yml,yaml,sh}": [
+      "prettier --write --ignore-unknown",
       "biome lint --no-errors-on-unmatched --reporter=summary"
     ],
+    ".husky/pre-commit": [
+      "prettier --write"
+    ],
     "scripts/**/*.py": [
-      ".venv/bin/ruff check"
+      ".venv/bin/python -m ruff format",
+      ".venv/bin/python -m ruff check"
     ]
   },
   "devDependencies": {
@@ -72,6 +76,9 @@
     "jsdom": "^27.0.0",
     "lint-staged": "^16.4.0",
     "postcss": "^8.5.6",
+    "prettier": "3.9.10",
+    "prettier-plugin-sh": "0.20.2",
+    "prettier-plugin-svelte": "4.1.1",
     "puppeteer": "^24.37.5",
     "svelte": "^5.29.0",
     "svelte-check": "^4.0.0",

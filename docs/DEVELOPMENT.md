@@ -24,6 +24,8 @@ For API keys and deliberate overrides, see [Configuration](CONFIGURATION.md). Pr
 
 ## Edit and validate
 
+Follow [Coding standards and structure](CODING_STANDARDS.md) for formatter ownership, naming and file placement. Run `npm run format` before validation; `npm run format:check` checks formatting without changing files.
+
 1. Inspect current behavior and preserve unrelated worktree changes.
 2. Make a focused change using the existing components and data boundaries.
 3. Run the checks appropriate to that change in [Testing](TESTING.md).

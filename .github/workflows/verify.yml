@@ -55,6 +55,9 @@ jobs:
       - name: Lint (Biome)
         run: npm run lint
 
+      - name: Check web, documentation and shell formatting
+        run: npm run format:code:check
+
       - name: Svelte type check
         run: npm run check
 
@@ -81,6 +84,9 @@ jobs:
 
       - name: Lint Python scripts
         run: python -m ruff check scripts
+
+      - name: Check Python formatting
+        run: python -m ruff format --check scripts
 
       - name: Roster sync field-preservation tests
         run: python scripts/data_collection/finnish/test_sync_roster.py

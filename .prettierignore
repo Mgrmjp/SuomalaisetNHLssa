@@ -1,0 +1,36 @@
+# Generated output, dependencies and local tool state.
+node_modules/
+build/
+dist/
+.svelte-kit/
+coverage/
+test-results/
+.venv/
+.ruff_cache/
+.kilo/
+.serena/
+.codex/
+.claude/
+.husky/_/
+
+# Collector output and bundled assets are owned by their producers.
+static/*
+!static/404.html
+scripts/**/cache/
+scripts/static/
+scripts/data/
+scripts/data_collection/scripts/
+src/lib/assets/
+package-lock.json
+*.timestamp-*.mjs
+
+# Ruff owns Python. Small declarative configuration and license files are
+# maintained directly; EditorConfig and Git define their text conventions.
+*.py
+*.toml
+*.txt
+.editorconfig
+.gitattributes
+.gitignore
+.prettierignore
+.env*
