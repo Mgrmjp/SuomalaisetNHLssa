@@ -351,8 +351,7 @@ $effect(() => {
                                     title="Avaa ottelutilastot ikkunaan"
                                     onclick={(e) => { e.stopPropagation(); showComprehensiveDetails = true; }}
                                 >
-                                    <span class="card__name-label">{displayName}</span>
-                                    <PanelsTopLeft class="card__name-icon" size={11} aria-hidden="true" />
+                                    <span class="card__name-label">{displayName}&nbsp;<PanelsTopLeft class="card__name-icon" size={11} aria-hidden="true" /></span>
                                 </button>
                             </h3>
                             <p class="card__team">

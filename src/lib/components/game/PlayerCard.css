@@ -185,7 +185,7 @@
     isolation: isolate;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     min-height: 2.75rem;
     padding-right: 3.25rem;
     text-align: left;
@@ -199,13 +199,11 @@
 }
 
 .card__stats-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.35rem;
+    display: block;
     text-align: left;
     max-width: 100%;
-    min-height: 2rem;
+    min-height: 0;
+    vertical-align: top;
     padding: 0;
     border: 0;
     border-radius: var(--card-radius-sm);
@@ -227,7 +225,8 @@
 }
 
 .card__name-icon {
-    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: -0.05em;
     color: var(--color-muted);
 }
 
@@ -450,6 +449,7 @@
    ============================== */
 .card__stat {
     display: flex;
+    margin-top: auto;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -535,7 +535,7 @@
    Footer strip
    ============================== */
 .card__footer {
-    margin-top: auto;
+    margin-top: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -576,6 +576,10 @@
    ============================== */
 .card--back .card__content {
     gap: 0.5rem;
+}
+
+.card--back .card__footer {
+    margin-top: auto;
 }
 
 .card__back-stats {
@@ -737,7 +741,7 @@
 .card__scoring {
     display: flex;
     gap: 0.25rem;
-    margin: 0;
+    margin: auto 0 0;
     padding: 0.1rem 0;
 }
 .card__scoring > div {
