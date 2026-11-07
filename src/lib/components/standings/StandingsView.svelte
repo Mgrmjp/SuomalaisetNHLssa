@@ -76,9 +76,12 @@ onMount(() => {
         </div>
     </div>
     {#if (stale || error) && hasData}
-        <Notice variant="warning">
+        <Notice variant="recovery">
             {error ? 'Päivitys epäonnistui. Näytetään viimeisin onnistunut sarjataulukko.' : 'Sarjataulukon tarkistuksesta on yli kolme tuntia.'}
             <span>Tarkistettu {formatTime($standingsMetadata.fetchedAt)}.</span>
+            {#snippet actions()}
+                <Button disabled={$standingsLoading} onclick={() => reload(true)}>{error ? 'Yritä uudelleen' : 'Päivitä'}</Button>
+            {/snippet}
         </Notice>
     {/if}
     {#if $standingsLoading && !hasData}

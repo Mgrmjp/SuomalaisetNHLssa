@@ -20,6 +20,7 @@ if (screenshotDir) await mkdir(screenshotDir, { recursive: true })
 const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] })
 const failures = []
 const snapshot = JSON.parse(await readFile('static/data/standings.json', 'utf8'))
+const gameDate = '2026-11-06'
 
 async function visit(page, path) {
     const response = await page.goto(baseUrl + path, { waitUntil: 'domcontentloaded', timeout: 60000 })
@@ -45,7 +46,13 @@ try {
                     navHeight: document.querySelector('.nav-tabs-list')?.getBoundingClientRect().height,
                     surface: [...document.querySelectorAll('.ui-surface, .panel')].slice(0, 8).map((node) => {
                         const style = getComputedStyle(node)
-                        return { top: style.borderTopLeftRadius, bottom: style.borderBottomLeftRadius }
+                        const radii = style.getPropertyValue('--card-radius').trim().split(/\s+/).map(Number.parseFloat)
+                        return {
+                            top: Number.parseFloat(style.borderTopLeftRadius),
+                            bottom: Number.parseFloat(style.borderBottomLeftRadius),
+                            expectedTop: radii[0],
+                            expectedBottom: radii[3] ?? radii[1] ?? radii[0],
+                        }
                     }),
                     overflowing: [...document.querySelectorAll('main *')].filter((node) => {
                         const rect = node.getBoundingClientRect()
@@ -55,8 +62,8 @@ try {
                 assert(geometry.scrollWidth <= width + 2, `Page overflow ${geometry.scrollWidth}/${width}: ${JSON.stringify(geometry.overflowing)}`)
                 assert(!geometry.navHeight || geometry.navHeight <= 58, 'Navigation stays in one scrollable row')
                 for (const surface of geometry.surface) {
-                    assert.equal(surface.top, '18px', 'Surface top geometry')
-                    assert.equal(surface.bottom, '0px', 'Surface bottom geometry')
+                    assert.equal(surface.top, surface.expectedTop, 'Surface follows its active radius token')
+                    assert.equal(surface.bottom, surface.expectedBottom, 'Surface follows its active radius token')
                 }
                 assert.deepEqual(errors, [], 'Runtime errors')
                 if (!PROSPECTS_ENABLED) assert.equal(await page.$$eval('a[href]', (links) => links.filter(link => /\/(lupaukset|prospects|drafts|scouting)(\/|$)/.test(new URL(link.href).pathname)).length), 0, 'Disabled section has no public links')
@@ -145,15 +152,19 @@ try {
     for (const width of [375, 768, 1440]) {
         const dashboard = await browser.newPage()
         await dashboard.setViewport({ width, height: 960 })
-        await visit(dashboard, '/')
+        await visit(dashboard, `/?date=${gameDate}`)
         await dashboard.click('[aria-label="Avaa kalenteri"]')
         await dashboard.waitForSelector('.calendar-month')
         assert(await dashboard.$eval('.calendar-month', (node) => node.getBoundingClientRect().width <= 360), 'Compact calendar')
-        await dashboard.$$eval('.calendar-month__day:not(.calendar-month__day--other-month)', (days) => days.find((day) => day.querySelector('span')?.textContent.trim() === '1')?.click())
-        const card = width < 768 ? '.swiper-forwards .swiper-slide:first-child .game-player-card' : '.scoring-list__grid .game-player-card'
+        await dashboard.$$eval('.calendar-month__day:not(.calendar-month__day--other-month)', (days) => days.find((day) => day.querySelector('.calendar-month__day-number')?.textContent.trim() === '5')?.click())
+        await dashboard.waitForFunction(() => new URL(location.href).searchParams.get('date') === '2026-11-05')
+        await dashboard.click('[aria-label="Avaa kalenteri"]')
+        await dashboard.$$eval('.calendar-month__day:not(.calendar-month__day--other-month)', (days) => days.find((day) => day.querySelector('.calendar-month__day-number')?.textContent.trim() === '6')?.click())
+        await dashboard.waitForFunction((date) => new URL(location.href).searchParams.get('date') === date, {}, gameDate)
+        const card = '.scoring-list__grid .game-player-card'
         await dashboard.waitForSelector(card + ' .card__name', { visible: true, timeout: 15000 })
         await dashboard.$eval(card, (node) => node.scrollIntoView({ block: 'center' }))
-        await dashboard.click(card + ' .card__name')
+        await dashboard.click(card + ' .card__footer-hint')
         await dashboard.waitForSelector(card + '.flipped')
         await new Promise((resolve) => setTimeout(resolve, 900))
         await dashboard.focus(card + ' .card--back')
@@ -162,11 +173,28 @@ try {
         await new Promise((resolve) => setTimeout(resolve, 900))
         await dashboard.evaluate(() => document.activeElement?.blur())
         if (screenshotDir) await dashboard.screenshot({ path: join(screenshotDir, `dashboard-results-${width}.png`) })
-        await dashboard.click(card + ' .card__footer-btn')
+        await dashboard.click(card + ' .card__stats-btn')
         await dashboard.waitForSelector('.player-details-dialog')
+        assert.equal(await dashboard.$(card + '.flipped'), null, 'Opening details does not flip the card')
         assert(await dashboard.$eval('.player-details-dialog', (node) => node.getBoundingClientRect().right <= innerWidth), 'Modal fits viewport')
         if (screenshotDir) await dashboard.screenshot({ path: join(screenshotDir, `player-modal-${width}.png`) })
         await dashboard.click('[aria-label="Sulje pelaajan lisätiedot"]')
+
+        // Recovery notices retain the cards and support keyboard retry.
+        const names = await dashboard.$$eval('.card__name-label', (nodes) => nodes.map((node) => node.textContent))
+        let failRefresh = true
+        await dashboard.setRequestInterception(true)
+        dashboard.on('request', (request) => failRefresh && request.url().includes(`/data/prepopulated/games/${gameDate}.json`)
+            ? request.respond({ status: 503, body: '{}' }) : request.continue())
+        await dashboard.evaluate(() => document.dispatchEvent(new Event('visibilitychange')))
+        await dashboard.waitForSelector('.ui-notice--recovery[role="status"]')
+        assert.deepEqual(await dashboard.$$eval('.card__name-label', (nodes) => nodes.map((node) => node.textContent)), names)
+        if (screenshotDir) await dashboard.screenshot({ path: join(screenshotDir, `dashboard-recovery-${width}.png`) })
+        failRefresh = false
+        await dashboard.focus('.ui-notice--recovery button')
+        await dashboard.keyboard.press('Enter')
+        await dashboard.waitForSelector('.ui-notice--recovery', { hidden: true })
+        assert.deepEqual(await dashboard.$$eval('.card__name-label', (nodes) => nodes.map((node) => node.textContent)), names)
         await dashboard.close()
     }
     console.log('PASS compact calendar, result card flip and player modal')
@@ -185,11 +213,46 @@ try {
     await page.$$eval('button', (buttons) => buttons.find((button) => button.textContent === 'Läntinen')?.click())
     await page.waitForFunction(() => document.querySelector('.table-heading')?.textContent.includes('Keskinen'))
     await page.setRequestInterception(true)
-    page.on('request', (request) => request.url().includes('/data/standings.json') ? request.respond({ status: 503, body: '{}' }) : request.continue())
+    let failStandingsRefresh = true
+    page.on('request', (request) => failStandingsRefresh && request.url().includes('/data/standings.json') ? request.respond({ status: 503, body: '{}' }) : request.continue())
     await page.$$eval('button', (buttons) => buttons.find((button) => button.textContent === 'Päivitä')?.click())
     await page.waitForFunction(() => document.querySelector('[role="status"]')?.textContent.includes('Päivitys epäonnistui'))
+    await page.waitForSelector('.ui-notice--recovery[role="status"]')
+    assert.equal(await page.$$eval('.standings-table tbody tr', (rows) => rows.length), 16)
+    if (screenshotDir) await page.screenshot({ path: join(screenshotDir, 'standings-recovery-1440.png') })
+    failStandingsRefresh = false
+    await page.focus('.ui-notice--recovery button')
+    await page.keyboard.press('Enter')
+    await page.waitForFunction(() => !document.querySelector('.ui-notice--recovery')?.textContent.includes('Päivitys epäonnistui'))
     assert.equal(await page.$$eval('.standings-table tbody tr', (rows) => rows.length), 16)
     await page.close()
+
+    for (const width of [375, 320]) {
+        const recoveryPage = await browser.newPage()
+        await recoveryPage.setViewport({ width, height: 960 })
+        let failRefresh = false
+        await recoveryPage.setRequestInterception(true)
+        recoveryPage.on('request', (request) => {
+            if (!request.url().includes('/data/standings.json')) return request.continue()
+            return request.respond(failRefresh
+                ? { status: 503, body: '{}' }
+                : { status: 200, contentType: 'application/json', body: JSON.stringify({ ...snapshot, fetchedAt: new Date().toISOString() }) })
+        })
+        await visit(recoveryPage, '/sarjataulukko/')
+        await recoveryPage.waitForSelector('.standings-table tbody tr')
+        failRefresh = true
+        await recoveryPage.$$eval('.view-actions button', (buttons) => buttons.find((button) => button.textContent === 'Päivitä')?.click())
+        await recoveryPage.waitForSelector('.ui-notice--recovery button')
+        assert.equal(await recoveryPage.$$eval('.standings-table tbody tr', (rows) => rows.length), 16)
+        assert(await recoveryPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Recovery notice fits mobile')
+        if (screenshotDir) await recoveryPage.screenshot({ path: join(screenshotDir, `standings-recovery-${width}.png`) })
+        failRefresh = false
+        await recoveryPage.focus('.ui-notice--recovery button')
+        await recoveryPage.keyboard.press('Enter')
+        await recoveryPage.waitForSelector('.ui-notice--recovery', { hidden: true })
+        assert.equal(await recoveryPage.$$eval('.standings-table tbody tr', (rows) => rows.length), 16)
+        await recoveryPage.close()
+    }
     for (const state of ['missing', 'stale']) {
         const statePage = await browser.newPage()
         let unavailable = state === 'missing'

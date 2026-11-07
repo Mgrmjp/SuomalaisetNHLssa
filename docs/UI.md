@@ -39,6 +39,6 @@ Reuse these components and tokens instead of creating a second design system or 
 
 Use semantic headings, real buttons/links and visible focus. Supply labels for icon-only controls. Ensure nested card actions do not accidentally flip the card, and keep keyboard flipping and modal close/focus behavior usable. Verify long Finnish names and narrow screens without horizontal page overflow.
 
-Loading, initial failure and background-refresh failure need distinct treatment. Do not erase visible good data while a background request runs. Do not use color as the only indication of win/loss or freshness. Respect reduced-motion preferences when changing animation.
+Loading, initial failure and background-refresh failure need distinct treatment. Use `Notice variant="recovery"` with an optional `actions` snippet for nonblocking refresh failures or stale cached data. It owns the compact dashboard surface, information icon, muted text and inline retry styling on both results and standings. Keep the visible results and never erase good data while a background request runs. Do not use color as the only indication of win/loss or freshness. Respect reduced-motion preferences when changing animation.
 
 Test responsive behavior and interactions using [Testing](TESTING.md). This guide describes conventions and checks; it does not claim a completed accessibility certification or measured performance score.

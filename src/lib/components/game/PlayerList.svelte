@@ -169,9 +169,11 @@ $effect(() => {
 </script>
 
 {#if $refreshError && !$isLoading && !$error}
-    <Notice variant="warning">
+    <Notice variant="recovery">
         <span>Päivitys epäonnistui. Näytetään viimeisimmät tulokset.</span>
-        <Button onclick={refreshSelectedDate}>Yritä uudelleen</Button>
+        {#snippet actions()}
+            <Button onclick={refreshSelectedDate}>Yritä uudelleen</Button>
+        {/snippet}
     </Notice>
 {/if}
 

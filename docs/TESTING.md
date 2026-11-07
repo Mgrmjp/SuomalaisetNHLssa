@@ -48,7 +48,7 @@ The [Verify workflow](../.github/workflows/verify.yml) and collection workflows 
 
 ## Browser verification
 
-With a development server already running, `npm run test:browser` invokes [scripts/test-pages.js](../scripts/test-pages.js) with Puppeteer. This is a real browser check, separate from the default unit suite. It checks responsive pages and interactions. Use `TEST_URL` to target another server and `UI_SCREENSHOT_DIR` to save screenshots.
+With a development server already running, `npm run test:browser` invokes [scripts/test-pages.js](../scripts/test-pages.js) with Puppeteer. This is a real browser check, separate from the default unit suite. It checks responsive pages and interactions. Surface geometry follows the active `--card-radius` token; player-card checks use the grid, flip control and name button. Recovery checks cover retained results/standings and keyboard retry through the shared `Notice` variant. Use `TEST_URL` to target another server and `UI_SCREENSHOT_DIR` to save screenshots.
 
 Browser work should cover desktop/mobile layout, focus, card flipping/details, date navigation, and failed refresh states. Follow the current session's browser-access constraints when working with an agent.
 
