@@ -52,6 +52,8 @@ With a development server already running, `npm run test:browser` invokes [scrip
 
 Browser work should cover desktop/mobile layout, focus, card flipping/details, date navigation, and failed refresh states. Follow the current session's browser-access constraints when working with an agent.
 
+Run `npm run test:ads:browser` against a running development server to check campaign expiry and image/link consistency across Finnish midnight, including pages loaded after the cutoff. Use `TEST_URL` to target a production preview. The check covers both mobile ad components and desktop slots at narrow and wide widths.
+
 ## Documentation validation
 
 [scripts/check_docs.py](../scripts/check_docs.py) checks the engineering-documentation set; editorial content and font licensing files are excluded. It validates literal npm script names against [package.json](../package.json) without executing network collectors. Its behavior is covered by [scripts/test_check_docs.py](../scripts/test_check_docs.py).

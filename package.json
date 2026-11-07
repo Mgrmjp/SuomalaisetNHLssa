@@ -30,6 +30,7 @@
     "data:realtime": ".venv/bin/python3 scripts/data_collection/realtime_poll.py",
     "goalies:collect": "node scripts/prebuild/collect-all-goalie-stats.cjs",
     "test:browser": "node scripts/test-pages.js",
+    "test:ads:browser": "node scripts/test-ad-campaigns.mjs",
     "test:browser:prod": "TEST_URL=https://suomalaisetnhlssa.fi node scripts/test-pages.js",
     "prospects:demo": ".venv/bin/python3 scripts/data_collection/leagues/demo_collector.py",
     "prospects:scrape": ".venv/bin/python3 scripts/data_collection/official_leagues.py",

@@ -1,5 +1,15 @@
 // @ts-nocheck
 import { writable } from 'svelte/store'
+import aaltoEnergiaDesktop from '../assets/ads/aalto-energia-desktop.svg'
+import aaltoEnergiaMobile from '../assets/ads/aalto-energia-mobile.svg'
+import bjornborgBlackweekDesktop from '../assets/ads/bjornborg-blackweek-desktop.svg'
+import bjornborgBlackweekMobile from '../assets/ads/bjornborg-blackweek-mobile.svg'
+import hehkuKiinteaDesktop from '../assets/ads/hehku-kiintea-12kk-desktop.svg'
+import hehkuKiinteaMobile from '../assets/ads/hehku-kiintea-12kk-mobile.svg'
+import hehkuPorssiDesktop from '../assets/ads/hehku-porssi-desktop.svg'
+import hehkuPorssiMobile from '../assets/ads/hehku-porssi-mobile.svg'
+
+const blackweekExpiresAt = '2026-12-01T00:00:00+02:00'
 
 // Ad spot identifiers
 export const AD_SPOTS = {
@@ -21,6 +31,39 @@ export const adSpotState = writable({
 
 // Banner ads - shared across banner spots (728x90 or 980x120 only)
 const bannerAds = [
+    {
+        id: 'hehku-porssi',
+        href: 'https://go.adt246.net/t/t?a=2034103803&as=2038972948&t=2&tk=1',
+        src: hehkuPorssiDesktop,
+        width: 728,
+        height: 90,
+        alt: 'Hehku Pörssi – tutustu pörssisähköön.',
+    },
+    {
+        id: 'hehku-kiintea-12kk',
+        href: 'https://go.adt246.net/t/t?a=2034099817&as=2038972948&t=2&tk=1',
+        src: hehkuKiinteaDesktop,
+        width: 728,
+        height: 90,
+        alt: 'Hehku Kiinteä 12 kk – kiinteä sähkön hinta vuodeksi.',
+    },
+    {
+        id: 'bjornborg-blackweek',
+        href: 'https://to.bjornborg.com/t/t?a=1578028333&as=2038972948&t=2&tk=1&url=www.bjornborg.com',
+        src: bjornborgBlackweekDesktop,
+        width: 728,
+        height: 90,
+        alt: 'Björn Borg Black Week – löydä suosikkisi.',
+        expiresAt: blackweekExpiresAt,
+    },
+    {
+        id: 'aalto-energia',
+        href: 'https://go.adt246.net/t/t?a=1875124667&as=2038972948&t=2&tk=1',
+        src: aaltoEnergiaDesktop,
+        width: 728,
+        height: 90,
+        alt: 'Aalto Energia – sähköä kotiisi. Tutustu sopimuksiin.',
+    },
     {
         id: 'dna',
         href: 'https://go.adt246.net/t/t?a=1883588377&as=2038972948&t=2&tk=1',
@@ -76,13 +119,80 @@ const bannerAds = [
     },
     {
         id: 'kvarn',
-        href: 'https://go.kvarnx.com/t/t?a=1946750195&as=2038972948&t=2&tk=1',
-        isCustom: 'kvarn',
+        href: 'https://track.adtraction.com/t/t?a=2083576457&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2083576457&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Kvarn X',
+    },
+    {
+        id: 'onthatass',
+        href: 'https://track.adtraction.com/t/t?a=2010251951&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2010251951&as=2038972948&t=1&tk=1&i=1',
+        width: 728,
+        height: 90,
+        alt: 'ON THAT ASS',
+    },
+    {
+        id: 'luhta',
+        href: 'https://track.adtraction.com/t/t?a=1837189231&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1837189231&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Luhta',
+    },
+    {
+        id: 'nordnet',
+        href: 'https://track.adtraction.com/t/t?a=2084043368&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2084043368&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Nordnet',
+    },
+    {
+        id: 'nordnet-banner',
+        href: 'https://track.adtraction.com/t/t?a=2020652698&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2020652698&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Nordnet',
+    },
+    {
+        id: 'skruvat',
+        href: 'https://track.adtraction.com/t/t?a=1483923987&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1483923987&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Skruvat',
+    },
+    {
+        id: 'seiska',
+        href: 'https://track.adtraction.com/t/t?a=2091706133&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2091706133&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Seiska',
+    },
+    {
+        id: 'viaplay',
+        href: 'https://track.adtraction.com/t/t?a=2111833033&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2111833033&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Viaplay',
     },
     {
         id: 'finlayson',
         href: 'https://to.finlayson.fi/t/t?a=1914383795&as=2038972948&t=2&tk=1',
         src: 'https://track.adtraction.com/t/t?a=1914383795&as=2038972948&t=1&tk=1&i=1',
+        width: 980,
+        height: 120,
+        alt: 'Finlayson',
+    },
+    {
+        id: 'finlayson-banner',
+        href: 'https://track.adtraction.com/t/t?a=1883158985&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1883158985&as=2038972948&t=1&tk=1&i=1',
         width: 980,
         height: 120,
         alt: 'Finlayson',
@@ -99,6 +209,71 @@ const bannerAds = [
 
 // Mobile ads - 300x250 only (IAB Medium Rectangle)
 const mobileAds = [
+    {
+        id: 'hehku-porssi-mobile',
+        href: 'https://go.adt246.net/t/t?a=2034103803&as=2038972948&t=2&tk=1',
+        src: hehkuPorssiMobile,
+        width: 300,
+        height: 250,
+        alt: 'Hehku Pörssi – tutustu pörssisähköön.',
+    },
+    {
+        id: 'hehku-kiintea-12kk-mobile',
+        href: 'https://go.adt246.net/t/t?a=2034099817&as=2038972948&t=2&tk=1',
+        src: hehkuKiinteaMobile,
+        width: 300,
+        height: 250,
+        alt: 'Hehku Kiinteä 12 kk – kiinteä sähkön hinta vuodeksi.',
+    },
+    {
+        id: 'bjornborg-blackweek-mobile',
+        href: 'https://to.bjornborg.com/t/t?a=1578028333&as=2038972948&t=2&tk=1&url=www.bjornborg.com',
+        src: bjornborgBlackweekMobile,
+        width: 300,
+        height: 250,
+        alt: 'Björn Borg Black Week – löydä suosikkisi.',
+        expiresAt: blackweekExpiresAt,
+    },
+    {
+        id: 'aalto-energia-mobile',
+        href: 'https://go.adt246.net/t/t?a=1875124667&as=2038972948&t=2&tk=1',
+        src: aaltoEnergiaMobile,
+        width: 300,
+        height: 250,
+        alt: 'Aalto Energia – sähköä kotiisi. Tutustu sopimuksiin.',
+    },
+    {
+        id: 'skruvat-mobile',
+        href: 'https://track.adtraction.com/t/t?a=1483923863&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1483923863&as=2038972948&t=1&tk=1&i=1',
+        width: 300,
+        height: 250,
+        alt: 'Skruvat',
+    },
+    {
+        id: 'nordnet-mobile',
+        href: 'https://track.adtraction.com/t/t?a=2075791997&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2075791997&as=2038972948&t=1&tk=1&i=1',
+        width: 300,
+        height: 250,
+        alt: 'Nordnet',
+    },
+    {
+        id: 'onthatass-mobile',
+        href: 'https://track.adtraction.com/t/t?a=2010251959&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=2010251959&as=2038972948&t=1&tk=1&i=1',
+        width: 300,
+        height: 250,
+        alt: 'ON THAT ASS',
+    },
+    {
+        id: 'luhta-mobile',
+        href: 'https://track.adtraction.com/t/t?a=1837189049&as=2038972948&t=2&tk=1',
+        src: 'https://track.adtraction.com/t/t?a=1837189049&as=2038972948&t=1&tk=1&i=1',
+        width: 300,
+        height: 250,
+        alt: 'Luhta',
+    },
     {
         id: 'moi1',
         href: 'https://in.moi.fi/t/t?a=1551605636&as=2038972948&t=2&tk=1',
@@ -154,16 +329,16 @@ const mobileBannerAds = [
     },
 ]
 
-export function getBannerAds() {
-    return bannerAds
+export function getBannerAds(now = Date.now()) {
+    return bannerAds.filter((ad) => !ad.expiresAt || now < Date.parse(ad.expiresAt))
 }
 
-export function getMobileAds() {
-    return mobileAds
+export function getMobileAds(now = Date.now()) {
+    return mobileAds.filter((ad) => !ad.expiresAt || now < Date.parse(ad.expiresAt))
 }
 
-export function getMobileBannerAds() {
-    return mobileBannerAds
+export function getMobileBannerAds(now = Date.now()) {
+    return mobileBannerAds.filter((ad) => !ad.expiresAt || now < Date.parse(ad.expiresAt))
 }
 
 // Get a random index that doesn't conflict with other spots

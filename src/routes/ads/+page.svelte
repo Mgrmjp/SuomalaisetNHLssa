@@ -1,10 +1,17 @@
 <script>
 // @ts-nocheck
+import { onMount } from 'svelte'
 import { getBannerAds, getMobileAds, getMobileBannerAds } from '$lib/stores/ads.js'
 
-const bannerAds = getBannerAds()
-const mobileAds = getMobileAds()
-const mobileBannerAds = getMobileBannerAds()
+let bannerAds = []
+let mobileAds = []
+let mobileBannerAds = []
+
+onMount(() => {
+    bannerAds = getBannerAds()
+    mobileAds = getMobileAds()
+    mobileBannerAds = getMobileBannerAds()
+})
 
 function getLogoSrc(id) {
     const name = id === 'vattenfall-opiskelija' ? 'vattenfall' : id

@@ -9,15 +9,35 @@ import {
     setAdSpotIndex,
 } from '$lib/stores/ads.js'
 
-const ads = getMobileAds()
-let currentAdIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, ads)
+// Populate after mounting so static HTML cannot hydrate expired campaign images.
+let ads = []
+let currentAdIndex = 0
 let _isPaused = false
 let interval
 let startTimeout
+let expiryTimeout
 let failedAds = {}
 
-// Mark this spot as active
-setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
+function refreshAds() {
+    const now = Date.now()
+    const previousId = ads[currentAdIndex]?.id
+    ads = getMobileAds(now)
+    currentAdIndex = previousId
+        ? Math.max(
+              0,
+              ads.findIndex((ad) => ad.id === previousId)
+          )
+        : getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, ads)
+    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
+
+    if (expiryTimeout) clearTimeout(expiryTimeout)
+    const nextExpiry = Math.min(
+        ...ads.filter((ad) => ad.expiresAt).map((ad) => Date.parse(ad.expiresAt))
+    )
+    if (Number.isFinite(nextExpiry)) {
+        expiryTimeout = setTimeout(refreshAds, Math.min(nextExpiry - now, 2_147_483_647))
+    }
+}
 
 function pauseAds() {
     _isPaused = true
@@ -38,14 +58,22 @@ function setAdFailed(id, failed) {
 }
 
 onMount(() => {
+    refreshAds()
     startTimeout = setTimeout(() => {
         interval = setInterval(nextAd, 20000)
     }, 16000)
+    window.addEventListener('focus', refreshAds)
+    document.addEventListener('visibilitychange', refreshAds)
 })
 
 onDestroy(() => {
     if (startTimeout) clearTimeout(startTimeout)
     if (interval) clearInterval(interval)
+    if (expiryTimeout) clearTimeout(expiryTimeout)
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('focus', refreshAds)
+        document.removeEventListener('visibilitychange', refreshAds)
+    }
 })
 </script>
 
@@ -74,7 +102,7 @@ onDestroy(() => {
             >
                 <img
                     src={ad.src}
-                    alt="Mainos"
+                    alt={ad.alt || 'Mainos'}
                     class="mobile-ad-img"
                     onload={() => setAdFailed(ad.id, false)}
                     onerror={() => setAdFailed(ad.id, true)}

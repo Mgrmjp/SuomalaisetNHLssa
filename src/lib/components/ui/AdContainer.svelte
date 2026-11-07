@@ -12,32 +12,33 @@ import {
 } from '$lib/stores/ads.js'
 
 /**
- * @typedef {{ id: string, href: string, isCustom?: string, src?: string, width?: number, height?: number, alt?: string }} Ad
+ * @typedef {{ id: string, href: string, isCustom?: string, src?: string, width?: number, height?: number, alt?: string, expiresAt?: string }} Ad
  */
 
 // Desktop banner ads
 /** @type {Ad[]} */
-const bannerAds = getBannerAds()
-let bannerIndex = getRandomAdIndex(AD_SPOTS.BANNER, bannerAds)
+let bannerAds = []
+let bannerIndex = 0
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let bannerInterval
 let failedBannerAds = {}
 
 // Mobile square/rectangle ads
 /** @type {Ad[]} */
-const mobileAds = getMobileAds()
-let mobileIndex = getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, mobileAds)
+let mobileAds = []
+let mobileIndex = 0
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let mobileInterval
 let failedMobileAds = {}
 
 // Mobile banner ads (horizontal, narrower)
 /** @type {Ad[]} */
-const mobileBannerAds = getMobileBannerAds()
-let mobileBannerIndex = getRandomAdIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerAds)
+let mobileBannerAds = []
+let mobileBannerIndex = 0
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let mobileBannerInterval
 let failedMobileBannerAds = {}
+let expiryTimeout
 
 let isPaused = false
 /** @type {boolean} */
@@ -45,6 +46,42 @@ let _isMobile = false
 
 function checkMobile() {
     _isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+}
+
+function getRefreshedIndex(spot, ads, previousId) {
+    if (!previousId) return getRandomAdIndex(spot, ads)
+    return Math.max(
+        0,
+        ads.findIndex((ad) => ad.id === previousId)
+    )
+}
+
+function refreshAds() {
+    const now = Date.now()
+    const bannerId = bannerAds[bannerIndex]?.id
+    const mobileId = mobileAds[mobileIndex]?.id
+    const mobileBannerId = mobileBannerAds[mobileBannerIndex]?.id
+
+    bannerAds = getBannerAds(now)
+    mobileAds = getMobileAds(now)
+    mobileBannerAds = getMobileBannerAds(now)
+    bannerIndex = getRefreshedIndex(AD_SPOTS.BANNER, bannerAds, bannerId)
+    mobileIndex = getRefreshedIndex(AD_SPOTS.MOBILE_MAIN, mobileAds, mobileId)
+    mobileBannerIndex = getRefreshedIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerAds, mobileBannerId)
+    setAdSpotIndex(AD_SPOTS.BANNER, bannerIndex)
+    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex)
+    setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex)
+
+    if (expiryTimeout) clearTimeout(expiryTimeout)
+    const nextExpiry = Math.min(
+        ...[...bannerAds, ...mobileAds, ...mobileBannerAds]
+            .filter((ad) => ad.expiresAt)
+            .map((ad) => Date.parse(ad.expiresAt))
+    )
+    if (Number.isFinite(nextExpiry)) {
+        // Recheck long campaigns before the browser's maximum timeout delay.
+        expiryTimeout = setTimeout(refreshAds, Math.min(nextExpiry - now, 2_147_483_647))
+    }
 }
 
 // --- Banner rotation ---
@@ -80,6 +117,7 @@ function setAdFailed(group, id, failed) {
 
 onMount(() => {
     checkMobile()
+    refreshAds()
 
     // Start rotation intervals
     bannerInterval = setInterval(nextBanner, 20000)
@@ -87,14 +125,19 @@ onMount(() => {
     mobileBannerInterval = setInterval(nextMobileBanner, 20000)
 
     window.addEventListener('resize', checkMobile)
+    window.addEventListener('focus', refreshAds)
+    document.addEventListener('visibilitychange', refreshAds)
 })
 
 onDestroy(() => {
     if (bannerInterval) clearInterval(bannerInterval)
     if (mobileInterval) clearInterval(mobileInterval)
     if (mobileBannerInterval) clearInterval(mobileBannerInterval)
+    if (expiryTimeout) clearTimeout(expiryTimeout)
     if (typeof window !== 'undefined') {
         window.removeEventListener('resize', checkMobile)
+        window.removeEventListener('focus', refreshAds)
+        document.removeEventListener('visibilitychange', refreshAds)
     }
 })
 
@@ -230,7 +273,7 @@ function getLogoSrc(ad) {
             >
                 <img
                     src={ad.src}
-                    alt="Mainos"
+                    alt={ad.alt || 'Mainos'}
                     class="ad-img ad-img--square"
                     onload={() => setAdFailed(AD_SPOTS.MOBILE_MAIN, ad.id, false)}
                     onerror={() => setAdFailed(AD_SPOTS.MOBILE_MAIN, ad.id, true)}
@@ -259,7 +302,7 @@ function getLogoSrc(ad) {
             >
                 <img
                     src={ad.src}
-                    alt="Mainos"
+                    alt={ad.alt || 'Mainos'}
                     class="ad-img"
                     onload={() => setAdFailed(AD_SPOTS.MOBILE_BANNER, ad.id, false)}
                     onerror={() => setAdFailed(AD_SPOTS.MOBILE_BANNER, ad.id, true)}
@@ -421,6 +464,7 @@ function getLogoSrc(ad) {
         }
 
         .ad-slot--mobile-square {
+            display: block;
             position: relative;
             width: min(300px, 100%);
             height: 250px;
@@ -442,6 +486,7 @@ function getLogoSrc(ad) {
         }
 
         .ad-slot--mobile-banner {
+            display: block;
             position: relative;
             width: min(300px, 100%);
             height: 250px;

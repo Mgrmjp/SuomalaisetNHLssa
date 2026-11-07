@@ -13,6 +13,7 @@
 | Dashboard layout and totals | [Homepage](../src/routes/+page.svelte) |
 | Player grouping and responsive grid | [PlayerList](../src/lib/components/game/PlayerList.svelte) |
 | Player-card layout and interactions | [PlayerCard](../src/lib/components/game/PlayerCard.svelte), [PlayerCard.css](../src/lib/components/game/PlayerCard.css) |
+| Banner rotation and artwork | [Ad store](../src/lib/stores/ads.js), [AdContainer](../src/lib/components/ui/AdContainer.svelte), [SVG artwork](../src/lib/assets/ads/) |
 
 Reuse these components and tokens instead of creating a second design system or copying an outdated component signature. The public app forces a light color scheme. The main bundled body font is Onest; see the CSS for fallbacks.
 
@@ -24,6 +25,8 @@ Reuse these components and tokens instead of creating a second design system or 
 - Use Finnish labels and numeric dates. Preserve visible game/date context when showing yesterday's feature on today's pre-game view.
 - Player-card matchups sit at the bottom with team logos flanking the score. Completed wins/losses add a subtle circular green/red glow centered at the bottom edge, with a text result label.
 - Team logos identify teams. Keep ordinary text and actions neutral/blue; reserve result colors for semantic states with text or accessible descriptions.
+- Bundle custom banner artwork through asset imports so image URLs respect the deployment base path. SVG banner text embeds the bundled Onest font and its license so standalone images match the site's typography across devices. Keep the affiliate tracking URL on the enclosing link and show the `Mainos` label.
+- Campaigns may define an `expiresAt` timestamp with an explicit timezone. Ads populate reserved slots after mounting so static HTML cannot retain expired images during hydration. The ad store filters expired campaigns; `AdContainer` and [MobileAd](../src/lib/components/ui/MobileAd.svelte) refresh at the next expiry and when the tab regains focus or changes visibility. Björn Borg Black Week ends at midnight after `30.11.2026` in Finland; evergreen banners continue rotating.
 - Position headings use distinct gradient stripes for forwards, defenders and goalies; retain their text labels so color is not the only distinction.
 - The underlined player name and window icon open the player-details dialog; keep this action on the name rather than a separate card-footer button.
 - Player details use compact stat grids and recent-game rows on the same ice-blue surfaces as the cards. Portalled overlays opt into `.dashboard-theme` to retain dashboard tokens outside the page wrapper. The dialog has an explicit close button, Escape dismissal, focus containment/return and background scroll locking.
