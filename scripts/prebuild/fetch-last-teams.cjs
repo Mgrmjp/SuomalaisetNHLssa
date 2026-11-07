@@ -3,12 +3,12 @@
 /**
  * Pre-build script to fetch last NHL team and career games played
  * for inactive Finnish players. Runs during build to avoid client-side API calls.
- * 
+ *
  * Usage: node scripts/prebuild/fetch-last-teams.cjs
  */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('fs')
+const path = require('path')
 
 function loadEnvFile(filePath) {
     if (!fs.existsSync(filePath)) return
@@ -36,11 +36,11 @@ loadEnvFile(path.join(process.cwd(), '.env'))
 const INPUT_FILE = path.join(process.cwd(), 'static/data/players/finnish-roster.json')
 
 async function fetchNHLData(url) {
-    const response = await fetch(url);
+    const response = await fetch(url)
     if (!response.ok) {
         return null
     }
-    return response.json();
+    return response.json()
 }
 
 /**
@@ -91,7 +91,9 @@ async function main() {
 
     const rawData = JSON.parse(fs.readFileSync(INPUT_FILE, 'utf8'))
     const players = Object.values(rawData)
-    const inactivePlayers = players.filter(p => !p.isActive || !p.currentTeam || p.currentTeam === '')
+    const inactivePlayers = players.filter(
+        (p) => !p.isActive || !p.currentTeam || p.currentTeam === ''
+    )
 
     console.log(`📋 Found ${inactivePlayers.length} inactive players`)
 
@@ -120,15 +122,17 @@ async function main() {
             updated++
         }
 
-        await new Promise(resolve => setTimeout(resolve, 100))
+        await new Promise((resolve) => setTimeout(resolve, 100))
     }
 
     if (updated > 0) {
         for (const player of players) {
             const playerId = player.playerId || player.id
             if (updates[playerId]) {
-                if (updates[playerId].lastTeam !== undefined) player.lastTeam = updates[playerId].lastTeam
-                if (updates[playerId].gamesPlayed !== undefined) player.gamesPlayed = updates[playerId].gamesPlayed
+                if (updates[playerId].lastTeam !== undefined)
+                    player.lastTeam = updates[playerId].lastTeam
+                if (updates[playerId].gamesPlayed !== undefined)
+                    player.gamesPlayed = updates[playerId].gamesPlayed
             }
         }
 
@@ -141,7 +145,7 @@ async function main() {
     console.log('\n✅ Pre-build complete!')
 }
 
-main().catch(error => {
+main().catch((error) => {
     console.error('\n❌ Pre-build failed:', error)
     process.exit(1)
 })

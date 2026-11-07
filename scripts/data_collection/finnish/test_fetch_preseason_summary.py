@@ -22,7 +22,8 @@ def boxscore(game_id, date, state="FINAL", game_type=1, finn_goals=0, finn_assis
         "playerByGameStats": {
             "awayTeam": {
                 "forwards": [{"playerId": 1, "goals": finn_goals, "assists": finn_assists}],
-                "defense": [], "goalies": [],
+                "defense": [],
+                "goalies": [],
             },
             "homeTeam": {"forwards": [], "defense": [], "goalies": []},
         },
@@ -44,18 +45,32 @@ class PreseasonSummaryTests(unittest.TestCase):
 
         self.assertEqual(result["completedGames"], 2)
         self.assertEqual(result["finnishGames"], 2)
-        self.assertEqual(result["scorers"], [{
-            "playerId": 1, "name": "Sebastian Aho", "team": "CAR",
-            "gamesPlayed": 2, "goals": 1, "assists": 2, "points": 3,
-        }])
+        self.assertEqual(
+            result["scorers"],
+            [
+                {
+                    "playerId": 1,
+                    "name": "Sebastian Aho",
+                    "team": "CAR",
+                    "gamesPlayed": 2,
+                    "goals": 1,
+                    "assists": 2,
+                    "points": 3,
+                }
+            ],
+        )
         self.assertEqual([game["gameId"] for game in result["games"]], [11, 10])
         self.assertEqual(result["games"][0]["finnishPlayers"][0]["points"], 1)
 
     def test_keeps_final_result_without_finns_for_coverage(self):
         game = boxscore(10, "2026-09-19")
-        game["playerByGameStats"]["awayTeam"]["forwards"] = [{"playerId": 99, "goals": 2, "assists": 0}]
+        game["playerByGameStats"]["awayTeam"]["forwards"] = [
+            {"playerId": 99, "goals": 2, "assists": 0}
+        ]
 
-        result = build_preseason_summary([game], {"1": {"name": "Sebastian Aho"}}, 2026, "2026-09-29")
+        result = build_preseason_summary(
+            [game], {"1": {"name": "Sebastian Aho"}}, 2026, "2026-09-29"
+        )
 
         self.assertEqual(result["completedGames"], 1)
         self.assertEqual(result["finnishGames"], 0)
@@ -68,7 +83,9 @@ class PreseasonSummaryTests(unittest.TestCase):
             {"playerId": 1, "toi": "00:00", "saves": 0},
         ]
 
-        result = build_preseason_summary([game], {"1": {"name": "Finnish Goalie"}}, 2026, "2026-09-29")
+        result = build_preseason_summary(
+            [game], {"1": {"name": "Finnish Goalie"}}, 2026, "2026-09-29"
+        )
 
         self.assertEqual(result["finnishGames"], 0)
 

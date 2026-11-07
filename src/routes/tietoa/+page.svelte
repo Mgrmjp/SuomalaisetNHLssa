@@ -53,50 +53,50 @@ onMount(() => {
 
     <!-- FAQPage Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
         mainEntity: [
             {
-                "@type": "Question",
-                name: "Mistä saan tietoa suomalaisten NHL-pelaajien tilastoista?",
+                '@type': 'Question',
+                name: 'Mistä saan tietoa suomalaisten NHL-pelaajien tilastoista?',
                 acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Suomi NHL -sivusto seuraa päivittäin suomalaisten NHL-pelaajien ottelutilastoja, mukaan lukien maalit, syötöt, pisteet ja jääajat. Kaikki tiedot päivittyvät automaattisesti NHL:n virallisista lähteistä."
-                }
+                    '@type': 'Answer',
+                    text: 'Suomi NHL -sivusto seuraa päivittäin suomalaisten NHL-pelaajien ottelutilastoja, mukaan lukien maalit, syötöt, pisteet ja jääajat. Kaikki tiedot päivittyvät automaattisesti NHL:n virallisista lähteistä.',
+                },
             },
             {
-                "@type": "Question",
-                name: "Kuinka monta suomalaista pelaa NHL:ssä?",
+                '@type': 'Question',
+                name: 'Kuinka monta suomalaista pelaa NHL:ssä?',
                 acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Suomi on yksi jääkiekon suurimmista NHL-maista. Tällä hetkellä NHL:ssä pelaa noin 30-35 suomalaista pelaajaa. Seuraa ajantasaisia tilastoja suomalaisetnhlssa.fi-sivustolta."
-                }
+                    '@type': 'Answer',
+                    text: 'Suomi on yksi jääkiekon suurimmista NHL-maista. Tällä hetkellä NHL:ssä pelaa noin 30-35 suomalaista pelaajaa. Seuraa ajantasaisia tilastoja suomalaisetnhlssa.fi-sivustolta.',
+                },
             },
             {
-                "@type": "Question",
-                name: "Miten voin tukea sivustoa?",
+                '@type': 'Question',
+                name: 'Miten voin tukea sivustoa?',
                 acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Voit tukea sivustoa lahjoittamalla Ko-fi-palvelun kautta tai klikkaamalla affiliate-linkkejä. Kaikki tuet menevät sivuston ylläpitokustannuksiin."
-                }
+                    '@type': 'Answer',
+                    text: 'Voit tukea sivustoa lahjoittamalla Ko-fi-palvelun kautta tai klikkaamalla affiliate-linkkejä. Kaikki tuet menevät sivuston ylläpitokustannuksiin.',
+                },
             },
             {
-                "@type": "Question",
-                name: "Kuinka usein sivusto päivittyy?",
+                '@type': 'Question',
+                name: 'Kuinka usein sivusto päivittyy?',
                 acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Sivusto päivittyy automaattisesti kun uutta pelitietoa on saatavilla NHL:n virallisista lähteistä."
-                }
+                    '@type': 'Answer',
+                    text: 'Sivusto päivittyy automaattisesti kun uutta pelitietoa on saatavilla NHL:n virallisista lähteistä.',
+                },
             },
             {
-                "@type": "Question",
-                name: "Mistä tiedot tulevat?",
+                '@type': 'Question',
+                name: 'Mistä tiedot tulevat?',
                 acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Pelaajatiedot haetaan NHL:n virallisista lähteistä (NHL.com API)."
-                }
-            }
-        ]
+                    '@type': 'Answer',
+                    text: 'Pelaajatiedot haetaan NHL:n virallisista lähteistä (NHL.com API).',
+                },
+            },
+        ],
     })}</script>`}
 
     <script src="https://storage.ko-fi.com/cdn/widget/Widget_2.js" on:load={initKofi}></script>
@@ -104,7 +104,7 @@ onMount(() => {
 
 <PageShell width="content" compact>
     <div class="info-page">
-        <a href={base + "/"} class="back-link">
+        <a href={base + '/'} class="back-link">
             <ChevronLeft size={16} aria-hidden="true" />
             Takaisin etusivulle
         </a>
@@ -174,73 +174,73 @@ onMount(() => {
 </PageShell>
 
 <style>
-    .info-page {
-        display: grid;
-        gap: var(--space-6);
-    }
+.info-page {
+    display: grid;
+    gap: var(--space-6);
+}
 
-    .info-sections {
-        display: grid;
-        gap: var(--space-4);
-    }
+.info-sections {
+    display: grid;
+    gap: var(--space-4);
+}
 
-    h2 {
-        margin: 0 0 var(--space-3);
-        color: var(--color-ink);
-        font-size: 1.2rem;
-        font-weight: 700;
-        line-height: 1.3;
-    }
+h2 {
+    margin: 0 0 var(--space-3);
+    color: var(--color-ink);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
 
-    p {
-        margin: 0;
-        color: #344054;
-        line-height: 1.7;
-    }
+p {
+    margin: 0;
+    color: #344054;
+    line-height: 1.7;
+}
 
-    .info-copy {
-        display: grid;
-        gap: var(--space-2);
-    }
+.info-copy {
+    display: grid;
+    gap: var(--space-2);
+}
 
-    ul {
-        margin: 0 0 0 var(--space-6);
-        color: #475467;
-        list-style: disc;
-    }
+ul {
+    margin: 0 0 0 var(--space-6);
+    color: #475467;
+    list-style: disc;
+}
 
-    li + li {
-        margin-top: var(--space-1);
-    }
+li + li {
+    margin-top: var(--space-1);
+}
 
-    .disclosure-note {
-        margin-top: var(--space-1);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-    }
+.disclosure-note {
+    margin-top: var(--space-1);
+    color: var(--color-muted);
+    font-size: 0.875rem;
+}
 
-    .support-section {
-        text-align: center;
-    }
+.support-section {
+    text-align: center;
+}
 
-    #kofi-widget-container {
-        display: flex;
-        justify-content: center;
-        min-height: 2.75rem;
-    }
+#kofi-widget-container {
+    display: flex;
+    justify-content: center;
+    min-height: 2.75rem;
+}
 
-    #kofi-widget-container :global(*) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
+#kofi-widget-container :global(*) {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
 
-    .info-footer {
-        padding: var(--space-6) 0;
-        text-align: center;
-        font-size: 0.875rem;
-    }
+.info-footer {
+    padding: var(--space-6) 0;
+    text-align: center;
+    font-size: 0.875rem;
+}
 
-    .info-footer p {
-        color: var(--color-muted);
-    }
+.info-footer p {
+    color: var(--color-muted);
+}
 </style>

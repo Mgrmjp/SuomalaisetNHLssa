@@ -29,16 +29,8 @@ from config import current_nhl_season_id
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 DATA_FILES = {
     "finnish": PROJECT_ROOT / "static" / "data" / "finnish_prospects.json",
-    "official": PROJECT_ROOT
-    / "static"
-    / "data"
-    / "leagues"
-    / "league_prospects_official.json",
-    "advanced": PROJECT_ROOT
-    / "static"
-    / "data"
-    / "leagues"
-    / "league_prospects_advanced.json",
+    "official": PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_official.json",
+    "advanced": PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_advanced.json",
     "na": PROJECT_ROOT / "static" / "data" / "leagues" / "league_prospects_na.json",
 }
 
@@ -219,9 +211,7 @@ def validate_draft_logic(player):
     if birth_date_str:
         birth_date = parse_date(birth_date_str)
         if birth_date and draft_year < birth_date.year:
-            issues.append(
-                f"draft_before_birth: draft={draft_year}, birth={birth_date.year}"
-            )
+            issues.append(f"draft_before_birth: draft={draft_year}, birth={birth_date.year}")
 
     if issues:
         return False, ", ".join(issues)
@@ -242,23 +232,17 @@ def validate_stats_consistency(player):
     gaa = stats.get("gaa") or stats.get("goals_against_average")
 
     is_goalie = position in ["g", "goalie", "maalivahti"]
-    has_goalie_stats = (save_pct is not None and save_pct > 0) or (
-        gaa is not None and gaa > 0
-    )
+    has_goalie_stats = (save_pct is not None and save_pct > 0) or (gaa is not None and gaa > 0)
     if has_goalie_stats:
         is_goalie = True
 
     if gp < 0 or goals < 0 or assists < 0 or points < 0:
-        issues.append(
-            f"negative_stats: gp={gp}, goals={goals}, assists={assists}, points={points}"
-        )
+        issues.append(f"negative_stats: gp={gp}, goals={goals}, assists={assists}, points={points}")
 
     if not is_goalie and gp > 0 and goals >= 0 and assists >= 0 and points >= 0:
         expected_points = goals + assists
         if points != expected_points:
-            issues.append(
-                f"points_mismatch: points={points}, expected={expected_points}"
-            )
+            issues.append(f"points_mismatch: points={points}, expected={expected_points}")
 
     if issues:
         return False, ", ".join(issues)
@@ -308,10 +292,7 @@ def validate_no_duplicates(players_by_id, player):
         existing_name = existing.get("name", "")
         existing_team = existing.get("team", "")
 
-        if (
-            normalize_name(name) == normalize_name(existing_name)
-            and team == existing_team
-        ):
+        if normalize_name(name) == normalize_name(existing_name) and team == existing_team:
             issues.append(f"duplicate_player: same_id={player_id}, name={name}")
 
     return True, None if not issues else False, ", ".join(issues)
@@ -613,9 +594,7 @@ def main():
         all_issues[file_key] = issues_by_validator
 
         if args.fix and fixed_count > 0:
-            filepath.write_text(
-                json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+            filepath.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
 
     quality_score = (total_passed / total_players * 100) if total_players > 0 else 0
 

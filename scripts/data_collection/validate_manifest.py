@@ -41,12 +41,16 @@ def validate_manifest():
     if missing_in_manifest or extra_in_manifest:
         print("❌ Manifest mismatch detected:")
         if missing_in_manifest:
-            print(f"   Missing in manifest ({len(missing_in_manifest)}): {sorted(missing_in_manifest)}")
+            print(
+                f"   Missing in manifest ({len(missing_in_manifest)}): {sorted(missing_in_manifest)}"
+            )
         if extra_in_manifest:
             print(f"   Extra in manifest ({len(extra_in_manifest)}): {sorted(extra_in_manifest)}")
         return False
 
-    print(f"✅ Manifest valid ({len(actual_files)} dates from {min(actual_files) if actual_files else 'N/A'} to {max(actual_files) if actual_files else 'N/A'})")
+    print(
+        f"✅ Manifest valid ({len(actual_files)} dates from {min(actual_files) if actual_files else 'N/A'} to {max(actual_files) if actual_files else 'N/A'})"
+    )
     return True
 
 

@@ -11,9 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 LINK = re.compile(r"!?\[[^\]]*\]\(<?([^\s)>]+)>?(?:\s+\"[^\"]*\")?\)")
 INLINE_PATH = re.compile(r"`((?:src|scripts|static|tests|docs|\.github)/[^`\s]+)`")
 NPM_SCRIPT = re.compile(r"\bnpm run ([a-zA-Z0-9][a-zA-Z0-9:._-]*)")
-COMMAND_SOURCE = re.compile(
-    r"\b(?:scripts|src)/[\w./\-\[\]]+\.(?:py|cjs|mjs|js|ts|sh)\b"
-)
+COMMAND_SOURCE = re.compile(r"\b(?:scripts|src)/[\w./\-\[\]]+\.(?:py|cjs|mjs|js|ts|sh)\b")
 
 
 def documents(root):
@@ -64,23 +62,18 @@ def check_document(path, root, npm_scripts):
             parsed = urlsplit(target)
             if parsed.scheme or parsed.netloc:
                 continue
-            destination = (
-                (path.parent / unquote(parsed.path)).resolve() if parsed.path else path
-            )
+            destination = (path.parent / unquote(parsed.path)).resolve() if parsed.path else path
             if not destination.is_relative_to(root.resolve()):
                 issues.append((number, f"Link leaves repository: {target}"))
             elif not destination.exists():
                 issues.append((number, f"Missing link target: {target}"))
             elif parsed.fragment and destination.suffix == ".md":
-                if unquote(parsed.fragment) not in anchors(
-                    destination.read_text(encoding="utf-8")
-                ):
+                if unquote(parsed.fragment) not in anchors(destination.read_text(encoding="utf-8")):
                     issues.append((number, f"Missing heading anchor: {target}"))
         for source in INLINE_PATH.findall(line):
             # Inline generated/example paths are descriptive, not source references.
             if any(
-                marker in source
-                for marker in ("*", "{", "<", ">", "YYYY", "SEASON", "PLAYER_ID")
+                marker in source for marker in ("*", "{", "<", ">", "YYYY", "SEASON", "PLAYER_ID")
             ):
                 continue
             if not (root / source).exists():

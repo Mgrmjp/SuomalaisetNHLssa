@@ -14,13 +14,13 @@ The Finnish fetcher writes `static/data/prepopulated/games/YYYY-MM-DD.json`. The
 
 The date is the NHL schedule key. Kickoff times are timestamps; a game on one schedule date can appear after midnight on the following Finnish calendar date. Show the timezone-adjusted date as well as the time when listing future games.
 
-| Record | Relevant fields |
-| --- | --- |
-| Game | `gameId`, `awayTeam`, `homeTeam`, `awayScore`, `homeScore`, `gameState`, `startTime`, `isOT`, `isSO` |
-| Player identity | `playerId`, `game_id`, `name`, `team`, `opponent`, `position`, `jersey_number` |
-| Skater performance | `goals`, `assists`, `points`, `time_on_ice`, `shots`, `plus_minus`, `penalty_minutes` |
-| Goalie performance | `saves`, `shots_against`, `goals_against`, `save_percentage`, ice time where available |
-| Game context on players | `game_status`, `game_result`, `game_score`, `game_venue`, `game_city` |
+| Record                  | Relevant fields                                                                                      |
+| ----------------------- | ---------------------------------------------------------------------------------------------------- |
+| Game                    | `gameId`, `awayTeam`, `homeTeam`, `awayScore`, `homeScore`, `gameState`, `startTime`, `isOT`, `isSO` |
+| Player identity         | `playerId`, `game_id`, `name`, `team`, `opponent`, `position`, `jersey_number`                       |
+| Skater performance      | `goals`, `assists`, `points`, `time_on_ice`, `shots`, `plus_minus`, `penalty_minutes`                |
+| Goalie performance      | `saves`, `shots_against`, `goals_against`, `save_percentage`, ice time where available               |
+| Game context on players | `game_status`, `game_result`, `game_score`, `game_venue`, `game_city`                                |
 
 Some fields are optional or vary between old snapshots. See [fetch.py](../scripts/data_collection/finnish/fetch.py) and [dailyPlayers.js](../src/lib/utils/dailyPlayers.js) before tightening compatibility rules.
 

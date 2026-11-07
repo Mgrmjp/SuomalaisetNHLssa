@@ -51,7 +51,7 @@ function _handleError() {
 {#if _hasImage}
     <img
         src={_currentSrc}
-        alt={alt}
+        {alt}
         class={imageClass}
         style={`display: block; object-position: ${objectPosition}; transform: scale(${zoom}); transform-origin: center top;`}
         {loading}

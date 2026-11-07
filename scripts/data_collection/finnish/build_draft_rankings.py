@@ -32,6 +32,7 @@ CATEGORIES = {
     # "international_goalies": 4
 }
 
+
 def fetch_rankings(year, category_id):
     url = f"https://api-web.nhle.com/v1/draft/rankings/{year}/{category_id}"
     try:
@@ -42,6 +43,7 @@ def fetch_rankings(year, category_id):
     except Exception as e:
         print(f"Error fetching rankings for category {category_id}: {e}")
         return None
+
 
 def fetch_published_rankings(draft_years):
     """Return both ranking categories for the newest draft class the NHL publishes."""
@@ -61,12 +63,9 @@ def fetch_published_rankings(draft_years):
 
 def main():
     print(f"Building Finnish Draft Rankings Cache for the upcoming {DRAFT_YEAR} draft...")
-    
-    combined_data = {
-        "north_american_skaters": [],
-        "international_skaters": []
-    }
-    
+
+    combined_data = {"north_american_skaters": [], "international_skaters": []}
+
     # Resolve the newest published draft class before touching any data.
     draft_years = [DRAFT_YEAR - offset for offset in range(DRAFT_FALLBACK_YEARS + 1)]
     draft_year, na_data, int_data = fetch_published_rankings(draft_years)
@@ -77,10 +76,7 @@ def main():
             "existing data was left untouched."
         )
     if draft_year != DRAFT_YEAR:
-        notice = (
-            f"NHL has not published {DRAFT_YEAR} rankings yet; keeping the "
-            f"{draft_year} class."
-        )
+        notice = f"NHL has not published {DRAFT_YEAR} rankings yet; keeping the {draft_year} class."
         print(notice)
         if os.getenv("GITHUB_ACTIONS"):
             print(f"::notice title=Draft rankings not published yet::{notice}")
@@ -89,7 +85,7 @@ def main():
         finns = [p for p in na_data["rankings"] if p.get("birthCountry") == "FIN"]
         print(f"Found {len(finns)} Finnish NA skaters")
         combined_data["north_american_skaters"] = finns
-    
+
     # Process International Skaters
     if int_data and "rankings" in int_data:
         finns = [p for p in int_data["rankings"] if p.get("birthCountry") == "FIN"]
@@ -103,7 +99,7 @@ def main():
     ep_year = None
     if EP_RANKINGS_FILE.exists():
         try:
-            with open(EP_RANKINGS_FILE, 'r') as f:
+            with open(EP_RANKINGS_FILE, "r") as f:
                 ep_data = json.load(f)
                 ep_sources = ep_data.get("sources", [])
                 ep_year = ep_data.get("year")
@@ -131,25 +127,28 @@ def main():
                 "year": draft_year,
                 "categories": {
                     "north_american": combined_data["north_american_skaters"],
-                    "international": combined_data["international_skaters"]
-                }
+                    "international": combined_data["international_skaters"],
+                },
             }
-        ]
+        ],
     }
-    
+
     # Add EP sources
     for source in ep_sources:
-        final_data["sources"].append({
-            "name": source["name"],
-            "slug": source["slug"],
-            "type": "independent",
-            "year": ep_year,
-            "players": source["players"]
-        })
+        final_data["sources"].append(
+            {
+                "name": source["name"],
+                "slug": source["slug"],
+                "type": "independent",
+                "year": ep_year,
+                "players": source["players"],
+            }
+        )
 
     # Save unified data
     save_json(final_data, RANKINGS_CACHE_FILE)
     print(f"Saved unified rankings to {RANKINGS_CACHE_FILE}")
+
 
 if __name__ == "__main__":
     main()

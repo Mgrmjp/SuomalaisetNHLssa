@@ -95,8 +95,8 @@ onDestroy(() => {
     >
         {#if failedAds[currentAdIndex]}
             <div class="support-message" aria-hidden="true">
-                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos
-                lisäät sivuston sallittujen listalle.
+                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos lisäät sivuston
+                sallittujen listalle.
             </div>
         {/if}
         {#each ads as ad, index (index)}
@@ -129,168 +129,168 @@ onDestroy(() => {
 </div>
 
 <style>
+.vertical-ad-container {
+    position: fixed;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 40;
+    display: none;
+    overflow: visible;
+    max-height: 100vh;
+    max-height: 100dvh;
+}
+
+/* Show only when both 160px side slots fit beside the 1280px rail. */
+@media (max-width: 1727px) {
     .vertical-ad-container {
+        display: none !important;
+    }
+}
+
+@media (min-width: 1728px) {
+    .vertical-ad-container {
+        display: block;
         position: fixed;
         right: 1rem;
         top: 50%;
         transform: translateY(-50%);
-        z-index: 40;
-        display: none;
-        overflow: visible;
+        width: 160px;
         max-height: 100vh;
         max-height: 100dvh;
-    }
-
-    /* Show only when both 160px side slots fit beside the 1280px rail. */
-    @media (max-width: 1727px) {
-        .vertical-ad-container {
-            display: none !important;
-        }
-    }
-
-    @media (min-width: 1728px) {
-        .vertical-ad-container {
-            display: block;
-            position: fixed;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 160px;
-            max-height: 100vh;
-            max-height: 100dvh;
-            overflow: visible;
-        }
-
-        .ad-wrapper {
-            width: 160px;
-            height: 600px;
-            max-height: calc(100dvh - 2rem);
-        }
-
-        .ad-link {
-            position: absolute;
-            width: 100%;
-            max-height: 600px;
-        }
+        overflow: visible;
     }
 
     .ad-wrapper {
-        position: relative;
         width: 160px;
         height: 600px;
         max-height: calc(100dvh - 2rem);
-        background: #ffffff;
-        border-radius: 0;
-        border: 1px solid rgba(16, 24, 40, 0.12);
-        box-shadow:
-            0 8px 22px rgba(0, 53, 128, 0.1),
-            0 1px 4px rgba(16, 24, 40, 0.04);
-        overflow: hidden;
-    }
-
-    .support-message {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.65rem;
-        border: 1px dashed rgba(0, 53, 128, 0.24);
-        background: rgba(238, 243, 251, 0.72);
-        color: rgba(15, 23, 42, 0.72);
-        font-size: 0.68rem;
-        font-weight: 700;
-        line-height: 1.35;
-        text-align: center;
-        pointer-events: none;
     }
 
     .ad-link {
         position: absolute;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         width: 100%;
-        height: 100%;
-        border: none;
-        opacity: 0;
-        transition: opacity 0.8s ease-in-out;
-        pointer-events: none;
+        max-height: 600px;
     }
+}
 
-    .ad-content-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        line-height: 0;
-        border-radius: 0;
-        box-shadow: none;
-        isolation: isolate;
-    }
+.ad-wrapper {
+    position: relative;
+    width: 160px;
+    height: 600px;
+    max-height: calc(100dvh - 2rem);
+    background: #ffffff;
+    border-radius: 0;
+    border: 1px solid rgba(16, 24, 40, 0.12);
+    box-shadow:
+        0 8px 22px rgba(0, 53, 128, 0.1),
+        0 1px 4px rgba(16, 24, 40, 0.04);
+    overflow: hidden;
+}
 
-    .ad-link.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
+.support-message {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem;
+    border: 1px dashed rgba(0, 53, 128, 0.24);
+    background: rgba(238, 243, 251, 0.72);
+    color: rgba(15, 23, 42, 0.72);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: center;
+    pointer-events: none;
+}
 
-    .ad-link.fade-out {
-        opacity: 0;
-    }
+.ad-link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    pointer-events: none;
+}
 
-    .ad-img {
-        width: auto;
-        height: auto;
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        border: none;
-        box-shadow: none;
-        border-radius: 0;
-        display: block;
-        position: relative;
-        z-index: 1;
-    }
+.ad-content-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    border-radius: 0;
+    box-shadow: none;
+    isolation: isolate;
+}
 
-    .ad-disclaimer {
-        position: absolute;
-        top: 6px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        background: var(--accent-ice, #eef3fb);
-        color: var(--accent, #003580);
-        border: 1px solid rgba(16, 24, 40, 0.14);
-        border-radius: 999px;
-        padding: 2px 7px 2px 5px;
-        font-size: 8px;
-        font-weight: 800;
-        line-height: 1.2;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        box-shadow: 0 1px 2px rgba(0, 53, 128, 0.08);
-        pointer-events: none;
-        z-index: 1;
-    }
+.ad-link.active {
+    opacity: 1;
+    pointer-events: auto;
+}
 
-    .ad-disclaimer::before {
-        content: '';
-        width: 4px;
-        height: 4px;
-        border-radius: 999px;
-        background: var(--accent, #003580);
-        box-shadow: 0 0 0 2px rgba(0, 53, 128, 0.12);
-    }
+.ad-link.fade-out {
+    opacity: 0;
+}
 
-    @media (prefers-reduced-motion: reduce) {
-        .ad-link {
-            transition: none;
-        }
+.ad-img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.ad-disclaimer {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--accent-ice, #eef3fb);
+    color: var(--accent, #003580);
+    border: 1px solid rgba(16, 24, 40, 0.14);
+    border-radius: 999px;
+    padding: 2px 7px 2px 5px;
+    font-size: 8px;
+    font-weight: 800;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    box-shadow: 0 1px 2px rgba(0, 53, 128, 0.08);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.ad-disclaimer::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--accent, #003580);
+    box-shadow: 0 0 0 2px rgba(0, 53, 128, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ad-link {
+        transition: none;
     }
+}
 </style>

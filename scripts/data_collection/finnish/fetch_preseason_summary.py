@@ -38,14 +38,16 @@ def normalize_boxscore(boxscore, roster):
                 seen_players.add(player_id)
                 goals = int(player.get("goals") or 0)
                 assists = int(player.get("assists") or 0)
-                players.append({
-                    "playerId": player_id,
-                    "name": finn["name"],
-                    "team": team,
-                    "goals": goals,
-                    "assists": assists,
-                    "points": goals + assists,
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": finn["name"],
+                        "team": team,
+                        "goals": goals,
+                        "assists": assists,
+                        "points": goals + assists,
+                    }
+                )
 
     start_time = boxscore["startTimeUTC"]
     period = boxscore.get("periodDescriptor", {})
@@ -110,7 +112,7 @@ def get_json(url):
     for attempt in range(4):
         response = requests.get(url, timeout=API_TIMEOUT)
         if response.status_code == 429 and attempt < 3:
-            time.sleep(2 ** attempt)
+            time.sleep(2**attempt)
             continue
         response.raise_for_status()
         return response.json()
@@ -143,11 +145,12 @@ def main():
         with open(OUTPUT_FILE, encoding="utf-8") as file:
             existing = json.load(file)
     if existing and (
-        existing.get("seasonYear") != season_year
-        or existing.get("schemaVersion") != 2
+        existing.get("seasonYear") != season_year or existing.get("schemaVersion") != 2
     ):
         existing = None
-    if existing and now.date() > date.fromisoformat(existing["regularSeasonStartDate"]) + timedelta(days=14):
+    if existing and now.date() > date.fromisoformat(existing["regularSeasonStartDate"]) + timedelta(
+        days=14
+    ):
         print("Preseason recap window has ended")
         return 0
 
@@ -187,7 +190,9 @@ def main():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=2)
         file.write("\n")
-    print(f"Saved {output['completedGames']} preseason results and {len(output['scorers'])} Finnish scorers")
+    print(
+        f"Saved {output['completedGames']} preseason results and {len(output['scorers'])} Finnish scorers"
+    )
     return 0
 
 

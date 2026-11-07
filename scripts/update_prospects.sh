@@ -15,7 +15,7 @@ YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
 # Determine project root and virtual environment
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 VENV_PYTHON="$PROJECT_ROOT/.venv/bin/python3"
 
@@ -30,7 +30,7 @@ EP_FAILED=0
 
 # Age of the EliteProspects snapshot, so staleness stays visible in the output.
 ep_snapshot_age() {
-    "$VENV_PYTHON" - <<'PY' 2>/dev/null || echo "unknown"
+    "$VENV_PYTHON" - << 'PY' 2> /dev/null || echo "unknown"
 import json
 from datetime import datetime
 from pathlib import Path

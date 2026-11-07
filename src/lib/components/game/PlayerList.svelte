@@ -180,7 +180,7 @@ $effect(() => {
 {#if $isLoading}
     <div class="scoring-list">
         <div class="scoring-list__grid">
-            {#each [1,2,3,4,5,6] as _}
+            {#each [1, 2, 3, 4, 5, 6] as _}
                 <SkeletonPlayerCard />
             {/each}
         </div>
@@ -194,7 +194,7 @@ $effect(() => {
     <EmptyState
         variant={emptyStateVariant}
         relatedGames={upcomingFinnishGames}
-        relatedGamesLabel={relatedGamesLabel}
+        {relatedGamesLabel}
         newsItems={fallbackNews}
         lineupCount={dressedCount}
         yesterdayDate={yesterdayPreviewDate}
@@ -203,7 +203,8 @@ $effect(() => {
     <section id="scoringList" class="scoring-list" aria-label="Pelaajien ottelutilastot">
         {#if filteredPlayers.length > 1}
             <div class="scoring-list__controls">
-                <label>Pelipaikka
+                <label
+                    >Pelipaikka
                     <select bind:value={positionFilter}>
                         <option value="all">Kaikki pelaajat</option>
                         <option value="forwards">Hyökkääjät</option>
@@ -211,7 +212,8 @@ $effect(() => {
                         <option value="goalies">Maalivahdit</option>
                     </select>
                 </label>
-                <label>Järjestä
+                <label
+                    >Järjestä
                     <select bind:value={sortBy}>
                         <option value="points">Pisteet</option>
                         <option value="goals">Maalit</option>
@@ -225,14 +227,20 @@ $effect(() => {
         {#each [{ key: 'forwards', title: 'Hyökkääjät', players: forwards }, { key: 'defenders', title: 'Puolustajat', players: defenders }, { key: 'goalies', title: 'Maalivahdit', players: goalies }] as group (group.key)}
             {#if (positionFilter === 'all' || positionFilter === group.key) && group.players.length}
                 <div class="scoring-list__section">
-                    <h2 class="scoring-list__section-title" data-position={group.key}>{group.title}</h2>
+                    <h2 class="scoring-list__section-title" data-position={group.key}>
+                        {group.title}
+                    </h2>
                     <div
                         id={`players-${group.key}`}
                         class="scoring-list__grid"
-                        class:scoring-list__grid--collapsed={positionFilter === 'all' && !expandedGroups[group.key]}
+                        class:scoring-list__grid--collapsed={positionFilter === 'all' &&
+                            !expandedGroups[group.key]}
                     >
                         {#each group.players.slice(0, positionFilter === 'all' && !expandedGroups[group.key] ? 8 : undefined) as player (`${player.playerId}-${player.game_id}`)}
-                            <PlayerCard {player} highlight={highlights.get(`${player.playerId}-${player.game_id}`)} />
+                            <PlayerCard
+                                {player}
+                                highlight={highlights.get(`${player.playerId}-${player.game_id}`)}
+                            />
                         {/each}
                     </div>
                     {#if positionFilter === 'all' && group.players.length > 2}
@@ -242,10 +250,17 @@ $effect(() => {
                             class:scoring-list__more--mobile-only={group.players.length <= 8}
                             aria-expanded={expandedGroups[group.key]}
                             aria-controls={`players-${group.key}`}
-                            onclick={() => { expandedGroups[group.key] = !expandedGroups[group.key] }}
+                            onclick={() => {
+                                expandedGroups[group.key] = !expandedGroups[group.key]
+                            }}
                         >
-                            {#if expandedGroups[group.key]}<Minus size={16} aria-hidden="true" />{:else}<Plus size={16} aria-hidden="true" />{/if}
-                            {expandedGroups[group.key] ? 'Näytä vähemmän' : `Näytä kaikki ${group.players.length} pelaajaa`}
+                            {#if expandedGroups[group.key]}<Minus
+                                    size={16}
+                                    aria-hidden="true"
+                                />{:else}<Plus size={16} aria-hidden="true" />{/if}
+                            {expandedGroups[group.key]
+                                ? 'Näytä vähemmän'
+                                : `Näytä kaikki ${group.players.length} pelaajaa`}
                         </button>
                     {/if}
                 </div>
@@ -258,28 +273,131 @@ $effect(() => {
 {/if}
 
 <style>
-    .scoring-list { min-width: 0; }
-    .scoring-list__controls { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-end; margin-bottom: 0.75rem; }
-    .scoring-list__controls label { display: flex; align-items: center; gap: 0.4rem; color: var(--color-muted); font-size: 0.75rem; font-weight: 600; }
-    .scoring-list__controls select { min-height: 2.5rem; max-width: 100%; padding: 0.4rem 1.6rem 0.4rem 0.6rem; border: var(--card-border); border-radius: var(--card-radius-sm); background: var(--card-bg); color: var(--color-ink); }
-    .scoring-list__section + .scoring-list__section { margin-top: 2.25rem; }
-    .scoring-list__section-title { margin: 0 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid #d5dce6; font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; display: flex; align-items: center; gap: 0.75rem; }
-    .scoring-list__section-title[data-position="forwards"] { --position-stripe: linear-gradient(#1275ff, #9563ff); }
-    .scoring-list__section-title[data-position="defenders"] { --position-stripe: linear-gradient(#0d9488, #38bdf8); }
-    .scoring-list__section-title[data-position="goalies"] { --position-stripe: linear-gradient(#fbbf24, #f97316); }
-    .scoring-list__section-title::before { content: ""; width: 0.3rem; height: 1.1rem; border-radius: 3px; transform: skew(-18deg); background: var(--position-stripe); }
-    .scoring-list__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: stretch; }
-    .scoring-list__empty { padding: 1rem; color: var(--color-muted); }
-    .scoring-list__more { display: flex; align-items: center; justify-content: center; gap: 0.4rem; width: fit-content; max-width: 100%; min-height: 2.5rem; margin: 1.5rem auto 1rem; padding: 0.5rem 1rem; border: var(--card-border); border-radius: var(--card-radius-sm); background: var(--card-bg); color: var(--color-ink); font-size: 0.8rem; font-weight: 600; cursor: pointer; }
-    .scoring-list__more:hover { background: var(--color-table-hover); }
-    .scoring-list__more:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    @media (max-width: 767px) {
-        .scoring-list__grid--collapsed :global(.game-player-card__container:nth-child(n+3)) { display: none; }
-        .scoring-list__controls label { flex: 1 1 0; min-width: 0; flex-direction: column; align-items: stretch; }
-        .scoring-list__controls select { width: 100%; }
+.scoring-list {
+    min-width: 0;
+}
+.scoring-list__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-bottom: 0.75rem;
+}
+.scoring-list__controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.scoring-list__controls select {
+    min-height: 2.5rem;
+    max-width: 100%;
+    padding: 0.4rem 1.6rem 0.4rem 0.6rem;
+    border: var(--card-border);
+    border-radius: var(--card-radius-sm);
+    background: var(--card-bg);
+    color: var(--color-ink);
+}
+.scoring-list__section + .scoring-list__section {
+    margin-top: 2.25rem;
+}
+.scoring-list__section-title {
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d5dce6;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.scoring-list__section-title[data-position='forwards'] {
+    --position-stripe: linear-gradient(#1275ff, #9563ff);
+}
+.scoring-list__section-title[data-position='defenders'] {
+    --position-stripe: linear-gradient(#0d9488, #38bdf8);
+}
+.scoring-list__section-title[data-position='goalies'] {
+    --position-stripe: linear-gradient(#fbbf24, #f97316);
+}
+.scoring-list__section-title::before {
+    content: '';
+    width: 0.3rem;
+    height: 1.1rem;
+    border-radius: 3px;
+    transform: skew(-18deg);
+    background: var(--position-stripe);
+}
+.scoring-list__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+}
+.scoring-list__empty {
+    padding: 1rem;
+    color: var(--color-muted);
+}
+.scoring-list__more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 2.5rem;
+    margin: 1.5rem auto 1rem;
+    padding: 0.5rem 1rem;
+    border: var(--card-border);
+    border-radius: var(--card-radius-sm);
+    background: var(--card-bg);
+    color: var(--color-ink);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.scoring-list__more:hover {
+    background: var(--color-table-hover);
+}
+.scoring-list__more:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+@media (max-width: 767px) {
+    .scoring-list__grid--collapsed :global(.game-player-card__container:nth-child(n + 3)) {
+        display: none;
     }
-    @media (min-width: 768px) { .scoring-list__more--mobile-only { display: none; } }
-    @media (min-width: 768px) { .scoring-list__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (min-width: 1024px) { .scoring-list__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-    @media (min-width: 1280px) { .scoring-list__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .scoring-list__controls label {
+        flex: 1 1 0;
+        min-width: 0;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .scoring-list__controls select {
+        width: 100%;
+    }
+}
+@media (min-width: 768px) {
+    .scoring-list__more--mobile-only {
+        display: none;
+    }
+}
+@media (min-width: 768px) {
+    .scoring-list__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (min-width: 1024px) {
+    .scoring-list__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+@media (min-width: 1280px) {
+    .scoring-list__grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
 </style>

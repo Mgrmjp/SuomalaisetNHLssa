@@ -44,29 +44,43 @@ ESPN_TRANSACTIONS_URL = "https://site.api.espn.com/apis/site/v2/sports/hockey/nh
 OUTPUT_FILE = DATA_DIR / "offseason-moves.json"
 
 REQUEST_HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (compatible; FinnishNHLBot/1.0; "
-        "+https://suomalaisetnhlssa.fi)"
-    )
+    "User-Agent": ("Mozilla/5.0 (compatible; FinnishNHLBot/1.0; +https://suomalaisetnhlssa.fi)")
 }
 
 TEAM_FULL_TO_ABBREV = {
-    "Anaheim Ducks": "ANA", "Boston Bruins": "BOS", "Buffalo Sabres": "BUF",
-    "Carolina Hurricanes": "CAR", "Columbus Blue Jackets": "CBJ",
-    "Calgary Flames": "CGY", "Chicago Blackhawks": "CHI",
-    "Colorado Avalanche": "COL", "Dallas Stars": "DAL",
-    "Detroit Red Wings": "DET", "Edmonton Oilers": "EDM",
-    "Florida Panthers": "FLA", "Los Angeles Kings": "LAK",
-    "Minnesota Wild": "MIN", "Montreal Canadiens": "MTL",
-    "New Jersey Devils": "NJD", "Nashville Predators": "NSH",
-    "New York Islanders": "NYI", "New York Rangers": "NYR",
-    "Ottawa Senators": "OTT", "Philadelphia Flyers": "PHI",
-    "Pittsburgh Penguins": "PIT", "Seattle Kraken": "SEA",
-    "San Jose Sharks": "SJS", "St. Louis Blues": "STL",
-    "Tampa Bay Lightning": "TBL", "Toronto Maple Leafs": "TOR",
-    "Utah Mammoth": "UTA", "Utah Hockey Club": "UTA",
-    "Vancouver Canucks": "VAN", "Vegas Golden Knights": "VGK",
-    "Winnipeg Jets": "WPG", "Washington Capitals": "WSH",
+    "Anaheim Ducks": "ANA",
+    "Boston Bruins": "BOS",
+    "Buffalo Sabres": "BUF",
+    "Carolina Hurricanes": "CAR",
+    "Columbus Blue Jackets": "CBJ",
+    "Calgary Flames": "CGY",
+    "Chicago Blackhawks": "CHI",
+    "Colorado Avalanche": "COL",
+    "Dallas Stars": "DAL",
+    "Detroit Red Wings": "DET",
+    "Edmonton Oilers": "EDM",
+    "Florida Panthers": "FLA",
+    "Los Angeles Kings": "LAK",
+    "Minnesota Wild": "MIN",
+    "Montreal Canadiens": "MTL",
+    "New Jersey Devils": "NJD",
+    "Nashville Predators": "NSH",
+    "New York Islanders": "NYI",
+    "New York Rangers": "NYR",
+    "Ottawa Senators": "OTT",
+    "Philadelphia Flyers": "PHI",
+    "Pittsburgh Penguins": "PIT",
+    "Seattle Kraken": "SEA",
+    "San Jose Sharks": "SJS",
+    "St. Louis Blues": "STL",
+    "Tampa Bay Lightning": "TBL",
+    "Toronto Maple Leafs": "TOR",
+    "Utah Mammoth": "UTA",
+    "Utah Hockey Club": "UTA",
+    "Vancouver Canucks": "VAN",
+    "Vegas Golden Knights": "VGK",
+    "Winnipeg Jets": "WPG",
+    "Washington Capitals": "WSH",
 }
 
 VALID_NHL_TEAMS = set(TEAM_FULL_TO_ABBREV.values())
@@ -75,9 +89,16 @@ ESPN_LOCATION_TO_ABBREV = {}
 for full_name, abbrev in TEAM_FULL_TO_ABBREV.items():
     location = next(
         (
-            prefix for prefix in (
-                "Los Angeles", "New Jersey", "New York", "San Jose", "St. Louis", "Tampa Bay"
-            ) if full_name.startswith(prefix + " ")
+            prefix
+            for prefix in (
+                "Los Angeles",
+                "New Jersey",
+                "New York",
+                "San Jose",
+                "St. Louis",
+                "Tampa Bay",
+            )
+            if full_name.startswith(prefix + " ")
         ),
         full_name.split()[0],
     )
@@ -95,29 +116,79 @@ ESPN_CLAIM_RE = re.compile(
 )
 
 NON_PLAYER_WORDS = {
-    "pick", "picks", "round", "conditional", "draft", "consideration",
-    "prospect", "prospects", "forward", "forwards", "defenseman",
-    "defensemen", "goalie", "goalies", "centre", "center", "winger",
-    "each", "and", "the", "from", "for", "to", "a", "an",
+    "pick",
+    "picks",
+    "round",
+    "conditional",
+    "draft",
+    "consideration",
+    "prospect",
+    "prospects",
+    "forward",
+    "forwards",
+    "defenseman",
+    "defensemen",
+    "goalie",
+    "goalies",
+    "centre",
+    "center",
+    "winger",
+    "each",
+    "and",
+    "the",
+    "from",
+    "for",
+    "to",
+    "a",
+    "an",
 }
 
 NON_NHL_KEYWORDS = [
-    "sweden", "finland", "czech", "slovakia", "germany", "swiss",
-    "austria", "russia", "norway", "denmark", "liiga", "shl",
-    "ahl", "echl", "khl", "nl ", "elc", "pwhl",
+    "sweden",
+    "finland",
+    "czech",
+    "slovakia",
+    "germany",
+    "swiss",
+    "austria",
+    "russia",
+    "norway",
+    "denmark",
+    "liiga",
+    "shl",
+    "ahl",
+    "echl",
+    "khl",
+    "nl ",
+    "elc",
+    "pwhl",
 ]
 
 NAME_SUFFIX_RE = re.compile(r"\b(Jr|Sr|II|III|IV)\.?\b", re.IGNORECASE)
 
 MONTHS = {
-    "JANUARY": 1, "FEBRUARY": 2, "MARCH": 3, "APRIL": 4,
-    "MAY": 5, "JUNE": 6, "JULY": 7, "AUGUST": 8,
-    "SEPTEMBER": 9, "OCTOBER": 10, "NOVEMBER": 11, "DECEMBER": 12,
+    "JANUARY": 1,
+    "FEBRUARY": 2,
+    "MARCH": 3,
+    "APRIL": 4,
+    "MAY": 5,
+    "JUNE": 6,
+    "JULY": 7,
+    "AUGUST": 8,
+    "SEPTEMBER": 9,
+    "OCTOBER": 10,
+    "NOVEMBER": 11,
+    "DECEMBER": 12,
 }
 
 WEEKDAYS = {
-    "monday": 0, "tuesday": 1, "wednesday": 2, "thursday": 3,
-    "friday": 4, "saturday": 5, "sunday": 6,
+    "monday": 0,
+    "tuesday": 1,
+    "wednesday": 2,
+    "thursday": 3,
+    "friday": 4,
+    "saturday": 5,
+    "sunday": 6,
 }
 
 
@@ -333,9 +404,7 @@ def extract_move_date_from_article(html, player_name, published_date, offseason_
             re.IGNORECASE,
         )
         if weekday_match:
-            weekday_date = date_for_weekday_on_or_before(
-                weekday_match.group(1), published_date
-            )
+            weekday_date = date_for_weekday_on_or_before(weekday_match.group(1), published_date)
             if weekday_date:
                 return weekday_date
 
@@ -354,9 +423,7 @@ def enrich_free_agent_dates(moves, tracker_html, offseason_year, fetcher=fetch_p
         if source_url not in article_cache:
             article_html = fetcher(source_url)
             if article_html:
-                article_date = extract_article_date(
-                    article_html, parse_json_ld(article_html)
-                )
+                article_date = extract_article_date(article_html, parse_json_ld(article_html))
                 article_cache[source_url] = (article_html, article_date)
             else:
                 article_cache[source_url] = (None, None)
@@ -497,12 +564,14 @@ def generate_move_id(player_id, move_type, old_team, new_team):
 
 
 def move_identity(move):
-    return "|".join([
-        str(move.get("playerId", "")),
-        str(move.get("moveType", "")),
-        str(move.get("oldTeam", "")),
-        str(move.get("newTeam", "")),
-    ])
+    return "|".join(
+        [
+            str(move.get("playerId", "")),
+            str(move.get("moveType", "")),
+            str(move.get("oldTeam", "")),
+            str(move.get("newTeam", "")),
+        ]
+    )
 
 
 def parse_trade_entries(paragraphs, roster_by_last, roster_by_full, page_date):
@@ -537,13 +606,15 @@ def parse_trade_entries(paragraphs, roster_by_last, roster_by_full, page_date):
                 date_str = page_date
                 if current_month and current_day:
                     date_str = f"{current_year}-{current_month:02d}-{current_day:02d}"
-                moves.append({
-                    "player": player,
-                    "oldTeam": old_team,
-                    "newTeam": new_team,
-                    "moveType": "trade",
-                    "date": date_str,
-                })
+                moves.append(
+                    {
+                        "player": player,
+                        "oldTeam": old_team,
+                        "newTeam": new_team,
+                        "moveType": "trade",
+                        "date": date_str,
+                    }
+                )
             continue
 
         traded_match = re.search(
@@ -565,13 +636,15 @@ def parse_trade_entries(paragraphs, roster_by_last, roster_by_full, page_date):
                 date_str = page_date
                 if current_month and current_day:
                     date_str = f"{current_year}-{current_month:02d}-{current_day:02d}"
-                moves.append({
-                    "player": player,
-                    "oldTeam": old_team,
-                    "newTeam": new_team,
-                    "moveType": "trade",
-                    "date": date_str,
-                })
+                moves.append(
+                    {
+                        "player": player,
+                        "oldTeam": old_team,
+                        "newTeam": new_team,
+                        "moveType": "trade",
+                        "date": date_str,
+                    }
+                )
 
     return moves
 
@@ -686,14 +759,16 @@ def parse_free_agent_entries(paragraphs, roster_by_last, roster_by_full, page_da
                 continue
             old_team = departure["oldTeam"]
 
-            moves.append({
-                "player": player,
-                "oldTeam": old_team,
-                "newTeam": current_team_abbrev,
-                "moveType": "free_agent",
-                "date": page_date,
-                "sourceText": normalized,
-            })
+            moves.append(
+                {
+                    "player": player,
+                    "oldTeam": old_team,
+                    "newTeam": current_team_abbrev,
+                    "moveType": "free_agent",
+                    "date": page_date,
+                    "sourceText": normalized,
+                }
+            )
 
     return moves
 
@@ -768,23 +843,22 @@ def parse_espn_waiver_claims(transactions, roster_by_last, roster_by_full):
             )
             if not player or not old_team or old_team == new_team:
                 continue
-            moves.append({
-                "player": player,
-                "oldTeam": old_team,
-                "newTeam": new_team,
-                "moveType": "waiver_claim",
-                "date": date,
-                "sourceUrl": f"https://www.espn.com/nhl/transactions?date={date.replace('-', '')}",
-            })
+            moves.append(
+                {
+                    "player": player,
+                    "oldTeam": old_team,
+                    "newTeam": new_team,
+                    "moveType": "waiver_claim",
+                    "date": date,
+                    "sourceUrl": f"https://www.espn.com/nhl/transactions?date={date.replace('-', '')}",
+                }
+            )
     return moves
 
 
 def validate_free_agent_coverage(paragraphs, moves, roster_by_last, roster_by_full):
     """Flag confirmed Finnish departures that the signing parser missed."""
-    parsed = {
-        (move["player"]["playerId"], move["oldTeam"], move["newTeam"])
-        for move in moves
-    }
+    parsed = {(move["player"]["playerId"], move["oldTeam"], move["newTeam"]) for move in moves}
     complete = True
     for name, departure in parse_free_agent_departures(paragraphs).items():
         player = match_player_to_roster(name, roster_by_last, roster_by_full)
@@ -829,19 +903,16 @@ def load_existing_moves():
 
 def merge_moves(existing, new_moves_list, offseason_year):
     if existing and existing.get("offseasonYear") == offseason_year:
-        existing_moves = {
-            move_identity(move): move for move in existing.get("moves", [])
-        }
+        existing_moves = {move_identity(move): move for move in existing.get("moves", [])}
     else:
         existing_moves = {}
 
     for move in new_moves_list:
         identity = move_identity(move)
         previous = existing_moves.get(identity, {})
-        if (
-            previous.get("sourceUrl", "").startswith("https://www.nhl.com/")
-            and move.get("sourceUrl", "").startswith("https://www.espn.com/")
-        ):
+        if previous.get("sourceUrl", "").startswith("https://www.nhl.com/") and move.get(
+            "sourceUrl", ""
+        ).startswith("https://www.espn.com/"):
             continue
         existing_moves[identity] = move
 
@@ -933,8 +1004,7 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
                 espn_transactions, roster_by_last, roster_by_full
             )
             waiver_moves = [
-                move for move in waiver_moves
-                if window["start"] <= move["date"] <= window["end"]
+                move for move in waiver_moves if window["start"] <= move["date"] <= window["end"]
             ]
             print(f"  Found {len(waiver_moves)} Finnish waiver claim(s)")
             all_moves.extend(waiver_moves)
@@ -949,23 +1019,21 @@ def collect_offseason_moves(offseason_year=2026, backfill=False):
         name = player["name"]
         slug = normalize_name_key(name).replace(" ", "-")
 
-        formatted_moves.append({
-            "moveId": generate_move_id(
-                pid, move["moveType"], move["oldTeam"], move["newTeam"]
-            ),
-            "playerId": pid,
-            "playerName": name,
-            "playerSlug": slug,
-            "position": player.get("position", ""),
-            "oldTeam": move["oldTeam"],
-            "newTeam": move["newTeam"],
-            "moveType": move["moveType"],
-            "date": move["date"],
-            "sourceUrl": move.get("sourceUrl") or (
-                TRADE_TRACKER_URL if move["moveType"] == "trade"
-                else FREE_AGENT_TRACKER_URL
-            ),
-        })
+        formatted_moves.append(
+            {
+                "moveId": generate_move_id(pid, move["moveType"], move["oldTeam"], move["newTeam"]),
+                "playerId": pid,
+                "playerName": name,
+                "playerSlug": slug,
+                "position": player.get("position", ""),
+                "oldTeam": move["oldTeam"],
+                "newTeam": move["newTeam"],
+                "moveType": move["moveType"],
+                "date": move["date"],
+                "sourceUrl": move.get("sourceUrl")
+                or (TRADE_TRACKER_URL if move["moveType"] == "trade" else FREE_AGENT_TRACKER_URL),
+            }
+        )
 
     seen_ids = set()
     deduped = []

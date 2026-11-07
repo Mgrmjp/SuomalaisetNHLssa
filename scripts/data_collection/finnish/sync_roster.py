@@ -27,10 +27,7 @@ def latest_moves_by_player(moves):
     latest = {}
     for move in moves:
         pid = str(move.get("playerId", ""))
-        if pid and (
-            pid not in latest
-            or move.get("date", "") > latest[pid].get("date", "")
-        ):
+        if pid and (pid not in latest or move.get("date", "") > latest[pid].get("date", "")):
             latest[pid] = move
     return latest
 
@@ -142,10 +139,7 @@ def sync_roster():
                     if player.get("isActive") is False:
                         player["isActive"] = True
                     overridden += 1
-                    print(
-                        f"   🔄 {player.get('name', pid)}: "
-                        f"{current or '?'} -> {new_team}"
-                    )
+                    print(f"   🔄 {player.get('name', pid)}: {current or '?'} -> {new_team}")
             if overridden:
                 print(f"   Applied {overridden} team override(s) from offseason moves")
         except Exception as e:

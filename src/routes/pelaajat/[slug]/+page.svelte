@@ -121,71 +121,65 @@ function getPlayerSlug(p) {
 
 <svelte:head>
     <title>{pageTitle}</title>
-    <meta
-        name="description"
-        content={playerDescription}
-    />
+    <meta name="description" content={playerDescription} />
     <meta property="og:title" content={ogTitle} />
-    <meta
-        property="og:description"
-        content={ogDescription}
-    />
+    <meta property="og:description" content={ogDescription} />
     <meta property="og:url" content={`https://suomalaisetnhlssa.fi/pelaajat/${slug}`} />
 
     <!-- Person Schema for SEO -->
     {@html jsonLdScript({
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": displayName,
-        "url": `https://suomalaisetnhlssa.fi/pelaajat/${slug}`,
-        "image": playerImage,
-        "jobTitle": `Professional Ice Hockey ${isGoalie ? "Goaltender" : "Player"}`,
-        "memberOf": {
-            "@type": "SportsTeam",
-            "name": teamFullName,
-            "sport": "Ice Hockey"
+        '@context': 'https://schema.org',
+        '@type': 'Person',
+        name: displayName,
+        url: `https://suomalaisetnhlssa.fi/pelaajat/${slug}`,
+        image: playerImage,
+        jobTitle: `Professional Ice Hockey ${isGoalie ? 'Goaltender' : 'Player'}`,
+        memberOf: {
+            '@type': 'SportsTeam',
+            name: teamFullName,
+            sport: 'Ice Hockey',
         },
-        "affiliation": {
-            "@type": "SportsTeam",
-            "name": teamFullName,
-            "sport": "Ice Hockey"
+        affiliation: {
+            '@type': 'SportsTeam',
+            name: teamFullName,
+            sport: 'Ice Hockey',
         },
-        "nationality": {
-            "@type": "Country",
-            "name": "Finland"
-        }
+        nationality: {
+            '@type': 'Country',
+            name: 'Finland',
+        },
     })}
 
     <!-- Breadcrumb Schema -->
     {@html jsonLdScript({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
             {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Etusivu",
-                "item": "https://suomalaisetnhlssa.fi/"
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Etusivu',
+                item: 'https://suomalaisetnhlssa.fi/',
             },
             {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Pelaajat",
-                "item": "https://suomalaisetnhlssa.fi/pelaajat"
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Pelaajat',
+                item: 'https://suomalaisetnhlssa.fi/pelaajat',
             },
             {
-                "@type": "ListItem",
-                "position": 3,
-                "name": displayName,
-                "item": `https://suomalaisetnhlssa.fi/pelaajat/${slug}`
-            }
-        ]
+                '@type': 'ListItem',
+                position: 3,
+                name: displayName,
+                item: `https://suomalaisetnhlssa.fi/pelaajat/${slug}`,
+            },
+        ],
     })}
 </svelte:head>
 
 <div class="public-view min-h-screen">
     <PageShell width="medium">
-        <a class="back-link" href={base + "/pelaajat"}>
+        <a class="back-link" href={base + '/pelaajat'}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
             Takaisin pelaajiin
         </a>
@@ -193,160 +187,261 @@ function getPlayerSlug(p) {
             title={displayName}
             subtitle={hasSeasonStats
                 ? `Kauden ${formattedSeason} pelaajaprofiili`
-                : "NHL-pelaajaprofiili"}
+                : 'NHL-pelaajaprofiili'}
         />
 
         <!-- Player Header -->
         <div class="mb-6 sm:mb-8">
             <Card padding="none" accent>
-            <div class="bg-slate-50 p-5 sm:p-6 text-slate-900 border-b border-slate-200">
-                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
-                    <div class="w-24 h-24 sm:w-32 sm:h-32 bg-slate-100 flex items-center justify-center border border-slate-200">
-                        <PlayerHeadshot
-                            playerId={player.playerId}
-                            explicitUrl={player.headshot}
-                            teamAbbrev={teamName}
-                            seasonId={seasonId}
-                            alt={`${displayName} - ${teamFullName}`}
-                            imageClass="w-full h-full object-cover"
-                            fallbackClass="w-full h-full flex items-center justify-center text-4xl font-bold text-slate-900"
-                            initials={displayName.split(' ').map(n => n[0]).join('')}
-                            loading="eager"
-                        />
-                    </div>
-                    <div class="min-w-0">
-                        <p class="mb-2 text-xl font-bold sm:text-2xl">{teamFullName}</p>
-                        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm sm:text-base text-slate-500">
-                            <span>{position}</span>
-                            <span>•</span>
-                            <span>#{player.jerseyNumber || player.sweaterNumber || player.playerId}</span>
-                            {#if player.birthDate || player.age}
+                <div class="bg-slate-50 p-5 sm:p-6 text-slate-900 border-b border-slate-200">
+                    <div
+                        class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left"
+                    >
+                        <div
+                            class="w-24 h-24 sm:w-32 sm:h-32 bg-slate-100 flex items-center justify-center border border-slate-200"
+                        >
+                            <PlayerHeadshot
+                                playerId={player.playerId}
+                                explicitUrl={player.headshot}
+                                teamAbbrev={teamName}
+                                {seasonId}
+                                alt={`${displayName} - ${teamFullName}`}
+                                imageClass="w-full h-full object-cover"
+                                fallbackClass="w-full h-full flex items-center justify-center text-4xl font-bold text-slate-900"
+                                initials={displayName
+                                    .split(' ')
+                                    .map((n) => n[0])
+                                    .join('')}
+                                loading="eager"
+                            />
+                        </div>
+                        <div class="min-w-0">
+                            <p class="mb-2 text-xl font-bold sm:text-2xl">{teamFullName}</p>
+                            <div
+                                class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm sm:text-base text-slate-500"
+                            >
+                                <span>{position}</span>
                                 <span>•</span>
-                                <span>{player.birthDate ? calculateAge(player.birthDate) : player.age}v</span>
+                                <span
+                                    >#{player.jerseyNumber ||
+                                        player.sweaterNumber ||
+                                        player.playerId}</span
+                                >
+                                {#if player.birthDate || player.age}
+                                    <span>•</span>
+                                    <span
+                                        >{player.birthDate
+                                            ? calculateAge(player.birthDate)
+                                            : player.age}v</span
+                                    >
+                                {/if}
+                            </div>
+                            {#if player.latestMove}
+                                <div
+                                    class="mt-3 inline-flex max-w-full border border-slate-200 px-3 py-1 text-[0.65rem] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em] text-slate-500"
+                                >
+                                    Siirtyi: {player.latestMove.oldTeam} → {player.latestMove
+                                        .newTeam}
+                                </div>
                             {/if}
                         </div>
-                        {#if player.latestMove}
-                            <div class="mt-3 inline-flex max-w-full border border-slate-200 px-3 py-1 text-[0.65rem] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.18em] text-slate-500">
-                                Siirtyi: {player.latestMove.oldTeam} → {player.latestMove.newTeam}
-                            </div>
-                        {/if}
                     </div>
                 </div>
-            </div>
 
-            <!-- Stats Grid -->
-            <div class="p-4 sm:p-8">
-                <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
-                    {hasSeasonStats ? `Kauden ${formattedSeason} tilastot` : 'NHL-profiili'}
-                </h2>
-                {#if hasSeasonStats}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.gamesPlayed}</div>
-                            <div class="text-sm text-gray-500 mt-1">Ottelut</div>
+                <!-- Stats Grid -->
+                <div class="p-4 sm:p-8">
+                    <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">
+                        {hasSeasonStats ? `Kauden ${formattedSeason} tilastot` : 'NHL-profiili'}
+                    </h2>
+                    {#if hasSeasonStats}
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-2xl sm:text-3xl font-bold text-gray-900">
+                                    {player.gamesPlayed}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Ottelut</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-2xl sm:text-3xl font-bold text-gray-900">
+                                    {player.goals}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Maalit</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-2xl sm:text-3xl font-bold text-gray-900">
+                                    {player.assists}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Syötöt</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-100 border border-slate-200"
+                            >
+                                <div class="text-2xl sm:text-3xl font-bold text-slate-900">
+                                    {player.points}
+                                </div>
+                                <div class="text-sm text-slate-500 mt-1 font-medium">Pisteet</div>
+                            </div>
                         </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.goals}</div>
-                            <div class="text-sm text-gray-500 mt-1">Maalit</div>
+                    {:else}
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-2xl sm:text-3xl font-bold text-gray-900">
+                                    {profileGamesPlayed ?? '-'}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">NHL-ottelut</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-2xl sm:text-3xl font-bold text-gray-900">
+                                    {teamName}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Joukkue</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-2xl sm:text-3xl font-bold text-gray-900">
+                                    {position}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Pelipaikka</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-100 border border-slate-200"
+                            >
+                                <div class="text-base sm:text-xl font-bold text-slate-900">
+                                    {player.birthplace || 'Suomi'}
+                                </div>
+                                <div class="text-sm text-slate-500 mt-1 font-medium">
+                                    Syntymäpaikka
+                                </div>
+                            </div>
                         </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{player.assists}</div>
-                            <div class="text-sm text-gray-500 mt-1">Syötöt</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-100 border border-slate-200">
-                            <div class="text-2xl sm:text-3xl font-bold text-slate-900">{player.points}</div>
-                            <div class="text-sm text-slate-500 mt-1 font-medium">Pisteet</div>
-                        </div>
-                    </div>
-                {:else}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{profileGamesPlayed ?? '-'}</div>
-                            <div class="text-sm text-gray-500 mt-1">NHL-ottelut</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{teamName}</div>
-                            <div class="text-sm text-gray-500 mt-1">Joukkue</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{position}</div>
-                            <div class="text-sm text-gray-500 mt-1">Pelipaikka</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-100 border border-slate-200">
-                            <div class="text-base sm:text-xl font-bold text-slate-900">{player.birthplace || 'Suomi'}</div>
-                            <div class="text-sm text-slate-500 mt-1 font-medium">Syntymäpaikka</div>
-                        </div>
-                    </div>
-                {/if}
+                    {/if}
 
-                {#if hasSeasonStats && !isGoalie}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.plusMinus > 0 ? '+' : ''}{player.plusMinus}</div>
-                            <div class="text-sm text-gray-500 mt-1">+/-</div>
+                    {#if hasSeasonStats && !isGoalie}
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.plusMinus > 0 ? '+' : ''}{player.plusMinus}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">+/-</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.penaltyMinutes || 0}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">R.min</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.pointsPerGame?.toFixed(2) || '0.00'}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Pisteka.</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.shootingPct
+                                        ? (player.shootingPct * 100).toFixed(1) + '%'
+                                        : '-'}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Laukais-%</div>
+                            </div>
                         </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.penaltyMinutes || 0}</div>
-                            <div class="text-sm text-gray-500 mt-1">R.min</div>
+                    {:else if hasSeasonStats}
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.saves || 0}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Torjunnat</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.goalsAgainst || 0}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Päästetyt</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.savePercentage
+                                        ? (player.savePercentage * 100).toFixed(2) + '%'
+                                        : '-'}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Torjunta-%</div>
+                            </div>
+                            <div
+                                class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200"
+                            >
+                                <div class="text-xl sm:text-2xl font-bold text-gray-900">
+                                    {player.gamesStarted || 0}
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Aloitukset</div>
+                            </div>
                         </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.pointsPerGame?.toFixed(2) || '0.00'}</div>
-                            <div class="text-sm text-gray-500 mt-1">Pisteka.</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.shootingPct ? (player.shootingPct * 100).toFixed(1) + '%' : '-'}</div>
-                            <div class="text-sm text-gray-500 mt-1">Laukais-%</div>
-                        </div>
-                    </div>
-                {:else if hasSeasonStats}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-3 sm:mt-4">
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.saves || 0}</div>
-                            <div class="text-sm text-gray-500 mt-1">Torjunnat</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.goalsAgainst || 0}</div>
-                            <div class="text-sm text-gray-500 mt-1">Päästetyt</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.savePercentage ? (player.savePercentage * 100).toFixed(2) + '%' : '-'}</div>
-                            <div class="text-sm text-gray-500 mt-1">Torjunta-%</div>
-                        </div>
-                        <div class="ui-stat-tile text-center p-3 sm:p-4 bg-slate-50 border border-slate-200">
-                            <div class="text-xl sm:text-2xl font-bold text-gray-900">{player.gamesStarted || 0}</div>
-                            <div class="text-sm text-gray-500 mt-1">Aloitukset</div>
-                        </div>
-                    </div>
-                {/if}
-            </div>
+                    {/if}
+                </div>
             </Card>
         </div>
 
         <!-- Same Team Players (Internal Linking) -->
         {#if sameTeamPlayers.length > 0}
             <Card>
-                <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Samassa joukkueessa pelaavat</h2>
-                <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Muut suomalaispelaajat joukkueessa {teamFullName}:</p>
+                <h2 class="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">
+                    Samassa joukkueessa pelaavat
+                </h2>
+                <p class="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                    Muut suomalaispelaajat joukkueessa {teamFullName}:
+                </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {#each sameTeamPlayers as teammate}
                         <a
                             href={`${base}/pelaajat/${getPlayerSlug(teammate)}`}
                             class="ui-surface ui-surface--interactive flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all group"
                         >
-                            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-100 flex-shrink-0 overflow-hidden">
+                            <div
+                                class="w-12 h-12 sm:w-14 sm:h-14 bg-slate-100 flex-shrink-0 overflow-hidden"
+                            >
                                 <PlayerHeadshot
                                     playerId={teammate.playerId}
                                     teamAbbrev={teammate.teamAbbrevs}
-                                    seasonId={seasonId}
+                                    {seasonId}
                                     alt={`${getPlayerName(teammate)} - ${teamFullName}`}
                                     imageClass="w-full h-full object-cover"
                                     fallbackClass="w-full h-full flex items-center justify-center text-sm font-bold text-gray-600"
-                                    initials={getPlayerName(teammate).split(' ').map(n => n[0]).join('')}
+                                    initials={getPlayerName(teammate)
+                                        .split(' ')
+                                        .map((n) => n[0])
+                                        .join('')}
                                     loading="lazy"
                                 />
                             </div>
                             <div>
-                                <h3 class="font-bold text-gray-900 group-hover:text-slate-700 transition-colors">
+                                <h3
+                                    class="font-bold text-gray-900 group-hover:text-slate-700 transition-colors"
+                                >
                                     {getPlayerName(teammate)}
                                 </h3>
                                 <div class="text-sm text-gray-500">
@@ -362,7 +457,7 @@ function getPlayerSlug(p) {
         <!-- Updated timestamp -->
         {#if data.updatedAt}
             <ViewMetadata class="mt-8">
-                Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}
+                Päivitetty: {new Date(data.updatedAt).toLocaleString('fi-FI')}
             </ViewMetadata>
         {/if}
     </PageShell>

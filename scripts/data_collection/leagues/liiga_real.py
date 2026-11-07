@@ -16,9 +16,7 @@ class LiigaRealCollector:
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update(
-            {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-            }
+            {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         )
 
     def get_current_season(self) -> str:
@@ -79,9 +77,7 @@ class LiigaRealCollector:
                 return []
 
             goalies = [
-                p
-                for p in all_players
-                if p.get("goalkeeper") == True or p.get("role") == "MV"
+                p for p in all_players if p.get("goalkeeper") == True or p.get("role") == "MV"
             ]
             return goalies
         except Exception as e:
@@ -160,22 +156,16 @@ class LiigaRealCollector:
                         "team": player.get("teamName", player.get("team", "Unknown")),
                         "league": "Liiga",
                         "position": "G",
-                        "games_played": player.get(
-                            "games", player.get("playedGames", 0)
-                        ),
+                        "games_played": player.get("games", player.get("playedGames", 0)),
                         "goals": 0,
                         "assists": player.get("assists", 0),
                         "points": player.get("assists", 0),
                         "plus_minus": 0,
-                        "penalty_minutes": player.get(
-                            "penaltyMinutes", player.get("pim", 0)
-                        ),
+                        "penalty_minutes": player.get("penaltyMinutes", player.get("pim", 0)),
                         "save_percentage": save_pct,
                         "goals_against_average": player.get("goalsAgainstAvg", 0),
                         "shutouts": player.get("shutOut", 0),
-                        "birth_date": player.get(
-                            "dateOfBirth", player.get("birthDate", "")
-                        ),
+                        "birth_date": player.get("dateOfBirth", player.get("birthDate", "")),
                         "height_cm": player.get("height", 0),
                         "weight_kg": player.get("weight", 0),
                         "nationality": "FIN",
@@ -189,25 +179,17 @@ class LiigaRealCollector:
                         "name": f"{player.get('firstName', '')} {player.get('lastName', '')}".strip(),
                         "team": player.get("teamName", player.get("team", "Unknown")),
                         "league": "Liiga",
-                        "position": player.get(
-                            "playerPosition", player.get("position", "F")
-                        ),
-                        "games_played": player.get(
-                            "games", player.get("playedGames", 0)
-                        ),
+                        "position": player.get("playerPosition", player.get("position", "F")),
+                        "games_played": player.get("games", player.get("playedGames", 0)),
                         "goals": player.get("goals", 0),
                         "assists": player.get("assists", 0),
                         "points": player.get("points", 0),
                         "plus_minus": player.get("plusMinus", 0),
-                        "penalty_minutes": player.get(
-                            "penaltyMinutes", player.get("pim", 0)
-                        ),
+                        "penalty_minutes": player.get("penaltyMinutes", player.get("pim", 0)),
                         "save_percentage": None,
                         "goals_against_average": None,
                         "shutouts": None,
-                        "birth_date": player.get(
-                            "dateOfBirth", player.get("birthDate", "")
-                        ),
+                        "birth_date": player.get("dateOfBirth", player.get("birthDate", "")),
                         "height_cm": player.get("height", 0),
                         "weight_kg": player.get("weight", 0),
                         "nationality": "FIN",

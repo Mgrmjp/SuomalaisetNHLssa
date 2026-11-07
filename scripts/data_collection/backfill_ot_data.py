@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import GAMES_DIR
 from utils import fetch_from_api, game_boxscore_url, save_json, load_json
 
+
 # =============================================================================
 # Backfill Functions
 # =============================================================================
@@ -30,7 +31,7 @@ def fetch_game_period_info(game_id):
         return {
             "period": pd.get("number", 3),
             "isOT": pd.get("number", 0) > 3,
-            "isSO": pd.get("periodType") == "SO"
+            "isSO": pd.get("periodType") == "SO",
         }
     except Exception as e:
         print(f"      ERROR fetching game {game_id}: {e}")
@@ -121,9 +122,11 @@ def main():
         games_needing_fix = 0
 
         for game in games:
-            if (game.get("period") is None and
-                game.get("gameState") != "FUT" and
-                game.get("gameType") == 2):
+            if (
+                game.get("period") is None
+                and game.get("gameState") != "FUT"
+                and game.get("gameType") == 2
+            ):
                 games_needing_fix += 1
 
         if games_needing_fix > 0:
@@ -140,7 +143,7 @@ def main():
         return
 
     response = input(f"Proceed to update {total_games_to_fix} games? (y/N): ")
-    if response.lower() != 'y':
+    if response.lower() != "y":
         print("Aborted.")
         return
 

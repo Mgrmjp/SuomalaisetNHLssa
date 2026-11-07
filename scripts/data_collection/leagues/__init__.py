@@ -30,16 +30,16 @@ from .slovak import SlovakExtraligaAdapter
 from .khl import KHLAdapter
 
 __all__ = [
-    'BaseLeagueAdapter',
-    'PlayerStats',
-    'LiigaAdapter',
-    'SHLAdapter',
-    'AHLAdapter',
-    'NCAAAdapter',
-    'DELAdapter',
-    'CzechExtraligaAdapter',
-    'SwissNLAdapter',
-    'ICEHLAdapter',
-    'SlovakExtraligaAdapter',
-    'KHLAdapter',
+    "BaseLeagueAdapter",
+    "PlayerStats",
+    "LiigaAdapter",
+    "SHLAdapter",
+    "AHLAdapter",
+    "NCAAAdapter",
+    "DELAdapter",
+    "CzechExtraligaAdapter",
+    "SwissNLAdapter",
+    "ICEHLAdapter",
+    "SlovakExtraligaAdapter",
+    "KHLAdapter",
 ]

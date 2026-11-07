@@ -56,17 +56,20 @@ const draftRankings = [
 
 <svelte:head>
     <title>Scouting Reports - Suomalaiset NHL-lupaukset</title>
-    <meta name="description" content="Yksityiskohtaiset scouting-raportit suomalaisista NHL-prospekteista." />
+    <meta
+        name="description"
+        content="Yksityiskohtaiset scouting-raportit suomalaisista NHL-prospekteista."
+    />
     <meta property="og:title" content="Scouting Reports" />
-    <meta property="og:description" content="Yksityiskohtaiset scouting-raportit suomalaisista NHL-prospekteista." />
+    <meta
+        property="og:description"
+        content="Yksityiskohtaiset scouting-raportit suomalaisista NHL-prospekteista."
+    />
 </svelte:head>
 
 <div class="min-h-screen">
     <PageShell>
-        <a
-            href={base + "/lupaukset"}
-            class="back-link"
-        >
+        <a href={base + '/lupaukset'} class="back-link">
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Takaisin lupaukset-sivulle
         </a>
@@ -85,13 +88,23 @@ const draftRankings = [
 
                     <div class="space-y-3">
                         {#each draftRankings.slice(0, 10) as player}
-                            <div class="flex items-center gap-3 p-2 transition-colors hover:bg-slate-50">
-                                <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-blue-100">
-                                    <span class="text-sm font-bold text-blue-700">#{player.rank}</span>
+                            <div
+                                class="flex items-center gap-3 p-2 transition-colors hover:bg-slate-50"
+                            >
+                                <div
+                                    class="flex h-10 w-10 flex-shrink-0 items-center justify-center bg-blue-100"
+                                >
+                                    <span class="text-sm font-bold text-blue-700"
+                                        >#{player.rank}</span
+                                    >
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="font-semibold text-slate-900 text-sm truncate">{player.name}</div>
-                                    <div class="text-xs text-slate-500">{player.position} · {player.team}</div>
+                                    <div class="font-semibold text-slate-900 text-sm truncate">
+                                        {player.name}
+                                    </div>
+                                    <div class="text-xs text-slate-500">
+                                        {player.position} · {player.team}
+                                    </div>
                                 </div>
                             </div>
                         {/each}
@@ -136,15 +149,23 @@ const draftRankings = [
                                 <div class="flex items-start justify-between gap-4">
                                     <div class="flex-1">
                                         <div class="flex items-center gap-2 mb-2">
-                                            <span class="inline-flex items-center bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                                            <span
+                                                class="inline-flex items-center bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
+                                            >
                                                 {report.rank}
                                             </span>
-                                            <span class="text-xs text-slate-500">{report.draft} Draft</span>
+                                            <span class="text-xs text-slate-500"
+                                                >{report.draft} Draft</span
+                                            >
                                         </div>
-                                        <h3 class="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-2">
+                                        <h3
+                                            class="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-2"
+                                        >
                                             {report.name}
                                         </h3>
-                                        <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
+                                        <div
+                                            class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600"
+                                        >
                                             <span>{report.position}</span>
                                             <span class="text-slate-300">·</span>
                                             <span>{report.team}</span>
@@ -154,7 +175,10 @@ const draftRankings = [
                                             <span>{report.height}</span>
                                         </div>
                                     </div>
-                                    <ChevronRight class="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-1" aria-hidden="true" />
+                                    <ChevronRight
+                                        class="w-5 h-5 text-slate-400 group-hover:text-blue-500 transition-colors flex-shrink-0 mt-1"
+                                        aria-hidden="true"
+                                    />
                                 </div>
                             </div>
                         </a>
@@ -169,9 +193,12 @@ const draftRankings = [
                                 <Plus class="h-5 w-5 text-slate-500" aria-hidden="true" />
                             </div>
                             <div>
-                                <h3 class="font-semibold text-slate-900">Lisää raportteja tulossa</h3>
+                                <h3 class="font-semibold text-slate-900">
+                                    Lisää raportteja tulossa
+                                </h3>
                                 <p class="text-sm text-slate-600">
-                                    Seuraamme jatkuvasti suomalaisia prospecteja ja julkaisemme uusia raportteja.
+                                    Seuraamme jatkuvasti suomalaisia prospecteja ja julkaisemme
+                                    uusia raportteja.
                                 </p>
                             </div>
                         </div>
@@ -179,6 +206,5 @@ const draftRankings = [
                 </div>
             </div>
         </div>
-
     </PageShell>
 </div>

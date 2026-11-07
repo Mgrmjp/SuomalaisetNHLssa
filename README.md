@@ -17,16 +17,16 @@ The dev server uses `http://localhost:3000`. Existing snapshots work without API
 
 ## Common commands
 
-| Task | Command |
-| --- | --- |
-| Develop against existing data | `npm run dev` |
-| Build without fetching data | `npm run build:quick` |
-| Build with season-stat prebuild collection | `npm run build` |
-| Preview the build on port 4173 | `npm run preview` |
-| Check documentation | `npm run docs:check` |
-| Check Svelte types | `npm run check` |
-| Run Vitest | `npm test` |
-| Run lint, type checks and tests | `npm run validate` |
+| Task                                       | Command               |
+| ------------------------------------------ | --------------------- |
+| Develop against existing data              | `npm run dev`         |
+| Build without fetching data                | `npm run build:quick` |
+| Build with season-stat prebuild collection | `npm run build`       |
+| Preview the build on port 4173             | `npm run preview`     |
+| Check documentation                        | `npm run docs:check`  |
+| Check Svelte types                         | `npm run check`       |
+| Run Vitest                                 | `npm test`            |
+| Run lint, type checks and tests            | `npm run validate`    |
 
 `package.json` is the command source of truth. `npm run build` automatically runs `prebuild`; `build:quick` skips that network step.
 

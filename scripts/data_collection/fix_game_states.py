@@ -42,7 +42,9 @@ def fetch_from_api(url: str, max_retries: int = 2) -> dict | None:
     return None
 
 
-def find_games_needing_fix(dry_run: bool = False, target_date: str | None = None) -> List[Tuple[Path, int, dict]]:
+def find_games_needing_fix(
+    dry_run: bool = False, target_date: str | None = None
+) -> List[Tuple[Path, int, dict]]:
     """
     Scan game JSON files for games with non-final or inconsistent final states.
 
@@ -128,7 +130,7 @@ def update_player_scores_in_file(
     correct_home_score: int,
     correct_away_score: int,
     home_team: str,
-    away_team: str
+    away_team: str,
 ) -> bool:
     """
     Update player data in the JSON file for a specific game.
@@ -201,15 +203,14 @@ def update_player_scores_in_file(
     return False
 
 
-def fix_game(
-    file_path: Path,
-    game_id: int,
-    old_game_data: dict,
-    dry_run: bool = False
-) -> bool:
+def fix_game(file_path: Path, game_id: int, old_game_data: dict, dry_run: bool = False) -> bool:
     """Fix a single game's state and scores."""
-    print(f"\n🏒 Game {game_id} ({old_game_data.get('awayTeam')} @ {old_game_data.get('homeTeam')})")
-    print(f"   Old: {old_game_data.get('awayScore')}-{old_game_data.get('homeScore')} {old_game_data.get('gameState')} P{old_game_data.get('period')}")
+    print(
+        f"\n🏒 Game {game_id} ({old_game_data.get('awayTeam')} @ {old_game_data.get('homeTeam')})"
+    )
+    print(
+        f"   Old: {old_game_data.get('awayScore')}-{old_game_data.get('homeScore')} {old_game_data.get('gameState')} P{old_game_data.get('period')}"
+    )
 
     # Fetch correct data
     correct_data = fetch_correct_game_data(game_id)
@@ -217,15 +218,16 @@ def fix_game(
         print(f"   ⚠️ Skipping - could not get correct data")
         return False
 
-    print(f"   New: {correct_data['awayScore']}-{correct_data['homeScore']} {correct_data['gameState']} P{correct_data['period']}")
-
-    # Check if scores actually changed
-    scores_changed = (
-        correct_data['homeScore'] != old_game_data.get('homeScore') or
-        correct_data['awayScore'] != old_game_data.get('awayScore')
+    print(
+        f"   New: {correct_data['awayScore']}-{correct_data['homeScore']} {correct_data['gameState']} P{correct_data['period']}"
     )
 
-    if not scores_changed and correct_data['gameState'] == "OFF":
+    # Check if scores actually changed
+    scores_changed = correct_data["homeScore"] != old_game_data.get("homeScore") or correct_data[
+        "awayScore"
+    ] != old_game_data.get("awayScore")
+
+    if not scores_changed and correct_data["gameState"] == "OFF":
         print(f"   ℹ️ Scores unchanged, just normalizing state")
     elif not scores_changed:
         print(f"   ℹ️ No changes needed")
@@ -277,7 +279,7 @@ def fix_game(
             correct_data["homeScore"],
             correct_data["awayScore"],
             old_game_data.get("homeTeam"),
-            old_game_data.get("awayTeam")
+            old_game_data.get("awayTeam"),
         )
 
     return True
@@ -308,7 +310,9 @@ def main():
 
     print(f"\n📋 Games to fix:")
     for file_path, game_id, game_data in games_to_fix[:10]:
-        print(f"   {game_id}: {game_data.get('awayTeam')} {game_data.get('awayScore')} @ {game_data.get('homeTeam')} {game_data.get('homeScore')} ({game_data.get('gameState')})")
+        print(
+            f"   {game_id}: {game_data.get('awayTeam')} {game_data.get('awayScore')} @ {game_data.get('homeTeam')} {game_data.get('homeScore')} ({game_data.get('gameState')})"
+        )
 
     if len(games_to_fix) > 10:
         print(f"   ... and {len(games_to_fix) - 10} more")

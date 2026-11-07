@@ -32,9 +32,7 @@ class FinnishNewsTests(unittest.TestCase):
         )
         self.assertEqual(news.match_players("NHL morning roundup", ROSTER), [])
         self.assertEqual(news.match_players("Kapanen returns", ROSTER), [])
-        self.assertEqual(
-            news.match_players("Oliver Kapanen returns", ROSTER), ["Oliver Kapanen"]
-        )
+        self.assertEqual(news.match_players("Oliver Kapanen returns", ROSTER), ["Oliver Kapanen"])
 
     def test_publication_must_come_from_publisher_metadata_not_search_date(self):
         result = news.verify_article(URL, page(), ROSTER, NOW)
@@ -48,22 +46,16 @@ class FinnishNewsTests(unittest.TestCase):
                 NOW,
             )
         )
-        self.assertIsNone(
-            news.verify_article(URL, page(date="2026-11-01"), ROSTER, NOW)
-        )
+        self.assertIsNone(news.verify_article(URL, page(date="2026-11-01"), ROSTER, NOW))
 
     def test_rejects_stale_future_unrelated_and_untrusted_articles(self):
         for date in ["2026-10-30T11:59:59Z", "2026-11-01T12:00:01Z", "bad date"]:
             self.assertIsNone(news.verify_article(URL, page(date), ROSTER, NOW))
         self.assertIsNone(
-            news.verify_article(
-                URL, page(title="NHL Opening Night Preview"), ROSTER, NOW
-            )
+            news.verify_article(URL, page(title="NHL Opening Night Preview"), ROSTER, NOW)
         )
         self.assertIsNone(
-            news.verify_article(
-                "https://nhl.com.evil.test/news/barkov", page(), ROSTER, NOW
-            )
+            news.verify_article("https://nhl.com.evil.test/news/barkov", page(), ROSTER, NOW)
         )
         self.assertIsNone(news.verify_article("https://nhl.com/", page(), ROSTER, NOW))
 
@@ -122,15 +114,11 @@ class FinnishNewsTests(unittest.TestCase):
             translatedSummary="Kooste päivän uutisista.",
         )
         index = news.build_news_index({"2026-11-01": [item]}, ROSTER, NOW)
-        self.assertEqual(
-            index["byDate"]["2026-11-01"][0]["translatedTitle"], item["title"]
-        )
+        self.assertEqual(index["byDate"]["2026-11-01"][0]["translatedTitle"], item["title"])
 
     def test_discovery_uses_news_window_and_checks_publisher_content(self):
         cache = {}
-        search = Mock(
-            return_value={"results": [{"url": URL, "title": "Barkov returns"}]}
-        )
+        search = Mock(return_value={"results": [{"url": URL, "title": "Barkov returns"}]})
         with (
             patch.object(news, "fetch_article", return_value=(URL, page())),
             patch.object(news, "faithful_translation", side_effect=lambda item: item),
@@ -148,9 +136,7 @@ class FinnishNewsTests(unittest.TestCase):
         roster = {"1": {"name": "Juuso Välimäki", "isActive": True}}
         html = '<meta charset="utf-8">' + page(title="Juuso Välimäki returns")
         self.assertEqual(
-            news.verify_article(URL, html.encode("utf-8"), roster, NOW)[
-                "matchedPlayers"
-            ],
+            news.verify_article(URL, html.encode("utf-8"), roster, NOW)["matchedPlayers"],
             ["Juuso Välimäki"],
         )
 
@@ -160,8 +146,7 @@ class FinnishNewsTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             roster_file, cache_file, output, github_output = [
-                root / name
-                for name in ["roster.json", "cache.json", "news.json", "github-output"]
+                root / name for name in ["roster.json", "cache.json", "news.json", "github-output"]
             ]
             roster_file.write_text(json.dumps(ROSTER))
             cache_file.write_text(json.dumps(archive))
@@ -180,18 +165,14 @@ class FinnishNewsTests(unittest.TestCase):
             self.assertEqual(
                 json.loads(cache_file.read_text())["2026-01-01"], archive["2026-01-01"]
             )
-            self.assertEqual(
-                len(json.loads(output.read_text())["byDate"]["2026-11-01"]), 1
-            )
+            self.assertEqual(len(json.loads(output.read_text())["byDate"]["2026-11-01"]), 1)
             self.assertEqual(
                 github_output.read_text().splitlines(),
                 ["updated=true", "updated=false"],
             )
 
     def test_article_fetch_does_not_follow_redirect_to_an_untrusted_host(self):
-        response = MagicMock(
-            status_code=302, headers={"Location": "http://127.0.0.1/private"}
-        )
+        response = MagicMock(status_code=302, headers={"Location": "http://127.0.0.1/private"})
         response.__enter__.return_value = response
         with patch.object(news.requests, "get", return_value=response) as getter:
             self.assertIsNone(news.fetch_article(URL))

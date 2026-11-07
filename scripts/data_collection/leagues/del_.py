@@ -83,9 +83,7 @@ class DELAdapter(BaseLeagueAdapter):
                     src = img.get("src") or img.get("data-src")
                     if src:
                         headshot_url = (
-                            f"https://www.penny-del.org{src}"
-                            if src.startswith("/")
-                            else src
+                            f"https://www.penny-del.org{src}" if src.startswith("/") else src
                         )
                         self._headshot_cache[profile_url] = headshot_url
                         return headshot_url
@@ -110,9 +108,7 @@ class DELAdapter(BaseLeagueAdapter):
         all_players = self.get_all_players()
         return [p for p in all_players if name.lower() in p.name.lower()]
 
-    def _parse_table_row(
-        self, cols: List[Any], nationality: str
-    ) -> Optional[PlayerStats]:
+    def _parse_table_row(self, cols: List[Any], nationality: str) -> Optional[PlayerStats]:
         """Parse DEL player table row."""
         try:
             # Player Name: often "LastName, FirstName"

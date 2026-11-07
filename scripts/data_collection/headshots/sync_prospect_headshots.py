@@ -58,7 +58,9 @@ def _safe_stem(value: str) -> str:
 
 def _build_filename(player: dict, headshot_url: str, content_type: str = "") -> str:
     player_id = str(player.get("player_id") or "").strip()
-    source_league = str(player.get("source_league") or player.get("league") or "unknown").strip().lower()
+    source_league = (
+        str(player.get("source_league") or player.get("league") or "unknown").strip().lower()
+    )
     stem = _safe_stem(player_id or f"{source_league}-{player.get('name', 'player')}")
 
     if content_type.startswith("."):
@@ -68,7 +70,10 @@ def _build_filename(player: dict, headshot_url: str, content_type: str = "") -> 
     if not ext:
         ext = Path(headshot_url.split("?", 1)[0]).suffix.lower()
     if not ext:
-        ext = mimetypes.guess_extension((content_type or "").split(";", 1)[0].strip().lower()) or ".jpg"
+        ext = (
+            mimetypes.guess_extension((content_type or "").split(";", 1)[0].strip().lower())
+            or ".jpg"
+        )
 
     return f"{stem}{ext}"
 
@@ -88,7 +93,9 @@ def _detect_extension_from_bytes(data: bytes) -> Optional[str]:
 
 def _build_optimized_filename(player: dict) -> str:
     player_id = str(player.get("player_id") or "").strip()
-    source_league = str(player.get("source_league") or player.get("league") or "unknown").strip().lower()
+    source_league = (
+        str(player.get("source_league") or player.get("league") or "unknown").strip().lower()
+    )
     stem = _safe_stem(player_id or f"{source_league}-{player.get('name', 'player')}")
     return f"{stem}{OPTIMIZED_EXTENSION}"
 
@@ -113,7 +120,9 @@ def _optimize_image_bytes(raw_bytes: bytes, source_extension: str) -> Optional[b
         ]
 
         try:
-            subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(
+                command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
         except Exception:
             return None
 
@@ -123,7 +132,9 @@ def _optimize_image_bytes(raw_bytes: bytes, source_extension: str) -> Optional[b
         return output_path.read_bytes()
 
 
-def _write_optimized_local_headshot(player: dict, raw_bytes: bytes, source_extension: str) -> Optional[str]:
+def _write_optimized_local_headshot(
+    player: dict, raw_bytes: bytes, source_extension: str
+) -> Optional[str]:
     optimized_bytes = _optimize_image_bytes(raw_bytes, source_extension)
     if not optimized_bytes:
         return None
@@ -148,7 +159,9 @@ def _download_to_local(session: requests.Session, player: dict, url: str) -> Opt
     is_image = content_type.lower().startswith("image/") or detected_extension is not None
 
     if not is_image:
-        print(f"[WARN] Non-image response for {player.get('name', 'player')}: {url} ({content_type or 'unknown'})")
+        print(
+            f"[WARN] Non-image response for {player.get('name', 'player')}: {url} ({content_type or 'unknown'})"
+        )
         return None
 
     source_extension = _build_filename(player, url, content_type or detected_extension or "")
@@ -226,7 +239,9 @@ def _optimize_existing_local_headshot(player: dict, local_url: str) -> Optional[
         return None
 
     source_extension = local_path.suffix.lower() or ".img"
-    optimized_url = _write_optimized_local_headshot(player, local_path.read_bytes(), source_extension)
+    optimized_url = _write_optimized_local_headshot(
+        player, local_path.read_bytes(), source_extension
+    )
     if not optimized_url:
         return None
 
@@ -261,7 +276,12 @@ def _process_data_file(data_file: Path, session: requests.Session) -> tuple[int,
             if optimized_local_url and optimized_local_url != headshot_url:
                 player["headshot_url"] = optimized_local_url
                 optimized_existing += 1
-            _assign_headshot_crop(player, player.get("original_headshot_url") or player.get("resolved_headshot_url") or headshot_url)
+            _assign_headshot_crop(
+                player,
+                player.get("original_headshot_url")
+                or player.get("resolved_headshot_url")
+                or headshot_url,
+            )
             continue
 
         if not _is_remote_headshot(headshot_url):

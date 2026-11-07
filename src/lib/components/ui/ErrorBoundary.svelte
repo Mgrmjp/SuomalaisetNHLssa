@@ -49,82 +49,64 @@ function _toggleDetails() {
 </script>
 
 {#if error}
-  <div class="error-boundary-overlay" transition:fade={{ duration: 200 }}>
-    <div class="error-boundary-modal" transition:fly={{ y: 50, duration: 300 }}>
-      <div class="error-header">
-        <div class="error-icon">⚠️</div>
-        <h2>Something went wrong</h2>
-        <button
-          class="close-btn"
-          onclick={_handleDismiss}
-          aria-label="Dismiss error"
-        >
-          ✕
-        </button>
-      </div>
+    <div class="error-boundary-overlay" transition:fade={{ duration: 200 }}>
+        <div class="error-boundary-modal" transition:fly={{ y: 50, duration: 300 }}>
+            <div class="error-header">
+                <div class="error-icon">⚠️</div>
+                <h2>Something went wrong</h2>
+                <button class="close-btn" onclick={_handleDismiss} aria-label="Dismiss error">
+                    ✕
+                </button>
+            </div>
 
-      <div class="error-content">
-        <div class="error-summary">
-          <p class="error-message">{errorReport.message}</p>
-          <p class="error-component">
-            <strong>Component:</strong> {errorReport.component}
-          </p>
-          <p class="error-time">
-            <strong>Time:</strong> {new Date(errorReport.timestamp).toLocaleString()}
-          </p>
+            <div class="error-content">
+                <div class="error-summary">
+                    <p class="error-message">{errorReport.message}</p>
+                    <p class="error-component">
+                        <strong>Component:</strong>
+                        {errorReport.component}
+                    </p>
+                    <p class="error-time">
+                        <strong>Time:</strong>
+                        {new Date(errorReport.timestamp).toLocaleString()}
+                    </p>
+                </div>
+
+                {#if _showDetails}
+                    <div class="error-details" transition:slide={{ duration: 200 }}>
+                        <h4>Technical Details</h4>
+                        <div class="error-stack">
+                            <pre><code>{errorReport.stack}</code></pre>
+                        </div>
+                        <div class="error-meta">
+                            <p><strong>User Agent:</strong> {errorReport.userAgent}</p>
+                            <p><strong>URL:</strong> {errorReport.url}</p>
+                        </div>
+                    </div>
+                {/if}
+            </div>
+
+            <div class="error-actions">
+                <button class="action-btn primary" onclick={_handleReload}> 🔄 Reload Page </button>
+
+                <button class="action-btn secondary" onclick={_handleReportError}>
+                    📋 Report Error
+                </button>
+
+                <button class="action-btn" onclick={_toggleDetails}>
+                    {_showDetails ? '🙈 Hide Details' : '👁️ Show Details'}
+                </button>
+
+                <button class="action-btn dismiss" onclick={_handleDismiss}> Dismiss </button>
+            </div>
         </div>
-
-        {#if _showDetails}
-          <div class="error-details" transition:slide={{ duration: 200 }}>
-            <h4>Technical Details</h4>
-            <div class="error-stack">
-              <pre><code>{errorReport.stack}</code></pre>
-            </div>
-            <div class="error-meta">
-              <p><strong>User Agent:</strong> {errorReport.userAgent}</p>
-              <p><strong>URL:</strong> {errorReport.url}</p>
-            </div>
-          </div>
-        {/if}
-      </div>
-
-      <div class="error-actions">
-        <button
-          class="action-btn primary"
-          onclick={_handleReload}
-        >
-          🔄 Reload Page
-        </button>
-
-        <button
-          class="action-btn secondary"
-          onclick={_handleReportError}
-        >
-          📋 Report Error
-        </button>
-
-        <button
-          class="action-btn"
-          onclick={_toggleDetails}
-        >
-          {_showDetails ? '🙈 Hide Details' : '👁️ Show Details'}
-        </button>
-
-        <button
-          class="action-btn dismiss"
-          onclick={_handleDismiss}
-        >
-          Dismiss
-        </button>
-      </div>
     </div>
-  </div>
 {:else}
-  {@render children()}
+    {@render children()}
 {/if}
 
 <style>
-  .error-boundary-overlay {
+.error-boundary-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -136,9 +118,9 @@ function _toggleDetails() {
     justify-content: center;
     z-index: 9999;
     backdrop-filter: blur(4px);
-  }
+}
 
-  .error-boundary-modal {
+.error-boundary-modal {
     background: white;
     border-radius: 12px;
     padding: 24px;
@@ -146,32 +128,34 @@ function _toggleDetails() {
     width: 90%;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
-  .error-header {
+.error-header {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 20px;
     padding-bottom: 16px;
     border-bottom: 1px solid #e5e7eb;
-  }
+}
 
-  .error-icon {
+.error-icon {
     font-size: 24px;
     flex-shrink: 0;
-  }
+}
 
-  .error-header h2 {
+.error-header h2 {
     margin: 0;
     color: #dc2626;
     font-size: 20px;
     font-weight: 600;
     flex-grow: 1;
-  }
+}
 
-  .close-btn {
+.close-btn {
     background: none;
     border: none;
     font-size: 18px;
@@ -180,58 +164,58 @@ function _toggleDetails() {
     border-radius: 4px;
     color: #6b7280;
     transition: all 0.2s;
-  }
+}
 
-  .close-btn:hover {
+.close-btn:hover {
     background: #f3f4f6;
     color: #374151;
-  }
+}
 
-  .error-content {
+.error-content {
     margin-bottom: 24px;
-  }
+}
 
-  .error-summary {
+.error-summary {
     background: #fef2f2;
     border: 1px solid #fecaca;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
-  }
+}
 
-  .error-message {
+.error-message {
     color: #dc2626;
     font-weight: 500;
     margin: 0 0 8px 0;
     font-family: monospace;
-  }
+}
 
-  .error-component,
-  .error-time {
+.error-component,
+.error-time {
     margin: 4px 0;
     color: #6b7280;
     font-size: 14px;
-  }
+}
 
-  .error-details {
+.error-details {
     background: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 16px;
-  }
+}
 
-  .error-details h4 {
+.error-details h4 {
     margin: 0 0 12px 0;
     color: #374151;
     font-size: 16px;
     font-weight: 600;
-  }
+}
 
-  .error-stack {
+.error-stack {
     margin-bottom: 16px;
-  }
+}
 
-  .error-stack pre {
+.error-stack pre {
     background: #1f2937;
     color: #f3f4f6;
     padding: 12px;
@@ -240,22 +224,22 @@ function _toggleDetails() {
     font-size: 12px;
     line-height: 1.4;
     margin: 0;
-  }
+}
 
-  .error-meta p {
+.error-meta p {
     margin: 4px 0;
     font-size: 12px;
     color: #6b7280;
     word-break: break-all;
-  }
+}
 
-  .error-actions {
+.error-actions {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
-  }
+}
 
-  .action-btn {
+.action-btn {
     padding: 8px 16px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
@@ -269,59 +253,59 @@ function _toggleDetails() {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-  }
+}
 
-  .action-btn:hover {
+.action-btn:hover {
     background: #f9fafb;
     border-color: #9ca3af;
-  }
+}
 
-  .action-btn.primary {
+.action-btn.primary {
     background: #dc2626;
     color: white;
     border-color: #dc2626;
-  }
+}
 
-  .action-btn.primary:hover {
+.action-btn.primary:hover {
     background: #b91c1c;
     border-color: #b91c1c;
-  }
+}
 
-  .action-btn.secondary {
+.action-btn.secondary {
     background: #3b82f6;
     color: white;
     border-color: #94a3b8;
-  }
+}
 
-  .action-btn.secondary:hover {
+.action-btn.secondary:hover {
     background: #2563eb;
     border-color: #2563eb;
-  }
+}
 
-  .action-btn.dismiss {
+.action-btn.dismiss {
     background: #6b7280;
     color: white;
     border-color: #6b7280;
-  }
+}
 
-  .action-btn.dismiss:hover {
+.action-btn.dismiss:hover {
     background: #4b5563;
     border-color: #4b5563;
-  }
+}
 
-  @media (max-width: 640px) {
+@media (max-width: 640px) {
     .error-boundary-modal {
-      margin: 16px;
-      padding: 20px;
+        margin: 16px;
+        padding: 20px;
     }
 
     .error-actions {
-      flex-direction: column;
+        flex-direction: column;
     }
 
     .action-btn {
-      width: 100%;
-      justify-content: center;
+        width: 100%;
+        justify-content: center;
     }
-  }
+}
 </style>

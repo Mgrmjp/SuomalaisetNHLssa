@@ -241,17 +241,13 @@ def test_parse_trade_excludes_non_finnish():
 
 
 def test_parse_signing_line_single():
-    names = parse_signing_line(
-        "Kiviranta signs 1-year contract with Stars", "DAL"
-    )
+    names = parse_signing_line("Kiviranta signs 1-year contract with Stars", "DAL")
     assert "Kiviranta" in names
     print("PASSED: parse_signing_line_single")
 
 
 def test_parse_signing_line_grouped():
-    names = parse_signing_line(
-        "Hyry, Shlaine, Halverson each signs contract with Stars", "DAL"
-    )
+    names = parse_signing_line("Hyry, Shlaine, Halverson each signs contract with Stars", "DAL")
     assert "Hyry" in names
     assert "Shlaine" in names
     assert "Halverson" in names
@@ -287,8 +283,10 @@ def test_signing_without_confirmed_departure_is_not_a_move():
     roster["8478123"]["currentTeam"] = "VAN"
     by_last, by_full = build_lookups(roster)
     paragraphs = [
-        "DALLAS STARS", "Signings",
-        "Kiviranta signs 1-year contract with Stars", "Free agents",
+        "DALLAS STARS",
+        "Signings",
+        "Kiviranta signs 1-year contract with Stars",
+        "Free agents",
     ]
     assert parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-01") == []
     print("PASSED: signing_without_confirmed_departure_is_not_a_move")
@@ -353,10 +351,14 @@ def test_free_agent_move_survives_roster_refresh():
         move = moves[0]
         assert (move["oldTeam"], move["newTeam"]) == ("SEA", "NYR")
         assert validate_free_agent_coverage(paragraphs, moves, by_last, by_full)
-        identities.add(generate_move_id(
-            move["player"]["playerId"], move["moveType"],
-            move["oldTeam"], move["newTeam"],
-        ))
+        identities.add(
+            generate_move_id(
+                move["player"]["playerId"],
+                move["moveType"],
+                move["oldTeam"],
+                move["newTeam"],
+            )
+        )
     assert len(identities) == 1
     print("PASSED: free_agent_move_survives_roster_refresh")
 
@@ -366,9 +368,13 @@ def test_free_agent_departure_must_match_signing_destination():
     roster["8480999"]["currentTeam"] = "NYR"
     by_last, by_full = build_lookups(roster)
     paragraphs = [
-        "NEW YORK RANGERS", "Signings",
-        "Tolvanen signs 1-year contract with Rangers", "Free agents",
-        "SEATTLE KRAKEN", "Free agents", "Eeli Tolvanen (signed: NSH).",
+        "NEW YORK RANGERS",
+        "Signings",
+        "Tolvanen signs 1-year contract with Rangers",
+        "Free agents",
+        "SEATTLE KRAKEN",
+        "Free agents",
+        "Eeli Tolvanen (signed: NSH).",
     ]
     assert parse_free_agent_entries(paragraphs, by_last, by_full, "2026-09-02") == []
     print("PASSED: free_agent_departure_must_match_signing_destination")
@@ -388,14 +394,28 @@ def test_collector_flags_unparsed_confirmed_signing():
     with (
         patch("fetch_offseason_moves.build_roster_lookup", return_value=(roster, by_last, by_full)),
         patch("fetch_offseason_moves.fetch_page_html", side_effect=["<p>No trades</p>", html]),
-        patch("fetch_offseason_moves.load_existing_moves", return_value={
-            "offseasonYear": 2026,
-            "moves": [{"playerId": "8480999", "moveType": "free_agent",
-                       "oldTeam": "SEA", "newTeam": "NYR", "date": "2026-09-02"}],
-        }),
-        patch("fetch_offseason_moves.get_offseason_window", return_value={
-            "start": "2026-06-20", "end": "2026-10-06",
-        }),
+        patch(
+            "fetch_offseason_moves.load_existing_moves",
+            return_value={
+                "offseasonYear": 2026,
+                "moves": [
+                    {
+                        "playerId": "8480999",
+                        "moveType": "free_agent",
+                        "oldTeam": "SEA",
+                        "newTeam": "NYR",
+                        "date": "2026-09-02",
+                    }
+                ],
+            },
+        ),
+        patch(
+            "fetch_offseason_moves.get_offseason_window",
+            return_value={
+                "start": "2026-06-20",
+                "end": "2026-10-06",
+            },
+        ),
         patch("fetch_offseason_moves.fetch_espn_transactions", return_value=[]),
         patch("fetch_offseason_moves.save_output") as save,
         redirect_stdout(logs),
@@ -446,14 +466,16 @@ def test_parse_espn_waiver_claim_from_compound_transaction():
         "currentTeam": "VAN",
     }
     by_last, by_full = build_lookups(roster)
-    transactions = [{
-        "date": "2026-09-25T07:00Z",
-        "description": (
-            "Claimed G Leevi Merilainen off waivers from Ottawa. "
-            "Placed F Filip Chytil on injured reserve."
-        ),
-        "team": {"abbreviation": "VAN"},
-    }]
+    transactions = [
+        {
+            "date": "2026-09-25T07:00Z",
+            "description": (
+                "Claimed G Leevi Merilainen off waivers from Ottawa. "
+                "Placed F Filip Chytil on injured reserve."
+            ),
+            "team": {"abbreviation": "VAN"},
+        }
+    ]
     moves = parse_espn_waiver_claims(transactions, by_last, by_full)
     assert len(moves) == 1
     assert moves[0]["player"]["playerId"] == 8482447
@@ -467,8 +489,16 @@ def test_parse_espn_waiver_claim_skips_placement_and_ambiguous_team():
     roster = make_roster()
     by_last, by_full = build_lookups(roster)
     transactions = [
-        {"date": "2026-09-25T07:00Z", "description": "Placed G Joonas Korpisalo on waivers.", "team": {"abbreviation": "BOS"}},
-        {"date": "2026-09-25T07:00Z", "description": "Claimed G Joonas Korpisalo off waivers from New York.", "team": {"abbreviation": "BOS"}},
+        {
+            "date": "2026-09-25T07:00Z",
+            "description": "Placed G Joonas Korpisalo on waivers.",
+            "team": {"abbreviation": "BOS"},
+        },
+        {
+            "date": "2026-09-25T07:00Z",
+            "description": "Claimed G Joonas Korpisalo off waivers from New York.",
+            "team": {"abbreviation": "BOS"},
+        },
     ]
     assert parse_espn_waiver_claims(transactions, by_last, by_full) == []
     print("PASSED: parse_espn_waiver_claim_skips_placement_and_ambiguous_team")
@@ -477,11 +507,13 @@ def test_parse_espn_waiver_claim_skips_placement_and_ambiguous_team():
 def test_parse_espn_waiver_claim_resolves_team_names_before_espn_abbreviations():
     roster = make_roster()
     by_last, by_full = build_lookups(roster)
-    transactions = [{
-        "date": "2026-09-25T07:00Z",
-        "description": "Claimed G Joonas Korpisalo off waivers from St. Louis.",
-        "team": {"displayName": "Los Angeles Kings", "abbreviation": "LA"},
-    }]
+    transactions = [
+        {
+            "date": "2026-09-25T07:00Z",
+            "description": "Claimed G Joonas Korpisalo off waivers from St. Louis.",
+            "team": {"displayName": "Los Angeles Kings", "abbreviation": "LA"},
+        }
+    ]
     moves = parse_espn_waiver_claims(transactions, by_last, by_full)
     assert len(moves) == 1
     assert (moves[0]["oldTeam"], moves[0]["newTeam"]) == ("STL", "LAK")
@@ -561,8 +593,11 @@ def test_merge_moves_deduplication():
 
 def test_merge_keeps_official_claim_source_over_espn():
     official = {
-        "playerId": "8482447", "moveType": "waiver_claim",
-        "oldTeam": "OTT", "newTeam": "VAN", "date": "2026-09-25",
+        "playerId": "8482447",
+        "moveType": "waiver_claim",
+        "oldTeam": "OTT",
+        "newTeam": "VAN",
+        "date": "2026-09-25",
         "sourceUrl": "https://www.nhl.com/canucks/news/claim",
     }
     espn = dict(official, sourceUrl="https://www.espn.com/nhl/transactions?date=20260925")
@@ -590,9 +625,7 @@ def test_article_date_uses_weekday_before_publish_date():
       <p>Joel Kiviranta signed a one-year contract with Dallas on Wednesday.</p>
     </article>
     """
-    date = extract_move_date_from_article(
-        html, "Joel Kiviranta", "2026-07-02", 2026
-    )
+    date = extract_move_date_from_article(html, "Joel Kiviranta", "2026-07-02", 2026)
     assert date == "2026-07-01"
     print("PASSED: article_date_uses_weekday_before_publish_date")
 
@@ -604,9 +637,7 @@ def test_article_date_uses_explicit_transaction_date():
       <p>The team agreed to terms with defenseman Ville Heinola.</p>
     </article>
     """
-    date = extract_move_date_from_article(
-        html, "Ville Heinola", "2026-07-02", 2026
-    )
+    date = extract_move_date_from_article(html, "Ville Heinola", "2026-07-02", 2026)
     assert date == "2026-07-01"
     print("PASSED: article_date_uses_explicit_transaction_date")
 
@@ -628,20 +659,14 @@ def test_enrich_free_agent_dates_uses_linked_article():
         "Free agents",
         "Group 3 Unrestricted Free Agents: Joel Kiviranta (signed: DAL)",
     ]
-    moves = parse_free_agent_entries(
-        paragraphs, by_last, by_full, "2026-07-03"
-    )
+    moves = parse_free_agent_entries(paragraphs, by_last, by_full, "2026-07-03")
     article_html = """
     <script type="application/ld+json">{"datePublished":"2026-07-02T12:00:00Z"}</script>
     <p>Joel Kiviranta signed a one-year contract with Dallas on Wednesday.</p>
     """
-    enriched = enrich_free_agent_dates(
-        moves, tracker_html, 2026, fetcher=lambda _url: article_html
-    )
+    enriched = enrich_free_agent_dates(moves, tracker_html, 2026, fetcher=lambda _url: article_html)
     assert enriched[0]["date"] == "2026-07-01"
-    assert enriched[0]["sourceUrl"].endswith(
-        "/news/joel-kiviranta-signs-with-stars"
-    )
+    assert enriched[0]["sourceUrl"].endswith("/news/joel-kiviranta-signs-with-stars")
     print("PASSED: enrich_free_agent_dates_uses_linked_article")
 
 
@@ -686,9 +711,13 @@ def test_build_output_structure():
             "date": "2026-07-01",
         }
     ]
-    with patch("fetch_offseason_moves.get_offseason_window", return_value={
-        "start": "2026-06-20", "end": "2026-10-06",
-    }):
+    with patch(
+        "fetch_offseason_moves.get_offseason_window",
+        return_value={
+            "start": "2026-06-20",
+            "end": "2026-10-06",
+        },
+    ):
         output = build_output(2026, moves, {"tradeTracker": "ok", "freeAgentTracker": "ok"})
     assert output["offseasonYear"] == 2026
     assert "window" in output

@@ -1,4 +1,5 @@
 """Focused tests for the shared atomic JSON writer."""
+
 import json
 import sys
 import tempfile
@@ -22,13 +23,18 @@ class SaveJsonTest(unittest.TestCase):
         written = save_json({"name": "Mikko Rantanen", "goals": 2}, target)
 
         self.assertEqual(written, target)
-        self.assertEqual(json.loads(target.read_text(encoding="utf-8")), {"name": "Mikko Rantanen", "goals": 2})
+        self.assertEqual(
+            json.loads(target.read_text(encoding="utf-8")), {"name": "Mikko Rantanen", "goals": 2}
+        )
 
     def test_preserves_unicode_by_default(self):
         target = self.base / "unicode.json"
         save_json({"name": "Artturi Lehkonen"}, target)
 
-        self.assertEqual(target.read_text(encoding="utf-8"), json.dumps({"name": "Artturi Lehkonen"}, indent=2, ensure_ascii=False))
+        self.assertEqual(
+            target.read_text(encoding="utf-8"),
+            json.dumps({"name": "Artturi Lehkonen"}, indent=2, ensure_ascii=False),
+        )
 
     def test_failed_serialization_preserves_previous_snapshot(self):
         target = self.base / "snapshot.json"

@@ -21,6 +21,7 @@ if _parent_dir not in sys.path:
 from config import SEASON_DIR
 from utils import fetch_from_api, rate_limit, save_json, schedule_url, game_boxscore_url
 
+
 def get_schedule_for_date(date):
     """Get NHL schedule for a specific date"""
     url = schedule_url(date)
@@ -31,16 +32,15 @@ def get_schedule_for_date(date):
     # Extract games from the nested gameWeek structure
     game_week = data.get("gameWeek", [])
     if game_week and len(game_week) > 0:
-        return {
-            "games": game_week[0].get("games", []),
-            "date": game_week[0].get("date", date)
-        }
+        return {"games": game_week[0].get("games", []), "date": game_week[0].get("date", date)}
     return {"games": [], "date": date}
+
 
 def get_game_details(game_id):
     """Get detailed game information including player stats"""
     url = game_boxscore_url(game_id)
     return fetch_from_api(url)
+
 
 def extract_all_player_data(game_data, game_id, home_team, away_team, game_date):
     """Extract all player data from game"""
@@ -70,51 +70,55 @@ def extract_all_player_data(game_data, game_id, home_team, away_team, game_date)
                 save_pct = player.get("savePctg", 0.0)
                 goals_against = player.get("goalsAgainst", 0)
 
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": away_team,
-                    "position": position,
-                    "goals": 0,  # Goalies don't score in this structure
-                    "assists": 0,  # Goalies don't get assists in this structure
-                    "points": 0,
-                    "shots": 0,
-                    "plusMinus": 0,
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": True,
-                    "saves": saves,
-                    "savePct": round(save_pct, 3) if save_pct else 0.0,
-                    "shotsAgainst": shots_against,
-                    "goalsAgainst": goals_against,
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": away_team,
+                        "position": position,
+                        "goals": 0,  # Goalies don't score in this structure
+                        "assists": 0,  # Goalies don't get assists in this structure
+                        "points": 0,
+                        "shots": 0,
+                        "plusMinus": 0,
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": True,
+                        "saves": saves,
+                        "savePct": round(save_pct, 3) if save_pct else 0.0,
+                        "shotsAgainst": shots_against,
+                        "goalsAgainst": goals_against,
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
             else:
                 # Skater stats (forwards and defense)
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": away_team,
-                    "position": position,
-                    "goals": player.get("goals", 0),
-                    "assists": player.get("assists", 0),
-                    "points": player.get("points", 0),
-                    "shots": player.get("sog", 0),
-                    "plusMinus": player.get("plusMinus", 0),
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": False,
-                    "saves": 0,
-                    "savePct": 0.0,
-                    "hits": player.get("hits", 0),
-                    "blockedShots": player.get("blockedShots", 0),
-                    "takeaways": player.get("takeaways", 0),
-                    "giveaways": player.get("giveaways", 0),
-                    "powerPlayGoals": player.get("powerPlayGoals", 0),
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": away_team,
+                        "position": position,
+                        "goals": player.get("goals", 0),
+                        "assists": player.get("assists", 0),
+                        "points": player.get("points", 0),
+                        "shots": player.get("sog", 0),
+                        "plusMinus": player.get("plusMinus", 0),
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": False,
+                        "saves": 0,
+                        "savePct": 0.0,
+                        "hits": player.get("hits", 0),
+                        "blockedShots": player.get("blockedShots", 0),
+                        "takeaways": player.get("takeaways", 0),
+                        "giveaways": player.get("giveaways", 0),
+                        "powerPlayGoals": player.get("powerPlayGoals", 0),
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
 
     # Process home team players (forwards, defense, goalies)
     home_stats = player_stats.get("homeTeam", {})
@@ -132,53 +136,58 @@ def extract_all_player_data(game_data, game_id, home_team, away_team, game_date)
                 save_pct = player.get("savePctg", 0.0)
                 goals_against = player.get("goalsAgainst", 0)
 
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": home_team,
-                    "position": position,
-                    "goals": 0,  # Goalies don't score in this structure
-                    "assists": 0,  # Goalies don't get assists in this structure
-                    "points": 0,
-                    "shots": 0,
-                    "plusMinus": 0,
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": True,
-                    "saves": saves,
-                    "savePct": round(save_pct, 3) if save_pct else 0.0,
-                    "shotsAgainst": shots_against,
-                    "goalsAgainst": goals_against,
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": home_team,
+                        "position": position,
+                        "goals": 0,  # Goalies don't score in this structure
+                        "assists": 0,  # Goalies don't get assists in this structure
+                        "points": 0,
+                        "shots": 0,
+                        "plusMinus": 0,
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": True,
+                        "saves": saves,
+                        "savePct": round(save_pct, 3) if save_pct else 0.0,
+                        "shotsAgainst": shots_against,
+                        "goalsAgainst": goals_against,
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
             else:
                 # Skater stats (forwards and defense)
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": home_team,
-                    "position": position,
-                    "goals": player.get("goals", 0),
-                    "assists": player.get("assists", 0),
-                    "points": player.get("points", 0),
-                    "shots": player.get("sog", 0),
-                    "plusMinus": player.get("plusMinus", 0),
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": False,
-                    "saves": 0,
-                    "savePct": 0.0,
-                    "hits": player.get("hits", 0),
-                    "blockedShots": player.get("blockedShots", 0),
-                    "takeaways": player.get("takeaways", 0),
-                    "giveaways": player.get("giveaways", 0),
-                    "powerPlayGoals": player.get("powerPlayGoals", 0),
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": home_team,
+                        "position": position,
+                        "goals": player.get("goals", 0),
+                        "assists": player.get("assists", 0),
+                        "points": player.get("points", 0),
+                        "shots": player.get("sog", 0),
+                        "plusMinus": player.get("plusMinus", 0),
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": False,
+                        "saves": 0,
+                        "savePct": 0.0,
+                        "hits": player.get("hits", 0),
+                        "blockedShots": player.get("blockedShots", 0),
+                        "takeaways": player.get("takeaways", 0),
+                        "giveaways": player.get("giveaways", 0),
+                        "powerPlayGoals": player.get("powerPlayGoals", 0),
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
 
     return players
+
 
 def generate_season_data(start_date, end_date):
     """Generate comprehensive data for all games in a date range"""
@@ -226,12 +235,16 @@ def generate_season_data(start_date, end_date):
             # OFF/FINAL = game is over and finished (this is what we want!)
             # CRIT = overtime/shootout - only accept if period > 3
             if game_state in ["FUT", "PRE"]:
-                print(f"   Game {i}/{len(games)}: {away_team} @ {home_team} - Not played yet ({game_state})")
+                print(
+                    f"   Game {i}/{len(games)}: {away_team} @ {home_team} - Not played yet ({game_state})"
+                )
                 continue
 
             # Skip CRIT games from schedule - need boxscore to check period
             if game_state == "CRIT":
-                print(f"   Game {i}/{len(games)}: {away_team} @ {home_team} - CRIT state, checking details...")
+                print(
+                    f"   Game {i}/{len(games)}: {away_team} @ {home_team} - CRIT state, checking details..."
+                )
 
             print(f"   Game {i}/{len(games)}: {away_team} @ {home_team} ({game_state})")
 
@@ -254,7 +267,9 @@ def generate_season_data(start_date, end_date):
                         continue
 
                 # Extract all player data
-                players = extract_all_player_data(game_details, game_id, home_team, away_team, date_str)
+                players = extract_all_player_data(
+                    game_details, game_id, home_team, away_team, date_str
+                )
                 all_players.extend(players)
 
                 # Add game summary
@@ -267,44 +282,49 @@ def generate_season_data(start_date, end_date):
                 is_so = pd.get("periodType") == "SO"
                 period = pd.get("number", 3)
 
-                all_games.append({
-                    "gameId": game_id,
-                    "gameDate": date_str,
-                    "homeTeam": home_team,
-                    "awayTeam": away_team,
-                    "homeScore": home_score,
-                    "awayScore": away_score,
-                    "gameState": normalized_state,
-                    "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
-                    "startTime": game.get("startTimeUTC", ""),
-                    "isOT": is_ot,
-                    "isSO": is_so,
-                    "period": period,
-                    "players_count": len(players)
-                })
+                all_games.append(
+                    {
+                        "gameId": game_id,
+                        "gameDate": date_str,
+                        "homeTeam": home_team,
+                        "awayTeam": away_team,
+                        "homeScore": home_score,
+                        "awayScore": away_score,
+                        "gameState": normalized_state,
+                        "gameType": game.get("gameType", 2),  # 1=preseason, 2=regular, 3=playoffs
+                        "startTime": game.get("startTimeUTC", ""),
+                        "isOT": is_ot,
+                        "isSO": is_so,
+                        "period": period,
+                        "players_count": len(players),
+                    }
+                )
 
                 # Show top performers from this game
-                scorers = sorted([p for p in players if p["points"] > 0],
-                               key=lambda x: x["points"], reverse=True)[:3]
+                scorers = sorted(
+                    [p for p in players if p["points"] > 0], key=lambda x: x["points"], reverse=True
+                )[:3]
                 if scorers:
                     scorer_names = [f"{p['name']} ({p['points']}pts)" for p in scorers]
                     print(f"      Top scorers: {', '.join(scorer_names)}")
 
             else:
                 print(f"      Failed to get details for game {game_id}")
-                all_games.append({
-                    "gameId": game_id,
-                    "gameDate": date_str,
-                    "homeTeam": home_team,
-                    "awayTeam": away_team,
-                    "homeScore": 0,
-                    "awayScore": 0,
-                    "gameState": "ERROR",
-                    "gameType": game.get("gameType", 2),
-                    "startTime": game.get("startTimeUTC", ""),
-                    "players_count": 0,
-                    "error": True
-                })
+                all_games.append(
+                    {
+                        "gameId": game_id,
+                        "gameDate": date_str,
+                        "homeTeam": home_team,
+                        "awayTeam": away_team,
+                        "homeScore": 0,
+                        "awayScore": 0,
+                        "gameState": "ERROR",
+                        "gameType": game.get("gameType", 2),
+                        "startTime": game.get("startTimeUTC", ""),
+                        "players_count": 0,
+                        "error": True,
+                    }
+                )
 
             # Rate limiting between games
             rate_limit(1.0)
@@ -316,16 +336,14 @@ def generate_season_data(start_date, end_date):
 
     return {
         "season": "2025-26",
-        "date_range": {
-            "start": start_date,
-            "end": end_date
-        },
+        "date_range": {"start": start_date, "end": end_date},
         "games": all_games,
         "players": all_players,
         "total_games": len([g for g in all_games if not g.get("error")]),
         "total_players": len(all_players),
-        "generated_at": datetime.now().isoformat()
+        "generated_at": datetime.now().isoformat(),
     }
+
 
 def main():
     # Get dates from command line or use defaults
@@ -364,8 +382,7 @@ def main():
     # Print some statistics
     if data["games"]:
         # Top scorers in season
-        season_scorers = sorted(data["players"],
-                              key=lambda x: x["points"], reverse=True)[:10]
+        season_scorers = sorted(data["players"], key=lambda x: x["points"], reverse=True)[:10]
 
         # Games by team
         team_games = {}
@@ -381,6 +398,7 @@ def main():
         print(f"\n📊 Games Played by Team:")
         for team, count in sorted(team_games.items()):
             print(f"   {team}: {count} games")
+
 
 if __name__ == "__main__":
     main()

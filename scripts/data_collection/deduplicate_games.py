@@ -21,6 +21,7 @@ from pathlib import Path
 GAMES_DIR = Path("/home/miikka/dev/suomalaisetnhlssa/static/data/prepopulated/games")
 MANIFEST_FILE = Path("/home/miikka/dev/suomalaisetnhlssa/static/data/games_manifest.json")
 
+
 def get_local_date_from_utc(utc_timestamp):
     """
     Convert UTC timestamp to local date (YYYY-MM-DD).
@@ -31,13 +32,14 @@ def get_local_date_from_utc(utc_timestamp):
 
     try:
         # Parse UTC timestamp
-        dt = datetime.fromisoformat(utc_timestamp.replace('Z', '+00:00'))
+        dt = datetime.fromisoformat(utc_timestamp.replace("Z", "+00:00"))
         # Convert to Eastern timezone (where most NHL games are played)
         eastern = timezone(datetime.timedelta(hours=-5))
         local_dt = dt.astimezone(eastern)
         return local_dt.strftime("%Y-%m-%d")
     except:
         return None
+
 
 def load_all_games():
     """
@@ -54,7 +56,7 @@ def load_all_games():
         print(f"  Processing {json_file.name}...")
 
         try:
-            with open(json_file, 'r') as f:
+            with open(json_file, "r") as f:
                 data = json.load(f)
             games = data.get("games", [])
 
@@ -92,6 +94,7 @@ def load_all_games():
 
     return games_by_correct_date
 
+
 def save_deduplicated_data(games_by_date):
     """Save deduplicated game data to files."""
     print("\nSaving deduplicated data...")
@@ -103,7 +106,7 @@ def save_deduplicated_data(games_by_date):
 
         try:
             # Try to load existing file to preserve players data
-            with open(json_file, 'r') as f:
+            with open(json_file, "r") as f:
                 data = json.load(f)
         except:
             # Create new structure if file doesn't exist
@@ -113,7 +116,7 @@ def save_deduplicated_data(games_by_date):
                 "players": [],
                 "total_players": 0,
                 "generated_at": datetime.now().isoformat(),
-                "source": "NHL API - Deduplicated"
+                "source": "NHL API - Deduplicated",
             }
 
         # Update games list
@@ -121,7 +124,7 @@ def save_deduplicated_data(games_by_date):
         data["date"] = date_str
 
         # Save back
-        with open(json_file, 'w') as f:
+        with open(json_file, "w") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
         saved_count += len(games)
@@ -129,12 +132,13 @@ def save_deduplicated_data(games_by_date):
 
     print(f"\nTotal games saved: {saved_count}")
 
+
 def update_manifest(games_by_date):
     """Update games_manifest.json with only dates that have games."""
     print("\nUpdating games_manifest.json...")
 
     try:
-        with open(MANIFEST_FILE, 'r') as f:
+        with open(MANIFEST_FILE, "r") as f:
             manifest = json.load(f)
     except:
         manifest = {"games": [], "lastUpdated": datetime.now().isoformat()}
@@ -147,11 +151,12 @@ def update_manifest(games_by_date):
     manifest["lastUpdated"] = datetime.now().isoformat()
 
     # Save
-    with open(MANIFEST_FILE, 'w') as f:
+    with open(MANIFEST_FILE, "w") as f:
         json.dump(manifest, f, indent=2, ensure_ascii=False)
 
     print(f"  Updated manifest with {len(dates_with_games)} dates")
     print(f"  Date range: {dates_with_games[0]} to {dates_with_games[-1]}")
+
 
 def remove_empty_files(games_by_date):
     """Remove any JSON files that are not in the games_by_date dict."""
@@ -169,6 +174,7 @@ def remove_empty_files(games_by_date):
             print(f"  ERROR removing {file.name}: {e}")
 
     print(f"Removed {len(files_to_remove)} unused files")
+
 
 def main():
     print("=" * 80)
@@ -195,6 +201,7 @@ def main():
     print("\n" + "=" * 80)
     print("✅ Deduplication complete!")
     print("=" * 80)
+
 
 if __name__ == "__main__":
     main()

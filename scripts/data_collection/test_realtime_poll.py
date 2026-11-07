@@ -30,16 +30,27 @@ class RealtimePollTests(unittest.TestCase):
 
     def poll(self, games=None):
         schedule = {"gameWeek": [{"date": self.date, "games": games or [self.game]}]}
-        with patch.object(realtime_poll, "GAMES_DIR", self.games_dir), patch.object(
-            realtime_poll, "fetch_from_api", return_value=schedule
+        with (
+            patch.object(realtime_poll, "GAMES_DIR", self.games_dir),
+            patch.object(realtime_poll, "fetch_from_api", return_value=schedule),
         ):
             return realtime_poll.check_for_live_games(self.date)
 
     def save_game(self, state="OFF", home_score=3, away_score=2):
-        (self.games_dir / f"{self.date}.json").write_text(json.dumps({
-            "games": [{"gameId": self.game["id"], "gameState": state,
-                       "homeScore": home_score, "awayScore": away_score}]
-        }))
+        (self.games_dir / f"{self.date}.json").write_text(
+            json.dumps(
+                {
+                    "games": [
+                        {
+                            "gameId": self.game["id"],
+                            "gameState": state,
+                            "homeScore": home_score,
+                            "awayScore": away_score,
+                        }
+                    ]
+                }
+            )
+        )
 
     def test_finished_games_replace_stale_upcoming_data(self):
         self.save_game("FUT", 0, 0)
@@ -64,18 +75,24 @@ class RealtimePollTests(unittest.TestCase):
         self.assertTrue(self.poll([{**self.game, "gameState": "LIVE"}]))
 
     def test_only_requested_schedule_day_is_checked(self):
-        schedule = {"gameWeek": [
-            {"date": "2026-09-30", "games": [{**self.game, "gameState": "LIVE"}]},
-            {"date": self.date, "games": []},
-        ]}
+        schedule = {
+            "gameWeek": [
+                {"date": "2026-09-30", "games": [{**self.game, "gameState": "LIVE"}]},
+                {"date": self.date, "games": []},
+            ]
+        }
         with patch.object(realtime_poll, "fetch_from_api", return_value=schedule):
             self.assertFalse(realtime_poll.check_for_live_games(self.date))
 
     def test_failed_update_does_not_report_updated_to_actions(self):
         output = self.games_dir / "github-output"
-        with patch.object(sys, "argv", ["realtime_poll.py", "--once", "--force", "--date", self.date]), patch.dict(
-            os.environ, {"GITHUB_OUTPUT": str(output)}
-        ), patch.object(realtime_poll, "run_update", return_value=False):
+        with (
+            patch.object(
+                sys, "argv", ["realtime_poll.py", "--once", "--force", "--date", self.date]
+            ),
+            patch.dict(os.environ, {"GITHUB_OUTPUT": str(output)}),
+            patch.object(realtime_poll, "run_update", return_value=False),
+        ):
             with self.assertRaises(SystemExit) as raised:
                 realtime_poll.main()
         self.assertEqual(raised.exception.code, 1)
@@ -90,11 +107,14 @@ class RealtimePollTests(unittest.TestCase):
                 )
 
     def test_poll_recovers_yesterday_without_skipping_todays_games(self):
-        with patch.object(realtime_poll, "check_for_live_games", side_effect=[True, True]) as check, patch.object(
-            realtime_poll, "run_update", return_value=True
-        ) as update:
+        with (
+            patch.object(realtime_poll, "check_for_live_games", side_effect=[True, True]) as check,
+            patch.object(realtime_poll, "run_update", return_value=True) as update,
+        ):
             self.assertTrue(realtime_poll.poll_once(["2026-10-01", "2026-10-02"]))
-        self.assertEqual([call.args[0] for call in check.call_args_list], ["2026-10-01", "2026-10-02"])
+        self.assertEqual(
+            [call.args[0] for call in check.call_args_list], ["2026-10-01", "2026-10-02"]
+        )
         self.assertEqual(update.call_count, 2)
 
     def test_api_failure_is_reported_instead_of_a_successful_noop(self):
@@ -103,13 +123,15 @@ class RealtimePollTests(unittest.TestCase):
                 realtime_poll.check_for_live_games(self.date)
 
     def test_workflow_pushes_results_and_manifest_before_rebasing(self):
-        workflow_path = Path(__file__).resolve().parents[2] / ".github/workflows/realtime-update.yml"
-        step = workflow_path.read_text().split(
-            "      - name: Commit and push updated data\n", 1
-        )[1].split("\n      - name:", 1)[0]
-        script = "\n".join(
-            line[10:] for line in step.split("        run: |\n", 1)[1].splitlines()
+        workflow_path = (
+            Path(__file__).resolve().parents[2] / ".github/workflows/realtime-update.yml"
         )
+        step = (
+            workflow_path.read_text()
+            .split("      - name: Commit and push updated data\n", 1)[1]
+            .split("\n      - name:", 1)[0]
+        )
+        script = "\n".join(line[10:] for line in step.split("        run: |\n", 1)[1].splitlines())
         remote = self.games_dir / "remote.git"
         checkout = self.games_dir / "checkout"
 

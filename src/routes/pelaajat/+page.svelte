@@ -73,39 +73,39 @@ function getPlayerSlug(player) {
 
     <!-- Breadcrumb Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
         itemListElement: [
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 1,
-                name: "Etusivu",
-                item: "https://suomalaisetnhlssa.fi/"
+                name: 'Etusivu',
+                item: 'https://suomalaisetnhlssa.fi/',
             },
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 2,
-                name: "Pelaajat",
-                item: "https://suomalaisetnhlssa.fi/pelaajat"
-            }
-        ]
+                name: 'Pelaajat',
+                item: 'https://suomalaisetnhlssa.fi/pelaajat',
+            },
+        ],
     })}</script>`}
 
     <!-- CollectionPage Schema for players list -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
         name: `Suomalaiset NHL-pelaajat ${_formattedSeason}`,
         description: `Kaikki suomalaiset NHL-pelaajat kaudella ${_formattedSeason}`,
-        url: "https://suomalaisetnhlssa.fi/pelaajat",
+        url: 'https://suomalaisetnhlssa.fi/pelaajat',
         numberOfItems: filteredPlayers.length,
-        inLanguage: "fi"
+        inLanguage: 'fi',
     })}</script>`}
 </svelte:head>
 
 <div class="public-view min-h-screen">
     <PageShell width="wide">
-        <a class="back-link" href={base + "/"}>
+        <a class="back-link" href={base + '/'}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
             Takaisin etusivulle
         </a>
@@ -126,7 +126,10 @@ function getPlayerSlug(player) {
         {#if _error}
             <Notice variant="error">{_error}</Notice>
         {:else if filteredPlayers.length === 0}
-            <ViewState title="Pelaajia ei löytynyt" message="Kokeile toista pelaajan tai joukkueen nimeä." />
+            <ViewState
+                title="Pelaajia ei löytynyt"
+                message="Kokeile toista pelaajan tai joukkueen nimeä."
+            />
         {:else}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {#each filteredPlayers as player}
@@ -140,13 +143,17 @@ function getPlayerSlug(player) {
                             <TeamLogo team={player.teamAbbrevs} size="48" />
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-900 text-lg leading-tight group-hover:text-blue-600 transition-colors">
+                            <h3
+                                class="font-bold text-slate-900 text-lg leading-tight group-hover:text-blue-600 transition-colors"
+                            >
                                 {getPlayerName(player)}
                             </h3>
                             <div class="text-sm text-slate-500 mt-1">
                                 {player.teamAbbrevs} • {player.positionCode}
                                 {#if player.birthDate || player.age}
-                                    • {player.birthDate ? calculateAge(player.birthDate) : player.age}v
+                                    • {player.birthDate
+                                        ? calculateAge(player.birthDate)
+                                        : player.age}v
                                 {/if}
                             </div>
                             <div class="text-xs text-slate-400 mt-2">
@@ -158,7 +165,8 @@ function getPlayerSlug(player) {
             </div>
 
             <ViewMetadata class="mt-8">
-                {#if data.updatedAt}Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")} <br />{/if}
+                {#if data.updatedAt}Päivitetty: {new Date(data.updatedAt).toLocaleString('fi-FI')}
+                    <br />{/if}
                 Yhteensä {filteredPlayers.length} pelaajaa
             </ViewMetadata>
         {/if}

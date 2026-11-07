@@ -7,6 +7,7 @@ import requests
 
 NHL_API_BASE = "https://api-web.nhle.com"
 
+
 def check_schedule(date_str):
     """Check schedule for a specific date"""
     url = f"{NHL_API_BASE}/v1/schedule/{date_str}"
@@ -20,6 +21,7 @@ def check_schedule(date_str):
             return 0, f"Error: {response.status_code}"
     except Exception as e:
         return 0, f"Error: {e}"
+
 
 def main():
     print("🏒 Checking NHL season availability...")
@@ -52,6 +54,7 @@ def main():
         elif isinstance(result, str):
             print(f"   {result}")
         print()
+
 
 if __name__ == "__main__":
     main()

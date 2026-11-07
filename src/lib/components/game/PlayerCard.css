@@ -390,7 +390,7 @@
 
 .game-card--win::after,
 .game-card--loss::after {
-    content: "";
+    content: '';
     position: absolute;
     bottom: -90px;
     left: 50%;

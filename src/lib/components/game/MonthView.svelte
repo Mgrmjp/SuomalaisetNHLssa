@@ -132,10 +132,10 @@ function generateCalendarDays(selectedDateStr) {
         class="calendar-month__header grid grid-cols-[2.5rem_minmax(0,1fr)_2.5rem] items-center gap-2 mb-2 px-1"
     >
         <span class="calendar-month__header-slot flex justify-start">
-            {#if view === "calendar"}
+            {#if view === 'calendar'}
                 <button
                     class="calendar-month__nav-btn calendar-month__nav-btn--prev w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
-                    onclick={() => _navigateMonth("prev")}
+                    onclick={() => _navigateMonth('prev')}
                     disabled={isSameMonth(currentMonth, new Date(1900, 0, 1))}
                     data-dashlane-label="true"
                     aria-label="Edellinen kuukausi"
@@ -149,21 +149,21 @@ function generateCalendarDays(selectedDateStr) {
             class="calendar-month__title text-base sm:text-lg font-bold text-gray-900 tracking-tight hover:text-blue-600 transition-colors flex items-center justify-center gap-1 w-full min-w-0 truncate"
             onclick={_toggleView}
         >
-            {#if view === "calendar"}
+            {#if view === 'calendar'}
                 {monthYearDisplay}
             {:else}
                 Valitse vuosi
             {/if}
-            {#if view === "calendar"}
+            {#if view === 'calendar'}
                 <ChevronDown class="w-4 h-4 opacity-50" aria-hidden="true" />
             {/if}
         </button>
 
         <span class="calendar-month__header-slot flex justify-end">
-            {#if view === "calendar"}
+            {#if view === 'calendar'}
                 <button
                     class="calendar-month__nav-btn calendar-month__nav-btn--next w-10 h-10 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
-                    onclick={() => _navigateMonth("next")}
+                    onclick={() => _navigateMonth('next')}
                     disabled={isSameMonth(currentMonth, $currentDateReadOnly)}
                     data-dashlane-label="true"
                     aria-label="Seuraava kuukausi"
@@ -175,7 +175,7 @@ function generateCalendarDays(selectedDateStr) {
     </div>
 
     <div class="calendar-month__body space-y-2 min-h-[18.75rem]">
-        {#if view === "calendar"}
+        {#if view === 'calendar'}
             <div
                 class="calendar-month__grid-labels grid grid-cols-7 text-center text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-wide"
             >
@@ -206,7 +206,7 @@ function generateCalendarDays(selectedDateStr) {
                         class:cursor-not-allowed={day.isFuture}
                         disabled={day.isFuture}
                         onclick={() => _selectDate(day.dateStr)}
-                        title={day.hasData ? "Pelejä tänä päivänä" : "Ei pelejä"}
+                        title={day.hasData ? 'Pelejä tänä päivänä' : 'Ei pelejä'}
                     >
                         <span
                             class="calendar-month__day-number relative z-10"
@@ -259,6 +259,12 @@ function generateCalendarDays(selectedDateStr) {
 </div>
 
 <style>
-    .calendar-month__selected { background: var(--accent); color: white; }
-    .calendar-month__nav-btn { color: var(--accent); background: var(--accent-ice); }
+.calendar-month__selected {
+    background: var(--accent);
+    color: white;
+}
+.calendar-month__nav-btn {
+    color: var(--accent);
+    background: var(--accent-ice);
+}
 </style>

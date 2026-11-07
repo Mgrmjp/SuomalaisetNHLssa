@@ -68,40 +68,73 @@ onMount(() => {
         </div>
         <div class="view-actions">
             <ControlGroup label="Konferenssi">
-                <Button selected={activeConference === 'eastern'} onclick={() => activeConference = 'eastern'}>Itäinen</Button>
-                <Button selected={activeConference === 'western'} onclick={() => activeConference = 'western'}>Läntinen</Button>
+                <Button
+                    selected={activeConference === 'eastern'}
+                    onclick={() => (activeConference = 'eastern')}>Itäinen</Button
+                >
+                <Button
+                    selected={activeConference === 'western'}
+                    onclick={() => (activeConference = 'western')}>Läntinen</Button
+                >
             </ControlGroup>
-            <Button selected={showAdvancedStats} onclick={() => showAdvancedStats = !showAdvancedStats}>Lisätilastot</Button>
-            <Button disabled={$standingsLoading} onclick={() => reload(true)}>{$standingsLoading ? 'Ladataan…' : 'Päivitä'}</Button>
+            <Button
+                selected={showAdvancedStats}
+                onclick={() => (showAdvancedStats = !showAdvancedStats)}>Lisätilastot</Button
+            >
+            <Button disabled={$standingsLoading} onclick={() => reload(true)}
+                >{$standingsLoading ? 'Ladataan…' : 'Päivitä'}</Button
+            >
         </div>
     </div>
     {#if (stale || error) && hasData}
         <Notice variant="recovery">
-            {error ? 'Päivitys epäonnistui. Näytetään viimeisin onnistunut sarjataulukko.' : 'Sarjataulukon tarkistuksesta on yli kolme tuntia.'}
+            {error
+                ? 'Päivitys epäonnistui. Näytetään viimeisin onnistunut sarjataulukko.'
+                : 'Sarjataulukon tarkistuksesta on yli kolme tuntia.'}
             <span>Tarkistettu {formatTime($standingsMetadata.fetchedAt)}.</span>
             {#snippet actions()}
-                <Button disabled={$standingsLoading} onclick={() => reload(true)}>{error ? 'Yritä uudelleen' : 'Päivitä'}</Button>
+                <Button disabled={$standingsLoading} onclick={() => reload(true)}
+                    >{error ? 'Yritä uudelleen' : 'Päivitä'}</Button
+                >
             {/snippet}
         </Notice>
     {/if}
     {#if $standingsLoading && !hasData}
         <ViewState busy message="Ladataan virallista sarjataulukkoa…" />
     {:else if !hasData}
-        <ViewState title="Sarjataulukkoa ei ole saatavilla" message={error || 'Viralliset tiedot eivät ole vielä saatavilla.'}>
+        <ViewState
+            title="Sarjataulukkoa ei ole saatavilla"
+            message={error || 'Viralliset tiedot eivät ole vielä saatavilla.'}
+        >
             {#snippet actions()}
                 <Button onclick={() => reload(true)}>Yritä uudelleen</Button>
             {/snippet}
         </ViewState>
     {:else}
-        <ConferenceStandings conferenceData={$standings[activeConference]} conferenceName={activeConference}
-            wildCardTeams={$standingsMetadata.wildCards[activeConference]} {showAdvancedStats} />
+        <ConferenceStandings
+            conferenceData={$standings[activeConference]}
+            conferenceName={activeConference}
+            wildCardTeams={$standingsMetadata.wildCards[activeConference]}
+            {showAdvancedStats}
+        />
         <ViewMetadata>
-            <p>Lähde: <a href="https://www.nhl.com/standings" target="_blank" rel="noreferrer">NHL</a> · Tiedot {formatDate(`${$standingsMetadata.sourceDate}T12:00:00Z`)} · Tarkistettu {formatTime($standingsMetadata.fetchedAt)}</p>
+            <p>
+                Lähde: <a href="https://www.nhl.com/standings" target="_blank" rel="noreferrer"
+                    >NHL</a
+                >
+                · Tiedot {formatDate(`${$standingsMetadata.sourceDate}T12:00:00Z`)} · Tarkistettu {formatTime(
+                    $standingsMetadata.fetchedAt
+                )}
+            </p>
             <p>Päivittyy tunnin välein ja ottelutulosten päivitysten yhteydessä.</p>
         </ViewMetadata>
     {/if}
 </div>
 
 <style>
-    .standings-view { display: grid; gap: var(--space-5); min-width: 0; }
+.standings-view {
+    display: grid;
+    gap: var(--space-5);
+    min-width: 0;
+}
 </style>

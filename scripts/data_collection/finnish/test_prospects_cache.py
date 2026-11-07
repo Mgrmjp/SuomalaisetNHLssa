@@ -111,9 +111,7 @@ class MergeGuardTests(unittest.TestCase):
     def test_conflicting_name_is_not_merged(self):
         self._upsert("8480009", "Eeli Tolvanen", "1999-06-18", "draft_picks:2017")
 
-        result = self._upsert(
-            "8480009", "Eelis Uronen", "2008-08-07", "draft_rankings:2027"
-        )
+        result = self._upsert("8480009", "Eelis Uronen", "2008-08-07", "draft_rankings:2027")
 
         self.assertIsNone(result)
         entry = self.candidates["8480009"]
@@ -124,9 +122,7 @@ class MergeGuardTests(unittest.TestCase):
     def test_conflicting_birth_date_is_not_merged(self):
         self._upsert("8467369", "Ossi Tukio", "2007-11-03", "draft_picks:2023")
 
-        result = self._upsert(
-            "8467369", "Ossi Tukio", "2008-08-13", "draft_rankings:2027"
-        )
+        result = self._upsert("8467369", "Ossi Tukio", "2008-08-13", "draft_rankings:2027")
 
         self.assertIsNone(result)
         entry = self.candidates["8467369"]
@@ -136,11 +132,7 @@ class MergeGuardTests(unittest.TestCase):
 
 class SnapshotGuardTests(unittest.TestCase):
     def test_counts_only_rows_inside_the_window(self):
-        players = (
-            [{"birthDate": "1948-01-01"}] * 100
-            + [{"birthDate": "2005-01-01"}] * 10
-            + [{}]
-        )
+        players = [{"birthDate": "1948-01-01"}] * 100 + [{"birthDate": "2005-01-01"}] * 10 + [{}]
 
         self.assertEqual(cache.count_prospects_in_window(players), 11)
 

@@ -24,19 +24,16 @@ import requests
 def get_master_finnish_ids_from_api():
     """
     Fetch all Finnish player IDs from NHL Stats API.
-    
+
     Returns:
         Dict mapping player_id -> {firstName, lastName, position, teamAbbrev}
     """
     players = {}
-    
+
     print("Fetching master Finnish player list from NHL Stats API...")
-    
-    params = {
-        "limit": -1,
-        "cayenneExp": 'nationalityCode="FIN"'
-    }
-    
+
+    params = {"limit": -1, "cayenneExp": 'nationalityCode="FIN"'}
+
     # Fetch skaters
     try:
         url = "https://api.nhle.com/stats/rest/en/skater/bios"
@@ -56,7 +53,7 @@ def get_master_finnish_ids_from_api():
     except Exception as e:
         print(f"   ❌ Error fetching skaters: {e}")
         return None
-    
+
     # Fetch goalies
     try:
         url = "https://api.nhle.com/stats/rest/en/goalie/bios"
@@ -78,7 +75,7 @@ def get_master_finnish_ids_from_api():
     except Exception as e:
         print(f"   ❌ Error fetching goalies: {e}")
         return None
-    
+
     print(f"   Total: {len(players)} Finnish players\n")
     return players
 
@@ -86,7 +83,7 @@ def get_master_finnish_ids_from_api():
 def validate_cache():
     """
     Validate Finnish player cache against NHL Stats API master list.
-    
+
     Returns:
         Tuple of (missing_players, cache_players, master_players)
     """
@@ -98,25 +95,25 @@ def validate_cache():
             cache_ids.add(int(player_id))
         except (ValueError, TypeError):
             continue
-    
+
     print(f"Current cache: {len(cache_ids)} players")
     print(f"Cache file: {FINNISH_CACHE_FILE}\n")
-    
+
     # Fetch master list
     master_players = get_master_finnish_ids_from_api()
     if master_players is None:
         print("❌ Failed to fetch master list. Cannot validate.")
         return None, None, None
-    
+
     master_ids = set(master_players.keys())
-    
+
     # Find missing players
     missing_ids = master_ids - cache_ids
     missing_players = {pid: master_players[pid] for pid in missing_ids}
-    
+
     # Find extra players (in cache but not in master list)
     extra_ids = cache_ids - master_ids
-    
+
     print("=" * 60)
     print("VALIDATION RESULTS")
     print("=" * 60)
@@ -126,28 +123,28 @@ def validate_cache():
     if extra_ids:
         print(f"ℹ️ Extra in cache (not in master list): {len(extra_ids)} players")
     print()
-    
+
     if missing_players:
         print("🆕 MISSING FINNISH PLAYERS (should be added to cache):")
         print("-" * 60)
         for player_id, player_info in sorted(missing_players.items()):
             name = f"{player_info['firstName']} {player_info['lastName']}"
-            position = player_info['position']
-            team = player_info.get('teamAbbrev', 'N/A')
+            position = player_info["position"]
+            team = player_info.get("teamAbbrev", "N/A")
             print(f"   ID: {player_id:<10} | {name:<30} | {position} | {team}")
         print()
-    
+
     if extra_ids:
         print("ℹ️ EXTRA PLAYERS IN CACHE (may be retired/inactive):")
         print("-" * 60)
         for player_id in sorted(extra_ids):
             player_data = cache_data.get(str(player_id), {})
-            name = player_data.get('name', 'Unknown')
-            position = player_data.get('position', 'N/A')
-            team = player_data.get('currentTeam', 'N/A')
+            name = player_data.get("name", "Unknown")
+            position = player_data.get("position", "N/A")
+            team = player_data.get("currentTeam", "N/A")
             print(f"   ID: {player_id:<10} | {name:<30} | {position} | {team}")
         print()
-    
+
     return missing_players, cache_ids, master_ids
 
 
@@ -155,13 +152,13 @@ def main():
     print("Finnish Player Cache Validation")
     print("=" * 60)
     print()
-    
+
     missing_players, cache_ids, master_ids = validate_cache()
-    
+
     if missing_players is None:
         print("❌ Validation failed due to API errors")
         sys.exit(1)
-    
+
     if missing_players:
         print(f"⚠️ Found {len(missing_players)} missing Finnish player(s)")
         print()

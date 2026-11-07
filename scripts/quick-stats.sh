@@ -31,10 +31,10 @@ for date in $(seq 0 6); do
 
         if [ "$players" -gt 0 ]; then
             # Count wins/losses/OT
-            day_wins=$(jq -r '[.players[]? | select(.game_result == "W" or .game_result == "SOW")] | length' "$file" 2>/dev/null)
-            day_losses=$(jq -r '[.players[]? | select(.game_result == "L" or .game_result == "SOL")] | length' "$file" 2>/dev/null)
-            day_ot=$(jq -r '[.players[]? | select(.game_result == "OTW" or .game_result == "OTL")] | length' "$file" 2>/dev/null)
-            day_scorers=$(jq -r '[.players[]? | select(.goals > 0 or .assists > 0)] | length' "$file" 2>/dev/null)
+            day_wins=$(jq -r '[.players[]? | select(.game_result == "W" or .game_result == "SOW")] | length' "$file" 2> /dev/null)
+            day_losses=$(jq -r '[.players[]? | select(.game_result == "L" or .game_result == "SOL")] | length' "$file" 2> /dev/null)
+            day_ot=$(jq -r '[.players[]? | select(.game_result == "OTW" or .game_result == "OTL")] | length' "$file" 2> /dev/null)
+            day_scorers=$(jq -r '[.players[]? | select(.goals > 0 or .assists > 0)] | length' "$file" 2> /dev/null)
 
             wins=$((wins + day_wins))
             losses=$((losses + day_losses))

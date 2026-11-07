@@ -2,6 +2,7 @@
 """
 Fetch full season data for Finnish NHL players.
 """
+
 import sys
 import subprocess
 import time
@@ -13,6 +14,7 @@ PER_DATE_TIMEOUT = 300  # 5 minutes per date
 RETRY_FAILED = True  # Retry failed dates at the end
 RETRY_DELAY = 5  # seconds between retries
 
+
 def date_range(start, end):
     """Generate list of dates from start to end inclusive."""
     current = datetime.strptime(start, "%Y-%m-%d").date()
@@ -21,6 +23,7 @@ def date_range(start, end):
         yield current.strftime("%Y-%m-%d")
         current += timedelta(days=1)
 
+
 def fetch_date(date_str):
     """Fetch data for a single date, return (success, output)."""
     try:
@@ -28,12 +31,12 @@ def fetch_date(date_str):
             ["python3", "scripts/data_collection/finnish/fetch.py", date_str],
             capture_output=True,
             text=True,
-            timeout=PER_DATE_TIMEOUT
+            timeout=PER_DATE_TIMEOUT,
         )
 
         if result.returncode == 0:
-            for line in result.stdout.split('\n'):
-                if 'Generated data for' in line:
+            for line in result.stdout.split("\n"):
+                if "Generated data for" in line:
                     return True, line.strip()
             return True, "OK"
         else:
@@ -43,6 +46,7 @@ def fetch_date(date_str):
         return False, "Timeout"
     except Exception as e:
         return False, str(e)
+
 
 def main():
     total = 0
@@ -77,9 +81,9 @@ def main():
 
     # Retry failed dates
     if RETRY_FAILED and failed_dates:
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Retrying {len(failed_dates)} failed dates...")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         for date_str in failed_dates[:]:  # Copy to modify during iteration
             print(f"\n[RETRY] Fetching {date_str}...", flush=True)
@@ -95,7 +99,7 @@ def main():
             else:
                 print(f"  ✗ Still failed: {msg}")
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Season fetch complete!")
     print(f"Total: {total}, Success: {success}, Failed: {failed}")
 
@@ -106,9 +110,10 @@ def main():
         if len(failed_dates) > 10:
             print(f"  ... and {len(failed_dates) - 10} more")
 
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     return 0 if failed == 0 else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

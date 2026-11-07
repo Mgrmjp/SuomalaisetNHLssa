@@ -23,42 +23,41 @@ import { resetToDefault } from '$lib/stores/gameData.js'
 
     <!-- Breadcrumb Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
         itemListElement: [
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 1,
-                name: "Etusivu",
-                item: "https://suomalaisetnhlssa.fi/"
+                name: 'Etusivu',
+                item: 'https://suomalaisetnhlssa.fi/',
             },
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 2,
-                name: "Sarjataulukko",
-                item: "https://suomalaisetnhlssa.fi/sarjataulukko"
-            }
-        ]
+                name: 'Sarjataulukko',
+                item: 'https://suomalaisetnhlssa.fi/sarjataulukko',
+            },
+        ],
     })}</script>`}
 </svelte:head>
 
 <div class="public-view min-h-screen">
     <PageShell width="wide">
-        <a class="back-link" href={base + "/"} onclick={resetToDefault}>
+        <a class="back-link" href={base + '/'} onclick={resetToDefault}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
             Takaisin etusivulle
         </a>
         <PageHeader title="NHL Sarjataulukko" subtitle="Konferenssit ja divisioonat" />
 
         <section class="standings-content" aria-label="NHL-sarjataulukot">
-        <StandingsView />
+            <StandingsView />
         </section>
     </PageShell>
 </div>
 
 <style>
-
-    .standings-content {
-        min-width: 0;
-    }
+.standings-content {
+    min-width: 0;
+}
 </style>

@@ -27,7 +27,10 @@ URL_CROP_PRESETS = (
     ("assets.leaguestat.com/", {"zoom": 1.1, "objectPosition": "50% 18%"}),
     ("assets.nhle.com/mugs/", {"zoom": 1.08, "objectPosition": "50% 18%"}),
     ("www.shl.se/imageproxy/", {"zoom": 1.12, "objectPosition": "50% 18%"}),
-    ("liiga-backend-prod.s3.eu-north-1.amazonaws.com/", {"zoom": 1.14, "objectPosition": "50% 16%"}),
+    (
+        "liiga-backend-prod.s3.eu-north-1.amazonaws.com/",
+        {"zoom": 1.14, "objectPosition": "50% 16%"},
+    ),
 )
 
 PLAYER_CROP_OVERRIDES = {

@@ -12,27 +12,27 @@ Ensimmäisellä kierroksella: **3 pelaajaa**
 
 ### Ensimmäinen kierros
 
-| # | Pelaaja | Seura | Joukkue | Pos |
-|---|---------|-------|---------|-----|
-| 12 | - | - | - | - |
-| 18 | - | - | - | - |
-| 27 | - | - | - | - |
+| #   | Pelaaja | Seura | Joukkue | Pos |
+| --- | ------- | ----- | ------- | --- |
+| 12  | -       | -     | -       | -   |
+| 18  | -       | -     | -       | -   |
+| 27  | -       | -     | -       | -   |
 
 ### Toinen kierros
 
-| # | Pelaaja | Seura | Joukkue | Pos |
-|---|---------|-------|---------|-----|
-| 38 | - | - | - | - |
-| 45 | - | - | - | - |
+| #   | Pelaaja | Seura | Joukkue | Pos |
+| --- | ------- | ----- | ------- | --- |
+| 38  | -       | -     | -       | -   |
+| 45  | -       | -     | -       | -   |
 
 ## Seurakohtaiset varaukset
 
-| Seura | Varauksia |
-|-------|-----------|
-| Anaheim | 3 |
-| Boston | 2 |
-| Chicago | 2 |
-| Dallas | 1 |
+| Seura   | Varauksia |
+| ------- | --------- |
+| Anaheim | 3         |
+| Boston  | 2         |
+| Chicago | 2         |
+| Dallas  | 1         |
 
 ## Päällimmäisiä havaintoja
 
@@ -43,4 +43,4 @@ Ensimmäisellä kierroksella: **3 pelaajaa**
 
 ---
 
-*Tietoja päivitetään draftin jälkeen*
+_Tietoja päivitetään draftin jälkeen_

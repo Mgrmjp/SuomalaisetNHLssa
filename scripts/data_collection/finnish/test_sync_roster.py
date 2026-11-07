@@ -114,15 +114,9 @@ def test_sync_preserves_last_team():
 
     retired = roster_written["8470002"]
     assert "lastTeam" in retired, f"lastTeam missing from retired player: {retired}"
-    assert retired["lastTeam"] == "CHI", (
-        f"Expected lastTeam=CHI, got {retired['lastTeam']}"
-    )
-    assert "gamesPlayed" in retired, (
-        f"gamesPlayed missing from retired player: {retired}"
-    )
-    assert retired["gamesPlayed"] == 450, (
-        f"Expected gamesPlayed=450, got {retired['gamesPlayed']}"
-    )
+    assert retired["lastTeam"] == "CHI", f"Expected lastTeam=CHI, got {retired['lastTeam']}"
+    assert "gamesPlayed" in retired, f"gamesPlayed missing from retired player: {retired}"
+    assert retired["gamesPlayed"] == 450, f"Expected gamesPlayed=450, got {retired['gamesPlayed']}"
 
     print("PASSED: sync_roster preserves lastTeam and gamesPlayed")
 
@@ -171,28 +165,20 @@ def test_sync_does_not_overwrite_active_team():
 
 def test_sync_handles_missing_roster_file():
     """Verify that the production roster and cache files exist and are valid."""
-    roster = load_json(
-        PROJECT_ROOT / "static" / "data" / "players" / "finnish-roster.json"
-    )
+    roster = load_json(PROJECT_ROOT / "static" / "data" / "players" / "finnish-roster.json")
     cache = load_json(FINNISH_CACHE_FILE)
 
     assert roster is not None, "Roster file should load"
     assert cache is not None, "Cache file should load"
     assert len(roster) > 0, "Roster should have players"
     assert len(cache) > 0, "Cache should have players"
-    assert set(roster.keys()) == set(cache.keys()), (
-        "Roster and cache should have same player IDs"
-    )
+    assert set(roster.keys()) == set(cache.keys()), "Roster and cache should have same player IDs"
 
     inactive = [
-        p
-        for p in roster.values()
-        if not p.get("isActive", True) or not p.get("currentTeam")
+        p for p in roster.values() if not p.get("isActive", True) or not p.get("currentTeam")
     ]
     with_last_team = [p for p in inactive if p.get("lastTeam")]
-    assert len(with_last_team) > 0, (
-        "At least some inactive players should have lastTeam"
-    )
+    assert len(with_last_team) > 0, "At least some inactive players should have lastTeam"
 
     print("PASSED: production data files are valid and consistent")
 

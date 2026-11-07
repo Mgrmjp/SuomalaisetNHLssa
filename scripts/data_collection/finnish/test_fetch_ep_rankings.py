@@ -151,7 +151,9 @@ class PayloadShapeTests(unittest.TestCase):
         self.assertEqual(ep.extract_ranking_rows(payload), [{"rank": 1}])
 
     def test_normalizes_the_current_payload(self):
-        player = ep.normalize_ranking_row(RECORDED_PAYLOAD["pageProps"]["draftRankings"]["rankings"][0])
+        player = ep.normalize_ranking_row(
+            RECORDED_PAYLOAD["pageProps"]["draftRankings"]["rankings"][0]
+        )
 
         self.assertEqual(
             player,

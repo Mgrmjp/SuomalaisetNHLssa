@@ -43,10 +43,7 @@ const yearlyStats = [
 
 <div class="min-h-screen">
     <PageShell width="medium">
-        <a
-            href={base + "/lupaukset"}
-            class="back-link"
-        >
+        <a href={base + '/lupaukset'} class="back-link">
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Takaisin lupaukset-sivulle
         </a>
@@ -83,11 +80,15 @@ const yearlyStats = [
                     <h2 class="text-lg font-bold text-slate-900 mb-4">Varaukset vuosittain</h2>
                     <div class="space-y-2 max-h-80 overflow-y-auto">
                         {#each yearlyStats as stat}
-                            <div class="flex items-center justify-between p-2 transition-colors hover:bg-slate-50">
+                            <div
+                                class="flex items-center justify-between p-2 transition-colors hover:bg-slate-50"
+                            >
                                 <span class="font-medium text-slate-900">{stat.year}</span>
                                 <div class="flex items-center gap-4">
                                     <span class="text-sm text-slate-500">Top {stat.top}</span>
-                                    <span class="w-12 text-right font-bold text-blue-600">{stat.count}</span>
+                                    <span class="w-12 text-right font-bold text-blue-600"
+                                        >{stat.count}</span
+                                    >
                                 </div>
                             </div>
                         {/each}
@@ -100,36 +101,73 @@ const yearlyStats = [
                 <h2 class="text-2xl font-bold text-slate-900 mb-6">Menestyneimmät top-varaukset</h2>
 
                 <Card padding="none">
-
-                        <DataTable caption="Suomalaisten NHL-varaukset" class="w-full">
-                            <thead class="bg-slate-50 border-b border-slate-200">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Vuosi</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Varaus</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Pelaaja</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">Joukkue</th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">O</th>
-                                    <th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">P</th>
+                    <DataTable caption="Suomalaisten NHL-varaukset" class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                    >Vuosi</th
+                                >
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                    >Varaus</th
+                                >
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                    >Pelaaja</th
+                                >
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                    >Joukkue</th
+                                >
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                    >O</th
+                                >
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider"
+                                    >P</th
+                                >
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {#each topPicks as pick}
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"
+                                        >{pick.year}</td
+                                    >
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span
+                                            class="inline-flex items-center bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
+                                        >
+                                            #{pick.rank}
+                                        </span>
+                                    </td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap font-medium text-slate-900"
+                                        >{pick.name}</td
+                                    >
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"
+                                        >{pick.team}</td
+                                    >
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-right text-sm font-mono text-slate-700"
+                                        >{pick.games}</td
+                                    >
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-right text-sm font-mono font-bold text-slate-900"
+                                        >{pick.points}</td
+                                    >
                                 </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                {#each topPicks as pick}
-                                    <tr class="hover:bg-slate-50 transition-colors">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{pick.year}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="inline-flex items-center bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-                                                #{pick.rank}
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap font-medium text-slate-900">{pick.name}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{pick.team}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-mono text-slate-700">{pick.games}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-mono font-bold text-slate-900">{pick.points}</td>
-                                    </tr>
-                                {/each}
-                            </tbody>
-                        </DataTable>
-
+                            {/each}
+                        </tbody>
+                    </DataTable>
                 </Card>
 
                 <!-- Fun facts -->
@@ -144,13 +182,12 @@ const yearlyStats = [
                     <div class="border border-emerald-100 bg-emerald-50 p-6">
                         <h3 class="font-bold text-emerald-900 mb-2">Eniten pisteitä</h3>
                         <p class="text-sm text-emerald-800">
-                            <strong>Mikko Rantanen</strong> (2015, #9) on kerännyt eniten pisteitä
-                            suomalaisista draft-varauksista yli 500 pistettä.
+                            <strong>Mikko Rantanen</strong> (2015, #9) on kerännyt eniten pisteitä suomalaisista
+                            draft-varauksista yli 500 pistettä.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
-
     </PageShell>
 </div>

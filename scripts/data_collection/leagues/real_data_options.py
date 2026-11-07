@@ -4,15 +4,24 @@ Real data collection options WITHOUT EliteProspects API
 This module documents and implements various approaches to get real
 hockey data from public sources.
 """
+
 import requests
 from typing import List, Dict
 
 
 class DataSource:
     """Represents a data source option"""
-    def __init__(self, name: str, url: str, method: str, 
-                 requires_key: bool = False, key_info: str = '',
-                 reliability: str = 'unknown', coverage: List[str] = None):
+
+    def __init__(
+        self,
+        name: str,
+        url: str,
+        method: str,
+        requires_key: bool = False,
+        key_info: str = "",
+        reliability: str = "unknown",
+        coverage: List[str] = None,
+    ):
         self.name = name
         self.url = url
         self.method = method
@@ -24,104 +33,95 @@ class DataSource:
 
 # Document all available data sources
 DATA_SOURCES = {
-    'liiga_api': DataSource(
-        name='Liiga Official API',
-        url='https://liiga.fi/api/v1',
-        method='REST API',
+    "liiga_api": DataSource(
+        name="Liiga Official API",
+        url="https://liiga.fi/api/v1",
+        method="REST API",
         requires_key=False,
-        reliability='broken',
-        coverage=['Liiga'],
-        key_info='API appears to have been removed or protected in 2024 site redesign'
+        reliability="broken",
+        coverage=["Liiga"],
+        key_info="API appears to have been removed or protected in 2024 site redesign",
     ),
-    
-    'shl_api': DataSource(
-        name='SHL Official API',
-        url='https://www.shl.se/p/api',
-        method='REST API',
+    "shl_api": DataSource(
+        name="SHL Official API",
+        url="https://www.shl.se/p/api",
+        method="REST API",
         requires_key=False,
-        reliability='broken',
-        coverage=['SHL'],
-        key_info='Now requires authentication, not publicly accessible'
+        reliability="broken",
+        coverage=["SHL"],
+        key_info="Now requires authentication, not publicly accessible",
     ),
-    
-    'ahl_api': DataSource(
-        name='AHL HockeyTech API',
-        url='https://lscluster.hockeytech.com/feed',
-        method='REST API',
+    "ahl_api": DataSource(
+        name="AHL HockeyTech API",
+        url="https://lscluster.hockeytech.com/feed",
+        method="REST API",
         requires_key=True,
-        reliability='working',
-        coverage=['AHL', 'ECHL'],
-        key_info='Requires HockeyTech API key. Free tier may be available.'
+        reliability="working",
+        coverage=["AHL", "ECHL"],
+        key_info="Requires HockeyTech API key. Free tier may be available.",
     ),
-    
-    'nhl_api': DataSource(
-        name='NHL Official API',
-        url='https://api-web.nhle.com/v1',
-        method='REST API',
+    "nhl_api": DataSource(
+        name="NHL Official API",
+        url="https://api-web.nhle.com/v1",
+        method="REST API",
         requires_key=False,
-        reliability='working',
-        coverage=['NHL'],
-        key_info='Already used by this project for NHL data'
+        reliability="working",
+        coverage=["NHL"],
+        key_info="Already used by this project for NHL data",
     ),
-    
-    'hockeydb': DataSource(
-        name='HockeyDB',
-        url='https://www.hockeydb.com',
-        method='Web Scraping',
+    "hockeydb": DataSource(
+        name="HockeyDB",
+        url="https://www.hockeydb.com",
+        method="Web Scraping",
         requires_key=False,
-        reliability='partial',
-        coverage=['Liiga', 'SHL', 'AHL', 'KHL', 'NCAA', 'Most leagues'],
-        key_info='HTML scraping. Site structure changes frequently.'
+        reliability="partial",
+        coverage=["Liiga", "SHL", "AHL", "KHL", "NCAA", "Most leagues"],
+        key_info="HTML scraping. Site structure changes frequently.",
     ),
-    
-    'flashscore': DataSource(
-        name='Flashscore',
-        url='https://www.flashscore.com',
-        method='Web Scraping / API',
+    "flashscore": DataSource(
+        name="Flashscore",
+        url="https://www.flashscore.com",
+        method="Web Scraping / API",
         requires_key=False,
-        reliability='working',
-        coverage=['Liiga', 'SHL', 'Most European leagues'],
-        key_info='Has embeddable widgets, scraping possible but TOS restricts'
+        reliability="working",
+        coverage=["Liiga", "SHL", "Most European leagues"],
+        key_info="Has embeddable widgets, scraping possible but TOS restricts",
     ),
-    
-    'eurohockey': DataSource(
-        name='EuroHockey',
-        url='https://www.eurohockey.com',
-        method='Web Scraping',
+    "eurohockey": DataSource(
+        name="EuroHockey",
+        url="https://www.eurohockey.com",
+        method="Web Scraping",
         requires_key=False,
-        reliability='partial',
-        coverage=['European leagues'],
-        key_info='Basic stats available via HTML'
+        reliability="partial",
+        coverage=["European leagues"],
+        key_info="Basic stats available via HTML",
     ),
-    
-    'api_hockey': DataSource(
-        name='API-Hockey (API-Football)',
-        url='https://api-hockey.io',
-        method='REST API',
+    "api_hockey": DataSource(
+        name="API-Hockey (API-Football)",
+        url="https://api-hockey.io",
+        method="REST API",
         requires_key=True,
-        reliability='working',
-        coverage=['Liiga', 'SHL', 'AHL', 'KHL', 'Most leagues'],
-        key_info='Free tier: 100 requests/day. Paid tiers available.'
+        reliability="working",
+        coverage=["Liiga", "SHL", "AHL", "KHL", "Most leagues"],
+        key_info="Free tier: 100 requests/day. Paid tiers available.",
     ),
-    
-    'sportradar': DataSource(
-        name='Sportradar',
-        url='https://sportradar.com',
-        method='REST API',
+    "sportradar": DataSource(
+        name="Sportradar",
+        url="https://sportradar.com",
+        method="REST API",
         requires_key=True,
-        reliability='working',
-        coverage=['All major leagues'],
-        key_info='Professional service, paid only'
+        reliability="working",
+        coverage=["All major leagues"],
+        key_info="Professional service, paid only",
     ),
-    
-    'liiga_fever': DataSource(
-        name='Liiga Fever (Community)',
-        url='https://github.com/liiga/fever',
-        method='REST API',
+    "liiga_fever": DataSource(
+        name="Liiga Fever (Community)",
+        url="https://github.com/liiga/fever",
+        method="REST API",
         requires_key=False,
-        reliability='community',
-        coverage=['Liiga'],
-        key_info='Community-maintained API, reliability varies'
+        reliability="community",
+        coverage=["Liiga"],
+        key_info="Community-maintained API, reliability varies",
     ),
 }
 
@@ -129,43 +129,39 @@ DATA_SOURCES = {
 def get_api_hockey_players(api_key: str, league_id: str, season: str) -> List[Dict]:
     """
     Fetch players using API-Hockey (api-hockey.io)
-    
+
     Args:
         api_key: Your API-Hockey API key
         league_id: League identifier (see API docs)
         season: Season string (e.g., '2024')
-    
+
     Free tier: 100 requests/day
     """
     url = "https://v1.hockey.api-sports.io/players"
-    headers = {
-        'x-rapidapi-key': api_key,
-        'x-rapidapi-host': 'v1.hockey.api-sports.io'
-    }
-    params = {
-        'league': league_id,
-        'season': season
-    }
-    
+    headers = {"x-rapidapi-key": api_key, "x-rapidapi-host": "v1.hockey.api-sports.io"}
+    params = {"league": league_id, "season": season}
+
     try:
         response = requests.get(url, headers=headers, params=params, timeout=30)
         response.raise_for_status()
         data = response.json()
-        
+
         players = []
-        for player in data.get('response', []):
-            if player.get('nationality') == 'FI':
-                players.append({
-                    'player_id': f"ah_{player.get('id')}",
-                    'name': f"{player.get('firstname', '')} {player.get('lastname', '')}".strip(),
-                    'team': player.get('team', {}).get('name', 'Unknown'),
-                    'league': league_id,
-                    'position': player.get('position', 'F'),
-                    'nationality': 'FIN',
-                    'source_league': league_id.lower(),
-                    'source': 'api-hockey'
-                })
-        
+        for player in data.get("response", []):
+            if player.get("nationality") == "FI":
+                players.append(
+                    {
+                        "player_id": f"ah_{player.get('id')}",
+                        "name": f"{player.get('firstname', '')} {player.get('lastname', '')}".strip(),
+                        "team": player.get("team", {}).get("name", "Unknown"),
+                        "league": league_id,
+                        "position": player.get("position", "F"),
+                        "nationality": "FIN",
+                        "source_league": league_id.lower(),
+                        "source": "api-hockey",
+                    }
+                )
+
         return players
     except Exception as e:
         print(f"API-Hockey error: {e}")
@@ -178,24 +174,27 @@ def get_nhl_api_prospects() -> List[Dict]:
     This works and is already used by the project
     """
     url = "https://api-web.nhle.com/v1/draft/prospects"
-    
+
     try:
         response = requests.get(url, timeout=30)
         response.raise_for_status()
         data = response.json()
-        
+
         finnish_prospects = []
-        for prospect in data.get('prospects', []):
-            if prospect.get('birthCountry') == 'FIN':
-                finnish_prospects.append({
-                    'player_id': f"nhl_{prospect.get('id')}",
-                    'name': prospect.get('firstName', {}).get('default', '') + ' ' + 
-                           prospect.get('lastName', {}).get('default', ''),
-                    'league': 'NHL Prospects',
-                    'nationality': 'FIN',
-                    'source': 'nhl-api'
-                })
-        
+        for prospect in data.get("prospects", []):
+            if prospect.get("birthCountry") == "FIN":
+                finnish_prospects.append(
+                    {
+                        "player_id": f"nhl_{prospect.get('id')}",
+                        "name": prospect.get("firstName", {}).get("default", "")
+                        + " "
+                        + prospect.get("lastName", {}).get("default", ""),
+                        "league": "NHL Prospects",
+                        "nationality": "FIN",
+                        "source": "nhl-api",
+                    }
+                )
+
         return finnish_prospects
     except Exception as e:
         print(f"NHL API error: {e}")
@@ -207,9 +206,9 @@ def print_data_source_guide():
     print("=" * 70)
     print("REAL DATA COLLECTION OPTIONS (No EliteProspects Required)")
     print("=" * 70)
-    
+
     print("\n🟢 RECOMMENDED APPROACHES:\n")
-    
+
     print("1. API-Hockey (Free Tier Available)")
     print("   URL: https://api-hockey.io")
     print("   Cost: Free (100 req/day) or €15/month")
@@ -221,7 +220,7 @@ def print_data_source_guide():
     print("   - Get API key")
     print("   - League IDs: Liiga=57, SHL=45, AHL=10, KHL=32, DEL=19")
     print("   - Call: get_api_hockey_players(YOUR_KEY, '57', '2024')")
-    
+
     print("\n2. Web Scraping (Free)")
     print("   Target: Individual league websites")
     print("   Cost: Free")
@@ -233,34 +232,40 @@ def print_data_source_guide():
     print("   - SHL: shl.se (Dynamic loading)")
     print("   - AHL: theahl.com (HockeyTech - requires key)")
     print("   - Czech: hokej.cz (HTML tables)")
-    
+
     print("\n3. NHL API (Free - Already Implemented)")
     print("   URL: https://api-web.nhle.com")
     print("   Cost: Free")
     print("   Coverage: NHL only")
     print("   Status: ✅ Already integrated in this project")
-    
+
     print("\n\n🟡 ALTERNATIVE PAID OPTIONS:\n")
-    
+
     print("4. Sportradar")
     print("   Cost: ~$500-2000/month")
     print("   Coverage: All major leagues")
     print("   Best for: Commercial projects")
-    
+
     print("\n5. HockeyTech Direct")
     print("   Cost: Contact for pricing")
     print("   Coverage: AHL, ECHL, CHL, USHL")
     print("   Best for: North American prospects")
-    
+
     print("\n\n🔴 CURRENT STATUS:\n")
-    
+
     for key, source in DATA_SOURCES.items():
-        status = "✅" if source.reliability == 'working' else "⚠️" if source.reliability == 'partial' else "❌"
+        status = (
+            "✅"
+            if source.reliability == "working"
+            else "⚠️"
+            if source.reliability == "partial"
+            else "❌"
+        )
         key_required = "🔑" if source.requires_key else ""
         print(f"{status} {source.name} {key_required}")
-        if source.reliability == 'broken':
+        if source.reliability == "broken":
             print(f"   Note: {source.key_info}")
-    
+
     print("\n" + "=" * 70)
     print("QUICK START RECOMMENDATION")
     print("=" * 70)
@@ -384,7 +389,7 @@ class APIHockeyCollector:
 
 if __name__ == "__main__":
     print_data_source_guide()
-    
+
     print("\n\n" + "=" * 70)
     print("SAMPLE API-HOCKEY IMPLEMENTATION")
     print("=" * 70)

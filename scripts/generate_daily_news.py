@@ -120,22 +120,14 @@ TRUSTED_NEWS_DOMAINS = {
 
 
 def iso(value):
-    return (
-        value.astimezone(timezone.utc)
-        .isoformat(timespec="seconds")
-        .replace("+00:00", "Z")
-    )
+    return value.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
 def parse_publication(value):
-    if not isinstance(value, str) or not re.search(
-        r"T.*(?:Z|[+-]\d{2}:?\d{2})$", value
-    ):
+    if not isinstance(value, str) or not re.search(r"T.*(?:Z|[+-]\d{2}:?\d{2})$", value):
         return None
     try:
-        return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(
-            timezone.utc
-        )
+        return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
     except ValueError:
         return None
 
@@ -143,9 +135,7 @@ def parse_publication(value):
 def fold(text):
     return " ".join(
         "".join(
-            c
-            for c in unicodedata.normalize("NFKD", text or "")
-            if not unicodedata.combining(c)
+            c for c in unicodedata.normalize("NFKD", text or "") if not unicodedata.combining(c)
         )
         .lower()
         .split()
@@ -161,10 +151,7 @@ def match_players(title, roster):
         full = fold(name)
         surname = full.split()[-1]
         aliases = [full] + ([surname] if surnames[surname] == 1 else [])
-        if any(
-            re.search(r"(?<!\w)" + re.escape(alias) + r"(?!\w)", headline)
-            for alias in aliases
-        ):
+        if any(re.search(r"(?<!\w)" + re.escape(alias) + r"(?!\w)", headline) for alias in aliases):
             matched.append(name)
     return matched
 
@@ -199,8 +186,7 @@ def is_trusted_news_url(url):
             and parsed.port in (None, 443)
             and parsed.path.strip("/")
             and any(
-                host == domain or host.endswith("." + domain)
-                for domain in TRUSTED_NEWS_DOMAINS
+                host == domain or host.endswith("." + domain) for domain in TRUSTED_NEWS_DOMAINS
             )
         )
     except (ValueError, TypeError):
@@ -238,9 +224,7 @@ def article_metadata(url, html):
     soup = BeautifulSoup(html, "html.parser")
 
     def meta(key):
-        node = soup.find("meta", attrs={"property": key}) or soup.find(
-            "meta", attrs={"name": key}
-        )
+        node = soup.find("meta", attrs={"property": key}) or soup.find("meta", attrs={"name": key})
         return (node.get("content", "") if node else "").strip()
 
     h1 = soup.find("h1")
@@ -266,9 +250,7 @@ def article_metadata(url, html):
             types = node.get("@type", [])
             if isinstance(types, str):
                 types = [types]
-            if not any(
-                t in {"Article", "NewsArticle", "ReportageNewsArticle"} for t in types
-            ):
+            if not any(t in {"Article", "NewsArticle", "ReportageNewsArticle"} for t in types):
                 continue
             article_url = node.get("url") or node.get("mainEntityOfPage")
             if isinstance(article_url, dict):
@@ -305,9 +287,7 @@ def verify_article(url, html, roster, now):
     ):
         return None
     host = urlparse(url).hostname.removeprefix("www.")
-    source_label = (
-        SOURCE_LABELS.get(host) or SOURCE_LABELS.get(host.split(".")[0]) or host
-    )
+    source_label = SOURCE_LABELS.get(host) or SOURCE_LABELS.get(host.split(".")[0]) or host
     return {
         "title": title,
         "summary": summary[:480],
@@ -340,9 +320,7 @@ def faithful_translation(item):
                 },
                 {
                     "role": "user",
-                    "content": json.dumps(
-                        {"title": item["title"], "summary": item["summary"]}
-                    ),
+                    "content": json.dumps({"title": item["title"], "summary": item["summary"]}),
                 },
             ],
             timeout=20,
@@ -392,22 +370,16 @@ def eligible_item(item, roster, now):
     ):
         return None
     players = match_players(item.get("title", ""), roster)
-    if not players or NOISE.search(
-        item.get("title", "") + " " + item.get("summary", "")
-    ):
+    if not players or NOISE.search(item.get("title", "") + " " + item.get("summary", "")):
         return None
     result = {**item, "matchedPlayers": players}
-    translated = (
-        item.get("translatedTitle", "") + " " + item.get("translatedSummary", "")
-    )
+    translated = item.get("translatedTitle", "") + " " + item.get("translatedSummary", "")
     if (
         item.get("translationSourceTitle") != item["title"]
         or item.get("translationSourceSummary") != item.get("summary")
         or GENERIC.search(translated)
     ):
-        result.update(
-            translatedTitle=item["title"], translatedSummary=item.get("summary", "")
-        )
+        result.update(translatedTitle=item["title"], translatedSummary=item.get("summary", ""))
     return result
 
 
@@ -445,9 +417,7 @@ def refresh_news(cache, roster, now, search=None, force=False):
         return False
     if search is None:
         if not os.environ.get("TAVILY_API_KEY"):
-            print(
-                "::warning::Tavily key unavailable; retaining only verified, unexpired news."
-            )
+            print("::warning::Tavily key unavailable; retaining only verified, unexpired news.")
             return False
         from tavily import TavilyClient
 
@@ -493,11 +463,7 @@ def refresh_news(cache, roster, now, search=None, force=False):
             if item:
                 date = item["publishedAt"][:10]
                 previous = next(
-                    (
-                        entry
-                        for entry in cache.get(date, [])
-                        if entry.get("url") == item["url"]
-                    ),
+                    (entry for entry in cache.get(date, []) if entry.get("url") == item["url"]),
                     {},
                 )
                 if (
@@ -512,9 +478,7 @@ def refresh_news(cache, roster, now, search=None, force=False):
                     ):
                         item[key] = previous.get(key, "")
                 cache[date] = [
-                    entry
-                    for entry in cache.get(date, [])
-                    if entry.get("url") != item["url"]
+                    entry for entry in cache.get(date, []) if entry.get("url") != item["url"]
                 ] + [item]
         except Exception:
             continue
@@ -529,8 +493,7 @@ def refresh_news(cache, roster, now, search=None, force=False):
             translated = faithful_translation(item)
             date = item["publishedAt"][:10]
             cache[date] = [
-                translated if entry.get("url") == item["url"] else entry
-                for entry in cache[date]
+                translated if entry.get("url") == item["url"] else entry for entry in cache[date]
             ]
     return True
 

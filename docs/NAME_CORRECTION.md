@@ -4,12 +4,12 @@
 
 Name correction exists in several collection and presentation paths. It is not solely a build-time operation or a planned future feature.
 
-| Path | Implementation and behavior |
-| --- | --- |
-| Python collection | [finnish_text_utils.py](../scripts/data_collection/finnish/finnish_text_utils.py): manual overrides, persisted correction cache and optional OpenAI correction |
-| Season-stat prebuild | [fetch-player-stats.cjs](../scripts/prebuild/fetch-player-stats.cjs): verified-spelling exceptions before optional OpenAI correction, with a deterministic fallback |
-| Svelte/server presentation | [finnishNameUtils.js](../src/lib/utils/finnishNameUtils.js): cached lookup/pattern corrections through `correctFullName` |
-| Hard-case player slugs | [player load](../src/routes/pelaajat/[slug]/+page.server.js): optional `correctFullNameWithLLM` fallback after deterministic slug matching |
+| Path                       | Implementation and behavior                                                                                                                                         |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Python collection          | [finnish_text_utils.py](../scripts/data_collection/finnish/finnish_text_utils.py): manual overrides, persisted correction cache and optional OpenAI correction      |
+| Season-stat prebuild       | [fetch-player-stats.cjs](../scripts/prebuild/fetch-player-stats.cjs): verified-spelling exceptions before optional OpenAI correction, with a deterministic fallback |
+| Svelte/server presentation | [finnishNameUtils.js](../src/lib/utils/finnishNameUtils.js): cached lookup/pattern corrections through `correctFullName`                                            |
+| Hard-case player slugs     | [player load](../src/routes/pelaajat/[slug]/+page.server.js): optional `correctFullNameWithLLM` fallback after deterministic slug matching                          |
 
 On GitHub Pages the server-load path runs at build time; it does not create a production API server. The deterministic JavaScript helper can also run in browser-rendered components. The optional LLM helper is called with a server-private key, not a public browser setting.
 

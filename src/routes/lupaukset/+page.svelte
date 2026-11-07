@@ -915,18 +915,21 @@ function _dedupeProspects(players) {
 
 <svelte:head>
     <title>Suomalaiset NHL-lupaukset - Varausprospectit ja tulevat tähdet</title>
-    <meta name="description" content="Seuraa suomalaisten NHL-varausten ja tulevien huippujen otteita maailmalla." />
+    <meta
+        name="description"
+        content="Seuraa suomalaisten NHL-varausten ja tulevien huippujen otteita maailmalla."
+    />
     <meta property="og:title" content="Suomalaiset NHL-lupaukset" />
-    <meta property="og:description" content="Seuraa suomalaisten NHL-varausten ja tulevien huippujen otteita maailmalla." />
+    <meta
+        property="og:description"
+        content="Seuraa suomalaisten NHL-varausten ja tulevien huippujen otteita maailmalla."
+    />
     <meta property="og:url" content="https://suomalaisetnhlssa.fi/lupaukset" />
 </svelte:head>
 
 <div class="min-h-screen">
     <PageShell>
-        <a
-            href={base + "/"}
-            class="back-link"
-        >
+        <a href={base + '/'} class="back-link">
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Takaisin etusivulle
         </a>
@@ -939,23 +942,20 @@ function _dedupeProspects(players) {
             <div class="filter-tabs-container">
                 <ControlGroup label="Pelaajatyyppi">
                     <Button
-
                         selected={activeFilter === 'all'}
-                        onclick={() => activeFilter = 'all'}
+                        onclick={() => (activeFilter = 'all')}
                     >
                         Kaikki ({allPlayers().length})
                     </Button>
                     <Button
-
                         selected={activeFilter === 'prospects'}
-                        onclick={() => activeFilter = 'prospects'}
+                        onclick={() => (activeFilter = 'prospects')}
                     >
                         NHL-varaukset
                     </Button>
                     <Button
-
                         selected={activeFilter === 'draft2026'}
-                        onclick={() => activeFilter = 'draft2026'}
+                        onclick={() => (activeFilter = 'draft2026')}
                     >
                         Draft {draftYearLabel}
                     </Button>
@@ -965,7 +965,11 @@ function _dedupeProspects(players) {
             <!-- Ranking Source Selector (only visible when Draft 2026 is active) -->
             {#if activeFilter === 'draft2026'}
                 <div class="mt-8 max-w-xs mx-auto">
-                    <label for="ranking-source" class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Rankings-lähde</label>
+                    <label
+                        for="ranking-source"
+                        class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2"
+                        >Rankings-lähde</label
+                    >
                     <select
                         id="ranking-source"
                         bind:value={selectedRankingSlug}
@@ -983,88 +987,349 @@ function _dedupeProspects(players) {
             <ViewState busy message="Ladataan lupauksia…" />
         {:else}
             <div in:fade={{ duration: 300 }}>
-                    <!-- Controls -->
-                    <div class="sort-tabs-container">
-                        <ControlGroup label="Kenttäpelaajien järjestys">
-                            <Button
+                <!-- Controls -->
+                <div class="sort-tabs-container">
+                    <ControlGroup label="Kenttäpelaajien järjestys">
+                        <Button selected={sortBy === 'points'} onclick={() => _setSort('points')}>
+                            Pisteet {getSortIcon('points')}
+                        </Button>
+                        <Button selected={sortBy === 'goals'} onclick={() => _setSort('goals')}>
+                            Maalit {getSortIcon('goals')}
+                        </Button>
+                        <Button selected={sortBy === 'league'} onclick={() => _setSort('league')}>
+                            Liiga {getSortIcon('league')}
+                        </Button>
+                        <Button
+                            selected={sortBy === 'age'}
+                            onclick={() => {
+                                sortBy = 'age'
+                                sortDirection = 'asc'
+                            }}
+                        >
+                            Ikä {getSortIcon('age')}
+                        </Button>
+                    </ControlGroup>
+                </div>
 
-                                selected={sortBy === 'points'}
-                                onclick={() => _setSort('points')}
-                            >
-                                Pisteet {getSortIcon('points')}
-                            </Button>
-                            <Button
+                <!-- Active prospects count -->
+                <div class="text-center mb-6">
+                    <span class="text-sm text-slate-500">
+                        Näytetään {sortedProspects.length} kenttäpelaajaa ja {sortedGoalies.length} maalivahtia
+                    </span>
+                </div>
 
-                                selected={sortBy === 'goals'}
-                                onclick={() => _setSort('goals')}
-                            >
-                                Maalit {getSortIcon('goals')}
-                            </Button>
-                            <Button
-
-                                selected={sortBy === 'league'}
-                                onclick={() => _setSort('league')}
-                            >
-                                Liiga {getSortIcon('league')}
-                            </Button>
-                            <Button
-
-                                selected={sortBy === 'age'}
-                                onclick={() => {
-                                    sortBy = 'age';
-                                    sortDirection = 'asc';
-                                }}
-                            >
-                                Ikä {getSortIcon('age')}
-                            </Button>
-                        </ControlGroup>
+                <!-- Skaters Grid -->
+                {#if sortedProspects.length === 0}
+                    <div class="text-center text-slate-400 mt-12">
+                        <p>Ei löytynyt lupauksia.</p>
                     </div>
+                {:else}
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    >
+                        {#each sortedProspects as player, index (`${player.id}-${index}`)}
+                            {@const selectedSeason = _getSelectedSeasonEntry(player)}
+                            {@const headshotUrl = _getBestAvailableSeasonHeadshot(player)}
+                            {@const headshotSettings = _getProspectHeadshotSettings(
+                                player,
+                                selectedSeason?.league || player.league
+                            )}
+                            <div
+                                class="ui-surface ui-surface--interactive group overflow-hidden border border-slate-200 bg-white p-4 transition-colors hover:border-blue-300"
+                            >
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="relative w-20 h-20 flex-shrink-0">
+                                        <div
+                                            class="relative z-10 h-full w-full overflow-hidden border-2 border-slate-100 bg-slate-50"
+                                        >
+                                            <PlayerHeadshot
+                                                playerId={_getBestFallbackPlayerId(player)}
+                                                explicitUrl={headshotUrl}
+                                                teamAbbrev={player.nhlRights}
+                                                alt={player.name}
+                                                imageClass="w-full h-full object-cover object-top"
+                                                zoom={headshotSettings.zoom}
+                                                objectPosition={headshotSettings.objectPosition}
+                                                autoFocusFace={false}
+                                                fallbackClass="w-full h-full flex items-center justify-center text-2xl font-bold text-slate-400"
+                                                initials={player.name
+                                                    .split(' ')
+                                                    .map((n) => n[0])
+                                                    .join('')
+                                                    .slice(0, 2)}
+                                                loading="lazy"
+                                            />
+                                        </div>
+                                        {#if player.type === 'draft2026' || _hasKnownNhlRights(player)}
+                                            <div
+                                                class="absolute -bottom-1 -right-1 z-20 border border-slate-100 bg-white p-1"
+                                            >
+                                                <div
+                                                    class="w-7 h-7 flex items-center justify-center"
+                                                >
+                                                    {#if player.type === 'draft2026'}
+                                                        <span
+                                                            class="text-[10px] font-black text-amber-600"
+                                                            >{player.draftRank
+                                                                ? `#${player.draftRank}`
+                                                                : '–'}</span
+                                                        >
+                                                    {:else if _getDisplayNhlRights(player.nhlRights)}
+                                                        <TeamLogo
+                                                            team={_getDisplayNhlRights(
+                                                                player.nhlRights
+                                                            )}
+                                                            size="24"
+                                                        />
+                                                    {/if}
+                                                </div>
+                                            </div>
+                                        {/if}
+                                    </div>
 
-                    <!-- Active prospects count -->
-                    <div class="text-center mb-6">
-                        <span class="text-sm text-slate-500">
-                            Näytetään {sortedProspects.length} kenttäpelaajaa ja {sortedGoalies.length} maalivahtia
-                        </span>
+                                    <div class="min-w-0">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <div
+                                                class="inline-block bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white"
+                                            >
+                                                {selectedSeason?.league || player.league}
+                                            </div>
+                                            {#if player.type === 'draft2026'}
+                                                <div
+                                                    class="inline-block bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white"
+                                                >
+                                                    Draft {draftYearLabel}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                        <h3 class="text-base font-bold text-slate-900 truncate">
+                                            {player.name}
+                                        </h3>
+                                        <div class="space-y-1 text-xs text-slate-500">
+                                            <div class="truncate">
+                                                {selectedSeason?.team || player.currentTeam}
+                                            </div>
+                                            <div
+                                                class="flex flex-wrap items-center gap-x-2 gap-y-1"
+                                            >
+                                                {#if player.birthDate}
+                                                    <span
+                                                        >{calculateAge(
+                                                            player.birthDate,
+                                                            $currentDateReadOnly
+                                                        )} vuotta</span
+                                                    >
+                                                {/if}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {#if _getSeasonSelectorEntries(player).length > 1}
+                                    <div class="mb-3 flex flex-wrap gap-2">
+                                        {#each _getSeasonSelectorEntries(player) as { entry, index }}
+                                            <button
+                                                class={`border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
+                                                    _getSelectedSeasonIndex(player) === index
+                                                        ? 'border-blue-200 bg-blue-50 text-blue-700'
+                                                        : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
+                                                }`}
+                                                onclick={() => _selectSeasonEntry(player, index)}
+                                                type="button"
+                                            >
+                                                {entry.league}
+                                                {entry.gp || 0} GP
+                                            </button>
+                                        {/each}
+                                    </div>
+                                {/if}
+
+                                {#if player.type === 'draft2026'}
+                                    <!-- Draft prospect stats -->
+                                    <div
+                                        class="grid grid-cols-4 gap-2 border border-slate-200 bg-slate-50/50 p-3 text-center"
+                                    >
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                GP
+                                            </div>
+                                            <div class="font-mono font-bold text-slate-700">
+                                                {selectedSeason?.gp || 0}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                G
+                                            </div>
+                                            <div class="font-mono font-bold text-emerald-600">
+                                                {selectedSeason?.goals || 0}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                A
+                                            </div>
+                                            <div class="font-mono font-bold text-amber-600">
+                                                {selectedSeason?.assists || 0}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                P
+                                            </div>
+                                            <div class="font-mono font-bold text-slate-900">
+                                                {selectedSeason?.points || 0}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {:else}
+                                    <!-- Regular prospect stats -->
+                                    <div
+                                        class="grid grid-cols-4 gap-2 border border-slate-100/50 bg-slate-50/50 p-3 text-center"
+                                    >
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                GP
+                                            </div>
+                                            <div class="font-mono font-bold text-slate-700">
+                                                {selectedSeason?.gp || 0}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                G
+                                            </div>
+                                            <div class="font-mono font-bold text-emerald-600">
+                                                {selectedSeason?.goals || 0}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                A
+                                            </div>
+                                            <div class="font-mono font-bold text-amber-600">
+                                                {selectedSeason?.assists || 0}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                            >
+                                                P
+                                            </div>
+                                            <div class="font-mono font-bold text-slate-900">
+                                                {selectedSeason?.points || 0}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
+                        {/each}
                     </div>
+                {/if}
 
-                    <!-- Skaters Grid -->
-                    {#if sortedProspects.length === 0}
-                        <div class="text-center text-slate-400 mt-12">
-                            <p>Ei löytynyt lupauksia.</p>
+                <!-- Goalies Section -->
+                {#if sortedGoalies.length > 0}
+                    <div class="mt-12">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">
+                            Maalivahdit
+                        </h2>
+
+                        <!-- Goalie Sort Controls -->
+                        <div class="sort-tabs-container">
+                            <ControlGroup label="Maalivahtien järjestys">
+                                <Button
+                                    selected={goalieSortBy === 'savePct'}
+                                    onclick={() => _setGoalieSort('savePct')}
+                                >
+                                    Torjunta-% {getGoalieSortIcon('savePct')}
+                                </Button>
+                                <Button
+                                    selected={goalieSortBy === 'gaa'}
+                                    onclick={() => _setGoalieSort('gaa')}
+                                >
+                                    Päästettyjen keskiarvo {getGoalieSortIcon('gaa')}
+                                </Button>
+                                <Button
+                                    selected={goalieSortBy === 'gp'}
+                                    onclick={() => _setGoalieSort('gp')}
+                                >
+                                    Ottelut {getGoalieSortIcon('gp')}
+                                </Button>
+                            </ControlGroup>
                         </div>
-                    {:else}
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {#each sortedProspects as player, index (`${player.id}-${index}`)}
-                                {@const selectedSeason = _getSelectedSeasonEntry(player)}
-                                {@const headshotUrl = _getBestAvailableSeasonHeadshot(player)}
-                                {@const headshotSettings = _getProspectHeadshotSettings(player, selectedSeason?.league || player.league)}
+
+                        <!-- Goalies Grid -->
+                        <div
+                            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                        >
+                            {#each sortedGoalies as goalie, index (`${goalie.id}-${index}`)}
+                                {@const selectedSeason = _getSelectedSeasonEntry(goalie)}
+                                {@const unifiedStats = _getUnifiedGoalieStats(goalie.name)}
+                                {@const headshotUrl = _getBestAvailableSeasonHeadshot(goalie)}
+                                {@const headshotSettings = _getProspectHeadshotSettings(
+                                    goalie,
+                                    selectedSeason?.league || goalie.league
+                                )}
                                 <div
                                     class="ui-surface ui-surface--interactive group overflow-hidden border border-slate-200 bg-white p-4 transition-colors hover:border-blue-300"
                                 >
                                     <div class="flex items-center gap-4 mb-4">
                                         <div class="relative w-20 h-20 flex-shrink-0">
-                                            <div class="relative z-10 h-full w-full overflow-hidden border-2 border-slate-100 bg-slate-50">
+                                            <div
+                                                class="relative z-10 h-full w-full overflow-hidden border-2 border-slate-200 bg-slate-50"
+                                            >
                                                 <PlayerHeadshot
-                                                    playerId={_getBestFallbackPlayerId(player)}
+                                                    playerId={_getBestFallbackPlayerId(goalie)}
                                                     explicitUrl={headshotUrl}
-                                                    teamAbbrev={player.nhlRights}
-                                                    alt={player.name}
+                                                    teamAbbrev={goalie.nhlRights}
+                                                    alt={goalie.name}
                                                     imageClass="w-full h-full object-cover object-top"
                                                     zoom={headshotSettings.zoom}
                                                     objectPosition={headshotSettings.objectPosition}
                                                     autoFocusFace={false}
                                                     fallbackClass="w-full h-full flex items-center justify-center text-2xl font-bold text-slate-400"
-                                                    initials={player.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                                                    initials={goalie.name
+                                                        .split(' ')
+                                                        .map((n) => n[0])
+                                                        .join('')
+                                                        .slice(0, 2)}
                                                     loading="lazy"
                                                 />
                                             </div>
-                                            {#if player.type === 'draft2026' || _hasKnownNhlRights(player)}
-                                                <div class="absolute -bottom-1 -right-1 z-20 border border-slate-100 bg-white p-1">
-                                                    <div class="w-7 h-7 flex items-center justify-center">
-                                                        {#if player.type === 'draft2026'}
-                                                            <span class="text-[10px] font-black text-amber-600">{player.draftRank ? `#${player.draftRank}` : '–'}</span>
-                                                        {:else if _getDisplayNhlRights(player.nhlRights)}
-                                                            <TeamLogo team={_getDisplayNhlRights(player.nhlRights)} size="24" />
+                                            {#if goalie.type === 'draft2026' || _hasKnownNhlRights(goalie)}
+                                                <div
+                                                    class="absolute -bottom-1 -right-1 z-20 border border-slate-200 bg-white p-1"
+                                                >
+                                                    <div
+                                                        class="w-7 h-7 flex items-center justify-center"
+                                                    >
+                                                        {#if goalie.type === 'draft2026'}
+                                                            <span
+                                                                class="text-[10px] font-black text-amber-600"
+                                                                >#{goalie.draftRank}</span
+                                                            >
+                                                        {:else if _getDisplayNhlRights(goalie.nhlRights)}
+                                                            <TeamLogo
+                                                                team={_getDisplayNhlRights(
+                                                                    goalie.nhlRights
+                                                                )}
+                                                                size="24"
+                                                            />
                                                         {/if}
                                                     </div>
                                                 </div>
@@ -1073,303 +1338,255 @@ function _dedupeProspects(players) {
 
                                         <div class="min-w-0">
                                             <div class="flex items-center gap-2 mb-1">
-                                                <div class="inline-block bg-blue-600 px-2 py-0.5 text-[10px] font-bold text-white">
-                                                    {selectedSeason?.league || player.league}
+                                                <div
+                                                    class="inline-block bg-emerald-600 px-2 py-0.5 text-[10px] font-bold text-white"
+                                                >
+                                                    {selectedSeason?.league || goalie.league}
                                                 </div>
-                                                {#if player.type === 'draft2026'}
-                                                    <div class="inline-block bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                                                        Draft {draftYearLabel}
+                                                {#if goalie.type === 'draft2026'}
+                                                    <div
+                                                        class="inline-block bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white"
+                                                    >
+                                                        Draft 2026
                                                     </div>
                                                 {/if}
                                             </div>
-                                            <h3 class="text-base font-bold text-slate-900 truncate">{player.name}</h3>
+                                            <h3 class="text-base font-bold text-slate-900 truncate">
+                                                {goalie.name}
+                                            </h3>
                                             <div class="space-y-1 text-xs text-slate-500">
-                                                <div class="truncate">{selectedSeason?.team || player.currentTeam}</div>
-                                                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                                    {#if player.birthDate}
-                                                        <span>{calculateAge(player.birthDate, $currentDateReadOnly)} vuotta</span>
+                                                <div class="truncate">
+                                                    {selectedSeason?.team || goalie.currentTeam}
+                                                </div>
+                                                <div
+                                                    class="flex flex-wrap items-center gap-x-2 gap-y-1"
+                                                >
+                                                    {#if goalie.birthDate}
+                                                        <span
+                                                            >{calculateAge(
+                                                                goalie.birthDate,
+                                                                $currentDateReadOnly
+                                                            )} vuotta</span
+                                                        >
                                                     {/if}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {#if _getSeasonSelectorEntries(player).length > 1}
+                                    {#if _getSeasonSelectorEntries(goalie).length > 1}
                                         <div class="mb-3 flex flex-wrap gap-2">
-                                            {#each _getSeasonSelectorEntries(player) as { entry, index }}
+                                            {#each _getSeasonSelectorEntries(goalie) as { entry, index }}
                                                 <button
                                                     class={`border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
-                                                        _getSelectedSeasonIndex(player) === index
-                                                            ? 'border-blue-200 bg-blue-50 text-blue-700'
+                                                        _getSelectedSeasonIndex(goalie) === index
+                                                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
                                                             : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
                                                     }`}
-                                                    onclick={() => _selectSeasonEntry(player, index)}
+                                                    onclick={() =>
+                                                        _selectSeasonEntry(goalie, index)}
                                                     type="button"
                                                 >
-                                                    {entry.league} {entry.gp || 0} GP
+                                                    {entry.league}
+                                                    {entry.gp || 0} GP
                                                 </button>
                                             {/each}
                                         </div>
                                     {/if}
 
-                                    {#if player.type === 'draft2026'}
+                                    {#if goalie.type === 'draft2026'}
                                         <!-- Draft prospect stats -->
-                                        <div class="grid grid-cols-4 gap-2 border border-slate-200 bg-slate-50/50 p-3 text-center">
+                                        <div
+                                            class="grid grid-cols-4 gap-2 border border-slate-200 bg-slate-50/50 p-3 text-center"
+                                        >
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
-                                                <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    GP
+                                                </div>
+                                                <div class="font-mono font-bold text-slate-700">
+                                                    {selectedSeason?.gp || 0}
+                                                </div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">G</div>
-                                                <div class="font-mono font-bold text-emerald-600">{selectedSeason?.goals || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    SV%
+                                                </div>
+                                                <div class="font-mono font-bold text-emerald-600">
+                                                    {selectedSeason?.savePct
+                                                        ? selectedSeason.savePct.toFixed(3)
+                                                        : '-'}
+                                                </div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">A</div>
-                                                <div class="font-mono font-bold text-amber-600">{selectedSeason?.assists || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    GAA
+                                                </div>
+                                                <div class="font-mono font-bold text-amber-600">
+                                                    {selectedSeason?.gaa
+                                                        ? selectedSeason.gaa.toFixed(2)
+                                                        : '-'}
+                                                </div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">P</div>
-                                                <div class="font-mono font-bold text-slate-900">{selectedSeason?.points || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    SO
+                                                </div>
+                                                <div class="font-mono font-bold text-slate-900">
+                                                    {selectedSeason?.shutouts || 0}
+                                                </div>
                                             </div>
                                         </div>
                                     {:else}
-                                        <!-- Regular prospect stats -->
-                                        <div class="grid grid-cols-4 gap-2 border border-slate-100/50 bg-slate-50/50 p-3 text-center">
+                                        <!-- Regular goalie stats -->
+                                        <div
+                                            class="grid grid-cols-4 gap-2 border border-slate-200/50 bg-slate-50/50 p-3 text-center"
+                                        >
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
-                                                <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    GP
+                                                </div>
+                                                <div class="font-mono font-bold text-slate-700">
+                                                    {unifiedStats?.gp || selectedSeason?.gp || 0}
+                                                </div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">G</div>
-                                                <div class="font-mono font-bold text-emerald-600">{selectedSeason?.goals || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    SV%
+                                                </div>
+                                                <div class="font-mono font-bold text-emerald-600">
+                                                    {_formatGoalieStat(
+                                                        unifiedStats?.savePct ??
+                                                            selectedSeason?.savePct,
+                                                        3
+                                                    )}
+                                                </div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">A</div>
-                                                <div class="font-mono font-bold text-amber-600">{selectedSeason?.assists || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    GAA
+                                                </div>
+                                                <div class="font-mono font-bold text-amber-600">
+                                                    {_formatGoalieStat(
+                                                        unifiedStats?.gaa ?? selectedSeason?.gaa,
+                                                        2
+                                                    )}
+                                                </div>
                                             </div>
                                             <div>
-                                                <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">P</div>
-                                                <div class="font-mono font-bold text-slate-900">{selectedSeason?.points || 0}</div>
+                                                <div
+                                                    class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
+                                                >
+                                                    SO
+                                                </div>
+                                                <div class="font-mono font-bold text-slate-900">
+                                                    {unifiedStats?.shutouts ??
+                                                        selectedSeason?.shutouts ??
+                                                        0}
+                                                </div>
                                             </div>
                                         </div>
                                     {/if}
                                 </div>
                             {/each}
                         </div>
-                    {/if}
-
-                    <!-- Goalies Section -->
-                    {#if sortedGoalies.length > 0}
-                        <div class="mt-12">
-                            <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Maalivahdit</h2>
-
-                            <!-- Goalie Sort Controls -->
-                            <div class="sort-tabs-container">
-                                <ControlGroup label="Maalivahtien järjestys">
-                                    <Button
-
-                                        selected={goalieSortBy === 'savePct'}
-                                        onclick={() => _setGoalieSort('savePct')}
-                                    >
-                                        Torjunta-% {getGoalieSortIcon('savePct')}
-                                    </Button>
-                                    <Button
-
-                                        selected={goalieSortBy === 'gaa'}
-                                        onclick={() => _setGoalieSort('gaa')}
-                                    >
-                                        Päästettyjen keskiarvo {getGoalieSortIcon('gaa')}
-                                    </Button>
-                                    <Button
-
-                                        selected={goalieSortBy === 'gp'}
-                                        onclick={() => _setGoalieSort('gp')}
-                                    >
-                                        Ottelut {getGoalieSortIcon('gp')}
-                                    </Button>
-                                </ControlGroup>
-                            </div>
-
-                            <!-- Goalies Grid -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                {#each sortedGoalies as goalie, index (`${goalie.id}-${index}`)}
-                                    {@const selectedSeason = _getSelectedSeasonEntry(goalie)}
-                                    {@const unifiedStats = _getUnifiedGoalieStats(goalie.name)}
-                                    {@const headshotUrl = _getBestAvailableSeasonHeadshot(goalie)}
-                                    {@const headshotSettings = _getProspectHeadshotSettings(goalie, selectedSeason?.league || goalie.league)}
-                                    <div
-                                        class="ui-surface ui-surface--interactive group overflow-hidden border border-slate-200 bg-white p-4 transition-colors hover:border-blue-300"
-                                    >
-                                        <div class="flex items-center gap-4 mb-4">
-                                            <div class="relative w-20 h-20 flex-shrink-0">
-                                                <div class="relative z-10 h-full w-full overflow-hidden border-2 border-slate-200 bg-slate-50">
-                                                    <PlayerHeadshot
-                                                        playerId={_getBestFallbackPlayerId(goalie)}
-                                                        explicitUrl={headshotUrl}
-                                                        teamAbbrev={goalie.nhlRights}
-                                                        alt={goalie.name}
-                                                        imageClass="w-full h-full object-cover object-top"
-                                                        zoom={headshotSettings.zoom}
-                                                        objectPosition={headshotSettings.objectPosition}
-                                                        autoFocusFace={false}
-                                                        fallbackClass="w-full h-full flex items-center justify-center text-2xl font-bold text-slate-400"
-                                                        initials={goalie.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                                                        loading="lazy"
-                                                    />
-                                                </div>
-                                                {#if goalie.type === 'draft2026' || _hasKnownNhlRights(goalie)}
-                                                    <div class="absolute -bottom-1 -right-1 z-20 border border-slate-200 bg-white p-1">
-                                                        <div class="w-7 h-7 flex items-center justify-center">
-                                                            {#if goalie.type === 'draft2026'}
-                                                                <span class="text-[10px] font-black text-amber-600">#{goalie.draftRank}</span>
-                                                            {:else if _getDisplayNhlRights(goalie.nhlRights)}
-                                                                <TeamLogo team={_getDisplayNhlRights(goalie.nhlRights)} size="24" />
-                                                            {/if}
-                                                        </div>
-                                                    </div>
-                                                {/if}
-                                            </div>
-
-                                            <div class="min-w-0">
-                                                <div class="flex items-center gap-2 mb-1">
-                                                    <div class="inline-block bg-emerald-600 px-2 py-0.5 text-[10px] font-bold text-white">
-                                                        {selectedSeason?.league || goalie.league}
-                                                    </div>
-                                                    {#if goalie.type === 'draft2026'}
-                                                        <div class="inline-block bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                                                            Draft 2026
-                                                        </div>
-                                                    {/if}
-                                                </div>
-                                                <h3 class="text-base font-bold text-slate-900 truncate">{goalie.name}</h3>
-                                                <div class="space-y-1 text-xs text-slate-500">
-                                                    <div class="truncate">{selectedSeason?.team || goalie.currentTeam}</div>
-                                                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                                                        {#if goalie.birthDate}
-                                                            <span>{calculateAge(goalie.birthDate, $currentDateReadOnly)} vuotta</span>
-                                                        {/if}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {#if _getSeasonSelectorEntries(goalie).length > 1}
-                                            <div class="mb-3 flex flex-wrap gap-2">
-                                                {#each _getSeasonSelectorEntries(goalie) as { entry, index }}
-                                                    <button
-                                                        class={`border px-2.5 py-1 text-[10px] font-semibold transition-colors ${
-                                                            _getSelectedSeasonIndex(goalie) === index
-                                                                ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                                                                : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:text-slate-700'
-                                                        }`}
-                                                        onclick={() => _selectSeasonEntry(goalie, index)}
-                                                        type="button"
-                                                    >
-                                                        {entry.league} {entry.gp || 0} GP
-                                                    </button>
-                                                {/each}
-                                            </div>
-                                        {/if}
-
-                                        {#if goalie.type === 'draft2026'}
-                                            <!-- Draft prospect stats -->
-                                            <div class="grid grid-cols-4 gap-2 border border-slate-200 bg-slate-50/50 p-3 text-center">
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
-                                                    <div class="font-mono font-bold text-slate-700">{selectedSeason?.gp || 0}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SV%</div>
-                                                    <div class="font-mono font-bold text-emerald-600">{selectedSeason?.savePct ? selectedSeason.savePct.toFixed(3) : '-'}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GAA</div>
-                                                    <div class="font-mono font-bold text-amber-600">{selectedSeason?.gaa ? selectedSeason.gaa.toFixed(2) : '-'}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SO</div>
-                                                    <div class="font-mono font-bold text-slate-900">{selectedSeason?.shutouts || 0}</div>
-                                                </div>
-                                            </div>
-                                        {:else}
-                                            <!-- Regular goalie stats -->
-                                            <div class="grid grid-cols-4 gap-2 border border-slate-200/50 bg-slate-50/50 p-3 text-center">
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GP</div>
-                                                    <div class="font-mono font-bold text-slate-700">{unifiedStats?.gp || selectedSeason?.gp || 0}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SV%</div>
-                                                    <div class="font-mono font-bold text-emerald-600">{_formatGoalieStat(unifiedStats?.savePct ?? selectedSeason?.savePct, 3)}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">GAA</div>
-                                                    <div class="font-mono font-bold text-amber-600">{_formatGoalieStat(unifiedStats?.gaa ?? selectedSeason?.gaa, 2)}</div>
-                                                </div>
-                                                <div>
-                                                    <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">SO</div>
-                                                    <div class="font-mono font-bold text-slate-900">{unifiedStats?.shutouts ?? selectedSeason?.shutouts ?? 0}</div>
-                                                </div>
-                                            </div>
-                                        {/if}
-                                    </div>
-                                {/each}
-                            </div>
-                        </div>
-                    {/if}
-                </div>
-            {/if}
-
-            <!-- Related Links -->
-            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a
-                    href="{base}/scouting"
-                    class="ui-surface ui-surface--interactive group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
-                >
-                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-blue-100">
-                        <FileText class="w-6 h-6 text-blue-600" aria-hidden="true" />
                     </div>
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">Scouting Reports</h3>
-                        <p class="text-sm text-slate-500">Yksityiskohtaiset analyysit lupaavimmista pelaajista</p>
-                    </div>
-                    <ChevronRight class="w-5 h-5 text-slate-400 group-hover:text-blue-500" aria-hidden="true" />
-                </a>
-
-                <a
-                    href="{base}/drafts"
-                    class="ui-surface ui-surface--interactive group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
-                >
-                    <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-emerald-100">
-                        <BarChart3 class="w-6 h-6 text-emerald-600" aria-hidden="true" />
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">Draft-historia</h3>
-                        <p class="text-sm text-slate-500">Suomalaisten varausten historia ja tilastot</p>
-                    </div>
-                    <ChevronRight class="w-5 h-5 text-slate-400 group-hover:text-blue-500" aria-hidden="true" />
-                </a>
+                {/if}
             </div>
+        {/if}
 
-            <!-- Data Sources -->
-            <div class="mt-12 pt-8 border-t border-slate-200">
-                <div class="text-center">
-                    <h3 class="text-sm font-semibold text-slate-900 mb-3">Tietolähteet</h3>
-                    <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-slate-500">
-                        <span>• NHL API: Pelaajatiedot & tilastot</span>
-                        <span>• NHL Central Scouting: Draft 2026 ranking</span>
-                        <span>• EliteProspects: Nuorten sarjatiedot</span>
-                        <span>• Liiga, SHL, AHL: Kausitilastot</span>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-4">
-                        Päivitetty: {new Date().toLocaleDateString('fi-FI')} •
-                        Näytetään {activeProspects.length + (activeFilter === 'all' ? ($draftRankings.north_american_skaters?.length || 0) + ($draftRankings.international_skaters?.length || 0) : 0)} lupausta
+        <!-- Related Links -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <a
+                href="{base}/scouting"
+                class="ui-surface ui-surface--interactive group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
+            >
+                <div class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-blue-100">
+                    <FileText class="w-6 h-6 text-blue-600" aria-hidden="true" />
+                </div>
+                <div class="flex-1">
+                    <h3
+                        class="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors"
+                    >
+                        Scouting Reports
+                    </h3>
+                    <p class="text-sm text-slate-500">
+                        Yksityiskohtaiset analyysit lupaavimmista pelaajista
                     </p>
                 </div>
+                <ChevronRight
+                    class="w-5 h-5 text-slate-400 group-hover:text-blue-500"
+                    aria-hidden="true"
+                />
+            </a>
+
+            <a
+                href="{base}/drafts"
+                class="ui-surface ui-surface--interactive group flex items-center gap-4 border border-slate-200 bg-white p-6 transition-colors hover:border-blue-300"
+            >
+                <div
+                    class="flex h-12 w-12 flex-shrink-0 items-center justify-center bg-emerald-100"
+                >
+                    <BarChart3 class="w-6 h-6 text-emerald-600" aria-hidden="true" />
+                </div>
+                <div class="flex-1">
+                    <h3
+                        class="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors"
+                    >
+                        Draft-historia
+                    </h3>
+                    <p class="text-sm text-slate-500">
+                        Suomalaisten varausten historia ja tilastot
+                    </p>
+                </div>
+                <ChevronRight
+                    class="w-5 h-5 text-slate-400 group-hover:text-blue-500"
+                    aria-hidden="true"
+                />
+            </a>
+        </div>
+
+        <!-- Data Sources -->
+        <div class="mt-12 pt-8 border-t border-slate-200">
+            <div class="text-center">
+                <h3 class="text-sm font-semibold text-slate-900 mb-3">Tietolähteet</h3>
+                <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-slate-500">
+                    <span>• NHL API: Pelaajatiedot & tilastot</span>
+                    <span>• NHL Central Scouting: Draft 2026 ranking</span>
+                    <span>• EliteProspects: Nuorten sarjatiedot</span>
+                    <span>• Liiga, SHL, AHL: Kausitilastot</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-4">
+                    Päivitetty: {new Date().toLocaleDateString('fi-FI')} • Näytetään {activeProspects.length +
+                        (activeFilter === 'all'
+                            ? ($draftRankings.north_american_skaters?.length || 0) +
+                              ($draftRankings.international_skaters?.length || 0)
+                            : 0)} lupausta
+                </p>
             </div>
+        </div>
     </PageShell>
 </div>
 
 <style>
-    .filter-tabs-container, .sort-tabs-container { display: flex; justify-content: flex-start; margin-bottom: var(--space-5); min-width: 0; }
+.filter-tabs-container,
+.sort-tabs-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: var(--space-5);
+    min-width: 0;
+}
 </style>

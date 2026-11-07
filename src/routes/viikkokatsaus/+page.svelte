@@ -37,38 +37,38 @@ function formatDate(dateStr) {
 
     <!-- Breadcrumb Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
         itemListElement: [
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 1,
-                name: "Etusivu",
-                item: "https://suomalaisetnhlssa.fi/"
+                name: 'Etusivu',
+                item: 'https://suomalaisetnhlssa.fi/',
             },
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 2,
-                name: "Viikkokatsaukset",
-                item: "https://suomalaisetnhlssa.fi/viikkokatsaus"
-            }
-        ]
+                name: 'Viikkokatsaukset',
+                item: 'https://suomalaisetnhlssa.fi/viikkokatsaus',
+            },
+        ],
     })}</script>`}
 
     <!-- CollectionPage Schema for articles -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        name: "Viikkokatsaukset - Suomalaisten NHL-pelaajien viikoittaiset katsaukset",
-        description: "Viikoittaiset katsaukset suomalaisten NHL-pelaajien menestykseen.",
-        url: "https://suomalaisetnhlssa.fi/viikkokatsaus",
-        inLanguage: "fi"
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'Viikkokatsaukset - Suomalaisten NHL-pelaajien viikoittaiset katsaukset',
+        description: 'Viikoittaiset katsaukset suomalaisten NHL-pelaajien menestykseen.',
+        url: 'https://suomalaisetnhlssa.fi/viikkokatsaus',
+        inLanguage: 'fi',
     })}</script>`}
 </svelte:head>
 
 <PageShell width="content" compact>
     <div class="editorial-page">
-        <a href={base + "/"} class="back-link">
+        <a href={base + '/'} class="back-link">
             <ChevronLeft size={16} aria-hidden="true" />
             Takaisin etusivulle
         </a>
@@ -107,11 +107,7 @@ function formatDate(dateStr) {
                                     </p>
                                     <p class="article-excerpt">{article.excerpt}</p>
                                 </div>
-                                <ChevronRight
-                                    class="article-arrow"
-                                    size={20}
-                                    aria-hidden="true"
-                                />
+                                <ChevronRight class="article-arrow" size={20} aria-hidden="true" />
                             </div>
                         </Card>
                     </a>
@@ -122,106 +118,108 @@ function formatDate(dateStr) {
 </PageShell>
 
 <style>
-    .editorial-page {
-        display: grid;
-        gap: var(--space-6);
-    }
+.editorial-page {
+    display: grid;
+    gap: var(--space-6);
+}
 
-    .back-link:focus-visible,
-    .article-link:focus-visible {
-        outline: 3px solid var(--accent-glow);
-        outline-offset: 3px;
-    }
+.back-link:focus-visible,
+.article-link:focus-visible {
+    outline: 3px solid var(--accent-glow);
+    outline-offset: 3px;
+}
 
-    .article-list {
-        display: grid;
-        gap: var(--space-4);
-    }
+.article-list {
+    display: grid;
+    gap: var(--space-4);
+}
 
-    .article-link {
-        display: block;
-        color: inherit;
-        text-decoration: none;
-    }
+.article-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
 
-    .article-link:hover :global(.card) {
-        border-color: var(--accent-soft);
-    }
+.article-link:hover :global(.card) {
+    border-color: var(--accent-soft);
+}
 
+.article-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-4);
+}
+
+.article-thumbnail {
+    width: 4rem;
+    height: 4rem;
+    overflow: hidden;
+    flex: none;
+    border: 1px solid var(--color-panel-border);
+    border-radius: 0;
+    background: var(--accent-ice);
+    box-shadow: none;
+}
+
+.article-thumbnail :global(.article-thumbnail__image) {
+    width: 100%;
+    height: 100%;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    object-fit: cover;
+}
+
+.article-copy {
+    min-width: 0;
+}
+
+h2 {
+    margin: 0 0 var(--space-2);
+    color: var(--color-ink);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    transition: color 0.16s ease;
+}
+
+.article-link:hover h2 {
+    color: var(--accent);
+}
+
+.article-meta {
+    margin: 0 0 var(--space-3);
+    color: var(--color-muted);
+    font-size: 0.82rem;
+}
+
+.article-excerpt,
+.empty-state {
+    margin: 0;
+    color: #344054;
+    line-height: 1.65;
+}
+
+.article-row :global(.article-arrow) {
+    margin-top: 0.15rem;
+    color: var(--color-muted);
+    transition:
+        color 0.16s ease,
+        transform 0.16s ease;
+}
+
+.article-link:hover :global(.article-arrow) {
+    color: var(--accent);
+    transform: translateX(2px);
+}
+
+@media (max-width: 520px) {
     .article-row {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        align-items: start;
-        gap: var(--space-4);
+        grid-template-columns: minmax(0, 1fr) auto;
     }
 
     .article-thumbnail {
-        width: 4rem;
-        height: 4rem;
-        overflow: hidden;
-        flex: none;
-        border: 1px solid var(--color-panel-border);
-        border-radius: 0;
-        background: var(--accent-ice);
-        box-shadow: none;
+        display: none;
     }
-
-    .article-thumbnail :global(.article-thumbnail__image) {
-        width: 100%;
-        height: 100%;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        object-fit: cover;
-    }
-
-    .article-copy {
-        min-width: 0;
-    }
-
-    h2 {
-        margin: 0 0 var(--space-2);
-        color: var(--color-ink);
-        font-size: 1.2rem;
-        font-weight: 700;
-        line-height: 1.3;
-        transition: color 0.16s ease;
-    }
-
-    .article-link:hover h2 {
-        color: var(--accent);
-    }
-
-    .article-meta {
-        margin: 0 0 var(--space-3);
-        color: var(--color-muted);
-        font-size: 0.82rem;
-    }
-
-    .article-excerpt,
-    .empty-state {
-        margin: 0;
-        color: #344054;
-        line-height: 1.65;
-    }
-
-    .article-row :global(.article-arrow) {
-        margin-top: 0.15rem;
-        color: var(--color-muted);
-        transition: color 0.16s ease, transform 0.16s ease;
-    }
-
-    .article-link:hover :global(.article-arrow) {
-        color: var(--accent);
-        transform: translateX(2px);
-    }
-
-    @media (max-width: 520px) {
-        .article-row {
-            grid-template-columns: minmax(0, 1fr) auto;
-        }
-
-        .article-thumbnail {
-            display: none;
-        }
-    }
+}
 </style>

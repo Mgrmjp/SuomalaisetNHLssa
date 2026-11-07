@@ -43,28 +43,28 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
 
     <!-- Breadcrumb Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
         itemListElement: [
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 1,
-                name: "Etusivu",
-                item: "https://suomalaisetnhlssa.fi/"
+                name: 'Etusivu',
+                item: 'https://suomalaisetnhlssa.fi/',
             },
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 2,
-                name: "Pistepörssi",
-                item: "https://suomalaisetnhlssa.fi/pisteporssi"
-            }
-        ]
+                name: 'Pistepörssi',
+                item: 'https://suomalaisetnhlssa.fi/pisteporssi',
+            },
+        ],
     })}</script>`}
 </svelte:head>
 
 <div class="public-view min-h-screen">
     <PageShell width="wide">
-        <a class="back-link" href={base + "/"}>
+        <a class="back-link" href={base + '/'}>
             <ChevronLeft class="h-4 w-4" aria-hidden="true" />
             Takaisin etusivulle
         </a>
@@ -81,8 +81,11 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
             <!-- Leaderboard Table -->
             <div in:fade={{ duration: 300 }}>
                 <Card padding="none" accent>
-
-                    <DataTable caption={`Suomalaisten pistepörssi ${formattedSeason}`} class="leaderboard-table w-full text-left text-sm whitespace-nowrap" scrollClass="leaderboard-scroll-area">
+                    <DataTable
+                        caption={`Suomalaisten pistepörssi ${formattedSeason}`}
+                        class="leaderboard-table w-full text-left text-sm whitespace-nowrap"
+                        scrollClass="leaderboard-scroll-area"
+                    >
                         <thead>
                             <tr
                                 class="bg-slate-50/80 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500 font-semibold"
@@ -128,7 +131,9 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                             {#each players as player, index}
                                 <tr
                                     class="transition-colors duration-150 hover:bg-slate-50/80 {index <
-                                    3 ? 'bg-yellow-50/30' : ''}"
+                                    3
+                                        ? 'bg-yellow-50/30'
+                                        : ''}"
                                 >
                                     <td class="px-6 py-4 text-center font-medium text-slate-400">
                                         {#if index === 0}
@@ -185,7 +190,7 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                                               ? 'text-red-500'
                                               : 'text-slate-400'}"
                                     >
-                                        {player.plusMinus > 0 ? "+" : ""}{player.plusMinus}
+                                        {player.plusMinus > 0 ? '+' : ''}{player.plusMinus}
                                     </td>
                                     <td
                                         class="px-6 py-4 text-center hidden md:table-cell text-slate-500"
@@ -195,22 +200,23 @@ const formattedSeason = `${seasonId.substring(0, 4)}-${seasonId.substring(6, 8)}
                                         class="px-6 py-4 text-center hidden lg:table-cell text-xs tabular-nums text-slate-500"
                                     >
                                         {Math.floor(player.timeOnIcePerGame / 60)}:{Math.floor(
-                                            player.timeOnIcePerGame % 60,
+                                            player.timeOnIcePerGame % 60
                                         )
                                             .toString()
-                                            .padStart(2, "0")}
+                                            .padStart(2, '0')}
                                     </td>
                                 </tr>
                             {/each}
                         </tbody>
                     </DataTable>
-
                 </Card>
             </div>
 
             {#if data.updatedAt}
                 <ViewMetadata class="mt-8">
-                    <p class="mt-2 text-xs">Päivitetty: {new Date(data.updatedAt).toLocaleString("fi-FI")}</p>
+                    <p class="mt-2 text-xs">
+                        Päivitetty: {new Date(data.updatedAt).toLocaleString('fi-FI')}
+                    </p>
                 </ViewMetadata>
             {/if}
         {/if}

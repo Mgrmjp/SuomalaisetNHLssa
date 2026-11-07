@@ -29,6 +29,7 @@ from utils import (
     player_landing_url,
     extract_team_name,
 )
+
 # Import Finnish text correction utilities
 from finnish_text_utils import normalize_finnish_player_data
 from headshots.sync import sync_headshots
@@ -58,9 +59,12 @@ def geocode_venue_address(venue_name, city):
 
     try:
         import requests
-        headers = {'User-Agent': 'FinnishNHLPlayers/1.0'}
+
+        headers = {"User-Agent": "FinnishNHLPlayers/1.0"}
         query = f"{venue_name}, {city}, USA"
-        url = f"{NOMINATIM_BASE}?format=json&addressdetails=1&q={requests.utils.quote(query)}&limit=1"
+        url = (
+            f"{NOMINATIM_BASE}?format=json&addressdetails=1&q={requests.utils.quote(query)}&limit=1"
+        )
 
         response = requests.get(url, headers=headers, timeout=NOMINATIM_TIMEOUT)
         response.raise_for_status()
@@ -68,14 +72,14 @@ def geocode_venue_address(venue_name, city):
 
         if results:
             result = results[0]
-            address = result.get('address', {})
+            address = result.get("address", {})
 
-            street = address.get('road', '')
-            house_number = address.get('house_number', '')
-            city_name = address.get('city', address.get('town', address.get('village', '')))
-            state = address.get('state', '')
-            country = address.get('country', '')
-            postcode = address.get('postcode', '')
+            street = address.get("road", "")
+            house_number = address.get("house_number", "")
+            city_name = address.get("city", address.get("town", address.get("village", "")))
+            state = address.get("state", "")
+            country = address.get("country", "")
+            postcode = address.get("postcode", "")
 
             full_parts = []
             if house_number and street:
@@ -93,12 +97,12 @@ def geocode_venue_address(venue_name, city):
             full_address = ", ".join(full_parts)
 
             venue_address = {
-                'street': street,
-                'city': city_name,
-                'state': state,
-                'country': country,
-                'postcode': postcode,
-                'full_address': full_address
+                "street": street,
+                "city": city_name,
+                "state": state,
+                "country": country,
+                "postcode": postcode,
+                "full_address": full_address,
             }
 
             _VENUE_ADDRESS_CACHE[cache_key] = venue_address
@@ -141,7 +145,7 @@ def get_teams_data():
                     "venue_name": team.get("venue", {}).get("name", ""),
                     "venue_city": team.get("venue", {}).get("city", ""),
                     "team_name": team.get("commonName", {}).get("default", ""),
-                    "location_name": team.get("placeName", {}).get("default", "")
+                    "location_name": team.get("placeName", {}).get("default", ""),
                 }
 
     _TEAMS_DATA_CACHE = teams_cache
@@ -153,10 +157,7 @@ def get_teams_venue_data():
     teams_data = get_teams_data()
     venue_data = {}
     for abbrev, data in teams_data.items():
-        venue_data[abbrev] = {
-            "venue_name": data["venue_name"],
-            "venue_city": data["venue_city"]
-        }
+        venue_data[abbrev] = {"venue_name": data["venue_name"], "venue_city": data["venue_city"]}
     return venue_data
 
 
@@ -168,9 +169,7 @@ def load_finnish_player_cache():
             # Apply corrections to all cached players
             corrected_cache = {}
             for player_id, player_data in data.items():
-                corrected_cache[int(player_id)] = normalize_finnish_player_data(
-                    player_data.copy()
-                )
+                corrected_cache[int(player_id)] = normalize_finnish_player_data(player_data.copy())
             return corrected_cache
     return {}
 
@@ -198,65 +197,69 @@ def detect_empty_net_goals(play_by_play_data, game_id, finnish_cache, game_data=
     empty_net_goals_scored = {}
     empty_net_goals_allowed = {}
 
-    if not play_by_play_data or 'plays' not in play_by_play_data:
+    if not play_by_play_data or "plays" not in play_by_play_data:
         return empty_net_goals_scored, empty_net_goals_allowed
 
     # Create reverse cache mapping: playerId -> position (for goalie detection)
     finnish_positions = {}
     for pid, info in finnish_cache.items():
-        if info.get('position') in ('G', 'Goalie'):
-            finnish_positions[pid] = 'G'
+        if info.get("position") in ("G", "Goalie"):
+            finnish_positions[pid] = "G"
 
-    for play in play_by_play_data['plays']:
-        if play.get('typeDescKey') == 'goal':
-            details = play.get('details', {})
-            zone_code = details.get('zoneCode', '')
-            highlight_url = details.get('highlightClipSharingUrl', '')
+    for play in play_by_play_data["plays"]:
+        if play.get("typeDescKey") == "goal":
+            details = play.get("details", {})
+            zone_code = details.get("zoneCode", "")
+            highlight_url = details.get("highlightClipSharingUrl", "")
 
             # Detect empty net goals using multiple indicators
-            is_empty_net = (zone_code == 'N' or 'empty-net' in (highlight_url or '').lower())
+            is_empty_net = zone_code == "N" or "empty-net" in (highlight_url or "").lower()
 
             if is_empty_net:
                 # Track scoring player
-                player_id = details.get('scoringPlayerId')
+                player_id = details.get("scoringPlayerId")
                 if player_id:
                     empty_net_goals_scored[player_id] = empty_net_goals_scored.get(player_id, 0) + 1
 
                 # Track goalie who allowed it
-                goalie_id = details.get('goalieInNetId')
+                goalie_id = details.get("goalieInNetId")
                 if goalie_id and goalie_id in finnish_positions:
-                    empty_net_goals_allowed[goalie_id] = empty_net_goals_allowed.get(goalie_id, 0) + 1
+                    empty_net_goals_allowed[goalie_id] = (
+                        empty_net_goals_allowed.get(goalie_id, 0) + 1
+                    )
                 elif not goalie_id and game_data:
                     # Determine which team had the empty net
-                    event_owner_team_id = details.get('eventOwnerTeamId')
-                    home_team_id = game_data.get('homeTeam', {}).get('id')
-                    away_team_id = game_data.get('awayTeam', {}).get('id')
+                    event_owner_team_id = details.get("eventOwnerTeamId")
+                    home_team_id = game_data.get("homeTeam", {}).get("id")
+                    away_team_id = game_data.get("awayTeam", {}).get("id")
 
                     if event_owner_team_id and home_team_id and away_team_id:
-                        defending_team_id = away_team_id if event_owner_team_id == home_team_id else home_team_id
+                        defending_team_id = (
+                            away_team_id if event_owner_team_id == home_team_id else home_team_id
+                        )
 
                         # Find Finnish goalie from defending team with highest TOI
                         # (the one who was actually playing when pulled for empty net)
-                        player_stats = game_data.get('playerByGameStats', {})
+                        player_stats = game_data.get("playerByGameStats", {})
                         finnish_goalies_on_defending_team = []
-                        for team_side in ['awayTeam', 'homeTeam']:
+                        for team_side in ["awayTeam", "homeTeam"]:
                             team_data = player_stats.get(team_side, {})
-                            if game_data.get(team_side, {}).get('id') == defending_team_id:
-                                for goalie in team_data.get('goalies', []):
-                                    goalie_id = goalie.get('playerId')
-                                    toi = goalie.get('toi', '00:00')
+                            if game_data.get(team_side, {}).get("id") == defending_team_id:
+                                for goalie in team_data.get("goalies", []):
+                                    goalie_id = goalie.get("playerId")
+                                    toi = goalie.get("toi", "00:00")
 
-                                    if goalie_id in finnish_positions and toi not in ('00:00', '0'):
+                                    if goalie_id in finnish_positions and toi not in ("00:00", "0"):
                                         finnish_goalies_on_defending_team.append((goalie_id, toi))
 
                         # Assign empty net goal to the goalie with highest TOI (the one who was pulled)
                         if finnish_goalies_on_defending_team:
                             # Sort by TOI descending and pick the first (highest TOI)
-                            finnish_goalies_on_defending_team.sort(
-                                key=lambda x: x[1], reverse=True
-                            )
+                            finnish_goalies_on_defending_team.sort(key=lambda x: x[1], reverse=True)
                             pulled_goalie_id = finnish_goalies_on_defending_team[0][0]
-                            empty_net_goals_allowed[pulled_goalie_id] = empty_net_goals_allowed.get(pulled_goalie_id, 0) + 1
+                            empty_net_goals_allowed[pulled_goalie_id] = (
+                                empty_net_goals_allowed.get(pulled_goalie_id, 0) + 1
+                            )
 
     return empty_net_goals_scored, empty_net_goals_allowed
 
@@ -274,16 +277,16 @@ def detect_shorthanded_goals(play_by_play_data, finnish_cache):
     """
     shorthanded_goals = {}
 
-    if not play_by_play_data or 'plays' not in play_by_play_data:
+    if not play_by_play_data or "plays" not in play_by_play_data:
         return shorthanded_goals
 
-    for play in play_by_play_data['plays']:
-        if play.get('typeDescKey') == 'goal':
-            details = play.get('details', {})
-            url = details.get('highlightClipSharingUrl', '')
+    for play in play_by_play_data["plays"]:
+        if play.get("typeDescKey") == "goal":
+            details = play.get("details", {})
+            url = details.get("highlightClipSharingUrl", "")
 
-            if 'shg' in (url or '').lower():
-                player_id = details.get('scoringPlayerId')
+            if "shg" in (url or "").lower():
+                player_id = details.get("scoringPlayerId")
                 if player_id and player_id in finnish_cache:
                     shorthanded_goals[player_id] = shorthanded_goals.get(player_id, 0) + 1
 
@@ -302,11 +305,7 @@ def get_schedule_for_date(date):
     game_week = data.get("gameWeek", [])
     day = next((day for day in game_week if day.get("date") == date), None)
     if day is not None and isinstance(day.get("games"), list):
-        return {
-            "games": day["games"],
-            "date": date,
-            "week_data": day
-        }
+        return {"games": day["games"], "date": date, "week_data": day}
     raise RuntimeError(f"NHL schedule is missing the requested day: {date}")
 
 
@@ -335,18 +334,18 @@ def get_player_recent_games(player_id, player_team, limit=10):
     try:
         data = fetch_from_api(player_landing_url(player_id))
 
-        if not data or 'last5Games' not in data:
+        if not data or "last5Games" not in data:
             return []
 
         recent_games = []
-        for game in data['last5Games'][:limit]:
-            game_date = game.get('gameDate', '')
-            opponent_abbrev = game.get('opponentAbbrev', '')
-            game_id = game.get('gameId')
+        for game in data["last5Games"][:limit]:
+            game_date = game.get("gameDate", "")
+            opponent_abbrev = game.get("opponentAbbrev", "")
+            game_id = game.get("gameId")
 
             team_score = 0
             opponent_score = 0
-            result = 'OT'
+            result = "OT"
 
             if game_id:
                 game_details = get_game_details(game_id)
@@ -366,50 +365,58 @@ def get_player_recent_games(player_id, player_team, limit=10):
                         opponent_full = extract_team_name(home_team)
 
                     if team_score > opponent_score:
-                        result = 'W'
+                        result = "W"
                     elif team_score < opponent_score:
-                        result = 'L'
+                        result = "L"
                 else:
                     opponent_full = opponent_abbrev
-                    plus_minus = game.get('plusMinus', 0)
+                    plus_minus = game.get("plusMinus", 0)
                     if plus_minus > 0:
-                        result = 'W'
+                        result = "W"
                     elif plus_minus < 0:
-                        result = 'L'
+                        result = "L"
             else:
                 opponent_full = opponent_abbrev
 
             # Detect if this is goalie data (has goalie-specific stats)
-            is_goalie_data = game.get('savePctg') is not None or game.get('goalsAgainst') is not None
-            
+            is_goalie_data = (
+                game.get("savePctg") is not None or game.get("goalsAgainst") is not None
+            )
+
             # Skip games where goalie didn't play (no shots faced = backup/scratch)
             # Only apply this filter to goalies, not skaters
             if is_goalie_data:
-                shots_against = game.get('shotsAgainst', 0)
+                shots_against = game.get("shotsAgainst", 0)
                 if shots_against == 0:
                     continue
 
             # Check if game was decided in OT/SO
-            # API recent games doesn't always show this detail easily, 
+            # API recent games doesn't always show this detail easily,
             # but gameOutcome might have it if we used a different endpoint.
             # For now, if result is T or we have OT info, keep it.
-            
-            shots_against = game.get('shotsAgainst', 0)
-            recent_games.append({
-                'date': game_date,
-                'opponent': opponent_abbrev,
-                'opponent_full': opponent_full,
-                'team_score': team_score,
-                'opponent_score': opponent_score,
-                'result': result, # Default result might be overwritten if we had better info
-                'goals': game.get('goals', 0),
-                'assists': game.get('assists', 0),
-                'points': game.get('points', 0),
-                'goals_against': game.get('goalsAgainst', 0) if is_goalie_data else None,
-                'save_percentage': round(game.get('savePctg', 0.0), 3) if game.get('savePctg') else None,
-                'shots_against': shots_against if is_goalie_data else None,
-                'saves': shots_against - game.get('goalsAgainst', 0) if is_goalie_data and game.get('goalsAgainst') is not None else None
-            })
+
+            shots_against = game.get("shotsAgainst", 0)
+            recent_games.append(
+                {
+                    "date": game_date,
+                    "opponent": opponent_abbrev,
+                    "opponent_full": opponent_full,
+                    "team_score": team_score,
+                    "opponent_score": opponent_score,
+                    "result": result,  # Default result might be overwritten if we had better info
+                    "goals": game.get("goals", 0),
+                    "assists": game.get("assists", 0),
+                    "points": game.get("points", 0),
+                    "goals_against": game.get("goalsAgainst", 0) if is_goalie_data else None,
+                    "save_percentage": round(game.get("savePctg", 0.0), 3)
+                    if game.get("savePctg")
+                    else None,
+                    "shots_against": shots_against if is_goalie_data else None,
+                    "saves": shots_against - game.get("goalsAgainst", 0)
+                    if is_goalie_data and game.get("goalsAgainst") is not None
+                    else None,
+                }
+            )
 
         return recent_games
     except Exception as e:
@@ -448,7 +455,9 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
     empty_net_goals_scored, empty_net_goals_allowed = detect_empty_net_goals(
         play_by_play_data, game_id, finnish_cache, game_data
     )
-    shorthanded_goals = detect_shorthanded_goals(play_by_play_data, finnish_cache) if play_by_play_data else {}
+    shorthanded_goals = (
+        detect_shorthanded_goals(play_by_play_data, finnish_cache) if play_by_play_data else {}
+    )
 
     # Get game context
     home_team = game_data.get("homeTeam", {}).get("abbrev", "UNK")
@@ -502,7 +511,7 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             finnish_player_data[player_id] = {
                 "player_cache": finnish_cache[player_id],
                 "game_stats": player,
-                "team_side": team_side
+                "team_side": team_side,
             }
 
     # Build Finnish player records
@@ -558,7 +567,11 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             "opponent": opponent,
             "opponent_full": opponent_team_full,
             "game_score": f"{player_score}-{opponent_score}",
-            "game_result": "W" if player_score > opponent_score else "L" if player_score < opponent_score else "T",
+            "game_result": "W"
+            if player_score > opponent_score
+            else "L"
+            if player_score < opponent_score
+            else "T",
             "game_venue": venue_info.get("venue", ""),
             "game_city": venue_info.get("city", ""),
             "game_address": venue_info.get("address", ""),
@@ -586,14 +599,16 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             "power_play_assists": 0,
             "short_handed_assists": 0,
             "shifts": game_stats.get("shifts", 0),
-            "average_ice_time": "00:00"
+            "average_ice_time": "00:00",
         }
 
         # Add goalie-specific stats
         if record["position"] == "G":
             record["saves"] = game_stats.get("saves", 0)
             record["shots_against"] = game_stats.get("shotsAgainst", 0)
-            record["save_percentage"] = round(game_stats.get("savePctg", 0.0), 3) if game_stats.get("savePctg") else 0.0
+            record["save_percentage"] = (
+                round(game_stats.get("savePctg", 0.0), 3) if game_stats.get("savePctg") else 0.0
+            )
             record["goals_against"] = game_stats.get("goalsAgainst", 0)
 
         # Get recent games (with delay to avoid rate limiting)
@@ -606,7 +621,7 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
         "home_team": home_team,
         "away_team": away_team,
         "home_score": home_score,
-        "away_score": away_score
+        "away_score": away_score,
     }
 
 
@@ -701,26 +716,34 @@ def generate_finnish_players_data(game_date):
             is_ot = pd.get("number", 0) > 3
             is_so = pd.get("periodType") == "SO"
 
-            game_summaries.append({
-                "gameId": game_id,
-                "homeTeam": home_team,
-                "awayTeam": away_team,
-                "homeScore": game_info.get("home_score", 0),
-                "awayScore": game_info.get("away_score", 0),
-                "gameState": normalized_state,
-                "gameType": game.get("gameType", 2),
-                "startTime": game.get("startTimeUTC", ""),
-                "isOT": is_ot,
-                "isSO": is_so,
-                "period": pd.get("number", 3),
-                "finnish_players_count": len(finnish_players),
-                "empty_net_goals": len([p for p in finnish_players if p.get('empty_net_goals', 0) > 0])
-            })
+            game_summaries.append(
+                {
+                    "gameId": game_id,
+                    "homeTeam": home_team,
+                    "awayTeam": away_team,
+                    "homeScore": game_info.get("home_score", 0),
+                    "awayScore": game_info.get("away_score", 0),
+                    "gameState": normalized_state,
+                    "gameType": game.get("gameType", 2),
+                    "startTime": game.get("startTimeUTC", ""),
+                    "isOT": is_ot,
+                    "isSO": is_so,
+                    "period": pd.get("number", 3),
+                    "finnish_players_count": len(finnish_players),
+                    "empty_net_goals": len(
+                        [p for p in finnish_players if p.get("empty_net_goals", 0) > 0]
+                    ),
+                }
+            )
 
             if finnish_players:
                 print(f"      ✅ Found {len(finnish_players)} Finnish players")
-                scorers = [f"{p['name']} ({p['points']}pts)" for p in finnish_players if p['points'] > 0]
-                empty_net_scorers = [p['name'] for p in finnish_players if p.get('empty_net_goals', 0) > 0]
+                scorers = [
+                    f"{p['name']} ({p['points']}pts)" for p in finnish_players if p["points"] > 0
+                ]
+                empty_net_scorers = [
+                    p["name"] for p in finnish_players if p.get("empty_net_goals", 0) > 0
+                ]
 
                 if scorers:
                     print(f"         Scorers: {', '.join(scorers)}")
@@ -740,7 +763,7 @@ def generate_finnish_players_data(game_date):
         "players": all_finnish_players,
         "total_players": len(all_finnish_players),
         "generated_at": datetime.now().isoformat(),
-        "source": "NHL API - Enhanced with Empty Net Goal Tracking"
+        "source": "NHL API - Enhanced with Empty Net Goal Tracking",
     }
 
 
@@ -760,7 +783,9 @@ def iter_date_range(start_date_str, end_date_str):
     end = parse_date(end_date_str)
 
     if current > end:
-        raise ValueError(f"Start date must be before or equal to end date: {start_date_str} > {end_date_str}")
+        raise ValueError(
+            f"Start date must be before or equal to end date: {start_date_str} > {end_date_str}"
+        )
 
     while current <= end:
         yield format_date(current)

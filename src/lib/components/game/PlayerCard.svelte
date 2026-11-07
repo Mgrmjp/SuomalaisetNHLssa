@@ -330,12 +330,13 @@ $effect(() => {
                 role="button"
                 tabindex="0"
                 onkeydown={_handleCardKeydown}
-                aria-label={highlight ? `Päivän onnistuja: ${highlight.text}. Käännä pelaajakortti ja näytä lisää tilastoja` : "Käännä pelaajakortti ja näytä lisää tilastoja"}
+                aria-label={highlight
+                    ? `Päivän onnistuja: ${highlight.text}. Käännä pelaajakortti ja näytä lisää tilastoja`
+                    : 'Käännä pelaajakortti ja näytä lisää tilastoja'}
                 in:scale={{ duration: 220, start: 0.96 }}
             >
-
                 <div class="card__watermark" aria-hidden="true">
-                    <TeamLogo team={player.team || "NHL"} size="160" />
+                    <TeamLogo team={player.team || 'NHL'} size="160" />
                 </div>
 
                 <div class="card__content">
@@ -350,18 +351,28 @@ $effect(() => {
                                     aria-haspopup="dialog"
                                     aria-expanded={showComprehensiveDetails}
                                     title="Avaa ottelutilastot ikkunaan"
-                                    onclick={(e) => { e.stopPropagation(); showComprehensiveDetails = true; }}
+                                    onclick={(e) => {
+                                        e.stopPropagation()
+                                        showComprehensiveDetails = true
+                                    }}
                                 >
-                                    <span class="card__name-label">{displayName}&nbsp;<PanelsTopLeft class="card__name-icon" size={11} aria-hidden="true" /></span>
+                                    <span class="card__name-label"
+                                        >{displayName}&nbsp;<PanelsTopLeft
+                                            class="card__name-icon"
+                                            size={11}
+                                            aria-hidden="true"
+                                        /></span
+                                    >
                                 </button>
                             </h3>
                             <p class="card__team">
                                 <span class="card__team-text">
                                     {#if player.jersey_number || player.jerseyNumber}
-                                        #{player.jersey_number || player.jerseyNumber} <span class="card__dot">|</span>
+                                        #{player.jersey_number || player.jerseyNumber}
+                                        <span class="card__dot">|</span>
                                     {/if}
-                                    {player.position || player.positionCode || "N/A"}
-                                    <span class="card__team-abbrev"> · {player.team || "NHL"}</span>
+                                    {player.position || player.positionCode || 'N/A'}
+                                    <span class="card__team-abbrev"> · {player.team || 'NHL'}</span>
                                 </span>
                             </p>
                         </div>
@@ -374,26 +385,67 @@ $effect(() => {
                     <!-- Primary stat -->
                     {#if !isGoalie}
                         <dl class="card__scoring">
-                            <div><dt>maalia</dt><dd>{player.goals || 0}</dd></div>
-                            <div><dt>syöttöä</dt><dd>{player.assists || 0}</dd></div>
-                            <div><dt>pistettä</dt><dd>{dailyPlayerPoints(player)}</dd></div>
-                            <div><dt>+/-</dt><dd class:card__scoring--positive={(player.plus_minus ?? player.plusMinus ?? 0) > 0} class:card__scoring--negative={(player.plus_minus ?? player.plusMinus ?? 0) < 0}>{(player.plus_minus ?? player.plusMinus ?? 0) > 0 ? '+' : ''}{player.plus_minus ?? player.plusMinus ?? 0}</dd></div>
+                            <div>
+                                <dt>maalia</dt>
+                                <dd>{player.goals || 0}</dd>
+                            </div>
+                            <div>
+                                <dt>syöttöä</dt>
+                                <dd>{player.assists || 0}</dd>
+                            </div>
+                            <div>
+                                <dt>pistettä</dt>
+                                <dd>{dailyPlayerPoints(player)}</dd>
+                            </div>
+                            <div>
+                                <dt>+/-</dt>
+                                <dd
+                                    class:card__scoring--positive={(player.plus_minus ??
+                                        player.plusMinus ??
+                                        0) > 0}
+                                    class:card__scoring--negative={(player.plus_minus ??
+                                        player.plusMinus ??
+                                        0) < 0}
+                                >
+                                    {(player.plus_minus ?? player.plusMinus ?? 0) > 0
+                                        ? '+'
+                                        : ''}{player.plus_minus ?? player.plusMinus ?? 0}
+                                </dd>
+                            </div>
                             {#if (player.penalty_minutes ?? player.penaltyMinutes ?? 0) > 0}
-                                <div><dt>ran. min</dt><dd>{player.penalty_minutes ?? player.penaltyMinutes}</dd></div>
+                                <div>
+                                    <dt>ran. min</dt>
+                                    <dd>{player.penalty_minutes ?? player.penaltyMinutes}</dd>
+                                </div>
                             {/if}
                         </dl>
                     {:else if _primaryStat}
                         <div class="card__stat card__stat--goalie">
                             <div
                                 class="card__save-gauge"
-                                class:card__save-gauge--strong={goalieSavePct >= 92 && goalieSavePct < 100}
+                                class:card__save-gauge--strong={goalieSavePct >= 92 &&
+                                    goalieSavePct < 100}
                                 class:card__save-gauge--legendary={goalieSavePct === 100}
-                                class:card__save-gauge--moderate={goalieSavePct >= 90 && goalieSavePct < 92}
+                                class:card__save-gauge--moderate={goalieSavePct >= 90 &&
+                                    goalieSavePct < 92}
                                 class:card__save-gauge--low={goalieSavePct < 90}
                             >
-                                <svg class="card__save-arc" viewBox="0 0 260 150" fill="none" aria-hidden="true" focusable="false">
+                                <svg
+                                    class="card__save-arc"
+                                    viewBox="0 0 260 150"
+                                    fill="none"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                >
                                     <defs>
-                                        <linearGradient id={`${cardId}-save-gradient`} x1="16" y1="132" x2="244" y2="132" gradientUnits="userSpaceOnUse">
+                                        <linearGradient
+                                            id={`${cardId}-save-gradient`}
+                                            x1="16"
+                                            y1="132"
+                                            x2="244"
+                                            y2="132"
+                                            gradientUnits="userSpaceOnUse"
+                                        >
                                             {#if goalieSavePct === 100}
                                                 <stop stop-color="#fef3c7" />
                                                 <stop offset="0.22" stop-color="#d97706" />
@@ -402,14 +454,31 @@ $effect(() => {
                                                 <stop offset="0.65" stop-color="#fbbf24" />
                                                 <stop offset="1" stop-color="#a16207" />
                                             {:else}
-                                                <stop stop-color="var(--save-gauge-color)" stop-opacity="0.4" />
-                                                <stop offset="0.2" stop-color="var(--save-gauge-color)" />
-                                                <stop offset="0.6" stop-color="var(--save-gauge-color)" stop-opacity="0.85" />
-                                                <stop offset="1" stop-color="var(--save-gauge-color)" stop-opacity="0.5" />
+                                                <stop
+                                                    stop-color="var(--save-gauge-color)"
+                                                    stop-opacity="0.4"
+                                                />
+                                                <stop
+                                                    offset="0.2"
+                                                    stop-color="var(--save-gauge-color)"
+                                                />
+                                                <stop
+                                                    offset="0.6"
+                                                    stop-color="var(--save-gauge-color)"
+                                                    stop-opacity="0.85"
+                                                />
+                                                <stop
+                                                    offset="1"
+                                                    stop-color="var(--save-gauge-color)"
+                                                    stop-opacity="0.5"
+                                                />
                                             {/if}
                                         </linearGradient>
                                     </defs>
-                                    <path class="card__save-track" d="M16 132a114 114 0 0 1 228 0" />
+                                    <path
+                                        class="card__save-track"
+                                        d="M16 132a114 114 0 0 1 228 0"
+                                    />
                                     {#if goalieSavePct > 0}
                                         <path
                                             class="card__save-progress"
@@ -422,7 +491,9 @@ $effect(() => {
                                 </svg>
                                 <div class="card__save-content">
                                     <span class="card__save-label">{_primaryStat.label}</span>
-                                    <strong class="card__stat-value">{_primaryStat.value}{_primaryStat.unit}</strong>
+                                    <strong class="card__stat-value"
+                                        >{_primaryStat.value}{_primaryStat.unit}</strong
+                                    >
                                     {#if _statBreakdown}
                                         <small class="card__save-breakdown">{_statBreakdown}</small>
                                     {/if}
@@ -443,20 +514,28 @@ $effect(() => {
                         {#if isGoalie}
                             {#if player.time_on_ice || player.toi}
                                 <div class="card__sub-stat" title="Peliaika">
-                                    <span class="card__sub-stat-value">{player.time_on_ice || player.toi}</span>
+                                    <span class="card__sub-stat-value"
+                                        >{player.time_on_ice || player.toi}</span
+                                    >
                                     <span class="card__sub-stat-label">peliaika</span>
                                 </div>
                             {/if}
                             <div class="card__sub-stat" title="Päästetyt maalit">
                                 <span
                                     class="card__sub-stat-value"
-                                    style="color: {player.goals_against === 0 ? 'var(--accent)' : player.goals_against >= 4 ? '#ef4444' : undefined}"
-                                >{player.goals_against}</span>
+                                    style="color: {player.goals_against === 0
+                                        ? 'var(--accent)'
+                                        : player.goals_against >= 4
+                                          ? '#ef4444'
+                                          : undefined}">{player.goals_against}</span
+                                >
                                 <span class="card__sub-stat-label">pääst.</span>
                             </div>
                             {#if _hasENG}
                                 <div class="card__sub-stat" title="Tyhjään maaliin">
-                                    <span class="card__sub-stat-value text-red-500">{player.empty_net_goals}</span>
+                                    <span class="card__sub-stat-value text-red-500"
+                                        >{player.empty_net_goals}</span
+                                    >
                                     <span class="card__sub-stat-label">tyhjä</span>
                                 </div>
                             {/if}
@@ -476,8 +555,13 @@ $effect(() => {
                             class:card__gamebar--loss={_didLose}
                         >
                             {#if _matchupTeams}
-                                <span class="card__gamebar-team" aria-label={`Vierasjoukkue ${_matchupTeams[0]}`}>
-                                    <span aria-hidden="true"><TeamLogo team={_matchupTeams[0]} size="28" /></span>
+                                <span
+                                    class="card__gamebar-team"
+                                    aria-label={`Vierasjoukkue ${_matchupTeams[0]}`}
+                                >
+                                    <span aria-hidden="true"
+                                        ><TeamLogo team={_matchupTeams[0]} size="28" /></span
+                                    >
                                     {_matchupTeams[0]}
                                 </span>
                             {:else}
@@ -485,21 +569,47 @@ $effect(() => {
                             {/if}
                             <div class="card__gamebar-score-wrap">
                                 {#if _formattedScore}
-                                    <span class="card__gamebar-score" aria-label={_didWin ? `Voitto ${_matchupScore}` : _didLose ? `Tappio ${_matchupScore}` : _matchupScore}>{_matchupScore}</span>
+                                    <span
+                                        class="card__gamebar-score"
+                                        aria-label={_didWin
+                                            ? `Voitto ${_matchupScore}`
+                                            : _didLose
+                                              ? `Tappio ${_matchupScore}`
+                                              : _matchupScore}>{_matchupScore}</span
+                                    >
                                 {:else if _matchupTeams}
                                     <span class="card__gamebar-at" aria-label="vastaan">@</span>
                                 {/if}
                                 {#if _isLive}
-                                    <span class="card__gamebar-status card__gamebar-status--live">LIVE{#if Number.isInteger(_game?.period) && _game.period > 0} · {_game.isSO ? 'VL' : _game.period <= 3 ? `${_game.period}. erä` : 'JA'}{/if}</span>
+                                    <span class="card__gamebar-status card__gamebar-status--live"
+                                        >LIVE{#if Number.isInteger(_game?.period) && _game.period > 0}
+                                            · {_game.isSO
+                                                ? 'VL'
+                                                : _game.period <= 3
+                                                  ? `${_game.period}. erä`
+                                                  : 'JA'}{/if}</span
+                                    >
                                 {:else if _showResult}
-                                    <span class="card__gamebar-result">{_didWin ? 'Voitto' : _didLose ? 'Tappio' : 'Päättynyt'}{#if _gameExtraTimeLabel} · {_gameExtraTimeLabel}{/if}</span>
+                                    <span class="card__gamebar-result"
+                                        >{_didWin
+                                            ? 'Voitto'
+                                            : _didLose
+                                              ? 'Tappio'
+                                              : 'Päättynyt'}{#if _gameExtraTimeLabel}
+                                            · {_gameExtraTimeLabel}{/if}</span
+                                    >
                                 {:else}
                                     <span class="card__gamebar-status">Tulossa</span>
                                 {/if}
                             </div>
                             {#if _matchupTeams}
-                                <span class="card__gamebar-team card__gamebar-team--home" aria-label={`Kotijoukkue ${_matchupTeams[1]}`}>
-                                    <span aria-hidden="true"><TeamLogo team={_matchupTeams[1]} size="28" /></span>
+                                <span
+                                    class="card__gamebar-team card__gamebar-team--home"
+                                    aria-label={`Kotijoukkue ${_matchupTeams[1]}`}
+                                >
+                                    <span aria-hidden="true"
+                                        ><TeamLogo team={_matchupTeams[1]} size="28" /></span
+                                    >
                                     {_matchupTeams[1]}
                                 </span>
                             {/if}
@@ -523,10 +633,8 @@ $effect(() => {
                 onkeydown={_handleCardKeydown}
                 aria-label="Käännä pelaajakortti takaisin"
             >
-
-
                 <div class="card__watermark" aria-hidden="true">
-                    <TeamLogo team={player.team || "NHL"} size="160" />
+                    <TeamLogo team={player.team || 'NHL'} size="160" />
                 </div>
 
                 <div class="card__content">
@@ -594,7 +702,9 @@ $effect(() => {
                             {/if}
                             {#if player.faceoff_wins !== undefined && player.faceoffs_taken !== undefined && player.faceoffs_taken > 0}
                                 <div class="card__back-stat">
-                                    <div class="card__back-stat-value">{player.faceoff_wins}/{player.faceoffs_taken}</div>
+                                    <div class="card__back-stat-value">
+                                        {player.faceoff_wins}/{player.faceoffs_taken}
+                                    </div>
                                     <div class="card__back-stat-label">Aloitukset</div>
                                 </div>
                             {/if}
@@ -625,7 +735,7 @@ $effect(() => {
         onclick={_handleBackdropClick}
         role="button"
         tabindex="0"
-        onkeydown={(e) => e.key === "Escape" && _closeSeasonStats(e)}
+        onkeydown={(e) => e.key === 'Escape' && _closeSeasonStats(e)}
         aria-label="Close modal"
     >
         <div
@@ -643,8 +753,15 @@ $effect(() => {
                             alt={displayName}
                             class="game-player-card__modal-photo"
                             class:blurred={_photoLoading || _imageLoading}
-                            onload={() => { _photoLoading = false; _imageLoading = false; }}
-                            onerror={() => { _photoError = true; _photoLoading = false; _imageLoading = false; }}
+                            onload={() => {
+                                _photoLoading = false
+                                _imageLoading = false
+                            }}
+                            onerror={() => {
+                                _photoError = true
+                                _photoLoading = false
+                                _imageLoading = false
+                            }}
                         />
                         {#if (_photoLoading || _imageLoading) && _lqipUrl}
                             <img src={_lqipUrl} alt="" class="game-player-card__modal-photo-lqip" />
@@ -656,7 +773,9 @@ $effect(() => {
                     {/if}
                 </div>
                 <div>
-                    <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">{displayName}</h3>
+                    <h3 id="season-stats-title" class="text-lg font-bold text-gray-900">
+                        {displayName}
+                    </h3>
                     <div class="text-sm text-gray-500 flex items-center gap-2">
                         <span>{_teamWithCity}</span>
                         <span>•</span>
@@ -674,16 +793,32 @@ $effect(() => {
             <div class="p-6">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <div class="text-2xl font-bold text-gray-900">{player.season_goals || 0}</div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Maalit</div>
+                        <div class="text-2xl font-bold text-gray-900">
+                            {player.season_goals || 0}
+                        </div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
+                            Maalit
+                        </div>
                     </div>
                     <div class="bg-gray-50 p-4 rounded-lg text-center">
-                        <div class="text-2xl font-bold text-gray-900">{player.season_assists || 0}</div>
-                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">Syötöt</div>
+                        <div class="text-2xl font-bold text-gray-900">
+                            {player.season_assists || 0}
+                        </div>
+                        <div class="text-xs text-gray-500 uppercase tracking-wider mt-1">
+                            Syötöt
+                        </div>
                     </div>
-                    <div class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100">
-                        <div class="text-3xl font-bold text-finnish-blue-600">{player.season_points || 0}</div>
-                        <div class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium">Pisteet yhteensä</div>
+                    <div
+                        class="bg-finnish-blue-50 p-4 rounded-lg text-center col-span-2 border border-finnish-blue-100"
+                    >
+                        <div class="text-3xl font-bold text-finnish-blue-600">
+                            {player.season_points || 0}
+                        </div>
+                        <div
+                            class="text-xs text-finnish-blue-600 uppercase tracking-wider mt-1 font-medium"
+                        >
+                            Pisteet yhteensä
+                        </div>
                     </div>
                 </div>
             </div>

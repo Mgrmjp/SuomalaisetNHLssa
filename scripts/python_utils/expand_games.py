@@ -12,6 +12,7 @@ from pathlib import Path
 
 NHL_API_BASE = "https://api-web.nhle.com"
 
+
 def fetch_from_api(url, max_retries=2):
     """Fetch data from NHL API with retry logic"""
     for attempt in range(max_retries):
@@ -26,10 +27,12 @@ def fetch_from_api(url, max_retries=2):
             time.sleep(2)  # Wait before retry
     return None
 
+
 def get_game_details(game_id):
     """Get detailed game information including player stats"""
     url = f"{NHL_API_BASE}/v1/gamecenter/{game_id}/boxscore"
     return fetch_from_api(url)
+
 
 def extract_all_player_data(game_data, game_id, home_team, away_team, game_date):
     """Extract all player data from game"""
@@ -57,44 +60,48 @@ def extract_all_player_data(game_data, game_id, home_team, away_team, game_date)
                 saves = player.get("saves", 0)
                 save_pct = player.get("savePctg", 0.0)
 
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": away_team,
-                    "position": position,
-                    "goals": 0,
-                    "assists": 0,
-                    "points": 0,
-                    "shots": 0,
-                    "plusMinus": 0,
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": True,
-                    "saves": saves,
-                    "savePct": round(save_pct, 3) if save_pct else 0.0,
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": away_team,
+                        "position": position,
+                        "goals": 0,
+                        "assists": 0,
+                        "points": 0,
+                        "shots": 0,
+                        "plusMinus": 0,
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": True,
+                        "saves": saves,
+                        "savePct": round(save_pct, 3) if save_pct else 0.0,
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
             else:
                 # Skater stats (forwards and defense)
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": away_team,
-                    "position": position,
-                    "goals": player.get("goals", 0),
-                    "assists": player.get("assists", 0),
-                    "points": player.get("points", 0),
-                    "shots": player.get("sog", 0),
-                    "plusMinus": player.get("plusMinus", 0),
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": False,
-                    "saves": 0,
-                    "savePct": 0.0,
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": away_team,
+                        "position": position,
+                        "goals": player.get("goals", 0),
+                        "assists": player.get("assists", 0),
+                        "points": player.get("points", 0),
+                        "shots": player.get("sog", 0),
+                        "plusMinus": player.get("plusMinus", 0),
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": False,
+                        "saves": 0,
+                        "savePct": 0.0,
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
 
     # Process home team players (forwards, defense, goalies)
     home_stats = player_stats.get("homeTeam", {})
@@ -110,46 +117,51 @@ def extract_all_player_data(game_data, game_id, home_team, away_team, game_date)
                 saves = player.get("saves", 0)
                 save_pct = player.get("savePctg", 0.0)
 
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": home_team,
-                    "position": position,
-                    "goals": 0,
-                    "assists": 0,
-                    "points": 0,
-                    "shots": 0,
-                    "plusMinus": 0,
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": True,
-                    "saves": saves,
-                    "savePct": round(save_pct, 3) if save_pct else 0.0,
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": home_team,
+                        "position": position,
+                        "goals": 0,
+                        "assists": 0,
+                        "points": 0,
+                        "shots": 0,
+                        "plusMinus": 0,
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": True,
+                        "saves": saves,
+                        "savePct": round(save_pct, 3) if save_pct else 0.0,
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
             else:
                 # Skater stats (forwards and defense)
-                players.append({
-                    "playerId": player_id,
-                    "name": name.strip(),
-                    "team": home_team,
-                    "position": position,
-                    "goals": player.get("goals", 0),
-                    "assists": player.get("assists", 0),
-                    "points": player.get("points", 0),
-                    "shots": player.get("sog", 0),
-                    "plusMinus": player.get("plusMinus", 0),
-                    "pim": player.get("pim", 0),
-                    "timeOnIce": player.get("toi", "00:00"),
-                    "isGoalie": False,
-                    "saves": 0,
-                    "savePct": 0.0,
-                    "gameId": game_id,
-                    "gameDate": game_date
-                })
+                players.append(
+                    {
+                        "playerId": player_id,
+                        "name": name.strip(),
+                        "team": home_team,
+                        "position": position,
+                        "goals": player.get("goals", 0),
+                        "assists": player.get("assists", 0),
+                        "points": player.get("points", 0),
+                        "shots": player.get("sog", 0),
+                        "plusMinus": player.get("plusMinus", 0),
+                        "pim": player.get("pim", 0),
+                        "timeOnIce": player.get("toi", "00:00"),
+                        "isGoalie": False,
+                        "saves": 0,
+                        "savePct": 0.0,
+                        "gameId": game_id,
+                        "gameDate": game_date,
+                    }
+                )
 
     return players
+
 
 def main():
     print("🏒 Expanding existing Finnish player data to include ALL players...")
@@ -180,7 +192,7 @@ def main():
         print(f"\n📅 Processing {date_str}...")
 
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 finnish_data = json.load(f)
         except Exception as e:
             print(f"   ❌ Error reading {file_path}: {e}")
@@ -201,7 +213,7 @@ def main():
                         "opponent": player["opponent"],
                         "game_score": player.get("game_score", ""),
                         "game_result": player.get("game_result", ""),
-                        "team": player.get("team", "")
+                        "team": player.get("team", ""),
                     }
 
         print(f"   🎯 Found {len(game_ids)} unique games with Finnish players")
@@ -225,7 +237,7 @@ def main():
                     game_id,
                     game_details.get("homeTeam", {}).get("abbrev", "UNK"),
                     game_details.get("awayTeam", {}).get("abbrev", "UNK"),
-                    date_str
+                    date_str,
                 )
                 date_players.extend(players)
 
@@ -235,17 +247,21 @@ def main():
                 home_score = game_details.get("homeTeam", {}).get("score", 0)
                 away_score = game_details.get("awayTeam", {}).get("score", 0)
 
-                all_games.append({
-                    "gameId": game_id,
-                    "gameDate": date_str,
-                    "homeTeam": home_team,
-                    "awayTeam": away_team,
-                    "homeScore": home_score,
-                    "awayScore": away_score,
-                    "players_count": len(players)
-                })
+                all_games.append(
+                    {
+                        "gameId": game_id,
+                        "gameDate": date_str,
+                        "homeTeam": home_team,
+                        "awayTeam": away_team,
+                        "homeScore": home_score,
+                        "awayScore": away_score,
+                        "players_count": len(players),
+                    }
+                )
 
-                print(f"      ✅ Extracted {len(players)} players ({away_team} {away_score} @ {home_team} {home_score})")
+                print(
+                    f"      ✅ Extracted {len(players)} players ({away_team} {away_score} @ {home_team} {home_score})"
+                )
 
             else:
                 print(f"      ❌ Failed to get details for game {game_id}")
@@ -263,11 +279,11 @@ def main():
             "players": date_players,
             "total_players": len(date_players),
             "total_games": len(game_ids),
-            "generated_at": datetime.now().isoformat()
+            "generated_at": datetime.now().isoformat(),
         }
 
         output_file = output_dir / f"{date_str}.json"
-        with open(output_file, 'w', encoding='utf-8') as f:
+        with open(output_file, "w", encoding="utf-8") as f:
             json.dump(daily_data, f, indent=2, ensure_ascii=False)
 
         print(f"   💾 Saved {len(date_players)} players from {len(game_ids)} games")
@@ -281,11 +297,11 @@ def main():
         "total_games": len(all_games),
         "total_players": len(all_players),
         "processed_dates": processed_count,
-        "generated_at": datetime.now().isoformat()
+        "generated_at": datetime.now().isoformat(),
     }
 
     season_file = output_dir / "season-2025-26-november-expanded.json"
-    with open(season_file, 'w', encoding='utf-8') as f:
+    with open(season_file, "w", encoding="utf-8") as f:
         json.dump(season_data, f, indent=2, ensure_ascii=False)
 
     print(f"\n✅ Expansion complete!")
@@ -312,6 +328,7 @@ def main():
         print(f"\n📊 Players by Team:")
         for team, count in sorted(team_counts.items(), key=lambda x: x[1], reverse=True)[:10]:
             print(f"   {team}: {count} players")
+
 
 if __name__ == "__main__":
     main()

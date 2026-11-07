@@ -119,14 +119,9 @@ class OfficialLeagueCollector:
         if player_name_lower and player_name_lower in alt_text:
             return True
 
-        return any(
-            token in normalized_url
-            for token in ("player", "photo", "headshot", "portrait")
-        )
+        return any(token in normalized_url for token in ("player", "photo", "headshot", "portrait"))
 
-    def _fetch_profile_photo(
-        self, profile_url: Optional[str], player_name: str
-    ) -> Optional[str]:
+    def _fetch_profile_photo(self, profile_url: Optional[str], player_name: str) -> Optional[str]:
         """Fetch a player portrait from an official profile page when the stats feed lacks one."""
         normalized_profile_url = self._normalize_url(profile_url)
         if not normalized_profile_url:
@@ -163,9 +158,7 @@ class OfficialLeagueCollector:
         self._profile_photo_cache[normalized_profile_url] = None
         return None
 
-    def _get_chl_team_site_base(
-        self, league_code: str, team_name: str
-    ) -> Optional[str]:
+    def _get_chl_team_site_base(self, league_code: str, team_name: str) -> Optional[str]:
         league_sites = CHL_TEAM_SITE_BASES.get(league_code, {})
         return league_sites.get(team_name)
 
@@ -222,9 +215,7 @@ class OfficialLeagueCollector:
             print(f"  Error: {e}")
         return None
 
-    def is_finnish(
-        self, name: str, nationality: str = "", birthplace: str = ""
-    ) -> bool:
+    def is_finnish(self, name: str, nationality: str = "", birthplace: str = "") -> bool:
         """Check if player is Finnish."""
         nat = nationality.strip().upper() if nationality else ""
 
@@ -241,9 +232,7 @@ class OfficialLeagueCollector:
                 return True
         return False
 
-    def _get_hockeytech_params(
-        self, league_name: str, base_stats_url: str
-    ) -> Dict[str, str]:
+    def _get_hockeytech_params(self, league_name: str, base_stats_url: str) -> Dict[str, str]:
         """Dynamically extract the valid key and season from the league's stats page."""
         try:
             print(f"  [{league_name}] Fetching valid API key...")
@@ -260,9 +249,7 @@ class OfficialLeagueCollector:
             if key_match and season_match:
                 key = key_match.group(1)
                 season = season_match.group(1)
-                client_code = (
-                    client_match.group(1) if client_match else league_name.lower()
-                )
+                client_code = client_match.group(1) if client_match else league_name.lower()
                 print(f"  [{league_name}] Found key: {key}, season: {season}")
                 return {"key": key, "season": season, "client_code": client_code}
         except Exception as e:
@@ -277,17 +264,11 @@ class OfficialLeagueCollector:
         players = []
 
         # Try to extract the current key from the stats page (it rotates each season)
-        ht_params = self._get_hockeytech_params(
-            "AHL", "https://theahl.com/stats/player-stats"
-        )
+        ht_params = self._get_hockeytech_params("AHL", "https://theahl.com/stats/player-stats")
 
         # Real AHL HockeyTech JSONP endpoint (discovered via browser network inspection)
         # Key and season are extracted dynamically, with fallbacks for 2025-26 season
-        key = (
-            ht_params.get("key", "ccb91f29d6744675")
-            if ht_params
-            else "ccb91f29d6744675"
-        )
+        key = ht_params.get("key", "ccb91f29d6744675") if ht_params else "ccb91f29d6744675"
         ahl_season = ht_params.get("season", "90") if ht_params else "90"
 
         # AHL uses JSONP (Angular callback format), get all players sorted by points
@@ -480,16 +461,12 @@ class OfficialLeagueCollector:
                                     "team": row.get("team_code", "Unknown"),
                                     "league": "ECHL",
                                     "position": row.get("position", "F"),
-                                    "games_played": int(
-                                        row.get("games_played", 0) or 0
-                                    ),
+                                    "games_played": int(row.get("games_played", 0) or 0),
                                     "goals": int(row.get("goals", 0) or 0),
                                     "assists": int(row.get("assists", 0) or 0),
                                     "points": int(row.get("points", 0) or 0),
                                     "plus_minus": int(row.get("plus_minus", 0) or 0),
-                                    "penalty_minutes": int(
-                                        row.get("penalty_minutes", 0) or 0
-                                    ),
+                                    "penalty_minutes": int(row.get("penalty_minutes", 0) or 0),
                                     "nationality": "FIN",
                                     "source": "hockeytech",
                                     "source_league": "echl",
@@ -554,16 +531,12 @@ class OfficialLeagueCollector:
                                     "team": row.get("team_code", "Unknown"),
                                     "league": "USHL",
                                     "position": row.get("position", "F"),
-                                    "games_played": int(
-                                        row.get("games_played", 0) or 0
-                                    ),
+                                    "games_played": int(row.get("games_played", 0) or 0),
                                     "goals": int(row.get("goals", 0) or 0),
                                     "assists": int(row.get("assists", 0) or 0),
                                     "points": int(row.get("points", 0) or 0),
                                     "plus_minus": int(row.get("plus_minus", 0) or 0),
-                                    "penalty_minutes": int(
-                                        row.get("penalty_minutes", 0) or 0
-                                    ),
+                                    "penalty_minutes": int(row.get("penalty_minutes", 0) or 0),
                                     "nationality": "FIN",
                                     "headshot_url": self._build_hockeytech_headshot_url(
                                         "ushl", str(player_id)
@@ -610,9 +583,7 @@ class OfficialLeagueCollector:
         try:
             response = self.session.get(url, params=params, timeout=30)
             if response.status_code == 200:
-                players = self._parse_modulekit_skaters(
-                    response.json(), "OHL", "ohl", "83"
-                )
+                players = self._parse_modulekit_skaters(response.json(), "OHL", "ohl", "83")
             else:
                 print(f"  OHL HTTP {response.status_code}")
         except Exception as e:
@@ -639,9 +610,7 @@ class OfficialLeagueCollector:
         try:
             response = self.session.get(url, params=params, timeout=30)
             if response.status_code == 200:
-                players = self._parse_modulekit_skaters(
-                    response.json(), "WHL", "whl", "289"
-                )
+                players = self._parse_modulekit_skaters(response.json(), "WHL", "whl", "289")
             else:
                 print(f"  WHL HTTP {response.status_code}")
         except Exception as e:
@@ -668,9 +637,7 @@ class OfficialLeagueCollector:
         try:
             response = self.session.get(url, params=params, timeout=30)
             if response.status_code == 200:
-                players = self._parse_modulekit_skaters(
-                    response.json(), "QMJHL", "qmjhl", "211"
-                )
+                players = self._parse_modulekit_skaters(response.json(), "QMJHL", "qmjhl", "211")
             else:
                 print(f"  QMJHL HTTP {response.status_code}")
         except Exception as e:
@@ -702,9 +669,7 @@ class OfficialLeagueCollector:
                                 {
                                     "player_id": f"khl_{player.get('id', '')}",
                                     "name": name,
-                                    "team": player.get("team", {}).get(
-                                        "name", "Unknown"
-                                    ),
+                                    "team": player.get("team", {}).get("name", "Unknown"),
                                     "league": "KHL",
                                     "position": player.get("position", "F"),
                                     "games_played": player.get("games", 0),
@@ -781,9 +746,7 @@ class OfficialLeagueCollector:
                             "plus_minus": int(row.get("PlusMinus", 0) or 0),
                             "penalty_minutes": int(row.get("PIM", 0) or 0),
                             "nationality": nat or "FIN",
-                            "headshot_url": self._extract_shl_headshot_url(
-                                info.get("playerMedia")
-                            ),
+                            "headshot_url": self._extract_shl_headshot_url(info.get("playerMedia")),
                             "source": "shl-statsv2",
                             "source_league": "shl",
                             "scraped_at": datetime.now().isoformat(),
@@ -801,9 +764,7 @@ class OfficialLeagueCollector:
         """Get Liiga players from liiga.fi v2 API (including goalie stats)."""
         players = []
 
-        year_end = (
-            int(season.split("-")[1]) if "-" in season else datetime.now().year + 1
-        )
+        year_end = int(season.split("-")[1]) if "-" in season else datetime.now().year + 1
 
         url = f"https://www.liiga.fi/api/v2/players/stats/summed/{year_end}/{year_end}/runkosarja/false"
         headers = {
@@ -824,17 +785,13 @@ class OfficialLeagueCollector:
                     if not self.is_finnish(name, nat):
                         continue
 
-                    is_goalie = (
-                        player.get("goalkeeper") == True or player.get("role") == "MV"
-                    )
+                    is_goalie = player.get("goalkeeper") == True or player.get("role") == "MV"
 
                     # v2 API returns savePercentage as percentage (89.4), convert to decimal (0.894)
                     raw_save_pct = player.get("savePercentage")
                     save_pct = None
                     if raw_save_pct is not None:
-                        save_pct = (
-                            raw_save_pct / 100 if raw_save_pct > 1 else raw_save_pct
-                        )
+                        save_pct = raw_save_pct / 100 if raw_save_pct > 1 else raw_save_pct
 
                     player_data = {
                         "player_id": f"liiga_{player.get('playerId', '')}",
@@ -857,9 +814,7 @@ class OfficialLeagueCollector:
 
                     if is_goalie:
                         player_data["save_percentage"] = save_pct
-                        player_data["goals_against_average"] = player.get(
-                            "goalsAgainstAvg"
-                        )
+                        player_data["goals_against_average"] = player.get("goalsAgainstAvg")
                         player_data["shutouts"] = player.get("shutOut", 0)
 
                     players.append(player_data)
@@ -1026,19 +981,14 @@ def enrich_league_files_with_birthdates():
     import unicodedata
 
     finnish_prospects_path = (
-        Path(__file__).parent.parent.parent
-        / "static"
-        / "data"
-        / "finnish_prospects.json"
+        Path(__file__).parent.parent.parent / "static" / "data" / "finnish_prospects.json"
     )
     if not finnish_prospects_path.exists():
         print("No finnish_prospects.json found, skipping birthdate enrichment")
         return
 
     try:
-        finnish_prospects = json.loads(
-            finnish_prospects_path.read_text(encoding="utf-8")
-        )
+        finnish_prospects = json.loads(finnish_prospects_path.read_text(encoding="utf-8"))
     except Exception as e:
         print(f"Failed to read finnish_prospects.json: {e}")
         return

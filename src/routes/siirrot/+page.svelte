@@ -9,16 +9,22 @@ const { data } = $props()
 
 <svelte:head>
     <title>Suomalaisten NHL-siirrot | Suomi NHL</title>
-    <meta name="description" content="Seuraa suomalaisten NHL-pelaajien offseason-siirtoja, pelaajakauppoja ja vapaan agentin sopimuksia." />
+    <meta
+        name="description"
+        content="Seuraa suomalaisten NHL-pelaajien offseason-siirtoja, pelaajakauppoja ja vapaan agentin sopimuksia."
+    />
     <meta property="og:title" content="Suomalaisten NHL-siirrot | Suomi NHL" />
-    <meta property="og:description" content="Suomalaispelaajien offseason-siirrot, pelaajakaupat ja vapaan agentin sopimukset." />
+    <meta
+        property="og:description"
+        content="Suomalaispelaajien offseason-siirrot, pelaajakaupat ja vapaan agentin sopimukset."
+    />
 </svelte:head>
 
 <PageShell width="dashboard">
     <PageHeader
         title="Suomalaisten NHL-siirrot"
         subtitle="Pelaajakaupat ja sopimukset offseason-kaudella"
-        backHref={base + "/"}
+        backHref={base + '/'}
         backLabel="Takaisin tuloksiin"
         children={undefined}
     />

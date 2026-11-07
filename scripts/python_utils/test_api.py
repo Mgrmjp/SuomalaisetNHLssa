@@ -8,6 +8,7 @@ import time
 
 NHL_API_BASE = "https://api-web.nhle.com"
 
+
 def fetch_from_api(url, max_retries=2):
     """Fetch data from NHL API with retry logic"""
     for attempt in range(max_retries):
@@ -22,6 +23,7 @@ def fetch_from_api(url, max_retries=2):
             time.sleep(1)  # Wait before retry
     return None
 
+
 def get_schedule_for_date(date):
     """Get NHL schedule for a specific date"""
     url = f"{NHL_API_BASE}/v1/schedule/{date}"
@@ -32,11 +34,9 @@ def get_schedule_for_date(date):
     # Extract games from the nested gameWeek structure
     game_week = data.get("gameWeek", [])
     if game_week and len(game_week) > 0:
-        return {
-            "games": game_week[0].get("games", []),
-            "date": game_week[0].get("date", date)
-        }
+        return {"games": game_week[0].get("games", []), "date": game_week[0].get("date", date)}
     return {"games": [], "date": date}
+
 
 def test_api():
     print("🏒 Testing NHL API with various dates...")
@@ -64,11 +64,12 @@ def test_api():
                     away = game.get("awayTeam", {}).get("abbrev", "UNK")
                     state = game.get("gameState", "UNK")
                     game_id = game.get("id", "UNK")
-                    print(f"   {i+1}. {away} @ {home} ({state}) - ID: {game_id}")
+                    print(f"   {i + 1}. {away} @ {home} ({state}) - ID: {game_id}")
             else:
                 print("   ❌ No games found")
         else:
             print("   ❌ Failed to fetch schedule")
+
 
 if __name__ == "__main__":
     test_api()

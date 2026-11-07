@@ -44,7 +44,7 @@ onMount(() => {
 
 <PageShell width="content" compact>
     <div class="error-page">
-        <a href={base + "/"} class="back-link">
+        <a href={base + '/'} class="back-link">
             <ChevronLeft size={16} aria-hidden="true" />
             Takaisin etusivulle
         </a>
@@ -63,11 +63,11 @@ onMount(() => {
                 <div class="error-code" aria-hidden="true">{status}</div>
 
                 <div class="error-actions">
-                    <a href={base + "/"} class="error-action error-action--primary">
+                    <a href={base + '/'} class="error-action error-action--primary">
                         <Home size={20} aria-hidden="true" />
                         Etusivulle
                     </a>
-                    <a href={base + "/pelaajat"} class="error-action error-action--secondary">
+                    <a href={base + '/pelaajat'} class="error-action error-action--secondary">
                         <Users size={20} aria-hidden="true" />
                         Pelaajiin
                     </a>
@@ -83,121 +83,123 @@ onMount(() => {
 </PageShell>
 
 <style>
-    .error-page {
-        display: grid;
-        gap: var(--space-6);
-    }
+.error-page {
+    display: grid;
+    gap: var(--space-6);
+}
 
-    .back-link {
-        display: inline-flex;
-        width: fit-content;
-        align-items: center;
-        gap: var(--space-2);
-        color: var(--color-muted);
-        font-size: 0.875rem;
-        font-weight: 600;
-        text-decoration: none;
-        transition: color 0.16s ease;
-    }
+.back-link {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.16s ease;
+}
 
-    .back-link:hover {
-        color: var(--accent);
-    }
+.back-link:hover {
+    color: var(--accent);
+}
 
-    .back-link:focus-visible,
-    .error-action:focus-visible {
-        outline: 3px solid var(--accent-glow);
-        outline-offset: 3px;
-    }
+.back-link:focus-visible,
+.error-action:focus-visible {
+    outline: 3px solid var(--accent-glow);
+    outline-offset: 3px;
+}
 
-    .error-surface :global(.card) {
-        border-radius: 0 !important;
-        box-shadow: none !important;
-    }
+.error-surface :global(.card) {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
 
-    .error-code {
-        width: fit-content;
-        margin-bottom: var(--space-6);
-        padding: var(--space-3) var(--space-4);
-        border: 1px solid var(--color-panel-border);
-        border-radius: 0;
-        background: var(--accent-ice);
-        box-shadow: none;
-        color: var(--accent);
-        font-family: var(--font-display);
-        font-size: clamp(2rem, 6vw, 3.5rem);
-        font-weight: 800;
-        line-height: 1;
-    }
+.error-code {
+    width: fit-content;
+    margin-bottom: var(--space-6);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-panel-border);
+    border-radius: 0;
+    background: var(--accent-ice);
+    box-shadow: none;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+}
 
+.error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}
+
+.error-action {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--accent);
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
+}
+
+.error-action--primary {
+    background: var(--accent);
+    color: #fff;
+}
+
+.error-action--primary:hover {
+    background: var(--accent-strong);
+}
+
+.error-action--secondary {
+    background: transparent;
+    color: var(--accent);
+}
+
+.error-action--secondary:hover {
+    background: var(--accent-ice);
+}
+
+.trivia {
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-panel-border);
+}
+
+.trivia p {
+    margin: 0;
+    color: #344054;
+    line-height: 1.65;
+}
+
+.trivia .trivia__label {
+    margin-bottom: var(--space-2);
+    color: var(--color-muted);
+    font-size: var(--eyebrow-size);
+    font-weight: var(--eyebrow-weight);
+    letter-spacing: var(--eyebrow-track);
+    text-transform: uppercase;
+}
+
+@media (max-width: 480px) {
     .error-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--space-3);
+        display: grid;
     }
 
     .error-action {
-        display: inline-flex;
-        min-height: 2.75rem;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-2);
-        padding: 0.65rem 1rem;
-        border: 1px solid var(--accent);
-        border-radius: 0;
-        box-shadow: none;
-        font-size: 0.9rem;
-        font-weight: 700;
-        text-decoration: none;
-        transition: background-color 0.16s ease, color 0.16s ease;
+        width: 100%;
     }
-
-    .error-action--primary {
-        background: var(--accent);
-        color: #fff;
-    }
-
-    .error-action--primary:hover {
-        background: var(--accent-strong);
-    }
-
-    .error-action--secondary {
-        background: transparent;
-        color: var(--accent);
-    }
-
-    .error-action--secondary:hover {
-        background: var(--accent-ice);
-    }
-
-    .trivia {
-        margin-top: var(--space-7);
-        padding-top: var(--space-5);
-        border-top: 1px solid var(--color-panel-border);
-    }
-
-    .trivia p {
-        margin: 0;
-        color: #344054;
-        line-height: 1.65;
-    }
-
-    .trivia .trivia__label {
-        margin-bottom: var(--space-2);
-        color: var(--color-muted);
-        font-size: var(--eyebrow-size);
-        font-weight: var(--eyebrow-weight);
-        letter-spacing: var(--eyebrow-track);
-        text-transform: uppercase;
-    }
-
-    @media (max-width: 480px) {
-        .error-actions {
-            display: grid;
-        }
-
-        .error-action {
-            width: 100%;
-        }
-    }
+}
 </style>

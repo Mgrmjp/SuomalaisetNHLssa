@@ -29,9 +29,7 @@ def _save_correction_cache():
     """Save correction cache to file."""
     try:
         _cache_file.parent.mkdir(parents=True, exist_ok=True)
-        _cache_file.write_text(
-            json.dumps(_correction_cache, ensure_ascii=False, indent=2)
-        )
+        _cache_file.write_text(json.dumps(_correction_cache, ensure_ascii=False, indent=2))
     except IOError:
         pass  # Ignore write errors
 

@@ -100,24 +100,24 @@ const _teamFullName = $derived(teamFullNames[_normalizedTeam] || _normalizedTeam
         height={size}
         loading="eager"
         onerror={(e) => {
-            e.currentTarget.src = `${base}/nhl-logos/placeholder.svg`;
+            e.currentTarget.src = `${base}/nhl-logos/placeholder.svg`
         }}
     />
 </span>
 
 <style>
-    .team-logo-wrapper {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: var(--logo-size);
-        height: var(--logo-size);
-    }
+.team-logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--logo-size);
+    height: var(--logo-size);
+}
 
-    .team-logo {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
+.team-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 </style>

@@ -38,14 +38,20 @@ const _isDesignSystemExempt = $derived($page.route.id === '/ads')
     <meta property="og:image" content="{_siteUrl}/og-image.svg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot" />
+    <meta
+        property="og:image:alt"
+        content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot"
+    />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={_siteName} />
     <meta name="twitter:description" content={_defaultDescription} />
     <meta name="twitter:image" content="{_siteUrl}/og-image.svg" />
-    <meta name="twitter:image:alt" content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot" />
+    <meta
+        name="twitter:image:alt"
+        content="Suomalaiset NHL:ssä - Suomalaisten NHL-pelaajien tilastot"
+    />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={_canonicalUrl} />
@@ -54,43 +60,44 @@ const _isDesignSystemExempt = $derived($page.route.id === '/ads')
     <link rel="alternate" hreflang="fi" href={_canonicalUrl} />
     <link rel="alternate" hreflang="x-default" href={_canonicalUrl} />
 
-    <link rel="icon" type="image/svg+xml" href={base + "/logo.svg"} />
+    <link rel="icon" type="image/svg+xml" href={base + '/logo.svg'} />
 
     <!-- Note: Google Fonts loaded in app.html with async pattern -->
 
     <!-- JSON-LD Structured Data -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "WebSite",
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
         name: _siteName,
         url: _siteUrl,
         description: _defaultDescription,
-        inLanguage: "fi",
+        inLanguage: 'fi',
     })}</script>`}
 
     <!-- Sports Organization Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "SportsOrganization",
-        name: "Suomalaiset NHL-pelaajat",
-        description: "Suomi NHL-pelaajien tilastot ja seuranta. Seuraa suomalaisten jääkiekkoilijoiden otteluita, pisteitä ja maaleja NHL-liigassa.",
+        '@context': 'https://schema.org',
+        '@type': 'SportsOrganization',
+        name: 'Suomalaiset NHL-pelaajat',
+        description:
+            'Suomi NHL-pelaajien tilastot ja seuranta. Seuraa suomalaisten jääkiekkoilijoiden otteluita, pisteitä ja maaleja NHL-liigassa.',
         url: _siteUrl,
-        sport: "Ice hockey",
-        category: "Professional NHL players from Finland",
+        sport: 'Ice hockey',
+        category: 'Professional NHL players from Finland',
     })}</script>`}
 
     <!-- Breadcrumb Schema -->
     {@html `<script type="application/ld+json">${JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
         itemListElement: [
             {
-                "@type": "ListItem",
+                '@type': 'ListItem',
                 position: 1,
-                name: "Etusivu",
-                item: _siteUrl + "/"
-            }
-        ]
+                name: 'Etusivu',
+                item: _siteUrl + '/',
+            },
+        ],
     })}</script>`}
 </svelte:head>
 

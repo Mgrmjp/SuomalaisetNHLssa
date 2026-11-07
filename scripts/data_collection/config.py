@@ -26,6 +26,7 @@ def upcoming_nhl_draft_year(today=None):
     today = today or date.today()
     return today.year + (today.month >= 7)
 
+
 # =============================================================================
 # Project Paths
 # =============================================================================
@@ -35,8 +36,8 @@ DATA_DIR = PROJECT_ROOT / "static" / "data"
 PREPOPULATED_DIR = DATA_DIR / "prepopulated"
 
 # Output directories for different data types
-GAMES_DIR = PREPOPULATED_DIR / "games"          # Daily game data (Finnish players)
-SEASON_DIR = PREPOPULATED_DIR / "season"        # Full season data (all players)
+GAMES_DIR = PREPOPULATED_DIR / "games"  # Daily game data (Finnish players)
+SEASON_DIR = PREPOPULATED_DIR / "season"  # Full season data (all players)
 ALL_PLAYERS_DIR = PREPOPULATED_DIR / "all-players"  # All players by date
 
 # =============================================================================

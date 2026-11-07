@@ -13,39 +13,41 @@ const { children, padding = 'normal', accent = false, interactive = false } = $p
 </div>
 
 <style>
-    .card {
-        position: relative;
-        min-width: 0;
-        max-width: 100%;
-        overflow: hidden;
-        background: var(--card-bg);
-        border: var(--card-border);
-        border-radius: var(--card-radius);
-        box-shadow: var(--card-shadow);
-    }
+.card {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    background: var(--card-bg);
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+}
 
-    .card[data-padding="normal"] {
-        padding: var(--card-padding-y) var(--card-padding-x);
-    }
+.card[data-padding='normal'] {
+    padding: var(--card-padding-y) var(--card-padding-x);
+}
 
-    .card[data-padding="compact"] {
-        padding: var(--space-4);
-    }
+.card[data-padding='compact'] {
+    padding: var(--space-4);
+}
 
-    .card[data-padding="none"] {
-        padding: 0;
-    }
+.card[data-padding='none'] {
+    padding: 0;
+}
 
-    .card--accent::before {
-        display: none;
-    }
+.card--accent::before {
+    display: none;
+}
 
-    .card--interactive {
-        transition: border-color 0.16s ease, background-color 0.16s ease;
-    }
+.card--interactive {
+    transition:
+        border-color 0.16s ease,
+        background-color 0.16s ease;
+}
 
-    .card--interactive:hover {
-        border-color: rgba(0, 53, 128, 0.2);
-        background: rgba(255, 255, 255, 0.74);
-    }
+.card--interactive:hover {
+    border-color: rgba(0, 53, 128, 0.2);
+    background: rgba(255, 255, 255, 0.74);
+}
 </style>

@@ -16,7 +16,7 @@
 
 /* Noise texture for player photo */
 .player-photo::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;
@@ -99,7 +99,7 @@
 }
 
 .stat-panel::before {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     background:
@@ -110,7 +110,7 @@
 
 /* Noise texture for stat panels */
 .stat-panel::after {
-    content: "";
+    content: '';
     position: absolute;
     inset: 0;
     pointer-events: none;

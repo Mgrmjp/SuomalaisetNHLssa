@@ -283,18 +283,12 @@ def main():
     # This prevents accidental data loss during partial API outages.
     if master_ids_reliable:
         before_prune = len(finnish_players)
-        finnish_players = prune_cache_with_master_ids(
-            finnish_players, master_finnish_ids
-        )
+        finnish_players = prune_cache_with_master_ids(finnish_players, master_finnish_ids)
         removed_count = before_prune - len(finnish_players)
         if removed_count > 0:
-            print(
-                f"🧹 Pruned {removed_count} non-Finnish stale entries from existing cache.\n"
-            )
+            print(f"🧹 Pruned {removed_count} non-Finnish stale entries from existing cache.\n")
     else:
-        print(
-            "⚠️ Master Finnish IDs not fully reliable; skipping stale entry pruning.\n"
-        )
+        print("⚠️ Master Finnish IDs not fully reliable; skipping stale entry pruning.\n")
 
     # Step 2: Get current NHL rosters for team enrichment
     player_teams = get_current_nhl_rosters()
@@ -313,9 +307,7 @@ def main():
         print("🔍 DRY RUN - would add these players:")
         print("-" * 60)
         for player_id, player_meta in sorted(missing_from_cache)[:20]:
-            name = (
-                f"{player_meta.get('firstName', '')} {player_meta.get('lastName', '')}"
-            )
+            name = f"{player_meta.get('firstName', '')} {player_meta.get('lastName', '')}"
             position = player_meta.get("position", "N/A")
             team = player_meta.get("teamAbbrev", "N/A")
             print(f"   ID: {player_id:<10} | {name:<30} | {position} | {team}")
@@ -442,9 +434,7 @@ def main():
 
     # Print all players
     print("🌟 All Finnish players:")
-    for player_id, player in sorted(
-        finnish_players.items(), key=lambda x: x[1]["name"]
-    ):
+    for player_id, player in sorted(finnish_players.items(), key=lambda x: x[1]["name"]):
         team = player.get("currentTeam", "N/A")
         print(f"   {player['name']} (ID: {player_id}) - {player['position']} - {team}")
 

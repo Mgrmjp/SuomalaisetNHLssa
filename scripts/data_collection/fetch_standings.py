@@ -32,14 +32,26 @@ def build_snapshot(data, now=None):
         if not isinstance(season, int) or season % 10000 != season // 10000 + 1:
             raise ValueError("Invalid season")
         datetime.strptime(date, "%Y-%m-%d")
-        for key in ("gamesPlayed", "wins", "losses", "otLosses", "points", "goalFor", "goalAgainst"):
+        for key in (
+            "gamesPlayed",
+            "wins",
+            "losses",
+            "otLosses",
+            "points",
+            "goalFor",
+            "goalAgainst",
+        ):
             if type(row.get(key)) is not int or row[key] < 0:
                 raise ValueError(f"Invalid {key} for {team}")
         if row["gamesPlayed"] != row["wins"] + row["losses"] + row["otLosses"]:
             raise ValueError(f"Inconsistent record for {team}")
         if row["points"] != 2 * row["wins"] + row["otLosses"]:
             raise ValueError(f"Inconsistent points for {team}")
-        for key, limit in (("divisionSequence", 8), ("conferenceSequence", 16), ("leagueSequence", 32)):
+        for key, limit in (
+            ("divisionSequence", 8),
+            ("conferenceSequence", 16),
+            ("leagueSequence", 32),
+        ):
             if type(row.get(key)) is not int or not 1 <= row[key] <= limit:
                 raise ValueError(f"Invalid {key} for {team}")
         divisions.setdefault(division, []).append(row["divisionSequence"])
@@ -49,14 +61,23 @@ def build_snapshot(data, now=None):
         dates.add(date)
     if len(seasons) != 1 or len(dates) != 1 or league_ranks != set(range(1, 33)):
         raise ValueError("Mixed seasons, dates, or incomplete rankings")
-    if len(divisions) != 4 or any(sorted(ranks) != list(range(1, 9)) for ranks in divisions.values()):
+    if len(divisions) != 4 or any(
+        sorted(ranks) != list(range(1, 9)) for ranks in divisions.values()
+    ):
         raise ValueError("Incomplete division rankings")
     for conference in ("E", "W"):
-        ranks = sorted(row["conferenceSequence"] for row in rows if row["conferenceAbbrev"] == conference)
+        ranks = sorted(
+            row["conferenceSequence"] for row in rows if row["conferenceAbbrev"] == conference
+        )
         if ranks != list(range(1, 17)):
             raise ValueError("Incomplete conference rankings")
-    return {"seasonId": seasons.pop(), "sourceDate": dates.pop(),
-            "fetchedAt": now.isoformat().replace("+00:00", "Z"), "source": SOURCE, "standings": rows}
+    return {
+        "seasonId": seasons.pop(),
+        "sourceDate": dates.pop(),
+        "fetchedAt": now.isoformat().replace("+00:00", "Z"),
+        "source": SOURCE,
+        "standings": rows,
+    }
 
 
 def read_snapshot(path):
@@ -73,7 +94,9 @@ def refresh_snapshot(path=OUTPUT, force=False, now=None, fetcher=fetch_from_api)
     if previous:
         try:
             validated = build_snapshot({"standings": previous["standings"]}, now)
-            if any(previous.get(key) != validated[key] for key in ("seasonId", "sourceDate", "source")):
+            if any(
+                previous.get(key) != validated[key] for key in ("seasonId", "sourceDate", "source")
+            ):
                 raise ValueError("Inconsistent snapshot metadata")
             fetched = datetime.fromisoformat(previous["fetchedAt"].replace("Z", "+00:00"))
             valid_previous = True
@@ -82,12 +105,17 @@ def refresh_snapshot(path=OUTPUT, force=False, now=None, fetcher=fetch_from_api)
         except (ValueError, KeyError, TypeError):
             pass
     snapshot = build_snapshot(fetcher(SOURCE), now)
-    if valid_previous and (snapshot["seasonId"], snapshot["sourceDate"]) < (previous["seasonId"], previous["sourceDate"]):
+    if valid_previous and (snapshot["seasonId"], snapshot["sourceDate"]) < (
+        previous["seasonId"],
+        previous["sourceDate"],
+    ):
         raise ValueError("Refusing to overwrite newer standings with older data")
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
     try:
-        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as stream:
+        with tempfile.NamedTemporaryFile(
+            mode="w", encoding="utf-8", dir=path.parent, delete=False
+        ) as stream:
             temporary = Path(stream.name)
             json.dump(snapshot, stream, ensure_ascii=False, indent=2)
             stream.write("\n")
@@ -100,12 +128,18 @@ def refresh_snapshot(path=OUTPUT, force=False, now=None, fetcher=fetch_from_api)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--force", action="store_true", help="Refresh even if checked within the last hour")
+    parser.add_argument(
+        "--force", action="store_true", help="Refresh even if checked within the last hour"
+    )
     args = parser.parse_args()
     updated = False
     try:
         updated = refresh_snapshot(force=args.force)
-        print("Official standings refreshed" if updated else "Official standings checked within the last hour")
+        print(
+            "Official standings refreshed"
+            if updated
+            else "Official standings checked within the last hour"
+        )
         return 0
     except Exception as error:
         print(f"Standings refresh failed; previous snapshot preserved: {error}")

@@ -18,8 +18,10 @@ def source_revision():
 def needs_deployment(url, revision):
     try:
         response = requests.get(
-            url, params={"t": int(time.time())},
-            headers={"Cache-Control": "no-cache"}, timeout=15,
+            url,
+            params={"t": int(time.time())},
+            headers={"Cache-Control": "no-cache"},
+            timeout=15,
         )
         response.raise_for_status()
         published = response.json()

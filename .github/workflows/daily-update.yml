@@ -59,7 +59,7 @@ jobs:
           # Run validation to check for missing Finnish players
           # Exit code 2 means missing players found, 0 means all good
           python scripts/data_collection/finnish/validate_finnish_players.py || VALIDATION_EXIT=$?
-          
+
           # If validation found missing players (exit code 2), rebuild cache
           if [ "${VALIDATION_EXIT:-0}" = "2" ]; then
             echo "⚠️ Missing Finnish players detected, rebuilding cache..."

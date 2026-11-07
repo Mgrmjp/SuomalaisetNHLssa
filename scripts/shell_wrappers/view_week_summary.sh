@@ -31,18 +31,18 @@ for date in $(seq 0 6); do
         # Show all players with color coding for wins/losses
         if [ "$players" -gt 0 ]; then
             # Get each player with their game result
-            jq -r '.players[]? | "\(.game_result)|\(.name)|\(.team)|\(.opponent)|\(.game_score)|\(.goals)|\(.assists)"' "$file" 2>/dev/null | while IFS='|' read -r result name team opponent score goals assists; do
+            jq -r '.players[]? | "\(.game_result)|\(.name)|\(.team)|\(.opponent)|\(.game_score)|\(.goals)|\(.assists)"' "$file" 2> /dev/null | while IFS='|' read -r result name team opponent score goals assists; do
                 # Set color based on game result
                 case "$result" in
-                    W|SOW)
+                    W | SOW)
                         color=$GREEN
                         status="✓"
                         ;;
-                    L|SOL)
+                    L | SOL)
                         color=$RED
                         status="✗"
                         ;;
-                    OTW|OTL)
+                    OTW | OTL)
                         color=$YELLOW
                         status="OT"
                         ;;

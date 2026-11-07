@@ -17,27 +17,31 @@ class DailyUpdateTests(unittest.TestCase):
             script.write_text((Path(__file__).parent / "daily_update.sh").read_text())
             python = root / ".venv/bin/python3"
             python.parent.mkdir(parents=True)
-            python.write_text('''#!/bin/bash
+            python.write_text("""#!/bin/bash
 printf '%s\n' "$*" >> "$UPDATE_TEST_LOG"
 case "$1" in
   *finnish/fetch.py) [ "$UPDATE_TEST_FAIL" = "fetch" ] && exit 3 ;;
   *generate_daily_news.py) [ "$UPDATE_TEST_FAIL" = "news" ] && exit 4 ;;
 esac
 exit 0
-''')
+""")
             python.chmod(0o755)
             date = root / "date"
-            date.write_text('''#!/bin/bash
+            date.write_text("""#!/bin/bash
 case "$2" in
   yesterday) echo 2026-10-01 ;;
   '+7 days') echo 2026-10-09 ;;
   *) exit 1 ;;
 esac
-''')
+""")
             date.chmod(0o755)
             log = root / "calls"
-            env = {**os.environ, "PATH": f"{root}:{os.environ['PATH']}",
-                   "UPDATE_TEST_LOG": str(log), "UPDATE_TEST_FAIL": failure}
+            env = {
+                **os.environ,
+                "PATH": f"{root}:{os.environ['PATH']}",
+                "UPDATE_TEST_LOG": str(log),
+                "UPDATE_TEST_FAIL": failure,
+            }
             result = subprocess.run(["bash", str(script)], env=env, capture_output=True, text=True)
             return result.returncode, log.read_text()
 

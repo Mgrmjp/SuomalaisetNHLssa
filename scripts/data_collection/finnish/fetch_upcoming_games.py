@@ -19,16 +19,12 @@ OUTPUT_FILE = DATA_DIR / "upcoming-finnish-games.json"
 
 def build_upcoming_games(schedule_weeks, roster, current_roster_ids, now, limit=8):
     finnish_players = {
-        int(player_id): player["name"]
-        for player_id, player in roster.items()
-        if player.get("name")
+        int(player_id): player["name"] for player_id, player in roster.items() if player.get("name")
     }
     players_by_team = {}
     for team, ids in current_roster_ids.items():
         players_by_team[team] = sorted(
-            finnish_players[player_id]
-            for player_id in ids
-            if player_id in finnish_players
+            finnish_players[player_id] for player_id in ids if player_id in finnish_players
         )
 
     games_by_id = {}
@@ -105,12 +101,14 @@ def fetch_current_roster_ids(schedule_weeks, finnish_ids, now, limit=8, getter=r
             for attempt in range(3):
                 response = getter(f"{NHL_API_BASE}/v1/roster/{team}/current", timeout=API_TIMEOUT)
                 if response.status_code == 429 and attempt < 2:
-                    time.sleep(2 ** attempt)
+                    time.sleep(2**attempt)
                     continue
                 response.raise_for_status()
                 break
             data = response.json()
-            if not all(isinstance(data.get(group), list) for group in ("forwards", "defensemen", "goalies")):
+            if not all(
+                isinstance(data.get(group), list) for group in ("forwards", "defensemen", "goalies")
+            ):
                 raise ValueError(f"NHL roster has missing player groups for {team}")
             rosters[team] = {
                 player["id"]

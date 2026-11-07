@@ -12,15 +12,40 @@ TAVILY_CACHE_FILE = "static/data/tavily_news_cache.json"
 
 # NHL team abbreviation to Finnish name mapping
 TEAM_NAMES_FI = {
-    "ANA": "Anaheim", "ARI": "Arizona", "BOS": "Boston", "BUF": "Buffalo",
-    "CGY": "Calgary", "CAR": "Carolina", "CHI": "Chicago", "COL": "Colorado",
-    "CBJ": "Columbus", "DAL": "Dallas", "DET": "Detroit", "EDM": "Edmonton",
-    "FLA": "Florida", "LAK": "Los Angeles", "MIN": "Minnesota", "MTL": "Montreal",
-    "NJD": "New Jersey", "NYI": "NY Islanders", "NYR": "NY Rangers",
-    "NSH": "Nashville", "OTT": "Ottawa", "PHI": "Philadelphia", "PIT": "Pittsburgh",
-    "SJS": "San Jose", "SEA": "Seattle", "STL": "St. Louis", "TBL": "Tampa Bay",
-    "TOR": "Toronto", "VAN": "Vancouver", "VGK": "Vegas", "WSH": "Washington",
-    "WPG": "Winnipeg", "UTA": "Utah", "NHL": "NHL",
+    "ANA": "Anaheim",
+    "ARI": "Arizona",
+    "BOS": "Boston",
+    "BUF": "Buffalo",
+    "CGY": "Calgary",
+    "CAR": "Carolina",
+    "CHI": "Chicago",
+    "COL": "Colorado",
+    "CBJ": "Columbus",
+    "DAL": "Dallas",
+    "DET": "Detroit",
+    "EDM": "Edmonton",
+    "FLA": "Florida",
+    "LAK": "Los Angeles",
+    "MIN": "Minnesota",
+    "MTL": "Montreal",
+    "NJD": "New Jersey",
+    "NYI": "NY Islanders",
+    "NYR": "NY Rangers",
+    "NSH": "Nashville",
+    "OTT": "Ottawa",
+    "PHI": "Philadelphia",
+    "PIT": "Pittsburgh",
+    "SJS": "San Jose",
+    "SEA": "Seattle",
+    "STL": "St. Louis",
+    "TBL": "Tampa Bay",
+    "TOR": "Toronto",
+    "VAN": "Vancouver",
+    "VGK": "Vegas",
+    "WSH": "Washington",
+    "WPG": "Winnipeg",
+    "UTA": "Utah",
+    "NHL": "NHL",
 }
 
 
@@ -119,9 +144,7 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
     news_items = []
 
     # 1. Highlight Top Scorer
-    skaters = {
-        name: stats for name, stats in players.items() if stats.get("position") != "G"
-    }
+    skaters = {name: stats for name, stats in players.items() if stats.get("position") != "G"}
     sorted_players = sorted(
         skaters.items(), key=lambda x: (x[1]["points"], x[1]["goals"]), reverse=True
     )
@@ -133,9 +156,7 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
         assists = top_stats["assists"]
 
         title = f"{top_name} viikon paras pistemies"
-        desc = (
-            f"{top_name} keräsi viikon parhaat tehopisteet lukemin {goals}+{assists}={points}."
-        )
+        desc = f"{top_name} keräsi viikon parhaat tehopisteet lukemin {goals}+{assists}={points}."
 
         # Check for multi-point games
         player_games = [g for g in games if g["name"] == top_name]
@@ -155,9 +176,7 @@ def fetch_weekly_news(year, week, week_start, week_end, players, games):
         )
 
     # 2. Goalie Shutouts or Big Wins
-    goalies = {
-        name: stats for name, stats in players.items() if stats.get("position") == "G"
-    }
+    goalies = {name: stats for name, stats in players.items() if stats.get("position") == "G"}
     for name, stats in goalies.items():
         player_games = [g for g in games if g["name"] == name]
         for g in player_games:
@@ -262,7 +281,9 @@ def format_date_finnish(date_str):
     return f"{dt.day}. {months[dt.month - 1]} {dt.year}"
 
 
-def generate_creative_title(week, year, top_player_name, top_points, has_hat_trick=False, has_shutout=False):
+def generate_creative_title(
+    week, year, top_player_name, top_points, has_hat_trick=False, has_shutout=False
+):
     """Generate an engaging title in natural Finnish sports journalism style"""
     random.seed(f"{year}-{week}")
 
@@ -372,22 +393,14 @@ def generate_articles(all_games):
         player_count = len(players)
 
         # Skaters only for scoring stats
-        skaters = {
-            name: stats
-            for name, stats in players.items()
-            if stats.get("position") != "G"
-        }
+        skaters = {name: stats for name, stats in players.items() if stats.get("position") != "G"}
         sorted_players = sorted(
             skaters.items(), key=lambda x: (x[1]["points"], x[1]["goals"]), reverse=True
         )
         top_scorers = sorted_players[:5]
 
         # Defenders
-        defenders = {
-            name: stats
-            for name, stats in players.items()
-            if stats.get("position") == "D"
-        }
+        defenders = {name: stats for name, stats in players.items() if stats.get("position") == "D"}
         sorted_defenders = sorted(
             defenders.items(),
             key=lambda x: (x[1]["points"], x[1]["goals"]),
@@ -395,11 +408,7 @@ def generate_articles(all_games):
         )
 
         # Goalies
-        goalies = {
-            name: stats
-            for name, stats in players.items()
-            if stats.get("position") == "G"
-        }
+        goalies = {name: stats for name, stats in players.items() if stats.get("position") == "G"}
 
         date_range = f"{week_start.strftime('%d.%m.')}–{week_end.strftime('%d.%m.%Y')}"
 
@@ -556,9 +565,7 @@ def generate_articles(all_games):
         goalie_stats = []
         for name, stats in goalies.items():
             all_records = [g for g in week_info["games"] if g["name"] == name]
-            g_daily = [
-                g for g in all_records if g.get("time_on_ice", "00:00") != "00:00"
-            ]
+            g_daily = [g for g in all_records if g.get("time_on_ice", "00:00") != "00:00"]
 
             if not g_daily:
                 continue
@@ -636,10 +643,7 @@ def generate_articles(all_games):
         date_str = week_start.strftime("%Y-%m-%d")
 
         # Detect hat tricks and shutouts for title generation
-        has_hat_trick = any(
-            g.get("goals", 0) >= 3
-            for g in week_info["games"]
-        )
+        has_hat_trick = any(g.get("goals", 0) >= 3 for g in week_info["games"])
         has_shutout = any(
             g.get("saves", 0) > 10
             and g.get("shots_against", 0) == g.get("saves", 0)
@@ -648,13 +652,16 @@ def generate_articles(all_games):
         )
 
         top_points = top_scorers[0][1]["points"] if top_scorers else 0
-        title = generate_creative_title(week, year, top_player_name, top_points, has_hat_trick, has_shutout)
+        title = generate_creative_title(
+            week, year, top_player_name, top_points, has_hat_trick, has_shutout
+        )
 
-        excerpt = f"{player_count} suomalaista pelasi, {total_goals} maalia, {total_points} pistettä."
+        excerpt = (
+            f"{player_count} suomalaista pelasi, {total_goals} maalia, {total_points} pistettä."
+        )
         if top_scorers:
             excerpt = (
-                f"{top_scorers[0][0]} keräsi {top_scorers[0][1]['points']} tehopistettä. "
-                + excerpt
+                f"{top_scorers[0][0]} keräsi {top_scorers[0][1]['points']} tehopistettä. " + excerpt
             )
 
         article = {

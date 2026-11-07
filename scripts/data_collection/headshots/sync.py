@@ -16,12 +16,14 @@ import requests
 
 try:
     from PIL import Image
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
 
 try:
     from rembg import remove as remove_bg
+
     REMBG_AVAILABLE = True
 except ImportError:
     REMBG_AVAILABLE = False
@@ -40,21 +42,20 @@ def get_existing_headshots() -> Set[int]:
     """Get set of player IDs that already have WebP headshots."""
     if not HEADSHOTS_DIR.exists():
         return set()
-    return {
-        int(f.stem) for f in HEADSHOTS_DIR.glob("*.webp")
-        if f.stem.isdigit()
-    }
+    return {int(f.stem) for f in HEADSHOTS_DIR.glob("*.webp") if f.stem.isdigit()}
 
 
-def get_headshot_bytes(player_id: int, team: str, headshot_url: Optional[str] = None) -> Optional[bytes]:
+def get_headshot_bytes(
+    player_id: int, team: str, headshot_url: Optional[str] = None
+) -> Optional[bytes]:
     """
     Fetch headshot bytes for a player.
-    
+
     Args:
         player_id: Player ID
         team: Team abbreviation
         headshot_url: Pre-computed headshot URL (from data)
-    
+
     Returns:
         Image bytes or None
     """
@@ -66,7 +67,7 @@ def get_headshot_bytes(player_id: int, team: str, headshot_url: Optional[str] = 
             return resp.content
         except Exception:
             pass
-    
+
     # Try player landing page
     try:
         resp = requests.get(f"{NHL_API}/v1/player/{player_id}/landing", timeout=10)
@@ -79,7 +80,7 @@ def get_headshot_bytes(player_id: int, team: str, headshot_url: Optional[str] = 
             return resp.content
     except Exception:
         pass
-    
+
     # Try CDN URLs
     for season in ["20252026", "current"]:
         try:
@@ -89,30 +90,30 @@ def get_headshot_bytes(player_id: int, team: str, headshot_url: Optional[str] = 
             return resp.content
         except Exception:
             continue
-    
+
     return None
 
 
 def download_headshot(player_id: int, team: str, headshot_url: Optional[str] = None) -> bool:
     """
     Download and save a player headshot as WebP with transparent background.
-    
+
     Args:
         player_id: Player ID
-        team: Team abbreviation  
+        team: Team abbreviation
         headshot_url: Pre-computed headshot URL
-    
+
     Returns:
         True if successful
     """
     if not PIL_AVAILABLE:
         return False
-    
+
     try:
         data = get_headshot_bytes(player_id, team, headshot_url)
         if data is None:
             return False
-        
+
         # Remove background if rembg is available
         if REMBG_AVAILABLE:
             data = remove_bg(data)
@@ -121,13 +122,13 @@ def download_headshot(player_id: int, team: str, headshot_url: Optional[str] = N
         else:
             img = Image.open(io.BytesIO(data))
             img = img.convert("RGB")
-        
+
         img = img.resize((IMAGE_SIZE, IMAGE_SIZE), Image.LANCZOS)
-        
+
         HEADSHOTS_DIR.mkdir(parents=True, exist_ok=True)
         out_path = HEADSHOTS_DIR / f"{player_id}.webp"
         img.save(out_path, format="WEBP", quality=WEBP_QUALITY)
-        
+
         return True
     except Exception as e:
         print(f"[WARN] Failed to download headshot for {player_id}: {e}")
@@ -138,11 +139,11 @@ def sync_headshots(players: List[dict], quiet: bool = False) -> int:
     """
     Sync headshots for a list of players.
     Downloads WebP for any player without a local copy.
-    
+
     Args:
         players: List of player dicts with playerId, team, headshot_url
         quiet: If True, suppress output
-    
+
     Returns:
         Number of new headshots downloaded
     """
@@ -150,22 +151,22 @@ def sync_headshots(players: List[dict], quiet: bool = False) -> int:
         if not quiet:
             print("[WARN] Pillow not available, skipping headshot sync")
         return 0
-    
+
     existing = get_existing_headshots()
     downloaded = 0
-    
+
     for player in players:
         player_id = player.get("playerId")
         if not player_id or player_id in existing:
             continue
-        
+
         team = player.get("team", "")
         headshot_url = player.get("headshot_url")
-        
+
         if download_headshot(player_id, team, headshot_url):
             downloaded += 1
             if not quiet:
                 print(f"         📷 Downloaded headshot for {player.get('name', player_id)}")
             existing.add(player_id)  # Avoid duplicate attempts
-    
+
     return downloaded

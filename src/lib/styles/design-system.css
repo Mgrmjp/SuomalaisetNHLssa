@@ -36,7 +36,7 @@
 }
 
 .app-shell:not(.design-system-exempt)
-    :is(button, input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+    :is(button, input:not([type='checkbox']):not([type='radio']), select, textarea) {
     border-radius: var(--card-radius-sm);
     font-family: inherit;
 }

@@ -33,7 +33,7 @@ SOURCES = {
     "tsn-craig-button": "TSN (Craig Button)",
     "draft-prospects-hockey": "Draft Prospects Hockey",
     "daily-faceoff": "Daily Faceoff",
-    "consolidated-ranking": "Consolidated Ranking"
+    "consolidated-ranking": "Consolidated Ranking",
 }
 
 
@@ -122,11 +122,7 @@ def fetch_ranking(build_id, slug, name):
     """Fetch a specific ranking from the Next.js data API."""
     # Pattern: https://www.eliteprospects.com/_next/data/{buildId}/draft-center/{slug}.json?params={slug}&nation=FIN&sort=rank
     url = f"{BASE_URL}/_next/data/{build_id}/draft-center/{slug}.json"
-    params = {
-        "params": slug,
-        "nation": "FIN",
-        "sort": "rank"
-    }
+    params = {"params": slug, "nation": "FIN", "sort": "rank"}
 
     try:
         print(f"Fetching {name} rankings...")
@@ -153,20 +149,12 @@ def main():
     if not build_id:
         raise SystemExit("Could not find EliteProspects buildId; rankings were not updated.")
 
-    all_rankings = {
-        "year": DRAFT_YEAR,
-        "updatedAt": datetime.now().isoformat(),
-        "sources": []
-    }
+    all_rankings = {"year": DRAFT_YEAR, "updatedAt": datetime.now().isoformat(), "sources": []}
 
     for slug, name in SOURCES.items():
         players = fetch_ranking(build_id, slug, name)
         if players:
-            all_rankings["sources"].append({
-                "name": name,
-                "slug": slug,
-                "players": players
-            })
+            all_rankings["sources"].append({"name": name, "slug": slug, "players": players})
 
     if all_rankings["sources"]:
         save_json(all_rankings, RANKINGS_OUTPUT)

@@ -10,13 +10,13 @@ Ordinary defaults belong in tracked code. Keep `.env.local` for API keys and del
 
 Copy `.env.example` to `.env.local`, preserving any keys already present. Fill only what you use:
 
-| Variable | Purpose |
-| --- | --- |
-| `TAVILY_API_KEY` | News discovery in `scripts/generate_daily_news.py` |
-| `OPENAI_API_KEY` | Optional news translations and player-name correction |
-| `APIHOCKEY_KEY` | Optional API-Hockey league collector |
+| Variable                 | Purpose                                                |
+| ------------------------ | ------------------------------------------------------ |
+| `TAVILY_API_KEY`         | News discovery in `scripts/generate_daily_news.py`     |
+| `OPENAI_API_KEY`         | Optional news translations and player-name correction  |
+| `APIHOCKEY_KEY`          | Optional API-Hockey league collector                   |
 | `ELITEPROSPECTS_API_KEY` | Optional Elite Prospects input for prospect collection |
-| `THE_SPORTS_DB_KEY` | Optional TheSportsDB prospect/league input |
+| `THE_SPORTS_DB_KEY`      | Optional TheSportsDB prospect/league input             |
 
 `.env.local` is ignored by Git; `.env.example` contains blank placeholders and is tracked. A separate `.env` file is unnecessary for the normal local setup.
 
@@ -24,13 +24,13 @@ Vite and the Node prebuild scripts load local env files. Python scripts do not g
 
 ## Tracked defaults
 
-| Configuration | Location |
-| --- | --- |
-| NHL collector API URL, timeout, retries and rate limits | `scripts/data_collection/config.py` |
-| Player positions and date constants | `src/lib/constants/gameConstants.js` |
-| Player-stats prebuild retry and cache-fallback defaults | `scripts/prebuild/fetch-player-stats.cjs` |
-| News publication-age and refresh windows | `scripts/generate_daily_news.py`, `src/lib/utils/dailyNews.js`, `src/lib/services/dailyNewsService.js` |
-| Public section availability | `src/lib/config/features.js` |
+| Configuration                                           | Location                                                                                               |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| NHL collector API URL, timeout, retries and rate limits | `scripts/data_collection/config.py`                                                                    |
+| Player positions and date constants                     | `src/lib/constants/gameConstants.js`                                                                   |
+| Player-stats prebuild retry and cache-fallback defaults | `scripts/prebuild/fetch-player-stats.cjs`                                                              |
+| News publication-age and refresh windows                | `scripts/generate_daily_news.py`, `src/lib/utils/dailyNews.js`, `src/lib/services/dailyNewsService.js` |
+| Public section availability                             | `src/lib/config/features.js`                                                                           |
 
 The old `NHL_API_BASE_URL`, generic `API_*`, cache/performance settings and fixed season-date variables came from a removed configuration service. Current code does not read those env entries. Do not reintroduce them as active settings. Python's `API_MAX_RETRIES` is a tracked constant, despite sharing a name with one old env entry.
 

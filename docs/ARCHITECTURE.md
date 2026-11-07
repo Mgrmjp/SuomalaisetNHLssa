@@ -35,12 +35,12 @@ The primary navigation currently exposes results, standings, teams and the point
 
 ## Other boundaries
 
-| Concern | Implementation |
-| --- | --- |
-| Static season-stat loading | [playerStats.js](../src/lib/server/playerStats.js) |
-| Official standings adapter and refresh | [standingsService.js](../src/lib/services/standingsService.js) |
-| News index caching and selection | [dailyNewsService.js](../src/lib/services/dailyNewsService.js), [dailyNews.js](../src/lib/utils/dailyNews.js) |
-| Safe editorial HTML | [safeMarkdown.js](../src/lib/utils/safeMarkdown.js) |
-| Shared UI surfaces and controls | [design-system.css](../src/lib/styles/design-system.css) |
+| Concern                                | Implementation                                                                                                |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Static season-stat loading             | [playerStats.js](../src/lib/server/playerStats.js)                                                            |
+| Official standings adapter and refresh | [standingsService.js](../src/lib/services/standingsService.js)                                                |
+| News index caching and selection       | [dailyNewsService.js](../src/lib/services/dailyNewsService.js), [dailyNews.js](../src/lib/utils/dailyNews.js) |
+| Safe editorial HTML                    | [safeMarkdown.js](../src/lib/utils/safeMarkdown.js)                                                           |
+| Shared UI surfaces and controls        | [design-system.css](../src/lib/styles/design-system.css)                                                      |
 
 When adding local data URLs, include SvelteKit's base path. Published endpoints and files must exist in the static build; a development-only server endpoint is not automatically available on GitHub Pages.

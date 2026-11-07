@@ -163,7 +163,7 @@ function _formatBirthDate(dateStr) {
                         <div class="team-info">
                             <h3 class="team-name">{teamName}</h3>
                             <p class="player-count">
-                                {teamPlayers.length} pelaaj{teamPlayers.length === 1 ? "a" : "aa"}
+                                {teamPlayers.length} pelaaj{teamPlayers.length === 1 ? 'a' : 'aa'}
                             </p>
                         </div>
                     </div>
@@ -172,9 +172,9 @@ function _formatBirthDate(dateStr) {
                     <div class="players-list">
                         {#each sortedPlayers as player}
                             <div class="player-row">
-                                <span class="player-number">{player.jersey_number ?? "-"}</span>
+                                <span class="player-number">{player.jersey_number ?? '-'}</span>
                                 <span class="player-name">{player.name}</span>
-                                <span class="player-position">{player.position || "-"}</span>
+                                <span class="player-position">{player.position || '-'}</span>
                                 <span class="player-birthdate">
                                     {#if player.birth_date}
                                         {_formatBirthDate(player.birth_date)}
@@ -191,7 +191,9 @@ function _formatBirthDate(dateStr) {
 
         {#if _inactivePlayers.length > 0}
             <div class="inactive-section mt-8">
-                <h3 class="text-xl font-bold text-gray-700 mb-4">Ei joukkueessa / Vanhat pelaajat</h3>
+                <h3 class="text-xl font-bold text-gray-700 mb-4">
+                    Ei joukkueessa / Vanhat pelaajat
+                </h3>
                 <div class="inactive-list ui-surface">
                     <div class="player-row inactive-header">
                         <span class="player-number">#</span>
@@ -202,10 +204,10 @@ function _formatBirthDate(dateStr) {
                     </div>
                     {#each _inactivePlayers as player}
                         <div class="player-row inactive">
-                            <span class="player-number">{player.jersey_number ?? "-"}</span>
+                            <span class="player-number">{player.jersey_number ?? '-'}</span>
                             <span class="player-name">{player.name}</span>
-                            <span class="player-position">{player.position || "-"}</span>
-                            <span class="player-gp">{player.games_played ?? "-"}</span>
+                            <span class="player-position">{player.position || '-'}</span>
+                            <span class="player-gp">{player.games_played ?? '-'}</span>
                             <span class="player-team">
                                 {#if player.last_team && player.last_team !== 'UNKNOWN'}
                                     {teamMapping[player.last_team] || player.last_team}
@@ -222,195 +224,195 @@ function _formatBirthDate(dateStr) {
 </div>
 
 <style>
-    .finnish-roster {
-        padding: 0;
-    }
+.finnish-roster {
+    padding: 0;
+}
 
-    .roster-header {
-        text-align: left;
-    }
+.roster-header {
+    text-align: left;
+}
 
+.teams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.team-card {
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.team-card:hover {
+    box-shadow: var(--card-shadow);
+}
+
+.team-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: var(--color-table-head);
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.team-logo-wrapper {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: white;
+    border-radius: var(--card-radius);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.team-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.team-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.players-list {
+    padding: 0.5rem 0;
+}
+
+.player-row {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr 2rem 5rem;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-bottom: 1px solid #f3f4f6;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.player-row:last-child {
+    border-bottom: none;
+}
+
+.player-row:hover {
+    background: #f9fafb;
+}
+
+.player-number {
+    font-weight: 600;
+    color: #374151;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.player-name {
+    font-weight: 500;
+    color: #111827;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-position {
+    font-weight: 600;
+    color: #6b7280;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+}
+
+.player-birthdate {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.inactive-section {
+    border-top: 2px solid #e5e7eb;
+    padding-top: 1.5rem;
+}
+
+.inactive-list {
+    background: #f9fafb;
+    border-radius: var(--card-radius);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+}
+
+.player-row.inactive-header {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+    grid-template-columns: 2.5rem 1fr 2rem 3rem 5rem;
+}
+
+.player-row.inactive {
+    background: #f9fafb;
+    grid-template-columns: 2.5rem 1fr 2rem 3rem 5rem;
+}
+
+.player-row.inactive:hover {
+    background: #f3f4f6;
+}
+
+.player-gp {
+    color: #6b7280;
+    font-size: 0.75rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.player-team {
+    color: #9ca3af;
+    font-size: 0.75rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
     .teams-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-        gap: 1.5rem;
-        align-items: start;
-    }
-
-    .team-card {
-        background: white;
-        border-radius: var(--card-radius);
-        box-shadow: var(--card-shadow);
-        overflow: hidden;
-        transition: box-shadow 0.2s ease;
-        border: 1px solid #e5e7eb;
-    }
-
-    .team-card:hover {
-        box-shadow: var(--card-shadow);
-    }
-
-    .team-header {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.25rem;
-        background: var(--color-table-head);
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .team-logo-wrapper {
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 56px;
-        height: 56px;
-        background: white;
-        border-radius: var(--card-radius);
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-
-    .team-info {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .team-name {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .player-count {
-        font-size: 0.875rem;
-        color: #6b7280;
-        margin: 0;
-    }
-
-    .players-list {
-        padding: 0.5rem 0;
+        grid-template-columns: 1fr;
     }
 
     .player-row {
-        display: grid;
-        grid-template-columns: 2.5rem 1fr 2rem 5rem;
-        gap: 0.5rem;
-        padding: 0.5rem 1.25rem;
-        border-bottom: 1px solid #f3f4f6;
-        align-items: center;
-        font-size: 0.875rem;
-    }
-
-    .player-row:last-child {
-        border-bottom: none;
-    }
-
-    .player-row:hover {
-        background: #f9fafb;
-    }
-
-    .player-number {
-        font-weight: 600;
-        color: #374151;
-        text-align: center;
-        font-variant-numeric: tabular-nums;
-    }
-
-    .player-name {
-        font-weight: 500;
-        color: #111827;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .player-position {
-        font-weight: 600;
-        color: #6b7280;
-        text-align: center;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.025em;
-    }
-
-    .player-birthdate {
-        color: #9ca3af;
-        font-size: 0.75rem;
-        text-align: right;
-        white-space: nowrap;
-    }
-
-    .inactive-section {
-        border-top: 2px solid #e5e7eb;
-        padding-top: 1.5rem;
-    }
-
-    .inactive-list {
-        background: #f9fafb;
-        border-radius: var(--card-radius);
-        border: 1px solid #e5e7eb;
-        overflow: hidden;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-    }
-
-    .player-row.inactive-header {
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: #9ca3af;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        background: #f3f4f6;
-        border-bottom: 1px solid #e5e7eb;
-        grid-template-columns: 2.5rem 1fr 2rem 3rem 5rem;
+        grid-template-columns: 2rem 1fr 1.5rem 4rem;
+        gap: 0.25rem;
+        padding: 0.5rem 0.75rem;
     }
 
     .player-row.inactive {
-        background: #f9fafb;
-        grid-template-columns: 2.5rem 1fr 2rem 3rem 5rem;
+        grid-template-columns: 2rem 1fr 1.5rem 2.5rem 4rem;
     }
 
-    .player-row.inactive:hover {
-        background: #f3f4f6;
+    .team-header {
+        padding: 1rem;
     }
-
-    .player-gp {
-        color: #6b7280;
-        font-size: 0.75rem;
-        text-align: center;
-        font-variant-numeric: tabular-nums;
-    }
-
-    .player-team {
-        color: #9ca3af;
-        font-size: 0.75rem;
-        text-align: right;
-        white-space: nowrap;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 640px) {
-        .teams-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .player-row {
-            grid-template-columns: 2rem 1fr 1.5rem 4rem;
-            gap: 0.25rem;
-            padding: 0.5rem 0.75rem;
-        }
-
-        .player-row.inactive {
-            grid-template-columns: 2rem 1fr 1.5rem 2.5rem 4rem;
-        }
-
-        .team-header {
-            padding: 1rem;
-        }
-    }
+}
 </style>

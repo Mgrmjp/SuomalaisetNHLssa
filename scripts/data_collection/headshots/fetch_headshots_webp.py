@@ -25,6 +25,7 @@ import requests
 
 try:
     from PIL import Image
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
@@ -33,6 +34,7 @@ except ImportError:
 
 try:
     from rembg import remove as remove_bg
+
     REMBG_AVAILABLE = True
 except ImportError:
     REMBG_AVAILABLE = False
@@ -41,10 +43,38 @@ except ImportError:
 NHL_API = "https://api-web.nhle.com"
 HEADSHOT_CDN = "https://assets.nhle.com/mugs/nhl"
 TEAM_ABBREVS: List[str] = [
-    "ANA", "BOS", "BUF", "CAR", "CBJ", "CGY", "CHI", "COL", "DAL", "DET",
-    "EDM", "FLA", "LAK", "MIN", "MTL", "NJD", "NSH", "NYI", "NYR", "OTT",
-    "PHI", "PIT", "SEA", "SJS", "STL", "TBL", "TOR", "UTA", "VAN", "VGK",
-    "WPG", "WSH"
+    "ANA",
+    "BOS",
+    "BUF",
+    "CAR",
+    "CBJ",
+    "CGY",
+    "CHI",
+    "COL",
+    "DAL",
+    "DET",
+    "EDM",
+    "FLA",
+    "LAK",
+    "MIN",
+    "MTL",
+    "NJD",
+    "NSH",
+    "NYI",
+    "NYR",
+    "OTT",
+    "PHI",
+    "PIT",
+    "SEA",
+    "SJS",
+    "STL",
+    "TBL",
+    "TOR",
+    "UTA",
+    "VAN",
+    "VGK",
+    "WPG",
+    "WSH",
 ]
 IMAGE_SIZE = 168  # Display size for player cards
 WEBP_QUALITY = 80
@@ -74,18 +104,18 @@ def fetch_finnish_players() -> List[dict]:
             continue
 
         players = (
-            roster.get("forwards", []) +
-            roster.get("defensemen", []) +
-            roster.get("goalies", [])
+            roster.get("forwards", []) + roster.get("defensemen", []) + roster.get("goalies", [])
         )
         for p in players:
             if is_finnish(p):
-                finnish_players.append({
-                    "team": team,
-                    "id": p.get("id"),
-                    "first": p.get("firstName", {}).get("default", ""),
-                    "last": p.get("lastName", {}).get("default", ""),
-                })
+                finnish_players.append(
+                    {
+                        "team": team,
+                        "id": p.get("id"),
+                        "first": p.get("firstName", {}).get("default", ""),
+                        "last": p.get("lastName", {}).get("default", ""),
+                    }
+                )
     return finnish_players
 
 
@@ -135,12 +165,12 @@ def save_webp(player_id: int, team: str) -> bool:
         else:
             img = Image.open(io.BytesIO(data))
             img = img.convert("RGB")
-        
+
         img = img.resize((IMAGE_SIZE, IMAGE_SIZE), Image.LANCZOS)
-        
+
         out_path = OUT_DIR / f"{player_id}.webp"
         img.save(out_path, format="WEBP", quality=WEBP_QUALITY)
-        
+
         size_kb = out_path.stat().st_size / 1024
         print(f"  ✓ {player_id}.webp ({size_kb:.1f} KB)")
         return True
@@ -161,7 +191,7 @@ def main() -> None:
             success += 1
 
     print(f"\n✓ Saved {success}/{len(players)} headshots to {OUT_DIR.resolve()}")
-    
+
     # Calculate total size
     total_bytes = sum(f.stat().st_size for f in OUT_DIR.glob("*.webp"))
     print(f"Total size: {total_bytes / 1024:.1f} KB")

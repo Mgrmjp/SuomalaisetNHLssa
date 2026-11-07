@@ -40,17 +40,26 @@ async function visit(width, now) {
 
 async function verify(page, errors) {
     assert.equal(await page.$('img[alt^="Björn Borg Black Week"]'), null)
-    for (const selector of ['.ad-slot--desktop .ad-link.active', '.mobile-ad-container .mobile-ad-link.active']) {
+    for (const selector of [
+        '.ad-slot--desktop .ad-link.active',
+        '.mobile-ad-container .mobile-ad-link.active',
+    ]) {
         assert.equal(await page.$$eval(selector, (nodes) => nodes.length), 1)
     }
     const pairs = await page.$$eval('img[alt^="Hehku"], img[alt^="Aalto Energia"]', (images) =>
         images.map((image) => ({ src: image.src, alt: image.alt, href: image.closest('a').href }))
     )
     for (const { src, alt, href } of pairs) {
-        const expected = alt.startsWith('Hehku Pörssi') ? '2034103803'
-            : alt.startsWith('Hehku Kiinteä') ? '2034099817' : '1875124667'
-        const name = alt.startsWith('Hehku Pörssi') ? 'hehku-porssi'
-            : alt.startsWith('Hehku Kiinteä') ? 'hehku-kiintea-12kk' : 'aalto-energia'
+        const expected = alt.startsWith('Hehku Pörssi')
+            ? '2034103803'
+            : alt.startsWith('Hehku Kiinteä')
+              ? '2034099817'
+              : '1875124667'
+        const name = alt.startsWith('Hehku Pörssi')
+            ? 'hehku-porssi'
+            : alt.startsWith('Hehku Kiinteä')
+              ? 'hehku-kiintea-12kk'
+              : 'aalto-energia'
         // Vite may inline small SVGs instead of emitting a named asset.
         const artwork = src.startsWith('data:image/svg+xml;base64,')
             ? Buffer.from(src.split(',')[1], 'base64').toString('utf8')
@@ -72,14 +81,18 @@ try {
             window.__campaignNow = after
             for (const expire of window.__campaignExpiry) expire()
         }, after)
-        await page.waitForFunction(() => !document.querySelector('img[alt^="Björn Borg Black Week"]'))
+        await page.waitForFunction(
+            () => !document.querySelector('img[alt^="Björn Borg Black Week"]')
+        )
         await verify(page, errors)
         await page.close()
 
         const fresh = await visit(width, after)
         await verify(fresh.page, fresh.errors)
         await fresh.page.close()
-        console.log(`PASS ${width}px: midnight expiry, fresh-page hydration, image/link pairs and layout`)
+        console.log(
+            `PASS ${width}px: midnight expiry, fresh-page hydration, image/link pairs and layout`
+        )
     }
 } finally {
     await browser.close()

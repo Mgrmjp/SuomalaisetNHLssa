@@ -12,13 +12,13 @@ There is no production Node/Python application server, systemd monitor or server
 
 Schedules below are the configured UTC cron expressions, not guaranteed execution times. GitHub can queue scheduled runs.
 
-| Workflow | Trigger | Main responsibility |
-| --- | --- | --- |
-| [Daily update](../.github/workflows/daily-update.yml) | 06:00 UTC, push to main, manual | Collect results and supporting data, sync roster, regenerate manifest, commit data, build and publish |
-| [Realtime update](../.github/workflows/realtime-update.yml) | Every ten minutes, manual | Recover live/missing final results, refresh standings and hourly news, commit changes, check whether deployment is needed |
-| [Prospects update](../.github/workflows/prospects-update.yml) | 07:00 UTC, manual | Refresh rankings/prospect cache and commit outputs; no direct Pages deployment step |
-| [Data integrity](../.github/workflows/data-integrity.yml) | 07:00 UTC, push to main, manual | Validate and optionally fix prospect data; commit successful fixes |
-| [Verify](../.github/workflows/verify.yml) | Pull requests and pushes to main | Documentation, frontend and Python checks |
+| Workflow                                                      | Trigger                          | Main responsibility                                                                                                       |
+| ------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| [Daily update](../.github/workflows/daily-update.yml)         | 06:00 UTC, push to main, manual  | Collect results and supporting data, sync roster, regenerate manifest, commit data, build and publish                     |
+| [Realtime update](../.github/workflows/realtime-update.yml)   | Every ten minutes, manual        | Recover live/missing final results, refresh standings and hourly news, commit changes, check whether deployment is needed |
+| [Prospects update](../.github/workflows/prospects-update.yml) | 07:00 UTC, manual                | Refresh rankings/prospect cache and commit outputs; no direct Pages deployment step                                       |
+| [Data integrity](../.github/workflows/data-integrity.yml)     | 07:00 UTC, push to main, manual  | Validate and optionally fix prospect data; commit successful fixes                                                        |
+| [Verify](../.github/workflows/verify.yml)                     | Pull requests and pushes to main | Documentation, frontend and Python checks                                                                                 |
 
 Data-mutating workflows share the `data-updates` concurrency group. Inspect each YAML file for its exact commands and failure handling rather than assuming all collectors run in every workflow.
 

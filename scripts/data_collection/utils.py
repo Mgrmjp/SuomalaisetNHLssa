@@ -83,11 +83,13 @@ def fetch_from_api(url, max_retries=None, timeout=None):
                     return None
 
                 # Exponential backoff with jitter for 429 errors
-                base_delay = 2 ** attempt
+                base_delay = 2**attempt
                 jitter_min, jitter_max = RATE_LIMIT_JITTER
                 jitter = random.uniform(jitter_min, jitter_max) * base_delay
                 delay = base_delay + jitter
-                print(f"Rate limited on {url}. Retrying in {delay:.2f} seconds... (attempt {attempt + 1}/{max_retries})")
+                print(
+                    f"Rate limited on {url}. Retrying in {delay:.2f} seconds... (attempt {attempt + 1}/{max_retries})"
+                )
                 time.sleep(delay)
                 continue
 
@@ -100,11 +102,13 @@ def fetch_from_api(url, max_retries=None, timeout=None):
                 return None
 
             # Exponential backoff for other errors
-            base_delay = 2 ** attempt
+            base_delay = 2**attempt
             jitter_min, jitter_max = RATE_LIMIT_JITTER
             jitter = random.uniform(jitter_min, jitter_max) * base_delay
             delay = base_delay + jitter
-            print(f"Error fetching {url}: {e}. Retrying in {delay:.2f} seconds... (attempt {attempt + 1}/{max_retries})")
+            print(
+                f"Error fetching {url}: {e}. Retrying in {delay:.2f} seconds... (attempt {attempt + 1}/{max_retries})"
+            )
             time.sleep(delay)
 
     return None
@@ -156,7 +160,7 @@ def save_json(data, file_path, indent=None, ensure_ascii=None):
     temporary = None
     try:
         with tempfile.NamedTemporaryFile(
-            mode='w', encoding='utf-8', dir=file_path.parent, delete=False
+            mode="w", encoding="utf-8", dir=file_path.parent, delete=False
         ) as stream:
             temporary = Path(stream.name)
             json.dump(data, stream, indent=indent, ensure_ascii=ensure_ascii)
@@ -183,7 +187,7 @@ def load_json(file_path):
         return None
 
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             return json.load(f)
     except (json.JSONDecodeError, IOError) as e:
         print(f"Error loading {file_path}: {e}")
@@ -228,7 +232,11 @@ def extract_team_name(team_data):
     """
     place_name = team_data.get("placeName", {}).get("default", "")
     common_name = team_data.get("commonName", {}).get("default", "")
-    return f"{place_name} {common_name}".strip() if place_name and common_name else common_name or place_name
+    return (
+        f"{place_name} {common_name}".strip()
+        if place_name and common_name
+        else common_name or place_name
+    )
 
 
 def get_player_name(player_data):

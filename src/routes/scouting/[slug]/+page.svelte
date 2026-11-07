@@ -84,10 +84,7 @@ const breadcrumbSchema = $derived({
 
 <div class="min-h-screen">
     <PageShell width="content">
-        <a
-            href={base + "/scouting"}
-            class="back-link"
-        >
+        <a href={base + '/scouting'} class="back-link">
             <ChevronLeft class="mr-1 h-4 w-4" aria-hidden="true" />
             Scouting Reports
         </a>

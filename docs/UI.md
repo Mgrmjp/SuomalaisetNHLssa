@@ -4,16 +4,16 @@
 
 ## Current sources
 
-| Concern | Source |
-| --- | --- |
-| Global tokens, font and dashboard background | [app.css](../src/app.css) |
-| Shared surfaces, controls, tables and focus treatment | [design-system.css](../src/lib/styles/design-system.css) |
-| Page shell and headings | [PageShell](../src/lib/components/ui/PageShell.svelte), [PageHeader](../src/lib/components/ui/PageHeader.svelte) |
-| Shared controls and state panels | [Button](../src/lib/components/ui/Button.svelte), [ControlGroup](../src/lib/components/ui/ControlGroup.svelte), [ViewState](../src/lib/components/ui/ViewState.svelte), [Notice](../src/lib/components/ui/Notice.svelte) |
-| Dashboard layout and totals | [Homepage](../src/routes/+page.svelte) |
-| Player grouping and responsive grid | [PlayerList](../src/lib/components/game/PlayerList.svelte) |
-| Player-card layout and interactions | [PlayerCard](../src/lib/components/game/PlayerCard.svelte), [PlayerCard.css](../src/lib/components/game/PlayerCard.css) |
-| Banner rotation and artwork | [Ad store](../src/lib/stores/ads.js), [AdContainer](../src/lib/components/ui/AdContainer.svelte), [SVG artwork](../src/lib/assets/ads/) |
+| Concern                                               | Source                                                                                                                                                                                                                   |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Global tokens, font and dashboard background          | [app.css](../src/app.css)                                                                                                                                                                                                |
+| Shared surfaces, controls, tables and focus treatment | [design-system.css](../src/lib/styles/design-system.css)                                                                                                                                                                 |
+| Page shell and headings                               | [PageShell](../src/lib/components/ui/PageShell.svelte), [PageHeader](../src/lib/components/ui/PageHeader.svelte)                                                                                                         |
+| Shared controls and state panels                      | [Button](../src/lib/components/ui/Button.svelte), [ControlGroup](../src/lib/components/ui/ControlGroup.svelte), [ViewState](../src/lib/components/ui/ViewState.svelte), [Notice](../src/lib/components/ui/Notice.svelte) |
+| Dashboard layout and totals                           | [Homepage](../src/routes/+page.svelte)                                                                                                                                                                                   |
+| Player grouping and responsive grid                   | [PlayerList](../src/lib/components/game/PlayerList.svelte)                                                                                                                                                               |
+| Player-card layout and interactions                   | [PlayerCard](../src/lib/components/game/PlayerCard.svelte), [PlayerCard.css](../src/lib/components/game/PlayerCard.css)                                                                                                  |
+| Banner rotation and artwork                           | [Ad store](../src/lib/stores/ads.js), [AdContainer](../src/lib/components/ui/AdContainer.svelte), [SVG artwork](../src/lib/assets/ads/)                                                                                  |
 
 Reuse these components and tokens instead of creating a second design system or copying an outdated component signature. The public app forces a light color scheme. The main bundled body font is Onest. Player-card scores and goalie save percentages use locally bundled Chakra Petch Bold Italic through `--font-sport`; other text keeps the existing body and heading typography. See the CSS for fallbacks.
 

@@ -32,8 +32,38 @@ except Exception:
 NHL_API = "https://api-web.nhle.com"
 HEADSHOT_CDN = "https://assets.nhle.com/mugs/nhl"
 TEAM_ABBREVS: List[str] = [
-    "ANA", "ARI", "BOS", "BUF", "CAR", "CBJ", "CGY", "CHI", "COL", "DAL", "DET", "EDM", "FLA", "LAK", "MIN",
-    "MTL", "NJD", "NSH", "NYI", "NYR", "OTT", "PHI", "PIT", "SEA", "SJS", "STL", "TBL", "TOR", "VAN", "VGK", "WPG", "WSH"
+    "ANA",
+    "ARI",
+    "BOS",
+    "BUF",
+    "CAR",
+    "CBJ",
+    "CGY",
+    "CHI",
+    "COL",
+    "DAL",
+    "DET",
+    "EDM",
+    "FLA",
+    "LAK",
+    "MIN",
+    "MTL",
+    "NJD",
+    "NSH",
+    "NYI",
+    "NYR",
+    "OTT",
+    "PHI",
+    "PIT",
+    "SEA",
+    "SJS",
+    "STL",
+    "TBL",
+    "TOR",
+    "VAN",
+    "VGK",
+    "WPG",
+    "WSH",
 ]
 THUMB_SIZE = 40
 OUT_DIR = Path("static/headshots/thumbs")
@@ -65,7 +95,11 @@ def fetch_teams_rosters() -> List[dict]:
             print(f"[WARN] roster failed for {team}: {exc}")
             continue
 
-        players = (roster.get("forwards") or []) + (roster.get("defensemen") or []) + (roster.get("goalies") or [])
+        players = (
+            (roster.get("forwards") or [])
+            + (roster.get("defensemen") or [])
+            + (roster.get("goalies") or [])
+        )
         for p in players:
             if is_finnish(p):
                 finnish_players.append(
@@ -98,7 +132,11 @@ def get_headshot_for_player(player_id: int, team: str) -> Optional[bytes]:
         pass
 
     # 2) season-specific mug (derive season slug if available)
-    season_slug = landing.get("season") if "landing" in locals() and isinstance(landing.get("season"), str) else "current"
+    season_slug = (
+        landing.get("season")
+        if "landing" in locals() and isinstance(landing.get("season"), str)
+        else "current"
+    )
     for slug in filter(None, [season_slug, "current"]):
         try:
             url = headshot_url(team, player_id, slug)
@@ -144,7 +182,9 @@ def main() -> None:
 
     print(f"Thumbs saved: {ok} -> {OUT_DIR.resolve()}")
     if not PIL_AVAILABLE:
-        print("Note: Pillow not installed, saved original PNGs. Install with `pip install pillow` for resized thumbs.")
+        print(
+            "Note: Pillow not installed, saved original PNGs. Install with `pip install pillow` for resized thumbs."
+        )
 
 
 if __name__ == "__main__":

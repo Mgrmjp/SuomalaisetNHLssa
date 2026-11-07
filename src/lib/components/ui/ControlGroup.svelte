@@ -24,13 +24,15 @@ let {
 </div>
 
 <style>
-    .segmented-control--scrollable {
-        flex-wrap: nowrap;
-        min-width: 0;
-        max-width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-    .segmented-control--scrollable::-webkit-scrollbar { display: none; }
+.segmented-control--scrollable {
+    flex-wrap: nowrap;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.segmented-control--scrollable::-webkit-scrollbar {
+    display: none;
+}
 </style>

@@ -39,14 +39,14 @@ Player totals and team membership change over time; inspect the generated files 
 
 ## Supporting datasets
 
-| Dataset | Refresh command or guide |
-| --- | --- |
+| Dataset                                      | Refresh command or guide                                                    |
+| -------------------------------------------- | --------------------------------------------------------------------------- |
 | Future games with roster-based Finnish names | `.venv/bin/python3 scripts/data_collection/finnish/fetch_upcoming_games.py` |
-| Official standings | `npm run data:standings`; [Standings](STANDINGS.md) |
-| Recent Finnish-player news | `npm run data:news:daily`; [News rules](DAILY_NEWS.md) |
-| Prospect rankings and application cache | `bash scripts/update_prospects.sh` |
-| Official league prospect inputs | `npm run prospects:leagues:update` |
-| Headshot processing | [Headshot tools](../scripts/data_collection/headshots/README.md) |
+| Official standings                           | `npm run data:standings`; [Standings](STANDINGS.md)                         |
+| Recent Finnish-player news                   | `npm run data:news:daily`; [News rules](DAILY_NEWS.md)                      |
+| Prospect rankings and application cache      | `bash scripts/update_prospects.sh`                                          |
+| Official league prospect inputs              | `npm run prospects:leagues:update`                                          |
+| Headshot processing                          | [Headshot tools](../scripts/data_collection/headshots/README.md)            |
 
 Upcoming games use current roster membership as a preview; lineup participation is not confirmed. The collector excludes already-started games. The UI must not substitute past games when no future data qualifies.
 
@@ -54,16 +54,16 @@ Prospect input collection and application-cache building are separate steps. `up
 
 ## Ownership and outputs
 
-| Output | Producer |
-| --- | --- |
-| `scripts/data_collection/finnish/cache/finnish-players.json` | Finnish cache builder |
-| `static/data/players/finnish-roster.json` | Roster sync; inactive-player enrichment during prebuild |
-| `static/data/prepopulated/games/` | Finnish daily fetcher |
-| `static/data/games_manifest.json` | Manifest generator |
-| `static/data/player-stats/` | Node stats prebuild collectors |
-| `static/data/upcoming-finnish-games.json` | Upcoming Finnish-game collector |
-| `static/data/standings.json` | Standings collector |
-| `static/data/daily-news.json` | Verified news collector |
+| Output                                                       | Producer                                                |
+| ------------------------------------------------------------ | ------------------------------------------------------- |
+| `scripts/data_collection/finnish/cache/finnish-players.json` | Finnish cache builder                                   |
+| `static/data/players/finnish-roster.json`                    | Roster sync; inactive-player enrichment during prebuild |
+| `static/data/prepopulated/games/`                            | Finnish daily fetcher                                   |
+| `static/data/games_manifest.json`                            | Manifest generator                                      |
+| `static/data/player-stats/`                                  | Node stats prebuild collectors                          |
+| `static/data/upcoming-finnish-games.json`                    | Upcoming Finnish-game collector                         |
+| `static/data/standings.json`                                 | Standings collector                                     |
+| `static/data/daily-news.json`                                | Verified news collector                                 |
 
 The [shared Python writer](../scripts/data_collection/utils.py) uses atomic replacement for its callers. Other collectors have their own write behavior; do not assume every legacy script has the same guarantees. Static data is copied into `build/` during the production build.
 

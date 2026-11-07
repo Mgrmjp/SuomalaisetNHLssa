@@ -50,9 +50,7 @@ class DocumentationChecks(unittest.TestCase):
                 "```bash\n.venv/bin/python3 scripts/existing.py\npython3 scripts/missing.py\n```"
             )
             errors = check_document(readme, root, {})
-            self.assertEqual(
-                errors, [(3, "Missing command source: scripts/missing.py")]
-            )
+            self.assertEqual(errors, [(3, "Missing command source: scripts/missing.py")])
 
     def test_rejects_links_outside_the_repository(self):
         with tempfile.TemporaryDirectory() as directory:
