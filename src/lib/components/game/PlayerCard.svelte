@@ -1,9 +1,8 @@
 <script>
 // @ts-nocheck
 
-import { MapPin, PanelsTopLeft, Rotate3D, X } from 'lucide-svelte'
-import { tick } from 'svelte'
-import { scale } from 'svelte/transition'
+import { ArrowLeftRight, MapPin, PanelsTopLeft, X } from 'lucide-svelte'
+import { onDestroy, tick } from 'svelte'
 import { base } from '$app/paths'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import { games } from '$lib/stores/gameData.js'
@@ -95,6 +94,10 @@ let showComprehensiveDetails = $state(false)
 let isFlipped = $state(false)
 let frontCard = $state(null)
 let backCard = $state(null)
+let cardInner = $state(null)
+let heightAnimation
+
+onDestroy(() => heightAnimation?.cancel())
 let isPressed = $state(false)
 
 // Team names are now fetched from API and stored in team_full field
@@ -128,21 +131,32 @@ function _handleBackdropClick(event) {
     }
 }
 
-function toggleFlip() {
+async function toggleFlip() {
+    const previousHeight = cardInner?.getBoundingClientRect().height
+    heightAnimation?.cancel()
     isFlipped = !isFlipped
+    await tick()
+
+    if (!cardInner || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const nextHeight = cardInner.getBoundingClientRect().height
+    if (!previousHeight || previousHeight === nextHeight) return
+    heightAnimation = cardInner.animate(
+        [{ height: `${previousHeight}px` }, { height: `${nextHeight}px` }],
+        { duration: 220, easing: 'cubic-bezier(0.2, 0, 0, 1)' }
+    )
 }
 
 function _flipFromControl(event) {
     event.stopPropagation()
     toggleFlip()
-    tick().then(() => (isFlipped ? backCard : frontCard)?.focus())
+    tick().then(() => (isFlipped ? backCard : frontCard)?.focus({ preventScroll: true }))
 }
 
 function _handleCardClick(event) {
     if (event.target.closest('button') || event.target.closest('a')) {
         return
     }
-    toggleFlip()
+    _flipFromControl(event)
 }
 
 function _handleCardKeydown(event) {
@@ -314,11 +328,13 @@ $effect(() => {
     <div class="game-player-card" class:flipped={isFlipped}>
         <!-- Spacer in normal flow to size container -->
         <div class="game-player-card__spacer" aria-hidden="true"></div>
-        <div class="game-player-card__inner">
+        <div class="game-player-card__inner" bind:this={cardInner}>
             <!-- Front of Card -->
             <div
                 class="game-card ui-surface"
                 bind:this={frontCard}
+                inert={isFlipped}
+                aria-hidden={isFlipped}
                 class:game-card--win={_didWin}
                 class:game-card--loss={_didLose}
                 class:pressed={isPressed}
@@ -331,9 +347,8 @@ $effect(() => {
                 tabindex="0"
                 onkeydown={_handleCardKeydown}
                 aria-label={highlight
-                    ? `Päivän onnistuja: ${highlight.text}. Käännä pelaajakortti ja näytä lisää tilastoja`
-                    : 'Käännä pelaajakortti ja näytä lisää tilastoja'}
-                in:scale={{ duration: 220, start: 0.96 }}
+                    ? `Päivän onnistuja: ${highlight.text}. Näytä pelaajan ottelutilastot`
+                    : 'Näytä pelaajan ottelutilastot'}
             >
                 <div class="card__watermark" aria-hidden="true">
                     <TeamLogo team={player.team || 'NHL'} size="160" />
@@ -386,11 +401,11 @@ $effect(() => {
                     {#if !isGoalie}
                         <dl class="card__scoring">
                             <div>
-                                <dt>maalia</dt>
+                                <dt title="Maalit" aria-label="Maalit">maalia</dt>
                                 <dd>{player.goals || 0}</dd>
                             </div>
                             <div>
-                                <dt>syöttöä</dt>
+                                <dt title="Syötöt" aria-label="Syötöt">syöttöä</dt>
                                 <dd>{player.assists || 0}</dd>
                             </div>
                             <div>
@@ -414,7 +429,9 @@ $effect(() => {
                             </div>
                             {#if (player.penalty_minutes ?? player.penaltyMinutes ?? 0) > 0}
                                 <div>
-                                    <dt>ran. min</dt>
+                                    <dt title="Rangaistusminuutit" aria-label="Rangaistusminuutit">
+                                        ran. min
+                                    </dt>
                                     <dd>{player.penalty_minutes ?? player.penaltyMinutes}</dd>
                                 </div>
                             {/if}
@@ -544,9 +561,15 @@ $effect(() => {
 
                     <!-- Footer -->
                     <div class="card__footer">
-                        <button type="button" class="card__footer-hint" onclick={_flipFromControl}>
-                            <Rotate3D class="card__flip-icon" aria-hidden="true" />
-                            Käännä kortti · Lisää tilastoja
+                        <button
+                            type="button"
+                            class="card__footer-hint"
+                            title="Näytä lisää tilastoja"
+                            aria-label="Näytä lisää tilastoja"
+                            onclick={_flipFromControl}
+                        >
+                            <ArrowLeftRight class="card__flip-icon" aria-hidden="true" />
+                            Näytä lisää tilastoja
                         </button>
                         <div
                             class="card__gamebar"
@@ -622,6 +645,8 @@ $effect(() => {
             <div
                 class="game-card ui-surface card--back"
                 bind:this={backCard}
+                inert={!isFlipped}
+                aria-hidden={!isFlipped}
                 class:pressed={isPressed}
                 class:flipped={isFlipped}
                 onclick={_handleCardClick}
@@ -631,7 +656,7 @@ $effect(() => {
                 role="button"
                 tabindex="0"
                 onkeydown={_handleCardKeydown}
-                aria-label="Käännä pelaajakortti takaisin"
+                aria-label="Palaa pelaajan otteluyhteenvetoon"
             >
                 <div class="card__watermark" aria-hidden="true">
                     <TeamLogo team={player.team || 'NHL'} size="160" />
@@ -717,7 +742,7 @@ $effect(() => {
                     </div>
                     <div class="card__footer">
                         <button type="button" class="card__footer-hint" onclick={_flipFromControl}>
-                            <Rotate3D class="card__flip-icon" aria-hidden="true" />
+                            <ArrowLeftRight class="card__flip-icon" aria-hidden="true" />
                             Takaisin
                         </button>
                     </div>

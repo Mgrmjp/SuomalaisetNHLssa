@@ -12,11 +12,9 @@
 
 .game-player-card {
     display: grid;
-    perspective: 1000px;
     position: relative;
     width: 100%;
     min-height: 0;
-    transform-style: preserve-3d;
 }
 
 .game-player-card__spacer {
@@ -29,12 +27,7 @@
     height: auto;
     min-height: 0;
     display: grid;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-style: preserve-3d;
-}
-
-.game-player-card.flipped .game-player-card__inner {
-    transform: rotateY(180deg);
+    grid-template-rows: minmax(0, 1fr);
 }
 
 /* ==============================
@@ -55,12 +48,10 @@
     box-shadow: var(--card-shadow);
     backdrop-filter: none;
     transition:
-        transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+        opacity 160ms ease,
+        visibility 0s linear 160ms,
         border-color 180ms ease;
-    will-change: transform;
     cursor: pointer;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
 }
 
 .game-card:hover {
@@ -76,10 +67,6 @@
     border-color: rgba(16, 24, 40, 0.22);
 }
 
-.game-card.pressed {
-    transition-duration: 60ms;
-}
-
 @media (max-width: 767px) {
     .game-card {
         padding: 1rem;
@@ -88,11 +75,10 @@
 }
 
 /* ==============================
-   Card visibility for flip
+   Card view switch
    ============================== */
 .card--back {
     position: relative;
-    transform: rotateY(180deg);
 }
 
 .game-player-card:not(.flipped) .card--back,
@@ -105,27 +91,26 @@
     pointer-events: none;
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.4s ease;
 }
 
 .game-player-card:not(.flipped) .game-card:not(.card--back) {
     pointer-events: auto;
     visibility: visible;
     opacity: 1;
+    transition-delay: 0s;
 }
 
 .game-player-card.flipped .card--back {
     pointer-events: auto;
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.4s ease;
+    transition-delay: 0s;
 }
 
 .game-player-card.flipped .game-card:not(.card--back) {
     pointer-events: none;
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0.4s ease;
 }
 
 /* ==============================
@@ -311,6 +296,7 @@
 .card__gamebar-team {
     grid-column: 1;
     grid-row: 1;
+    justify-self: start;
     display: flex;
     align-items: center;
     gap: 0.35rem;
@@ -802,7 +788,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .game-player-card__inner {
+    .game-card {
         transition: none;
     }
     .card__gamebar-status--live {

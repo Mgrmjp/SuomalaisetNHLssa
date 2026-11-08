@@ -263,6 +263,66 @@ try {
     await tablePage.close()
     console.log('PASS keyboard sorting/filtering, search empty state and table scrolling')
 
+    // Initial HTML and pending date requests show cards instead of a premature empty state.
+    for (const width of [375, 1440]) {
+        const loadingPage = await browser.newPage()
+        await loadingPage.setViewport({ width, height: 960 })
+        await loadingPage.setJavaScriptEnabled(false)
+        await visit(loadingPage, `/?date=${gameDate}`)
+        assert.equal(await loadingPage.$$eval('.card--skeleton', (nodes) => nodes.length), 4)
+
+        let releaseResults
+        const pendingResults = new Promise((resolve) => {
+            releaseResults = resolve
+        })
+        await loadingPage.setRequestInterception(true)
+        loadingPage.on('request', async (request) => {
+            if (request.url().includes(`/data/prepopulated/games/${gameDate}.json`)) {
+                await pendingResults
+            }
+            await request.continue()
+        })
+        await loadingPage.setJavaScriptEnabled(true)
+        await visit(loadingPage, `/?date=${gameDate}`)
+        await loadingPage.waitForSelector('.scoring-list[aria-busy="true"]')
+        assert.equal(
+            await loadingPage.$$eval(
+                '.card--skeleton',
+                (nodes) => nodes.filter((node) => node.getBoundingClientRect().height > 0).length
+            ),
+            width < 768 ? 2 : 4
+        )
+        assert(
+            await loadingPage.$$eval('.skeleton-card__name', (nodes) =>
+                nodes
+                    .filter(
+                        (node) => node.closest('.card--skeleton').getBoundingClientRect().height > 0
+                    )
+                    .every((node) => node.getBoundingClientRect().width > 40)
+            )
+        )
+        assert.equal(await loadingPage.$('.card--skeleton button, .card--skeleton a'), null)
+        await loadingPage.emulateMediaFeatures([
+            { name: 'prefers-reduced-motion', value: 'reduce' },
+        ])
+        assert.equal(
+            await loadingPage.$eval(
+                '.card--skeleton',
+                (node) => getComputedStyle(node, '::after').animationName
+            ),
+            'none'
+        )
+        if (screenshotDir)
+            await loadingPage.screenshot({
+                path: join(screenshotDir, `loading-cards-${width}.png`),
+            })
+        releaseResults()
+        await loadingPage.waitForSelector('.scoring-list__grid .game-player-card')
+        assert.equal(await loadingPage.$('.card--skeleton'), null)
+        await loadingPage.close()
+    }
+    console.log('PASS initial/loading skeleton cards, responsive layout and reduced motion')
+
     // The date picker stays compact and historical game cards remain interactive.
     for (const width of [375, 768, 1440]) {
         const dashboard = await browser.newPage()
@@ -313,6 +373,18 @@ try {
         await dashboard.$eval(card, (node) => node.scrollIntoView({ block: 'center' }))
         await dashboard.click(card + ' .card__footer-hint')
         await dashboard.waitForSelector(card + '.flipped')
+        assert(
+            await dashboard.$eval(card + ' .game-card:not(.card--back)', (node) => node.inert),
+            'The inactive summary cannot receive focus or clicks'
+        )
+        assert.equal(
+            await dashboard.$eval(
+                card + ' .game-player-card__inner',
+                (node) => getComputedStyle(node).transform
+            ),
+            'none',
+            'Switching stats keeps the card flat'
+        )
         await new Promise((resolve) => setTimeout(resolve, 900))
         await dashboard.focus(card + ' .card--back')
         await dashboard.keyboard.press('Enter')
@@ -344,6 +416,33 @@ try {
         if (screenshotDir)
             await dashboard.screenshot({ path: join(screenshotDir, `player-modal-${width}.png`) })
         await dashboard.click('[aria-label="Sulje pelaajan lisätiedot"]')
+
+        await dashboard.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }])
+        await dashboard.click(card + ' .game-card:not(.card--back) .card__footer-hint')
+        await dashboard.waitForSelector(card + '.flipped')
+        assert.equal(
+            await dashboard.$eval(
+                card,
+                (node) =>
+                    node
+                        .getAnimations({ subtree: true })
+                        .filter((animation) =>
+                            animation.effect
+                                .getKeyframes()
+                                .some((frame) => frame.height || frame.opacity)
+                        ).length
+            ),
+            0,
+            'Reduced motion switches views without animation'
+        )
+        await dashboard.focus(card + ' .card--back')
+        await dashboard.keyboard.press('Enter')
+        await dashboard.waitForFunction(
+            (selector) => !document.querySelector(selector).classList.contains('flipped'),
+            {},
+            card
+        )
+        await dashboard.emulateMediaFeatures([])
 
         // Recovery notices retain the cards and support keyboard retry.
         const names = await dashboard.$$eval('.card__name-label', (nodes) =>

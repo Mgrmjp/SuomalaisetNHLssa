@@ -63,6 +63,7 @@ const _totalPenaltyMinutes = $derived(
 )
 const totalPlayers = $derived(participatingPlayers.length)
 const _hasScoringPlayers = $derived(totalPlayers > 0)
+const loadingResults = $derived($isLoading || !$selectedDate)
 
 function buildDateLabel(value) {
     if (!value) {
@@ -216,7 +217,7 @@ onMount(() => {
     <div class="dashboard">
         <div class="dashboard__rail">
             <!-- Controls (date picker) -->
-            {#if activeBreak && !$isLoading && totalPlayers === 0}
+            {#if activeBreak && !loadingResults && totalPlayers === 0}
                 <div class="dashboard__notice">
                     <section class="panel panel--break">
                         <div
@@ -253,7 +254,7 @@ onMount(() => {
             <section class="dashboard__results" aria-label="Tulokset ja tilastot">
                 <div class="dashboard__active-stack">
                     <!-- Compact daily totals -->
-                    {#if $isLoading}
+                    {#if loadingResults}
                         <section
                             class="panel panel--hero"
                             aria-busy="true"
@@ -326,7 +327,7 @@ onMount(() => {
                     {/if}
 
                     <!-- Player List -->
-                    {#if !activeBreak || $isLoading || totalPlayers > 0}
+                    {#if !activeBreak || loadingResults || totalPlayers > 0}
                         <PlayerList upcomingGames={data.upcomingGames} />
                     {/if}
 

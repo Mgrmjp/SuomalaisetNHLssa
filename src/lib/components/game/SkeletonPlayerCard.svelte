@@ -1,182 +1,163 @@
-<div class="card ui-surface card--skeleton">
-    <!-- Header -->
-    <div class="card__top">
-        <div class="card__player-info">
-            <div class="card__name-skeleton"></div>
-            <div class="card__team-skeleton"></div>
+<div class="skeleton-card card--skeleton ui-surface" aria-hidden="true">
+    <div class="skeleton-card__header">
+        <div class="skeleton-card__identity">
+            <div class="skeleton-card__block skeleton-card__name"></div>
+            <div class="skeleton-card__block skeleton-card__details"></div>
         </div>
-        <div class="card__badge-skeleton"></div>
+        <div class="skeleton-card__block skeleton-card__logo"></div>
     </div>
-
-    <!-- Matchup pill -->
-    <div class="card__matchup-skeleton"></div>
-
-    <!-- Primary stat ring -->
-    <div class="card__stat">
-        <div class="card__value-skeleton"></div>
-        <div class="card__stat-meta-skeleton">
-            <div class="card__stat-meta-label-skeleton"></div>
-            <div class="card__stat-meta-context-skeleton"></div>
-        </div>
+    <div class="skeleton-card__block skeleton-card__venue"></div>
+    <div class="skeleton-card__stats">
+        {#each [1, 2, 3, 4] as _}
+            <div class="skeleton-card__stat">
+                <div class="skeleton-card__block skeleton-card__value"></div>
+                <div class="skeleton-card__block skeleton-card__label"></div>
+            </div>
+        {/each}
     </div>
-
-    <!-- Sub stats -->
-    <div class="card__sub-stats-skeleton">
-        <div class="card__sub-stat-skeleton">
-            <div class="card__sub-stat-value-skeleton"></div>
-            <div class="card__sub-stat-label-skeleton"></div>
-        </div>
-        <div class="card__sub-stat-skeleton">
-            <div class="card__sub-stat-value-skeleton"></div>
-            <div class="card__sub-stat-label-skeleton"></div>
-        </div>
+    <div class="skeleton-card__block skeleton-card__switch"></div>
+    <div class="skeleton-card__matchup">
+        <div class="skeleton-card__block skeleton-card__team"></div>
+        <div class="skeleton-card__block skeleton-card__score"></div>
+        <div class="skeleton-card__block skeleton-card__team"></div>
     </div>
-
-    <!-- Footer -->
-    <div class="card__footer">
-        <div class="card__footer-hint-skeleton"></div>
-        <div class="card__footer-btn-skeleton"></div>
-    </div>
+    <div class="skeleton-card__block skeleton-card__result"></div>
 </div>
 
 <style>
-.card {
+.skeleton-card {
     position: relative;
-    overflow: hidden;
-    border-radius: var(--card-radius-sm);
-    padding: 1rem;
-    background: var(--card-bg);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    box-shadow: var(--card-shadow);
-    min-height: 315px;
-    border-radius: var(--card-radius);
-}
-
-@media (max-width: 767px) {
-    .card {
-        padding: 0.85rem;
-        border-radius: var(--card-radius);
-    }
-}
-
-.card__top {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+    min-height: 258px;
+    overflow: hidden;
+    padding: 1rem;
+    border: var(--card-border);
+    border-radius: var(--card-radius);
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+.skeleton-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        100deg,
+        transparent 25%,
+        rgba(255, 255, 255, 0.6) 50%,
+        transparent 75%
+    );
+    transform: translateX(-100%);
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.skeleton-card__block {
+    flex-shrink: 0;
+    border-radius: 4px;
+    background: #dbe7f5;
+}
+
+.skeleton-card__header {
+    display: flex;
     align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.skeleton-card__identity {
+    flex: 1;
+    min-width: 0;
+}
+
+.skeleton-card__name {
+    width: 80%;
+    height: 16px;
+    margin-bottom: 0.5rem;
+}
+
+.skeleton-card__details {
+    width: 45%;
+    height: 10px;
+}
+
+.skeleton-card__logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.skeleton-card__venue {
+    width: 65%;
+    height: 10px;
+}
+
+.skeleton-card__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.5rem;
 }
 
-.card__name-skeleton {
-    height: 16px;
-    width: 70%;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
-    margin-bottom: 0.35rem;
-}
-
-.card__team-skeleton {
-    height: 10px;
-    width: 40%;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
-}
-
-.card__badge-skeleton {
-    width: 44px;
-    height: 24px;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
-    flex-shrink: 0;
-}
-
-.card__matchup-skeleton {
-    height: 28px;
-    border-radius: var(--card-radius-sm);
-    background: #f3f4f6;
-    margin-top: 0.5rem;
-}
-
-.card__stat {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
-}
-
-.card__value-skeleton {
-    width: 72px;
-    height: 28px;
-    border-radius: var(--card-radius-sm);
-    background: #f3f4f6;
-    flex-shrink: 0;
-}
-
-.card__stat-meta-skeleton {
+.skeleton-card__stat {
     display: grid;
-    gap: 0.25rem;
+    justify-items: center;
+    gap: 0.5rem;
 }
 
-.card__stat-meta-label-skeleton {
-    height: 10px;
-    width: 60px;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
+.skeleton-card__value {
+    width: 20px;
+    height: 16px;
 }
 
-.card__stat-meta-context-skeleton {
-    height: 10px;
-    width: 80px;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
-}
-
-.card__sub-stats-skeleton {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    padding: 0.5rem 0;
-    border-top: 1px solid rgba(229, 231, 235, 0.5);
-}
-
-.card__sub-stat-skeleton {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-}
-
-.card__sub-stat-value-skeleton {
-    height: 14px;
-    width: 18px;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
-}
-
-.card__sub-stat-label-skeleton {
-    height: 8px;
+.skeleton-card__label {
     width: 32px;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
-}
-
-.card__footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 0.25rem;
-}
-
-.card__footer-hint-skeleton {
     height: 8px;
-    width: 80px;
-    background: #f3f4f6;
-    border-radius: var(--card-radius-sm);
 }
 
-.card__footer-btn-skeleton {
+.skeleton-card__switch {
+    align-self: center;
+    width: 40%;
+    height: 10px;
+    margin-top: auto;
+}
+
+.skeleton-card__matchup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(116, 151, 190, 0.2);
+}
+
+.skeleton-card__team {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.skeleton-card__score {
+    width: 36px;
+    height: 14px;
+}
+
+.skeleton-card__result {
+    align-self: center;
     width: 44px;
-    height: 22px;
-    background: #e5e7eb;
-    border-radius: var(--card-radius-sm);
+    height: 8px;
+}
+
+@keyframes skeleton-shimmer {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skeleton-card::after {
+        animation: none;
+    }
 }
 </style>

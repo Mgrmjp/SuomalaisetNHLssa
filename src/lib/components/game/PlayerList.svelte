@@ -28,6 +28,7 @@ import PlayerCard from './PlayerCard.svelte'
 import SkeletonPlayerCard from './SkeletonPlayerCard.svelte'
 
 const { upcomingGames = [] } = $props()
+const loadingResults = $derived($isLoading || !$selectedDate)
 let refreshedUpcomingGames = $state(null)
 const scheduleRefreshMinute = $derived(Math.floor($currentDate.getTime() / 60000))
 const scheduledFinnishGames = $derived(
@@ -188,10 +189,11 @@ $effect(() => {
     </Notice>
 {/if}
 
-{#if $isLoading}
-    <div class="scoring-list">
-        <div class="scoring-list__grid">
-            {#each [1, 2, 3, 4, 5, 6] as _}
+{#if loadingResults}
+    <div class="scoring-list" aria-busy="true">
+        <p class="scoring-list__loading-label" role="status">Ladataan pelaajien ottelutilastoja…</p>
+        <div class="scoring-list__grid scoring-list__grid--loading">
+            {#each [1, 2, 3, 4] as _}
                 <SkeletonPlayerCard />
             {/each}
         </div>
@@ -288,6 +290,12 @@ $effect(() => {
 .scoring-list {
     min-width: 0;
 }
+.scoring-list__loading-label {
+    margin: 0 0 0.75rem;
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
 .scoring-list__controls {
     display: flex;
     flex-wrap: wrap;
@@ -379,6 +387,9 @@ $effect(() => {
     outline-offset: 2px;
 }
 @media (max-width: 767px) {
+    .scoring-list__grid--loading :global(.card--skeleton:nth-child(n + 3)) {
+        display: none;
+    }
     .scoring-list__grid--collapsed :global(.game-player-card__container:nth-child(n + 3)) {
         display: none;
     }
