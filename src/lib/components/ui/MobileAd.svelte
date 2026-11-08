@@ -1,34 +1,31 @@
 <script>
 // @ts-nocheck
 import { onDestroy, onMount } from 'svelte'
-import {
-    AD_SPOTS,
-    getMobileAds,
-    getNextAdIndex,
-    getRandomAdIndex,
-    setAdSpotIndex,
-} from '$lib/stores/ads.js'
+import AdLabel from './AdLabel.svelte'
+import { AD_SPOTS, getMobileAds, releaseMobileAd, selectMobileAd } from '$lib/stores/ads.js'
+
+export let spot = AD_SPOTS.MOBILE_MAIN
+export let betweenGroups = false
 
 // Populate after mounting so static HTML cannot hydrate expired campaign images.
 let ads = []
-let currentAdIndex = 0
+let currentAdId = null
 let _isPaused = false
 let interval
-let startTimeout
 let expiryTimeout
-let failedAds = {}
+let loadedAds = {}
+$: readyAds = ads.filter((ad) => loadedAds[ad.id])
+$: currentAd = readyAds.find((ad) => ad.id === currentAdId)
 
 function refreshAds() {
     const now = Date.now()
-    const previousId = ads[currentAdIndex]?.id
     ads = getMobileAds(now)
-    currentAdIndex = previousId
-        ? Math.max(
-              0,
-              ads.findIndex((ad) => ad.id === previousId)
-          )
-        : getRandomAdIndex(AD_SPOTS.MOBILE_MAIN, ads)
-    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
+    if (!ads.some((ad) => ad.id === currentAdId && loadedAds[ad.id])) {
+        currentAdId = selectMobileAd(
+            spot,
+            ads.filter((ad) => loadedAds[ad.id])
+        )
+    }
 
     if (expiryTimeout) clearTimeout(expiryTimeout)
     const nextExpiry = Math.min(
@@ -48,66 +45,75 @@ function resumeAds() {
 }
 
 function nextAd() {
-    if (_isPaused) return
-    currentAdIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex, ads)
-    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, currentAdIndex)
+    if (_isPaused || readyAds.length === 0) return
+    currentAdId = selectMobileAd(spot, readyAds, currentAdId)
 }
 
-function setAdFailed(id, failed) {
-    failedAds = { ...failedAds, [id]: failed }
+function setAdLoaded(ad, image) {
+    // Providers sometimes return a successful 1x1 tracking pixel for an unavailable creative.
+    const wasLoaded = loadedAds[ad.id]
+    const usable = image.naturalWidth > 1 && image.naturalHeight > 1
+    loadedAds = { ...loadedAds, [ad.id]: usable }
+    if ((usable && !wasLoaded) || (!usable && ad.id === currentAdId)) {
+        currentAdId = selectMobileAd(
+            spot,
+            ads.filter((candidate) => loadedAds[candidate.id])
+        )
+    }
 }
 
 onMount(() => {
     refreshAds()
-    startTimeout = setTimeout(() => {
-        interval = setInterval(nextAd, 20000)
-    }, 16000)
+    interval = setInterval(nextAd, 20000)
     window.addEventListener('focus', refreshAds)
     document.addEventListener('visibilitychange', refreshAds)
 })
 
 onDestroy(() => {
-    if (startTimeout) clearTimeout(startTimeout)
     if (interval) clearInterval(interval)
     if (expiryTimeout) clearTimeout(expiryTimeout)
     if (typeof window !== 'undefined') {
+        releaseMobileAd(spot)
         window.removeEventListener('focus', refreshAds)
         document.removeEventListener('visibilitychange', refreshAds)
     }
 })
 </script>
 
-<div class="mobile-ad-container">
+<div
+    class="mobile-ad-container"
+    class:mobile-ad-container--empty={!currentAd}
+    class:mobile-ad-container--between={betweenGroups}
+    data-ad-spot={spot}
+>
     <div
         class="ad-wrapper"
-        onmouseenter={pauseAds}
-        onmouseleave={resumeAds}
+        onpointerenter={(event) => {
+            if (event.pointerType === 'mouse') pauseAds()
+        }}
+        onpointerleave={resumeAds}
         role="region"
         aria-label="Mainos"
     >
-        {#if failedAds[ads[currentAdIndex]?.id]}
-            <div class="support-message" aria-hidden="true">
-                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos lisäät sivuston
-                sallittujen listalle.
-            </div>
-        {/if}
-        {#each ads as ad, index (ad.id)}
+        <AdLabel />
+        {#each ads as ad (ad.id)}
             <a
                 href={ad.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="mobile-ad-link"
-                class:active={index === currentAdIndex}
-                class:fade-out={index !== currentAdIndex}
+                class:active={ad.id === currentAd?.id}
+                class:fade-out={ad.id !== currentAd?.id}
+                tabindex={ad.id === currentAd?.id ? 0 : -1}
+                aria-hidden={ad.id !== currentAd?.id}
             >
                 <img
                     src={ad.src}
                     alt={ad.alt || 'Mainos'}
                     class="mobile-ad-img"
-                    onload={() => setAdFailed(ad.id, false)}
-                    onerror={() => setAdFailed(ad.id, true)}
+                    onload={(event) => setAdLoaded(ad, event.currentTarget)}
+                    onerror={(event) => setAdLoaded(ad, event.currentTarget)}
                 />
-                <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}
     </div>
@@ -121,6 +127,14 @@ onDestroy(() => {
     padding: 0;
 }
 
+.mobile-ad-container--between {
+    margin-bottom: 2.25rem;
+}
+
+.mobile-ad-container--empty {
+    display: none;
+}
+
 @media (min-width: 768px) {
     .mobile-ad-container {
         display: none;
@@ -130,32 +144,17 @@ onDestroy(() => {
 .ad-wrapper {
     position: relative;
     width: min(300px, 100%);
-    height: 250px;
-    overflow: hidden;
-    border-radius: 0;
-}
-
-.support-message {
-    position: absolute;
-    inset: 0;
+    height: 282px;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 1rem;
-    border: 1px dashed rgba(0, 53, 128, 0.24);
-    border-radius: 10px;
-    background: rgba(238, 243, 251, 0.72);
-    color: rgba(15, 23, 42, 0.72);
-    font-size: 0.8rem;
-    font-weight: 700;
-    line-height: 1.35;
-    text-align: center;
-    pointer-events: none;
+    align-items: flex-start;
+    overflow: visible;
+    border-radius: 0;
 }
 
 .mobile-ad-link {
     position: absolute;
-    top: 0;
+    top: 32px;
     left: 0;
     width: 100%;
     height: 250px;
@@ -164,7 +163,7 @@ onDestroy(() => {
     opacity: 0;
     transition: opacity 1s ease-in-out;
     pointer-events: none;
-    overflow: hidden;
+    overflow: visible;
     border-radius: 0;
     isolation: isolate;
 }
@@ -201,30 +200,11 @@ onDestroy(() => {
 .mobile-ad-img {
     width: 100%;
     height: 250px;
-    object-fit: cover;
+    object-fit: contain;
+    display: block;
     border: 1px solid rgba(15, 23, 42, 0.85);
     border-radius: 0;
     position: relative;
-    z-index: 1;
-}
-
-.ad-disclaimer {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.55);
-    color: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 999px;
-    padding: 4px 10px;
-    font-size: 10px;
-    font-weight: 700;
-    line-height: 1.2;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    backdrop-filter: blur(6px);
-    pointer-events: none;
     z-index: 1;
 }
 

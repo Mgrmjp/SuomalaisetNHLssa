@@ -409,3 +409,33 @@ export function setAdSpotIndex(spot, index) {
         [spot]: index,
     }))
 }
+
+// Use creative IDs: placements can have different loaded images and therefore different indices.
+const mobileAdSelections = new Map()
+
+/**
+ * @param {string} spot
+ * @param {Array<{id: string}>} ads Loaded, usable creatives for this placement.
+ * @param {string | null} [previousId]
+ * @returns {string | null}
+ */
+export function selectMobileAd(spot, ads, previousId = null) {
+    if (!ads.length) {
+        mobileAdSelections.delete(spot)
+        return null
+    }
+    const occupied = new Set(
+        [...mobileAdSelections].filter(([key]) => key !== spot).map(([, id]) => id)
+    )
+    const alternatives = ads.filter((ad) => ad.id !== previousId)
+    const available = alternatives.filter((ad) => !occupied.has(ad.id))
+    const candidates = available.length ? available : alternatives.length ? alternatives : ads
+    const selected = candidates[Math.floor(Math.random() * candidates.length)]
+    mobileAdSelections.set(spot, selected.id)
+    return selected.id
+}
+
+/** @param {string} spot */
+export function releaseMobileAd(spot) {
+    mobileAdSelections.delete(spot)
+}

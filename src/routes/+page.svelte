@@ -18,7 +18,6 @@ import { page } from '$app/stores'
 import DateControls from '$lib/components/game/DateControls.svelte'
 import PlayerList from '$lib/components/game/PlayerList.svelte'
 import AdContainer from '$lib/components/ui/AdContainer.svelte'
-import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import NavTabs from '$lib/components/ui/NavTabs.svelte'
 import TeamLogo from '$lib/components/ui/TeamLogo.svelte'
 import {
@@ -443,7 +442,6 @@ onMount(() => {
 
             <!-- Ads follow the product content so navigation stays attached to its section. -->
             <div class="dashboard__ads">
-                <MobileAd />
                 <AdContainer />
             </div>
         </div>
@@ -562,6 +560,12 @@ onMount(() => {
     display: grid;
     gap: 2.25rem;
     margin-top: 2.25rem;
+}
+
+@media (max-width: 767px) {
+    .dashboard__ads {
+        display: none;
+    }
 }
 
 /* ============================================

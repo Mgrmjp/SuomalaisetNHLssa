@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { getBannerAds, getMobileAds } from '$lib/stores/ads.js'
+import { getBannerAds, getMobileAds, releaseMobileAd, selectMobileAd } from '$lib/stores/ads.js'
 
 describe('Black Week campaign availability', () => {
     afterEach(() => vi.useRealTimers())
@@ -35,4 +35,46 @@ describe('Black Week campaign availability', () => {
             expect(getAds().some((ad) => ad.id.startsWith('bjornborg-blackweek'))).toBe(false)
         })
     }
+})
+
+describe('Mobile ad selection', () => {
+    const ads = [{ id: 'a' }, { id: 'b' }, { id: 'c' }]
+    afterEach(() => {
+        releaseMobileAd('first')
+        releaseMobileAd('second')
+        vi.restoreAllMocks()
+    })
+
+    it('uses randomness to select from loaded images', () => {
+        vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValueOnce(0.99)
+        expect(selectMobileAd('first', ads)).toBe('a')
+        expect(selectMobileAd('first', ads)).toBe('c')
+    })
+
+    it('avoids the other placement by creative ID when loaded pools differ', () => {
+        vi.spyOn(Math, 'random').mockReturnValue(0)
+        expect(selectMobileAd('first', ads.slice(1))).toBe('b')
+        expect(selectMobileAd('second', ads)).toBe('a')
+    })
+
+    it('rotates randomly without immediately repeating or duplicating another placement', () => {
+        vi.spyOn(Math, 'random').mockReturnValue(0)
+        expect(selectMobileAd('first', ads)).toBe('a')
+        expect(selectMobileAd('second', ads)).toBe('b')
+        expect(selectMobileAd('first', ads, 'a')).toBe('c')
+    })
+
+    it('releases a placement when it disappears or has no usable images', () => {
+        vi.spyOn(Math, 'random').mockReturnValue(0)
+        selectMobileAd('first', ads)
+        releaseMobileAd('first')
+        expect(selectMobileAd('second', ads)).toBe('a')
+        expect(selectMobileAd('second', [])).toBeNull()
+        expect(selectMobileAd('first', ads)).toBe('a')
+    })
+
+    it('keeps displaying the only usable image when no alternative is available', () => {
+        expect(selectMobileAd('first', ads.slice(0, 1), 'a')).toBe('a')
+        expect(selectMobileAd('second', ads.slice(0, 1))).toBe('a')
+    })
 })

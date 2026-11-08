@@ -53,7 +53,7 @@ With a development server already running, `npm run test:browser` invokes [scrip
 
 Browser work should cover desktop/mobile layout, focus, card flipping/details, date navigation, and failed refresh states. Follow the current session's browser-access constraints when working with an agent.
 
-Run `npm run test:ads:browser` against a running development server to check campaign expiry and image/link consistency across Finnish midnight, including pages loaded after the cutoff. Use `TEST_URL` to target a production preview. The check covers both mobile ad components and desktop slots at narrow and wide widths.
+Run `npm run test:ads:browser` against a running development server to check campaign expiry and image/link consistency across Finnish midnight, including pages loaded after the cutoff. Use `TEST_URL` to target a production preview. The check covers mobile and desktop slots at narrow and wide widths, mobile placements between player types, unclipped labels, position filtering, keyboard focus, random initial selections, touch-safe rotation without duplicate placements, rotation with failed or 1×1 provider images, and collapse when every mobile image fails.
 
 ## Documentation validation
 

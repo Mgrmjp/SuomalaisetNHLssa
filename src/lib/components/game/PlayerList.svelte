@@ -4,6 +4,7 @@ import { Minus, Plus } from 'lucide-svelte'
 import { base } from '$app/paths'
 import Button from '$lib/components/ui/Button.svelte'
 import Notice from '$lib/components/ui/Notice.svelte'
+import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import { getDailyFallbackNews } from '$lib/services/dailyNewsService.js'
 import {
     currentBreak,
@@ -72,6 +73,16 @@ const defenders = $derived(
 )
 const goalies = $derived(
     sortDailyPlayers(filteredPlayers.filter(isGoalie), sortBy === 'name' ? 'name' : 'time')
+)
+const visibleGroups = $derived(
+    [
+        { key: 'forwards', title: 'Hyökkääjät', players: forwards },
+        { key: 'defenders', title: 'Puolustajat', players: defenders },
+        { key: 'goalies', title: 'Maalivahdit', players: goalies },
+    ].filter(
+        (group) =>
+            (positionFilter === 'all' || positionFilter === group.key) && group.players.length
+    )
 )
 const hasAnyPlayers = $derived(filteredPlayers.length > 0)
 const yesterdayPreviewDate = $derived(
@@ -224,47 +235,48 @@ $effect(() => {
                 </label>
             </div>
         {/if}
-        {#each [{ key: 'forwards', title: 'Hyökkääjät', players: forwards }, { key: 'defenders', title: 'Puolustajat', players: defenders }, { key: 'goalies', title: 'Maalivahdit', players: goalies }] as group (group.key)}
-            {#if (positionFilter === 'all' || positionFilter === group.key) && group.players.length}
-                <div class="scoring-list__section">
-                    <h2 class="scoring-list__section-title" data-position={group.key}>
-                        {group.title}
-                    </h2>
-                    <div
-                        id={`players-${group.key}`}
-                        class="scoring-list__grid"
-                        class:scoring-list__grid--collapsed={positionFilter === 'all' &&
-                            !expandedGroups[group.key]}
-                    >
-                        {#each group.players.slice(0, positionFilter === 'all' && !expandedGroups[group.key] ? 8 : undefined) as player (`${player.playerId}-${player.game_id}`)}
-                            <PlayerCard
-                                {player}
-                                highlight={highlights.get(`${player.playerId}-${player.game_id}`)}
-                            />
-                        {/each}
-                    </div>
-                    {#if positionFilter === 'all' && group.players.length > 2}
-                        <button
-                            type="button"
-                            class="scoring-list__more"
-                            class:scoring-list__more--mobile-only={group.players.length <= 8}
-                            aria-expanded={expandedGroups[group.key]}
-                            aria-controls={`players-${group.key}`}
-                            onclick={() => {
-                                expandedGroups[group.key] = !expandedGroups[group.key]
-                            }}
-                        >
-                            {#if expandedGroups[group.key]}<Minus
-                                    size={16}
-                                    aria-hidden="true"
-                                />{:else}<Plus size={16} aria-hidden="true" />{/if}
-                            {expandedGroups[group.key]
-                                ? 'Näytä vähemmän'
-                                : `Näytä kaikki ${group.players.length} pelaajaa`}
-                        </button>
-                    {/if}
+        {#each visibleGroups as group, groupIndex (group.key)}
+            <div class="scoring-list__section">
+                {#if groupIndex > 0}
+                    <MobileAd spot={`mobile-before-${group.key}`} betweenGroups />
+                {/if}
+                <h2 class="scoring-list__section-title" data-position={group.key}>
+                    {group.title}
+                </h2>
+                <div
+                    id={`players-${group.key}`}
+                    class="scoring-list__grid"
+                    class:scoring-list__grid--collapsed={positionFilter === 'all' &&
+                        !expandedGroups[group.key]}
+                >
+                    {#each group.players.slice(0, positionFilter === 'all' && !expandedGroups[group.key] ? 8 : undefined) as player (`${player.playerId}-${player.game_id}`)}
+                        <PlayerCard
+                            {player}
+                            highlight={highlights.get(`${player.playerId}-${player.game_id}`)}
+                        />
+                    {/each}
                 </div>
-            {/if}
+                {#if positionFilter === 'all' && group.players.length > 2}
+                    <button
+                        type="button"
+                        class="scoring-list__more"
+                        class:scoring-list__more--mobile-only={group.players.length <= 8}
+                        aria-expanded={expandedGroups[group.key]}
+                        aria-controls={`players-${group.key}`}
+                        onclick={() => {
+                            expandedGroups[group.key] = !expandedGroups[group.key]
+                        }}
+                    >
+                        {#if expandedGroups[group.key]}<Minus
+                                size={16}
+                                aria-hidden="true"
+                            />{:else}<Plus size={16} aria-hidden="true" />{/if}
+                        {expandedGroups[group.key]
+                            ? 'Näytä vähemmän'
+                            : `Näytä kaikki ${group.players.length} pelaajaa`}
+                    </button>
+                {/if}
+            </div>
         {/each}
         {#if positionFilter !== 'all' && ((positionFilter === 'forwards' && !forwards.length) || (positionFilter === 'defenders' && !defenders.length) || (positionFilter === 'goalies' && !goalies.length))}
             <p class="scoring-list__empty">Ei pelaajia tällä pelipaikalla valittuna päivänä.</p>

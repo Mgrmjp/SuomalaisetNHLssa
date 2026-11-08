@@ -1,6 +1,7 @@
 <script>
 // @ts-nocheck
 import { onDestroy, onMount } from 'svelte'
+import AdLabel from './AdLabel.svelte'
 import { base } from '$app/paths'
 
 // Standard IAB vertical rectangle: 160x600
@@ -86,6 +87,7 @@ onDestroy(() => {
 </script>
 
 <div class="vertical-ad-container">
+    <AdLabel />
     <div
         class="ad-wrapper"
         onmouseenter={pauseAds}
@@ -121,7 +123,6 @@ onDestroy(() => {
                         onload={() => setAdFailed(index, false)}
                         onerror={() => setAdFailed(index, true)}
                     />
-                    <span class="ad-disclaimer">Mainos</span>
                 </div>
             </a>
         {/each}
@@ -130,6 +131,8 @@ onDestroy(() => {
 
 <style>
 .vertical-ad-container {
+    justify-items: center;
+    gap: 8px;
     position: fixed;
     right: 1rem;
     top: 50%;
@@ -150,7 +153,7 @@ onDestroy(() => {
 
 @media (min-width: 1728px) {
     .vertical-ad-container {
-        display: block;
+        display: grid;
         position: fixed;
         right: 1rem;
         top: 50%;
@@ -164,7 +167,7 @@ onDestroy(() => {
     .ad-wrapper {
         width: 160px;
         height: 600px;
-        max-height: calc(100dvh - 2rem);
+        max-height: calc(100dvh - 2rem - 32px);
     }
 
     .ad-link {
@@ -178,7 +181,7 @@ onDestroy(() => {
     position: relative;
     width: 160px;
     height: 600px;
-    max-height: calc(100dvh - 2rem);
+    max-height: calc(100dvh - 2rem - 32px);
     background: #ffffff;
     border-radius: 0;
     border: 1px solid rgba(16, 24, 40, 0.12);
@@ -254,38 +257,6 @@ onDestroy(() => {
     display: block;
     position: relative;
     z-index: 1;
-}
-
-.ad-disclaimer {
-    position: absolute;
-    top: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    background: var(--accent-ice, #eef3fb);
-    color: var(--accent, #003580);
-    border: 1px solid rgba(16, 24, 40, 0.14);
-    border-radius: 999px;
-    padding: 2px 7px 2px 5px;
-    font-size: 8px;
-    font-weight: 800;
-    line-height: 1.2;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    box-shadow: 0 1px 2px rgba(0, 53, 128, 0.08);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.ad-disclaimer::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    border-radius: 999px;
-    background: var(--accent, #003580);
-    box-shadow: 0 0 0 2px rgba(0, 53, 128, 0.12);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,11 +1,10 @@
 <script>
 // @ts-nocheck
 import { onDestroy, onMount } from 'svelte'
+import AdLabel from './AdLabel.svelte'
 import {
     AD_SPOTS,
     getBannerAds,
-    getMobileAds,
-    getMobileBannerAds,
     getNextAdIndex,
     getRandomAdIndex,
     setAdSpotIndex,
@@ -21,32 +20,12 @@ let bannerAds = []
 let bannerIndex = 0
 /** @type {ReturnType<typeof setInterval> | undefined} */
 let bannerInterval
-let failedBannerAds = {}
 
-// Mobile square/rectangle ads
-/** @type {Ad[]} */
-let mobileAds = []
-let mobileIndex = 0
-/** @type {ReturnType<typeof setInterval> | undefined} */
-let mobileInterval
-let failedMobileAds = {}
-
-// Mobile banner ads (horizontal, narrower)
-/** @type {Ad[]} */
-let mobileBannerAds = []
-let mobileBannerIndex = 0
-/** @type {ReturnType<typeof setInterval> | undefined} */
-let mobileBannerInterval
-let failedMobileBannerAds = {}
 let expiryTimeout
-
 let isPaused = false
-/** @type {boolean} */
-let _isMobile = false
-
-function checkMobile() {
-    _isMobile = typeof window !== 'undefined' && window.innerWidth < 768
-}
+let loadedBannerAds = {}
+$: readyBannerAds = bannerAds.filter((ad) => ad.isCustom || loadedBannerAds[ad.id])
+$: activeBanner = readyBannerAds[bannerIndex] || readyBannerAds[0]
 
 function getRefreshedIndex(spot, ads, previousId) {
     if (!previousId) return getRandomAdIndex(spot, ads)
@@ -58,25 +37,14 @@ function getRefreshedIndex(spot, ads, previousId) {
 
 function refreshAds() {
     const now = Date.now()
-    const bannerId = bannerAds[bannerIndex]?.id
-    const mobileId = mobileAds[mobileIndex]?.id
-    const mobileBannerId = mobileBannerAds[mobileBannerIndex]?.id
-
+    const bannerId = activeBanner?.id
     bannerAds = getBannerAds(now)
-    mobileAds = getMobileAds(now)
-    mobileBannerAds = getMobileBannerAds(now)
-    bannerIndex = getRefreshedIndex(AD_SPOTS.BANNER, bannerAds, bannerId)
-    mobileIndex = getRefreshedIndex(AD_SPOTS.MOBILE_MAIN, mobileAds, mobileId)
-    mobileBannerIndex = getRefreshedIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerAds, mobileBannerId)
+    bannerIndex = getRefreshedIndex(AD_SPOTS.BANNER, readyBannerAds, bannerId)
     setAdSpotIndex(AD_SPOTS.BANNER, bannerIndex)
-    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex)
-    setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex)
 
     if (expiryTimeout) clearTimeout(expiryTimeout)
     const nextExpiry = Math.min(
-        ...[...bannerAds, ...mobileAds, ...mobileBannerAds]
-            .filter((ad) => ad.expiresAt)
-            .map((ad) => Date.parse(ad.expiresAt))
+        ...bannerAds.filter((ad) => ad.expiresAt).map((ad) => Date.parse(ad.expiresAt))
     )
     if (Number.isFinite(nextExpiry)) {
         // Recheck long campaigns before the browser's maximum timeout delay.
@@ -86,56 +54,32 @@ function refreshAds() {
 
 // --- Banner rotation ---
 function nextBanner() {
-    if (isPaused) return
-    bannerIndex = getNextAdIndex(AD_SPOTS.BANNER, bannerIndex, bannerAds)
+    if (isPaused || readyBannerAds.length === 0) return
+    bannerIndex = getNextAdIndex(AD_SPOTS.BANNER, bannerIndex, readyBannerAds)
     setAdSpotIndex(AD_SPOTS.BANNER, bannerIndex)
 }
 
-// --- Mobile ad rotation ---
-function nextMobile() {
-    if (isPaused) return
-    mobileIndex = getNextAdIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex, mobileAds)
-    setAdSpotIndex(AD_SPOTS.MOBILE_MAIN, mobileIndex)
-}
-
-// --- Mobile banner rotation ---
-function nextMobileBanner() {
-    if (isPaused) return
-    mobileBannerIndex = getNextAdIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex, mobileBannerAds)
-    setAdSpotIndex(AD_SPOTS.MOBILE_BANNER, mobileBannerIndex)
-}
-
-function setAdFailed(group, id, failed) {
-    if (group === AD_SPOTS.BANNER) {
-        failedBannerAds = { ...failedBannerAds, [id]: failed }
-    } else if (group === AD_SPOTS.MOBILE_MAIN) {
-        failedMobileAds = { ...failedMobileAds, [id]: failed }
-    } else {
-        failedMobileBannerAds = { ...failedMobileBannerAds, [id]: failed }
+function setBannerLoaded(ad, image) {
+    loadedBannerAds = {
+        ...loadedBannerAds,
+        [ad.id]: image.naturalWidth > 1 && image.naturalHeight > 1,
     }
 }
 
 onMount(() => {
-    checkMobile()
     refreshAds()
 
     // Start rotation intervals
     bannerInterval = setInterval(nextBanner, 20000)
-    mobileInterval = setInterval(nextMobile, 20000)
-    mobileBannerInterval = setInterval(nextMobileBanner, 20000)
 
-    window.addEventListener('resize', checkMobile)
     window.addEventListener('focus', refreshAds)
     document.addEventListener('visibilitychange', refreshAds)
 })
 
 onDestroy(() => {
     if (bannerInterval) clearInterval(bannerInterval)
-    if (mobileInterval) clearInterval(mobileInterval)
-    if (mobileBannerInterval) clearInterval(mobileBannerInterval)
     if (expiryTimeout) clearTimeout(expiryTimeout)
     if (typeof window !== 'undefined') {
-        window.removeEventListener('resize', checkMobile)
         window.removeEventListener('focus', refreshAds)
         document.removeEventListener('visibilitychange', refreshAds)
     }
@@ -150,12 +94,6 @@ function getLogoSrc(ad) {
 }
 </script>
 
-<!--
-  Unified ad container with reserved space at all breakpoints.
-  - Desktop (>=768px): shows horizontal banner
-  - Mobile (<768px): shows square/rectangle ad + horizontal banner below it
-  Space is always reserved — zero layout shift.
--->
 <div
     class="ad-container"
     onmouseenter={() => (isPaused = true)}
@@ -164,21 +102,18 @@ function getLogoSrc(ad) {
     aria-label="Mainos"
 >
     <!-- Desktop banner (hidden on mobile) -->
-    <div class="ad-slot ad-slot--desktop">
-        {#if failedBannerAds[bannerAds[bannerIndex]?.id]}
-            <div class="support-message" aria-hidden="true">
-                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos lisäät sivuston
-                sallittujen listalle.
-            </div>
-        {/if}
-        {#each bannerAds as ad, index (ad.id)}
+    <div class="ad-slot ad-slot--desktop" class:ad-slot--empty={!activeBanner}>
+        <AdLabel />
+        {#each bannerAds as ad (ad.id)}
             <a
                 href={ad.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="ad-link"
-                class:active={index === bannerIndex}
-                class:fade-out={index !== bannerIndex}
+                class:active={ad.id === activeBanner?.id}
+                class:fade-out={ad.id !== activeBanner?.id}
+                tabindex={ad.id === activeBanner?.id ? 0 : -1}
+                aria-hidden={ad.id !== activeBanner?.id}
             >
                 {#if ad.isCustom === 'dna'}
                     <div class="custom-banner dna">
@@ -359,69 +294,10 @@ function getLogoSrc(ad) {
                         src={ad.src}
                         alt={ad.alt || 'Mainos'}
                         class="ad-img"
-                        onload={() => setAdFailed(AD_SPOTS.BANNER, ad.id, false)}
-                        onerror={() => setAdFailed(AD_SPOTS.BANNER, ad.id, true)}
+                        onload={(event) => setBannerLoaded(ad, event.currentTarget)}
+                        onerror={() => (loadedBannerAds = { ...loadedBannerAds, [ad.id]: false })}
                     />
                 {/if}
-                <span class="ad-disclaimer">Mainos</span>
-            </a>
-        {/each}
-    </div>
-
-    <!-- Mobile square/rectangle ad (hidden on desktop) -->
-    <div class="ad-slot ad-slot--mobile-square">
-        {#if failedMobileAds[mobileAds[mobileIndex]?.id]}
-            <div class="support-message" aria-hidden="true">
-                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos lisäät sivuston
-                sallittujen listalle.
-            </div>
-        {/if}
-        {#each mobileAds as ad, index (ad.id)}
-            <a
-                href={ad.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="ad-link ad-link--square"
-                class:active={index === mobileIndex}
-                class:fade-out={index !== mobileIndex}
-            >
-                <img
-                    src={ad.src}
-                    alt={ad.alt || 'Mainos'}
-                    class="ad-img ad-img--square"
-                    onload={() => setAdFailed(AD_SPOTS.MOBILE_MAIN, ad.id, false)}
-                    onerror={() => setAdFailed(AD_SPOTS.MOBILE_MAIN, ad.id, true)}
-                />
-                <span class="ad-disclaimer">Mainos</span>
-            </a>
-        {/each}
-    </div>
-
-    <!-- Mobile horizontal banner (hidden on desktop) -->
-    <div class="ad-slot ad-slot--mobile-banner">
-        {#if failedMobileBannerAds[mobileBannerAds[mobileBannerIndex]?.id]}
-            <div class="support-message" aria-hidden="true">
-                Näyttää siltä, että käytät mainostenestoa. Arvostamme suuresti, jos lisäät sivuston
-                sallittujen listalle.
-            </div>
-        {/if}
-        {#each mobileBannerAds as ad, index (ad.id)}
-            <a
-                href={ad.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="ad-link ad-link--mbanner"
-                class:active={index === mobileBannerIndex}
-                class:fade-out={index !== mobileBannerIndex}
-            >
-                <img
-                    src={ad.src}
-                    alt={ad.alt || 'Mainos'}
-                    class="ad-img"
-                    onload={() => setAdFailed(AD_SPOTS.MOBILE_BANNER, ad.id, false)}
-                    onerror={() => setAdFailed(AD_SPOTS.MOBILE_BANNER, ad.id, true)}
-                />
-                <span class="ad-disclaimer">Mainos</span>
             </a>
         {/each}
     </div>
@@ -442,34 +318,16 @@ function getLogoSrc(ad) {
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
-}
-
-.support-message {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    border: 1px dashed rgba(0, 53, 128, 0.24);
-    border-radius: 0;
-    background: rgba(238, 243, 251, 0.72);
-    color: rgba(15, 23, 42, 0.72);
-    font-size: 0.8rem;
-    font-weight: 700;
-    line-height: 1.35;
-    text-align: center;
-    pointer-events: none;
+    align-items: flex-start;
 }
 
 /* Ad link base — absolute positioning for crossfade */
 .ad-link {
     position: absolute;
-    top: 0;
+    top: 32px;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 90px;
     display: block;
     border: none;
     opacity: 0;
@@ -521,38 +379,6 @@ function getLogoSrc(ad) {
     z-index: 1;
 }
 
-.ad-disclaimer {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    background: var(--accent-ice, #eef3fb);
-    color: var(--accent, #003580);
-    border: 1px solid rgba(16, 24, 40, 0.14);
-    border-radius: 999px;
-    padding: 3px 10px 3px 8px;
-    font-size: 10px;
-    font-weight: 800;
-    line-height: 1.2;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    box-shadow: 0 1px 2px rgba(0, 53, 128, 0.08);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.ad-disclaimer::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    border-radius: 999px;
-    background: var(--accent, #003580);
-    box-shadow: 0 0 0 2px rgba(0, 53, 128, 0.12);
-}
-
 /* =====================
        DESKTOP (>=768px)
        Only banner visible - 728x90 IAB leaderboard
@@ -561,61 +387,18 @@ function getLogoSrc(ad) {
     position: relative;
     width: 100%;
     max-width: 728px;
-    height: 90px;
+    height: 122px;
     margin: 0 auto;
 }
 
-.ad-slot--mobile-square,
-.ad-slot--mobile-banner {
-    display: none;
-}
-
-/* =====================
-       MOBILE (<768px)
-       Square ad + banner stacked, both with reserved space
-       ===================== */
 @media (max-width: 767px) {
     .ad-slot--desktop {
         display: none;
     }
+}
 
-    .ad-slot--mobile-square {
-        display: block;
-        position: relative;
-        width: min(300px, 100%);
-        height: 250px;
-        margin: 0 auto;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .ad-link--square {
-        position: absolute;
-        width: 100%;
-        height: 250px;
-    }
-
-    .ad-img--square {
-        width: 100%;
-        height: 250px;
-        object-fit: cover;
-    }
-
-    .ad-slot--mobile-banner {
-        display: block;
-        position: relative;
-        width: min(300px, 100%);
-        height: 250px;
-        margin: 0 auto;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    .ad-link--mbanner {
-        position: absolute;
-        width: 100%;
-        height: 250px;
-    }
+.ad-slot--empty {
+    display: none;
 }
 
 /* Reduced motion */
