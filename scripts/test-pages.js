@@ -481,6 +481,130 @@ try {
     }
     console.log('PASS compact calendar, result card flip and player modal')
 
+    // Compact rows share the cards' data and controls and persist across page/date loads.
+    for (const width of [320, 768, 1440]) {
+        const context = await browser.createBrowserContext()
+        const compactPage = await context.newPage()
+        await compactPage.setViewport({ width, height: 960 })
+        await visit(compactPage, '/?date=2026-11-07')
+        await compactPage.waitForSelector('.game-player-card')
+        assert.equal(
+            await compactPage.$eval('#scoringList', (node) => node.dataset.viewMode),
+            'cards'
+        )
+        await compactPage.click('.scoring-list__view button:nth-child(2)')
+        await compactPage.waitForSelector('#scoringList[data-view-mode="compact"]')
+        assert.equal(await compactPage.$('.scoring-list__more'), null)
+        const rows = await compactPage.$$eval('.game-player-card', (nodes) =>
+            nodes.map((node) => ({
+                height: node.getBoundingClientRect().height,
+                width: node.getBoundingClientRect().width,
+                hasStats: !!node.querySelector('.card__scoring, .card__save-content'),
+            }))
+        )
+        assert(rows.length > 8, 'Compact mode shows every participating player')
+        if (width < 768)
+            assert.equal(
+                await compactPage.$$eval('.mobile-ad-container', (nodes) => nodes.length),
+                2,
+                'Compact rows keep ads between positions'
+            )
+        assert(rows.every((row) => row.height > 0 && row.height < 170 && row.hasStats))
+        assert(await compactPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+        assert.equal(
+            await compactPage.$eval('.scoring-list__view button:nth-child(2)', (node) =>
+                node.getAttribute('aria-pressed')
+            ),
+            'true'
+        )
+        if (screenshotDir)
+            await compactPage.screenshot({ path: join(screenshotDir, `compact-rows-${width}.png`) })
+
+        const firstRow = '.scoring-list__grid .game-player-card'
+        await compactPage.click(firstRow + ' .card__stats-btn')
+        await compactPage.waitForSelector('.player-details-dialog')
+        await compactPage.click('[aria-label="Sulje pelaajan lisätiedot"]')
+        await compactPage.click(firstRow + ' .card__footer-hint')
+        await compactPage.waitForSelector(firstRow + '.flipped')
+        await compactPage.focus(firstRow + ' .card--back')
+        await compactPage.keyboard.press('Enter')
+        await compactPage.waitForFunction(
+            (selector) => !document.querySelector(selector).classList.contains('flipped'),
+            {},
+            firstRow
+        )
+
+        await compactPage.select('.scoring-list__controls select', 'forwards')
+        assert.equal(
+            await compactPage.$('.scoring-list__section-title[data-position="defenders"]'),
+            null
+        )
+        const sort = await compactPage.$$('.scoring-list__controls select')
+        await sort[1].select('name')
+        const names = await compactPage.$$eval('.card__name-label', (nodes) =>
+            nodes
+                .filter((node) => node.closest('.game-card').getAttribute('aria-hidden') !== 'true')
+                .map((node) => node.textContent.trim())
+        )
+        assert.deepEqual(
+            names,
+            [...names].sort((a, b) => a.localeCompare(b, 'fi'))
+        )
+        let releaseCompactResults
+        const compactResults = new Promise((resolve) => {
+            releaseCompactResults = resolve
+        })
+        await compactPage.setRequestInterception(true)
+        compactPage.on('request', async (request) => {
+            if (request.url().includes(`/data/prepopulated/games/${gameDate}.json`))
+                await compactResults
+            await request.continue()
+        })
+        await visit(compactPage, `/?date=${gameDate}`)
+        await compactPage.waitForSelector('.skeleton-card--compact')
+        assert.equal(
+            await compactPage.$$eval(
+                '.skeleton-card--compact',
+                (nodes) => nodes.filter((node) => node.getBoundingClientRect().height > 0).length
+            ),
+            4
+        )
+        assert(
+            await compactPage.$$eval('.skeleton-card--compact', (nodes) =>
+                nodes.every((node) => node.getBoundingClientRect().height < 170)
+            )
+        )
+        releaseCompactResults()
+        await compactPage.waitForSelector('#scoringList[data-view-mode="compact"]')
+        await compactPage.focus('.scoring-list__view button:first-child')
+        await compactPage.keyboard.press('Enter')
+        await compactPage.waitForSelector('#scoringList[data-view-mode="cards"]')
+        await compactPage.reload({ waitUntil: 'domcontentloaded' })
+        await compactPage.waitForSelector('#scoringList[data-view-mode="cards"]')
+        await context.close()
+    }
+    console.log(
+        'PASS compact rows: density, all players, details, stats, filters, sorting and saved preference'
+    )
+
+    const privateContext = await browser.createBrowserContext()
+    const privatePage = await privateContext.newPage()
+    await privatePage.evaluateOnNewDocument(() => {
+        for (const method of ['getItem', 'setItem']) {
+            const original = Storage.prototype[method]
+            Storage.prototype[method] = function (key, ...args) {
+                if (key === 'player-view-mode') throw new Error('Preference storage unavailable')
+                return original.call(this, key, ...args)
+            }
+        }
+    })
+    await visit(privatePage, `/?date=${gameDate}`)
+    await privatePage.waitForSelector('.scoring-list__view')
+    await privatePage.click('.scoring-list__view button:nth-child(2)')
+    await privatePage.waitForSelector('#scoringList[data-view-mode="compact"]')
+    await privateContext.close()
+    console.log('PASS compact view remains usable when preference storage is blocked')
+
     // Standings must retain official ordering and recover without hiding last-good rows.
     const page = await browser.newPage()
     await page.setViewport({ width: 1440, height: 960 })

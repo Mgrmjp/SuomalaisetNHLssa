@@ -18,8 +18,9 @@ import { isPlayerGameLive, shouldShowGameResult } from '$lib/utils/gameStateHelp
 import { getLocalHeadshotThumbUrl, getLocalHeadshotUrl } from '$lib/utils/playerHeadshots.js'
 import ComprehensivePlayerDetails from './ComprehensivePlayerDetails.svelte'
 import './PlayerCard.css'
+import './PlayerCardCompact.css'
 
-const { player, highlight = null } = $props()
+const { player, highlight = null, compact = false } = $props()
 const cardId = $props.id()
 
 // Reactive variables for player photo
@@ -325,7 +326,11 @@ $effect(() => {
 
 <div class="game-player-card__container relative w-full" class:goalie-card={isGoalie}>
     <!-- Player Card -->
-    <div class="game-player-card" class:flipped={isFlipped}>
+    <div
+        class="game-player-card"
+        class:flipped={isFlipped}
+        class:game-player-card--compact={compact}
+    >
         <!-- Spacer in normal flow to size container -->
         <div class="game-player-card__spacer" aria-hidden="true"></div>
         <div class="game-player-card__inner" bind:this={cardInner}>
@@ -333,6 +338,7 @@ $effect(() => {
             <div
                 class="game-card ui-surface"
                 bind:this={frontCard}
+                class:card--compact={compact}
                 inert={isFlipped}
                 aria-hidden={isFlipped}
                 class:game-card--win={_didWin}
@@ -401,14 +407,18 @@ $effect(() => {
                     {#if !isGoalie}
                         <dl class="card__scoring">
                             <div>
-                                <dt title="Maalit" aria-label="Maalit">maalia</dt>
+                                <dt title="Maalit" aria-label="Maalit">
+                                    {compact ? 'M' : 'maalia'}
+                                </dt>
                                 <dd>{player.goals || 0}</dd>
                             </div>
                             <div>
-                                <dt title="Syötöt" aria-label="Syötöt">syöttöä</dt>
+                                <dt title="Syötöt" aria-label="Syötöt">
+                                    {compact ? 'S' : 'syöttöä'}
+                                </dt>
                                 <dd>{player.assists || 0}</dd>
                             </div>
-                            <div>
+                            <div class="card__scoring-points">
                                 <dt>pistettä</dt>
                                 <dd>{dailyPlayerPoints(player)}</dd>
                             </div>
@@ -430,7 +440,7 @@ $effect(() => {
                             {#if (player.penalty_minutes ?? player.penaltyMinutes ?? 0) > 0}
                                 <div>
                                     <dt title="Rangaistusminuutit" aria-label="Rangaistusminuutit">
-                                        ran. min
+                                        {compact ? 'RM' : 'ran. min'}
                                     </dt>
                                     <dd>{player.penalty_minutes ?? player.penaltyMinutes}</dd>
                                 </div>

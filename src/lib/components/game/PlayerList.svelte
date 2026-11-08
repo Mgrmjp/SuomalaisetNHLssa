@@ -1,8 +1,10 @@
 <script>
 // @ts-nocheck
-import { Minus, Plus } from 'lucide-svelte'
+import { LayoutGrid, List, Minus, Plus } from 'lucide-svelte'
+import { onMount } from 'svelte'
 import { base } from '$app/paths'
 import Button from '$lib/components/ui/Button.svelte'
+import ControlGroup from '$lib/components/ui/ControlGroup.svelte'
 import Notice from '$lib/components/ui/Notice.svelte'
 import MobileAd from '$lib/components/ui/MobileAd.svelte'
 import { getDailyFallbackNews } from '$lib/services/dailyNewsService.js'
@@ -41,6 +43,25 @@ const scheduledFinnishGames = $derived(
 
 let fallbackNews = $state([])
 let newsLookupToken = 0
+let viewMode = $state('cards')
+const viewModeKey = 'player-view-mode'
+onMount(() => {
+    try {
+        if (window.localStorage.getItem(viewModeKey) === 'compact') viewMode = 'compact'
+    } catch {
+        // Keep the default view when browser storage is unavailable.
+    }
+})
+
+function setViewMode(mode) {
+    viewMode = mode
+    try {
+        window.localStorage.setItem(viewModeKey, mode)
+    } catch {
+        // The selected view still works without persistence.
+    }
+}
+
 let sortBy = $state('points')
 let positionFilter = $state('all')
 let expandedGroups = $state({ forwards: false, defenders: false, goalies: false })
@@ -192,9 +213,12 @@ $effect(() => {
 {#if loadingResults}
     <div class="scoring-list" aria-busy="true">
         <p class="scoring-list__loading-label" role="status">Ladataan pelaajien ottelutilastoja…</p>
-        <div class="scoring-list__grid scoring-list__grid--loading">
+        <div
+            class="scoring-list__grid scoring-list__grid--loading"
+            class:scoring-list__grid--compact={viewMode === 'compact'}
+        >
             {#each [1, 2, 3, 4] as _}
-                <SkeletonPlayerCard />
+                <SkeletonPlayerCard compact={viewMode === 'compact'} />
             {/each}
         </div>
     </div>
@@ -213,9 +237,22 @@ $effect(() => {
         yesterdayDate={yesterdayPreviewDate}
     />
 {:else}
-    <section id="scoringList" class="scoring-list" aria-label="Pelaajien ottelutilastot">
-        {#if filteredPlayers.length > 1}
-            <div class="scoring-list__controls">
+    <section
+        id="scoringList"
+        class="scoring-list"
+        aria-label="Pelaajien ottelutilastot"
+        data-view-mode={viewMode}
+    >
+        <div class="scoring-list__controls">
+            <ControlGroup label="Pelaajanäkymä" class="scoring-list__view">
+                <Button selected={viewMode === 'cards'} onclick={() => setViewMode('cards')}>
+                    <LayoutGrid size={16} aria-hidden="true" /> Kortit
+                </Button>
+                <Button selected={viewMode === 'compact'} onclick={() => setViewMode('compact')}>
+                    <List size={16} aria-hidden="true" /> Tiivis
+                </Button>
+            </ControlGroup>
+            {#if filteredPlayers.length > 1}
                 <label
                     >Pelipaikka
                     <select bind:value={positionFilter}>
@@ -235,8 +272,8 @@ $effect(() => {
                         <option value="name">Nimi</option>
                     </select>
                 </label>
-            </div>
-        {/if}
+            {/if}
+        </div>
         {#each visibleGroups as group, groupIndex (group.key)}
             <div class="scoring-list__section">
                 {#if groupIndex > 0}
@@ -248,17 +285,20 @@ $effect(() => {
                 <div
                     id={`players-${group.key}`}
                     class="scoring-list__grid"
-                    class:scoring-list__grid--collapsed={positionFilter === 'all' &&
+                    class:scoring-list__grid--compact={viewMode === 'compact'}
+                    class:scoring-list__grid--collapsed={viewMode === 'cards' &&
+                        positionFilter === 'all' &&
                         !expandedGroups[group.key]}
                 >
-                    {#each group.players.slice(0, positionFilter === 'all' && !expandedGroups[group.key] ? 8 : undefined) as player (`${player.playerId}-${player.game_id}`)}
+                    {#each group.players.slice(0, viewMode === 'cards' && positionFilter === 'all' && !expandedGroups[group.key] ? 8 : undefined) as player (`${player.playerId}-${player.game_id}`)}
                         <PlayerCard
                             {player}
+                            compact={viewMode === 'compact'}
                             highlight={highlights.get(`${player.playerId}-${player.game_id}`)}
                         />
                     {/each}
                 </div>
-                {#if positionFilter === 'all' && group.players.length > 2}
+                {#if viewMode === 'cards' && positionFilter === 'all' && group.players.length > 2}
                     <button
                         type="button"
                         class="scoring-list__more"
@@ -302,6 +342,10 @@ $effect(() => {
     gap: 0.75rem;
     justify-content: flex-end;
     margin-bottom: 0.75rem;
+}
+.scoring-list__controls :global(.scoring-list__view) {
+    margin-right: auto;
+    align-self: flex-end;
 }
 .scoring-list__controls label {
     display: flex;
@@ -357,6 +401,10 @@ $effect(() => {
     gap: 1rem;
     align-items: stretch;
 }
+.scoring-list__grid.scoring-list__grid--compact {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.5rem;
+}
 .scoring-list__empty {
     padding: 1rem;
     color: var(--color-muted);
@@ -387,11 +435,19 @@ $effect(() => {
     outline-offset: 2px;
 }
 @media (max-width: 767px) {
-    .scoring-list__grid--loading :global(.card--skeleton:nth-child(n + 3)) {
+    .scoring-list__grid--loading:not(.scoring-list__grid--compact)
+        :global(.card--skeleton:nth-child(n + 3)) {
         display: none;
     }
     .scoring-list__grid--collapsed :global(.game-player-card__container:nth-child(n + 3)) {
         display: none;
+    }
+    .scoring-list__controls :global(.scoring-list__view) {
+        width: 100%;
+    }
+    .scoring-list__controls :global(.scoring-list__view .ui-control) {
+        flex: 1;
+        justify-content: center;
     }
     .scoring-list__controls label {
         flex: 1 1 0;

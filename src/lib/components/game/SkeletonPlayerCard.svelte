@@ -1,4 +1,12 @@
-<div class="skeleton-card card--skeleton ui-surface" aria-hidden="true">
+<script>
+const { compact = false } = $props()
+</script>
+
+<div
+    class="skeleton-card card--skeleton ui-surface"
+    class:skeleton-card--compact={compact}
+    aria-hidden="true"
+>
     <div class="skeleton-card__header">
         <div class="skeleton-card__identity">
             <div class="skeleton-card__block skeleton-card__name"></div>
@@ -147,6 +155,60 @@
     align-self: center;
     width: 44px;
     height: 8px;
+}
+
+.skeleton-card--compact {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1fr) 2.5rem;
+    grid-template-areas: 'identity stats game action';
+    align-items: center;
+    min-height: 80px;
+    gap: 0.5rem 1rem;
+    padding: 0.75rem;
+    border-radius: var(--card-radius-sm);
+}
+
+.skeleton-card--compact .skeleton-card__header {
+    grid-area: identity;
+}
+.skeleton-card--compact .skeleton-card__stats {
+    grid-area: stats;
+    gap: 0.25rem;
+}
+.skeleton-card--compact .skeleton-card__label {
+    width: 14px;
+    height: 6px;
+}
+.skeleton-card--compact .skeleton-card__matchup {
+    grid-area: game;
+    border: 0;
+    padding: 0;
+}
+.skeleton-card--compact .skeleton-card__switch {
+    grid-area: action;
+    width: 24px;
+    margin: 0;
+}
+.skeleton-card--compact .skeleton-card__venue,
+.skeleton-card--compact .skeleton-card__result {
+    display: none;
+}
+.skeleton-card--compact .skeleton-card__header {
+    flex-direction: row-reverse;
+    gap: 0.5rem;
+}
+.skeleton-card--compact .skeleton-card__logo {
+    width: 28px;
+    height: 28px;
+}
+
+@media (max-width: 767px) {
+    .skeleton-card--compact {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 2.5rem;
+        grid-template-areas: 'identity identity action' 'stats game game';
+        min-height: 112px;
+        gap: 0.5rem;
+    }
 }
 
 @keyframes skeleton-shimmer {
