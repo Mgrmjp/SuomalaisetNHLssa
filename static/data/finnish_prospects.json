@@ -754,6 +754,57 @@
     "hasCurrentSeasonStats": false
   },
   {
+    "id": "8483693",
+    "name": "Joel Maatta",
+    "nhlRights": "EDM",
+    "position": "C",
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8483693.png",
+    "height": 185,
+    "weight": 91,
+    "birthDate": "2002-07-06",
+    "sources": [
+      "team_prospects:EDM",
+      "draft_picks:2022"
+    ],
+    "currentTeam": "TPS",
+    "league": "Liiga",
+    "stats": {
+      "gp": 20,
+      "goals": 5,
+      "assists": 4,
+      "points": 9,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {}
+  },
+  {
+    "id": "8485047",
+    "name": "Joona Saarelainen",
+    "nhlRights": "TBL",
+    "sources": [
+      "draft_picks:2024"
+    ],
+    "currentTeam": "KalPa",
+    "league": "Liiga",
+    "stats": {
+      "gp": 19,
+      "goals": 8,
+      "assists": 1,
+      "points": 9,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {},
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/TBL/8485047.png",
+    "position": "C",
+    "birthDate": "2006-04-04"
+  },
+  {
     "id": "8486305",
     "name": "Luka Arkko",
     "nhlRights": "DET",
@@ -849,57 +900,6 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8481695.png",
     "position": "C",
     "birthDate": "2001-04-28"
-  },
-  {
-    "id": "8483693",
-    "name": "Joel Maatta",
-    "nhlRights": "EDM",
-    "position": "C",
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8483693.png",
-    "height": 185,
-    "weight": 91,
-    "birthDate": "2002-07-06",
-    "sources": [
-      "team_prospects:EDM",
-      "draft_picks:2022"
-    ],
-    "currentTeam": "TPS",
-    "league": "Liiga",
-    "stats": {
-      "gp": 19,
-      "goals": 4,
-      "assists": 4,
-      "points": 8,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {}
-  },
-  {
-    "id": "8485047",
-    "name": "Joona Saarelainen",
-    "nhlRights": "TBL",
-    "sources": [
-      "draft_picks:2024"
-    ],
-    "currentTeam": "KalPa",
-    "league": "Liiga",
-    "stats": {
-      "gp": 18,
-      "goals": 7,
-      "assists": 1,
-      "points": 8,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {},
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/TBL/8485047.png",
-    "position": "C",
-    "birthDate": "2006-04-04"
   },
   {
     "id": "8484773",
@@ -1392,7 +1392,7 @@
     "currentTeam": "New York Rangers",
     "league": "NHL",
     "stats": {
-      "gp": 18,
+      "gp": 19,
       "goals": 4,
       "assists": 2,
       "points": 6,
@@ -2110,6 +2110,33 @@
     "hasCurrentSeasonStats": false
   },
   {
+    "id": "8484877",
+    "name": "Aatos Koivu",
+    "nhlRights": "MTL",
+    "position": "C",
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8484877.png",
+    "height": 185,
+    "weight": 77,
+    "birthDate": "2006-06-22",
+    "sources": [
+      "team_prospects:MTL",
+      "draft_picks:2024"
+    ],
+    "currentTeam": "TPS",
+    "league": "Liiga",
+    "stats": {
+      "gp": 19,
+      "goals": 2,
+      "assists": 1,
+      "points": 3,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {}
+  },
+  {
     "id": "8480037",
     "name": "Aleksi Heponiemi",
     "nhlRights": "FLA",
@@ -2301,6 +2328,33 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8480000.png",
     "position": "D",
     "birthDate": "1998-11-16"
+  },
+  {
+    "id": "8484872",
+    "name": "Kasper Pikkarainen",
+    "nhlRights": "NJD",
+    "position": "R",
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8484872.png",
+    "height": 191,
+    "weight": 88,
+    "birthDate": "2006-08-07",
+    "sources": [
+      "team_prospects:NJD",
+      "draft_picks:2024"
+    ],
+    "currentTeam": "TPS",
+    "league": "Liiga",
+    "stats": {
+      "gp": 17,
+      "goals": 2,
+      "assists": 1,
+      "points": 3,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": {}
   },
   {
     "id": "8484797",
@@ -2496,33 +2550,6 @@
     "birthDate": "2002-03-25"
   },
   {
-    "id": "8484877",
-    "name": "Aatos Koivu",
-    "nhlRights": "MTL",
-    "position": "C",
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8484877.png",
-    "height": 185,
-    "weight": 77,
-    "birthDate": "2006-06-22",
-    "sources": [
-      "team_prospects:MTL",
-      "draft_picks:2024"
-    ],
-    "currentTeam": "TPS",
-    "league": "Liiga",
-    "stats": {
-      "gp": 18,
-      "goals": 1,
-      "assists": 1,
-      "points": 2,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {}
-  },
-  {
     "id": "8483463",
     "name": "Aleksanteri Kaskimaki",
     "nhlRights": "STL",
@@ -2696,33 +2723,6 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/20262027/PIT/8484490.png",
     "position": "D",
     "birthDate": "2005-02-01"
-  },
-  {
-    "id": "8484872",
-    "name": "Kasper Pikkarainen",
-    "nhlRights": "NJD",
-    "position": "R",
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8484872.png",
-    "height": 191,
-    "weight": 88,
-    "birthDate": "2006-08-07",
-    "sources": [
-      "team_prospects:NJD",
-      "draft_picks:2024"
-    ],
-    "currentTeam": "TPS",
-    "league": "Liiga",
-    "stats": {
-      "gp": 16,
-      "goals": 2,
-      "assists": 0,
-      "points": 2,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {}
   },
   {
     "id": "8485052",
@@ -3429,7 +3429,7 @@
     "currentTeam": "TPS",
     "league": "Liiga",
     "stats": {
-      "gp": 15,
+      "gp": 16,
       "goals": 0,
       "assists": 0,
       "points": 0,
@@ -3725,11 +3725,11 @@
     "currentTeam": "Vancouver Canucks",
     "league": "NHL",
     "stats": {
-      "gp": 13,
+      "gp": 14,
       "goals": 0,
       "assists": 0,
       "points": 0,
-      "savePct": 0.889189,
+      "savePct": 0.888601,
       "gaa": 0.0,
       "shutouts": 0
     },
