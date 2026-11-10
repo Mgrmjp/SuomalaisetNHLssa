@@ -1,58 +1,6 @@
 {
-  "updatedAt": "2026-11-09T15:06:00Z",
+  "updatedAt": "2026-11-10T14:21:23Z",
   "games": [
-    {
-      "gameId": 2026020283,
-      "startTime": "2026-11-10T01:00:00Z",
-      "awayTeam": "NYR",
-      "homeTeam": "EDM",
-      "finnishPlayers": [
-        {
-          "name": "Eeli Tolvanen",
-          "team": "NYR"
-        },
-        {
-          "name": "Joonas Korpisalo",
-          "team": "NYR"
-        },
-        {
-          "name": "Kasperi Kapanen",
-          "team": "EDM"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020284,
-      "startTime": "2026-11-10T02:30:00Z",
-      "awayTeam": "PHI",
-      "homeTeam": "VAN",
-      "finnishPlayers": [
-        {
-          "name": "Rasmus Ristolainen",
-          "team": "PHI"
-        },
-        {
-          "name": "Kevin Lankinen",
-          "team": "VAN"
-        },
-        {
-          "name": "Leevi Meriläinen",
-          "team": "VAN"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020285,
-      "startTime": "2026-11-10T03:00:00Z",
-      "awayTeam": "NYI",
-      "homeTeam": "SJS",
-      "finnishPlayers": [
-        {
-          "name": "Matias Maccelli",
-          "team": "NYI"
-        }
-      ]
-    },
     {
       "gameId": 2026020286,
       "startTime": "2026-11-11T00:00:00Z",
@@ -126,6 +74,66 @@
         {
           "name": "Aleksanteri Kaskimaki",
           "team": "STL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020292,
+      "startTime": "2026-11-11T03:00:00Z",
+      "awayTeam": "NSH",
+      "homeTeam": "LAK",
+      "finnishPlayers": [
+        {
+          "name": "Justus Annunen",
+          "team": "NSH"
+        },
+        {
+          "name": "Juuse Saros",
+          "team": "NSH"
+        },
+        {
+          "name": "Erik Haula",
+          "team": "LAK"
+        },
+        {
+          "name": "Joel Armia",
+          "team": "LAK"
+        },
+        {
+          "name": "Samuel Helenius",
+          "team": "LAK"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020293,
+      "startTime": "2026-11-12T00:00:00Z",
+      "awayTeam": "TBL",
+      "homeTeam": "BUF",
+      "finnishPlayers": [
+        {
+          "name": "Konsta Helenius",
+          "team": "BUF"
+        },
+        {
+          "name": "Ukko-Pekka Luukkonen",
+          "team": "BUF"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020294,
+      "startTime": "2026-11-12T00:30:00Z",
+      "awayTeam": "NYR",
+      "homeTeam": "CGY",
+      "finnishPlayers": [
+        {
+          "name": "Eeli Tolvanen",
+          "team": "NYR"
+        },
+        {
+          "name": "Joonas Korpisalo",
+          "team": "NYR"
         }
       ]
     }
