@@ -1,46 +1,6 @@
 {
-  "updatedAt": "2026-11-13T13:56:33Z",
+  "updatedAt": "2026-11-14T12:59:44Z",
   "games": [
-    {
-      "gameId": 2026020310,
-      "startTime": "2026-11-14T02:00:00Z",
-      "awayTeam": "NYR",
-      "homeTeam": "VAN",
-      "finnishPlayers": [
-        {
-          "name": "Eeli Tolvanen",
-          "team": "NYR"
-        },
-        {
-          "name": "Joonas Korpisalo",
-          "team": "NYR"
-        },
-        {
-          "name": "Kevin Lankinen",
-          "team": "VAN"
-        },
-        {
-          "name": "Leevi Meriläinen",
-          "team": "VAN"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020311,
-      "startTime": "2026-11-14T03:00:00Z",
-      "awayTeam": "NSH",
-      "homeTeam": "VGK",
-      "finnishPlayers": [
-        {
-          "name": "Justus Annunen",
-          "team": "NSH"
-        },
-        {
-          "name": "Juuse Saros",
-          "team": "NSH"
-        }
-      ]
-    },
     {
       "gameId": 2026020321,
       "startTime": "2026-11-14T18:00:00Z",
@@ -138,6 +98,30 @@
         {
           "name": "Ville Koivunen",
           "team": "PIT"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020318,
+      "startTime": "2026-11-15T00:00:00Z",
+      "awayTeam": "NJD",
+      "homeTeam": "WSH",
+      "finnishPlayers": [
+        {
+          "name": "Lenni Hämeenaho",
+          "team": "NJD"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020319,
+      "startTime": "2026-11-15T00:00:00Z",
+      "awayTeam": "PHI",
+      "homeTeam": "CBJ",
+      "finnishPlayers": [
+        {
+          "name": "Rasmus Ristolainen",
+          "team": "PHI"
         }
       ]
     }
