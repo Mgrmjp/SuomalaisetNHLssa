@@ -1,127 +1,171 @@
 {
-  "updatedAt": "2026-11-14T12:59:44Z",
+  "updatedAt": "2026-11-15T13:26:35Z",
   "games": [
     {
-      "gameId": 2026020321,
-      "startTime": "2026-11-14T18:00:00Z",
-      "awayTeam": "SEA",
-      "homeTeam": "CAR",
-      "finnishPlayers": [
-        {
-          "name": "Jani Nyman",
-          "team": "SEA"
-        },
-        {
-          "name": "Kaapo Kakko",
-          "team": "SEA"
-        },
-        {
-          "name": "Ville Ottavainen",
-          "team": "SEA"
-        },
-        {
-          "name": "Jesperi Kotkaniemi",
-          "team": "CAR"
-        },
-        {
-          "name": "Juuso Välimäki",
-          "team": "CAR"
-        },
-        {
-          "name": "Sebastian Aho",
-          "team": "CAR"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020312,
-      "startTime": "2026-11-14T20:30:00Z",
-      "awayTeam": "WPG",
-      "homeTeam": "CHI",
-      "finnishPlayers": [
-        {
-          "name": "Teuvo Teravainen",
-          "team": "CHI"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020313,
-      "startTime": "2026-11-15T00:00:00Z",
-      "awayTeam": "MIN",
-      "homeTeam": "BOS",
-      "finnishPlayers": [
-        {
-          "name": "Olli Määttä",
-          "team": "MIN"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020314,
-      "startTime": "2026-11-15T00:00:00Z",
+      "gameId": 2026020326,
+      "startTime": "2026-11-16T00:30:00Z",
       "awayTeam": "EDM",
-      "homeTeam": "TOR",
+      "homeTeam": "PHI",
       "finnishPlayers": [
         {
           "name": "Kasperi Kapanen",
           "team": "EDM"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020315,
-      "startTime": "2026-11-15T00:00:00Z",
-      "awayTeam": "COL",
-      "homeTeam": "MTL",
-      "finnishPlayers": [
-        {
-          "name": "Artturi Lehkonen",
-          "team": "COL"
         },
-        {
-          "name": "Oliver Kapanen",
-          "team": "MTL"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020317,
-      "startTime": "2026-11-15T00:00:00Z",
-      "awayTeam": "OTT",
-      "homeTeam": "PIT",
-      "finnishPlayers": [
-        {
-          "name": "Nikolas Matinpalo",
-          "team": "OTT"
-        },
-        {
-          "name": "Ville Koivunen",
-          "team": "PIT"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020318,
-      "startTime": "2026-11-15T00:00:00Z",
-      "awayTeam": "NJD",
-      "homeTeam": "WSH",
-      "finnishPlayers": [
-        {
-          "name": "Lenni Hämeenaho",
-          "team": "NJD"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020319,
-      "startTime": "2026-11-15T00:00:00Z",
-      "awayTeam": "PHI",
-      "homeTeam": "CBJ",
-      "finnishPlayers": [
         {
           "name": "Rasmus Ristolainen",
           "team": "PHI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020327,
+      "startTime": "2026-11-16T01:00:00Z",
+      "awayTeam": "FLA",
+      "homeTeam": "DAL",
+      "finnishPlayers": [
+        {
+          "name": "Aleksander Barkov",
+          "team": "FLA"
+        },
+        {
+          "name": "Anton Lundell",
+          "team": "FLA"
+        },
+        {
+          "name": "Eetu Luostarinen",
+          "team": "FLA"
+        },
+        {
+          "name": "Niko Mikkola",
+          "team": "FLA"
+        },
+        {
+          "name": "Arttu Hyry",
+          "team": "DAL"
+        },
+        {
+          "name": "Esa Lindell",
+          "team": "DAL"
+        },
+        {
+          "name": "Joel Kiviranta",
+          "team": "DAL"
+        },
+        {
+          "name": "Mikko Rantanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Miro Heiskanen",
+          "team": "DAL"
+        },
+        {
+          "name": "Roope Hintz",
+          "team": "DAL"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020328,
+      "startTime": "2026-11-16T01:00:00Z",
+      "awayTeam": "CGY",
+      "homeTeam": "ANA",
+      "finnishPlayers": [
+        {
+          "name": "Mikael Granlund",
+          "team": "ANA"
+        },
+        {
+          "name": "Ville Husso",
+          "team": "ANA"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020329,
+      "startTime": "2026-11-16T02:00:00Z",
+      "awayTeam": "VAN",
+      "homeTeam": "VGK",
+      "finnishPlayers": [
+        {
+          "name": "Kevin Lankinen",
+          "team": "VAN"
+        },
+        {
+          "name": "Leevi Meriläinen",
+          "team": "VAN"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020330,
+      "startTime": "2026-11-16T02:00:00Z",
+      "awayTeam": "NSH",
+      "homeTeam": "SJS",
+      "finnishPlayers": [
+        {
+          "name": "Justus Annunen",
+          "team": "NSH"
+        },
+        {
+          "name": "Juuse Saros",
+          "team": "NSH"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020331,
+      "startTime": "2026-11-17T00:30:00Z",
+      "awayTeam": "MTL",
+      "homeTeam": "NYR",
+      "finnishPlayers": [
+        {
+          "name": "Oliver Kapanen",
+          "team": "MTL"
+        },
+        {
+          "name": "Eeli Tolvanen",
+          "team": "NYR"
+        },
+        {
+          "name": "Joonas Korpisalo",
+          "team": "NYR"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020332,
+      "startTime": "2026-11-17T02:30:00Z",
+      "awayTeam": "VAN",
+      "homeTeam": "UTA",
+      "finnishPlayers": [
+        {
+          "name": "Kevin Lankinen",
+          "team": "VAN"
+        },
+        {
+          "name": "Leevi Meriläinen",
+          "team": "VAN"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020333,
+      "startTime": "2026-11-18T00:00:00Z",
+      "awayTeam": "LAK",
+      "homeTeam": "BOS",
+      "finnishPlayers": [
+        {
+          "name": "Erik Haula",
+          "team": "LAK"
+        },
+        {
+          "name": "Joel Armia",
+          "team": "LAK"
+        },
+        {
+          "name": "Samuel Helenius",
+          "team": "LAK"
         }
       ]
     }
