@@ -512,6 +512,30 @@
     "birthDate": "1998-02-25"
   },
   {
+    "id": "8480036",
+    "name": "Miro Heiskanen",
+    "nhlRights": "DAL",
+    "sources": [
+      "draft_picks:2017"
+    ],
+    "currentTeam": "Dallas Stars",
+    "league": "NHL",
+    "stats": {
+      "gp": 16,
+      "goals": 4,
+      "assists": 8,
+      "points": 12,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": true,
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/DAL/8480036.png",
+    "position": "D",
+    "birthDate": "1999-07-18"
+  },
+  {
     "id": "8480875",
     "name": "Niklas Nordgren",
     "nhlRights": "CHI",
@@ -545,7 +569,7 @@
     "currentTeam": "Florida Panthers",
     "league": "NHL",
     "stats": {
-      "gp": 21,
+      "gp": 22,
       "goals": 7,
       "assists": 4,
       "points": 11,
@@ -635,28 +659,28 @@
     "hasCurrentSeasonStats": {}
   },
   {
-    "id": "8480036",
-    "name": "Miro Heiskanen",
-    "nhlRights": "DAL",
+    "id": "8482759",
+    "name": "Viljami Marjala",
+    "nhlRights": "BUF",
     "sources": [
-      "draft_picks:2017"
+      "draft_picks:2021"
     ],
-    "currentTeam": "Dallas Stars",
-    "league": "NHL",
+    "currentTeam": "Bakersfield Condors",
+    "league": "AHL",
     "stats": {
       "gp": 15,
-      "goals": 3,
-      "assists": 8,
+      "goals": 1,
+      "assists": 10,
       "points": 11,
       "savePct": 0.0,
       "gaa": 0.0,
       "shutouts": 0
     },
     "lastSeason": 20262027,
-    "hasCurrentSeasonStats": true,
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/DAL/8480036.png",
-    "position": "D",
-    "birthDate": "1999-07-18"
+    "hasCurrentSeasonStats": {},
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/EDM/8482759.png",
+    "position": "L",
+    "birthDate": "2003-01-29"
   },
   {
     "id": "8479540",
@@ -731,6 +755,30 @@
     "birthDate": "2000-09-24"
   },
   {
+    "id": "8481711",
+    "name": "Matias Maccelli",
+    "nhlRights": "ARI",
+    "sources": [
+      "draft_picks:2019"
+    ],
+    "currentTeam": "New York Islanders",
+    "league": "NHL",
+    "stats": {
+      "gp": 11,
+      "goals": 2,
+      "assists": 8,
+      "points": 10,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": true,
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/NYI/8481711.png",
+    "position": "L",
+    "birthDate": "2000-10-14"
+  },
+  {
     "id": "8485611",
     "name": "Max Westergard",
     "nhlRights": "PHI",
@@ -777,30 +825,6 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8480273.png",
     "position": "C",
     "birthDate": "1996-03-06"
-  },
-  {
-    "id": "8482759",
-    "name": "Viljami Marjala",
-    "nhlRights": "BUF",
-    "sources": [
-      "draft_picks:2021"
-    ],
-    "currentTeam": "Bakersfield Condors",
-    "league": "AHL",
-    "stats": {
-      "gp": 14,
-      "goals": 1,
-      "assists": 9,
-      "points": 10,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {},
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/EDM/8482759.png",
-    "position": "L",
-    "birthDate": "2003-01-29"
   },
   {
     "id": "8481699",
@@ -941,7 +965,7 @@
     "currentTeam": "Hartford Wolf Pack",
     "league": "AHL",
     "stats": {
-      "gp": 17,
+      "gp": 18,
       "goals": 3,
       "assists": 6,
       "points": 9,
@@ -953,28 +977,28 @@
     "hasCurrentSeasonStats": false
   },
   {
-    "id": "8481711",
-    "name": "Matias Maccelli",
-    "nhlRights": "ARI",
+    "id": "8486483",
+    "name": "Olli Wahlroos",
+    "birthDate": "2008-02-15",
+    "position": "LW",
     "sources": [
-      "draft_picks:2019"
+      "draft_rankings:2026:international_skaters"
     ],
-    "currentTeam": "New York Islanders",
-    "league": "NHL",
+    "currentTeam": "Edmonton Oil Kings",
+    "league": "WHL",
     "stats": {
-      "gp": 10,
-      "goals": 2,
-      "assists": 7,
+      "gp": 18,
+      "goals": 4,
+      "assists": 5,
       "points": 9,
       "savePct": 0.0,
       "gaa": 0.0,
       "shutouts": 0
     },
     "lastSeason": 20262027,
-    "hasCurrentSeasonStats": true,
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/NYI/8481711.png",
-    "position": "L",
-    "birthDate": "2000-10-14"
+    "hasCurrentSeasonStats": {},
+    "nhlRights": "N/A",
+    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8486483.png"
   },
   {
     "id": "8481048",
@@ -1112,7 +1136,7 @@
     "currentTeam": "Coachella Valley Firebirds",
     "league": "AHL",
     "stats": {
-      "gp": 14,
+      "gp": 15,
       "goals": 2,
       "assists": 6,
       "points": 8,
@@ -1214,7 +1238,7 @@
     "currentTeam": "Cleveland Monsters",
     "league": "AHL",
     "stats": {
-      "gp": 12,
+      "gp": 13,
       "goals": 3,
       "assists": 5,
       "points": 8,
@@ -1248,30 +1272,6 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8480983.png",
     "position": "D",
     "birthDate": "2000-06-19"
-  },
-  {
-    "id": "8486483",
-    "name": "Olli Wahlroos",
-    "birthDate": "2008-02-15",
-    "position": "LW",
-    "sources": [
-      "draft_rankings:2026:international_skaters"
-    ],
-    "currentTeam": "Edmonton Oil Kings",
-    "league": "WHL",
-    "stats": {
-      "gp": 17,
-      "goals": 4,
-      "assists": 4,
-      "points": 8,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": {},
-    "nhlRights": "N/A",
-    "headshot": "https://assets.nhle.com/mugs/nhl/latest/8486483.png"
   },
   {
     "id": "8486046",
@@ -1414,7 +1414,7 @@
     "currentTeam": "Cleveland Monsters",
     "league": "AHL",
     "stats": {
-      "gp": 15,
+      "gp": 16,
       "goals": 2,
       "assists": 5,
       "points": 7,
@@ -1535,12 +1535,13 @@
     "birthDate": "2003-05-08",
     "sources": [
       "team_prospects:CAR",
-      "draft_picks:2021"
+      "draft_picks:2021",
+      "thesportsdb"
     ],
     "currentTeam": "Chicago Wolves",
     "league": "AHL",
     "stats": {
-      "gp": 15,
+      "gp": 16,
       "goals": 4,
       "assists": 2,
       "points": 6,
@@ -1828,7 +1829,7 @@
     "currentTeam": "Florida Panthers",
     "league": "NHL",
     "stats": {
-      "gp": 22,
+      "gp": 23,
       "goals": 2,
       "assists": 3,
       "points": 5,
@@ -2119,7 +2120,7 @@
     "currentTeam": "Seattle Thunderbirds",
     "league": "WHL",
     "stats": {
-      "gp": 17,
+      "gp": 18,
       "goals": 1,
       "assists": 3,
       "points": 4,
@@ -2635,7 +2636,7 @@
     "currentTeam": "St. Louis Blues",
     "league": "NHL",
     "stats": {
-      "gp": 9,
+      "gp": 10,
       "goals": 1,
       "assists": 1,
       "points": 2,
@@ -3294,7 +3295,7 @@
     "currentTeam": "Hartford Wolf Pack",
     "league": "AHL",
     "stats": {
-      "gp": 13,
+      "gp": 14,
       "goals": 0,
       "assists": 1,
       "points": 1,
@@ -3655,11 +3656,11 @@
     "currentTeam": "Nashville Predators",
     "league": "NHL",
     "stats": {
-      "gp": 5,
+      "gp": 6,
       "goals": 0,
       "assists": 0,
       "points": 0,
-      "savePct": 0.885714,
+      "savePct": 0.8625,
       "gaa": 0.0,
       "shutouts": 0
     },
@@ -3949,7 +3950,7 @@
     "currentTeam": "Charlotte Checkers",
     "league": "AHL",
     "stats": {
-      "gp": 3,
+      "gp": 4,
       "goals": 0,
       "assists": 0,
       "points": 0,
