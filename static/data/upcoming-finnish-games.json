@@ -1,34 +1,6 @@
 {
-  "updatedAt": "2026-11-18T15:08:46Z",
+  "updatedAt": "2026-11-19T15:15:38Z",
   "games": [
-    {
-      "gameId": 2026020345,
-      "startTime": "2026-11-19T00:30:00Z",
-      "awayTeam": "MTL",
-      "homeTeam": "NJD",
-      "finnishPlayers": [
-        {
-          "name": "Oliver Kapanen",
-          "team": "MTL"
-        },
-        {
-          "name": "Lenni Hämeenaho",
-          "team": "NJD"
-        }
-      ]
-    },
-    {
-      "gameId": 2026020346,
-      "startTime": "2026-11-19T03:00:00Z",
-      "awayTeam": "COL",
-      "homeTeam": "UTA",
-      "finnishPlayers": [
-        {
-          "name": "Artturi Lehkonen",
-          "team": "COL"
-        }
-      ]
-    },
     {
       "gameId": 2026020347,
       "startTime": "2026-11-20T00:00:00Z",
@@ -130,6 +102,30 @@
         {
           "name": "Matias Maccelli",
           "team": "NYI"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020349,
+      "startTime": "2026-11-20T00:30:00Z",
+      "awayTeam": "EDM",
+      "homeTeam": "TBL",
+      "finnishPlayers": [
+        {
+          "name": "Kasperi Kapanen",
+          "team": "EDM"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020353,
+      "startTime": "2026-11-20T01:00:00Z",
+      "awayTeam": "CBJ",
+      "homeTeam": "CHI",
+      "finnishPlayers": [
+        {
+          "name": "Teuvo Teravainen",
+          "team": "CHI"
         }
       ]
     }
