@@ -418,8 +418,6 @@ export async function loadPlayersForDate(date, { background = false } = {}) {
         console.warn(
             `⚠️ Skipping UI update for ${date} because selected date is ${currentSelectedDate}`
         )
-        // Still return the data but don't update the UI
-        // Data is loaded from prepopulated files only
         return []
     }
 
@@ -430,7 +428,6 @@ export async function loadPlayersForDate(date, { background = false } = {}) {
     if (!background) errorStore.set(null)
 
     try {
-        // Get data from prepopulated JSON files only
         const { players: fetchedPlayers, games: gamesData } = await getResultsForDate(date)
         // Navigation or a newer request may have overtaken this response.
         if (date !== get(selectedDateStore) || requestId !== resultsRequestId) return []
@@ -444,7 +441,7 @@ export async function loadPlayersForDate(date, { background = false } = {}) {
         refreshErrorStore.set(null)
 
         logger.success(
-            `Loaded ${fetchedPlayers.length} players and ${gamesData.games.length} games from prepopulated data for ${date}`
+            `Loaded ${fetchedPlayers.length} players and ${gamesData.games.length} games for ${date}`
         )
 
         return fetchedPlayers

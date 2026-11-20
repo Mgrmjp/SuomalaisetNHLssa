@@ -107,6 +107,8 @@ const visibleGroups = $derived(
     )
 )
 const hasAnyPlayers = $derived(filteredPlayers.length > 0)
+const playerStatsPending = $derived($games.games.some((game) => game.playerStatsPending))
+const resultsDelayed = $derived($games.games.some((game) => game.resultDelayed))
 const yesterdayPreviewDate = $derived(
     !hasAnyPlayers &&
         !$currentBreak &&
@@ -207,6 +209,14 @@ $effect(() => {
         {#snippet actions()}
             <Button onclick={refreshSelectedDate}>Yritä uudelleen</Button>
         {/snippet}
+    </Notice>
+{:else if !$isLoading && !$error && (playerStatsPending || resultsDelayed)}
+    <Notice variant="recovery">
+        <span>
+            {resultsDelayed
+                ? 'Osan otteluista raportointi viivästyy. Näytetään viimeisimmät saatavilla olevat tiedot.'
+                : 'Lopputulokset ovat ajan tasalla. Osan otteluista pelaajatilastot odottavat päivitystä.'}
+        </span>
     </Notice>
 {/if}
 

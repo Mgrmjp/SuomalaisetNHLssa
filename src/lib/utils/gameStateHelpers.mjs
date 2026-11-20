@@ -1,158 +1,47 @@
 // @ts-nocheck
-/**
- * Game State Helpers
- *
- * Utilities for determining game status (live, upcoming, complete)
- * based on the gameState field from game data.
- */
 
-/**
- * Game state constants from NHL API
- */
 export const GAME_STATE = {
-    OFF: 'OFF', // Game is over/final
-    FINAL: 'FINAL', // Alternative final state
-    PRE: 'PRE', // Pre-game (scheduled, not started)
-    FUT: 'FUT', // Future game (scheduled)
-    LIVE: 'LIVE', // Game is live/in-progress
-    CRIT: 'CRIT', // Critical/late game situation
-    IRT: 'IRT', // In review timeout
+    OFF: 'OFF',
+    FINAL: 'FINAL',
+    PRE: 'PRE',
+    FUT: 'FUT',
+    LIVE: 'LIVE',
+    CRIT: 'CRIT',
+    IRT: 'IRT',
 }
 
-function normalizeGameDateString(value) {
-    if (typeof value !== 'string') {
-        return null
-    }
-    const trimmed = value.trim()
-    if (!trimmed) {
-        return null
-    }
-    const candidate = trimmed.slice(0, 10)
-    return /^\d{4}-\d{2}-\d{2}$/.test(candidate) ? candidate : null
-}
-
-function getPlayerGameDateString(player) {
-    if (!player) {
-        return null
-    }
-
-    return (
-        normalizeGameDateString(player.game_date) ||
-        normalizeGameDateString(player.gameDate) ||
-        normalizeGameDateString(player.gameDateString)
-    )
-}
-
-function isPlayerGameInPast(player) {
-    const playerDate = getPlayerGameDateString(player)
-    if (!playerDate) {
-        return false
-    }
-    const today = new Date().toISOString().slice(0, 10)
-    return playerDate < today
-}
-
-const COMPLETED_PLAYER_STATUSES = new Set(['OFF', 'FINAL'])
-
-function getPlayerGameStatus(player) {
-    if (!player) {
-        return null
-    }
-
-    const status =
-        player.game_status || player.gameStatus || player.game_state || player.gameState || null
-
-    if (typeof status !== 'string') {
-        return null
-    }
-
-    return status.trim().toUpperCase() || null
-}
-
-function isPlayerGameMarkedComplete(player) {
-    const status = getPlayerGameStatus(player)
-    if (!status) {
-        return false
-    }
-    return COMPLETED_PLAYER_STATUSES.has(status)
-}
-
-/**
- * Get game state for a player by looking up their game
- * @param {Object} player - Player object with game_id property
- * @param {Object} gamesData - Games data object with findGameById function
- * @returns {string|null} Game state code or null if not found
- */
-export function getGameStateForPlayer(player, gamesData) {
-    if (!player?.game_id || !gamesData?.findGameById) {
-        return null
-    }
-    const game = gamesData.findGameById(player.game_id)
-    return game?.gameState || null
-}
-
-/**
- * Check if player's game is currently live/in-progress
- * Includes time-based safeguard: games that started 5+ hours ago are not live
- * @param {Object} player - Player object with game_id property
- * @param {Object} gamesData - Games data object with findGameById function
- * @returns {boolean} True if game is live
- */
-export function isPlayerGameLive(player, gamesData) {
-    if (isPlayerGameMarkedComplete(player)) {
-        return false
-    }
-
-    if (isPlayerGameInPast(player)) {
-        return false
-    }
-
-    const state = getGameStateForPlayer(player, gamesData)
-
-    // If state is a "finished" state, definitely not live
-    if (state === GAME_STATE.OFF || state === GAME_STATE.FINAL) {
-        return false
-    }
-
-    // If state is not a live state, not live
-    if (state !== GAME_STATE.LIVE && state !== GAME_STATE.CRIT && state !== GAME_STATE.IRT) {
-        return false
-    }
-
-    // Time-based safeguard: if game started more than 5 hours ago, consider it finished
-    // This handles edge cases where stale data persists
-    const game = gamesData?.findGameById?.(player?.game_id)
-    if (game?.startTime) {
-        const startTime = new Date(game.startTime)
-        const now = new Date()
-        const hoursElapsed = (now - startTime) / (1000 * 60 * 60)
-
-        // NHL games typically last 2.5-3.5 hours; 5 hours is a safe buffer
-        if (hoursElapsed > 5) {
-            return false
-        }
-    }
-
-    return true
-}
-
-/**
- * Check if game result should be shown (game is complete)
- * @param {Object} player - Player object with game_id property
- * @param {Object} gamesData - Games data object with findGameById function
- * @returns {boolean} True if game is complete and result should be shown
- */
-export function shouldShowGameResult(player, gamesData) {
-    const state = getGameStateForPlayer(player, gamesData)
+export function isCompletedGame(state) {
     return state === GAME_STATE.OFF || state === GAME_STATE.FINAL
 }
 
-/**
- * Check if game is upcoming (not started yet)
- * @param {Object} player - Player object with game_id property
- * @param {Object} gamesData - Games data object with findGameById function
- * @returns {boolean} True if game is upcoming
- */
+function findPlayerGame(player, gamesData) {
+    return gamesData?.findGameById?.(player?.game_id)
+}
+
+/** The game record takes precedence over duplicated fields in older player records. */
+export function getGameStateForPlayer(player, gamesData) {
+    const status =
+        findPlayerGame(player, gamesData)?.gameState ||
+        player?.game_status ||
+        player?.gameStatus ||
+        player?.game_state ||
+        player?.gameState
+    return typeof status === 'string' ? status.trim().toUpperCase() || null : null
+}
+
+export function isPlayerGameLive(player, gamesData) {
+    const state = getGameStateForPlayer(player, gamesData)
+    return (
+        !findPlayerGame(player, gamesData)?.resultDelayed &&
+        [GAME_STATE.LIVE, GAME_STATE.CRIT, GAME_STATE.IRT].includes(state)
+    )
+}
+
+export function shouldShowGameResult(player, gamesData) {
+    const state = getGameStateForPlayer(player, gamesData)
+    return isCompletedGame(state) || (!state && Boolean(player?.game_result || player?.gameResult))
+}
+
 export function isGameUpcoming(player, gamesData) {
     const state = getGameStateForPlayer(player, gamesData)
     return state === GAME_STATE.PRE || state === GAME_STATE.FUT

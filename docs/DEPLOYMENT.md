@@ -49,4 +49,6 @@ Credentials are supplied through GitHub repository secrets. Current news collect
 
 Trace the complete path: NHL response → saved dated snapshot → manifest → committed revision → Pages artifact → browser refresh. Check the failed workflow step, not just the overall badge. Preserve valid prior snapshots on source failures.
 
-The browser's retry can reload only published files. It cannot repair a failed collection or deployment. If a published revision is correct but data is stale, inspect the artifact contents and collection timestamps. If data is correct locally but absent in production, inspect the commit/deploy steps.
+The browser retries the published snapshots every minute while the page is visible. If a game is still unfinished and its snapshot is more than 15 minutes behind, the dashboard shows a delay. For games that started within the last 48 hours, it also checks ESPN for an explicitly final score matching the teams, home/away sides and scheduled start. A recovered score appears with a notice that player statistics still await the published NHL boxscore.
+
+If a published revision is correct but data is stale, inspect the artifact contents and collection timestamps. If data is correct locally but absent in production, inspect the commit/deploy steps.

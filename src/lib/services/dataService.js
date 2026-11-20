@@ -1,12 +1,12 @@
 // Data Service
-// Loads the single pre-populated results snapshot for a date.
-// Scores and players always come from the same snapshot.
+// Loads a published results snapshot and checks for finals when updates are delayed.
 
 // @ts-nocheck
 
 import { base } from '$app/paths'
 import { isValidDateFormat } from '$lib/api/nhlApi.js'
 import { fetchWithTimeout } from '$lib/utils/apiHelpers.js'
+import { recoverDelayedResults } from './finalScoreRecovery.js'
 
 /**
  * A pre-populated results snapshot as stored at
@@ -16,9 +16,10 @@ import { fetchWithTimeout } from '$lib/utils/apiHelpers.js'
  * @property {Array<{gameId: number, gameState?: string, startTime?: string, homeTeam?: any, awayTeam?: any, homeScore?: number, awayScore?: number, [key: string]: any}>} games
  * @property {Array<Record<string, any>>} players Finnish player performances for the date
  * @property {number} [total_players]
+ * @property {string} [generated_at]
  */
 
-/** Load one fresh snapshot so scores and players update together.
+/** Load the published stats and recover any delayed final scores.
  * @param {string} date Date in YYYY-MM-DD format
  * @returns {Promise<{players: any[], games: {games: any[], findGameById: (id: number) => any}}>}
  * @throws {Error} On an invalid date, failed fetch, or incomplete snapshot
@@ -35,9 +36,10 @@ export async function getResultsForDate(date) {
     if (data.date !== date || !Array.isArray(data.games) || !Array.isArray(data.players)) {
         throw new Error('Incomplete results snapshot')
     }
-    const gamesById = new Map(data.games.map((game) => [game.gameId, game]))
+    const { games, players } = await recoverDelayedResults(data)
+    const gamesById = new Map(games.map((game) => [game.gameId, game]))
     return {
-        players: data.players,
-        games: { games: data.games, findGameById: (id) => gamesById.get(id) || null },
+        players,
+        games: { games, findGameById: (id) => gamesById.get(id) || null },
     }
 }

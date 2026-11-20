@@ -1,6 +1,6 @@
 # Security headers for all deployed responses
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' https: data:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://cdn.jsdelivr.net https://storage.ko-fi.com; connect-src 'self' https://api-web.nhle.com https://api.nhle.com https://suomalaisetnhlssa.goatcounter.com https://*.goatcounter.com; frame-src https://ko-fi.com https://storage.ko-fi.com; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' https: data:; font-src 'self' https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; script-src 'self' 'unsafe-inline' https://gc.zgo.at https://cdn.jsdelivr.net https://storage.ko-fi.com; connect-src 'self' https://api-web.nhle.com https://api.nhle.com https://site.api.espn.com https://suomalaisetnhlssa.goatcounter.com https://*.goatcounter.com; frame-src https://ko-fi.com https://storage.ko-fi.com; upgrade-insecure-requests
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff

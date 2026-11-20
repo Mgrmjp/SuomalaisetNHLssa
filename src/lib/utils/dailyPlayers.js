@@ -108,6 +108,7 @@ export function getDailyHighlights(players, gamesData) {
                 allowed != null &&
                 Number(allowed) === 0 &&
                 shots >= 15 &&
+                !game?.playerStatsPending &&
                 finished
             ) {
                 return [

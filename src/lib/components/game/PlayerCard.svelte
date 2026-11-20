@@ -188,8 +188,8 @@ const displayName = $derived(
 const gamesData = $derived($games)
 const _isLive = $derived(isPlayerGameLive(player, gamesData))
 const _game = $derived(gamesData?.findGameById?.(player?.game_id) || null)
-const gameResult = $derived(player.game_result || player.gameResult || null)
-const _showResult = $derived(shouldShowGameResult(player, gamesData) || Boolean(gameResult))
+const _showResult = $derived(shouldShowGameResult(player, gamesData))
+const gameResult = $derived(_showResult ? player.game_result || player.gameResult : null)
 const _teamWithCity = $derived(getTeamWithCity(player.team || 'NHL'))
 const _formattedScore = $derived(formatGameScore(player, gamesData))
 const _venue = $derived(formatGameVenue(player))
@@ -613,7 +613,9 @@ $effect(() => {
                                 {:else if _matchupTeams}
                                     <span class="card__gamebar-at" aria-label="vastaan">@</span>
                                 {/if}
-                                {#if _isLive}
+                                {#if _game?.resultDelayed}
+                                    <span class="card__gamebar-status">Päivitys viivästyy</span>
+                                {:else if _isLive}
                                     <span class="card__gamebar-status card__gamebar-status--live"
                                         >LIVE{#if Number.isInteger(_game?.period) && _game.period > 0}
                                             · {_game.isSO
