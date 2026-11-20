@@ -7,7 +7,7 @@ Refactored to use shared config and utilities from parent package.
 
 import sys
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 # Add parent directory to path for imports
@@ -427,7 +427,9 @@ def get_player_recent_games(player_id, player_team, limit=10):
 # =============================================================================
 # Finnish Player Data Extraction
 # =============================================================================
-def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, finnish_cache):
+def extract_finnish_player_data(
+    game_data, game_id, date_str, schedule_data, finnish_cache, game_state
+):
     """
     Extract Finnish player data with empty net goal tracking.
 
@@ -437,6 +439,7 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
         date_str: Game date (YYYY-MM-DD)
         schedule_data: Schedule data for venue info
         finnish_cache: Finnish player cache
+        game_state: Normalized boxscore state
 
     Returns:
         Tuple of (finnish_players list, game_info dict)
@@ -552,6 +555,13 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
         else:
             empty_net_count = empty_net_goals_scored.get(player_id, 0)
 
+        game_result = None
+        if game_state == "OFF":
+            if player_score == opponent_score:
+                game_result = "T"
+            else:
+                game_result = "W" if player_score > opponent_score else "L"
+
         # Build record
         record = {
             "playerId": player_id,
@@ -567,17 +577,13 @@ def extract_finnish_player_data(game_data, game_id, date_str, schedule_data, fin
             "opponent": opponent,
             "opponent_full": opponent_team_full,
             "game_score": f"{player_score}-{opponent_score}",
-            "game_result": "W"
-            if player_score > opponent_score
-            else "L"
-            if player_score < opponent_score
-            else "T",
+            "game_result": game_result,
             "game_venue": venue_info.get("venue", ""),
             "game_city": venue_info.get("city", ""),
             "game_address": venue_info.get("address", ""),
             "game_id": game_id,
             "game_date": date_str,
-            "game_status": "OFF",
+            "game_status": game_state,
             "created_at": datetime.now().isoformat(),
             "headshot_url": player_cache.get("headshot", ""),
             # Game stats
@@ -708,7 +714,7 @@ def generate_finnish_players_data(game_date):
                 raise RuntimeError(f"Incomplete boxscore for {game_id}: {skip_reason}")
 
             finnish_players, game_info = extract_finnish_player_data(
-                game_details, game_id, game_date, schedule, finnish_cache
+                game_details, game_id, game_date, schedule, finnish_cache, normalized_state
             )
             all_finnish_players.extend(finnish_players)
 
@@ -762,7 +768,7 @@ def generate_finnish_players_data(game_date):
         "games": game_summaries,
         "players": all_finnish_players,
         "total_players": len(all_finnish_players),
-        "generated_at": datetime.now().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "source": "NHL API - Enhanced with Empty Net Goal Tracking",
     }
 

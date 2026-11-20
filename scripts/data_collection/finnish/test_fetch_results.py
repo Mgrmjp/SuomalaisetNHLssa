@@ -27,6 +27,7 @@ class FetchResultsTests(unittest.TestCase):
             patch.object(fetch, "load_finnish_player_cache", return_value={1: {"name": "Finn"}}),
             patch.object(fetch, "get_schedule_for_date", return_value=schedule),
             patch.object(fetch, "get_game_details", return_value=details),
+            patch.object(fetch, "sync_headshots", return_value=0),
             patch.object(fetch.time, "sleep"),
         ):
             return fetch.generate_and_save_for_date(self.date)
@@ -56,6 +57,28 @@ class FetchResultsTests(unittest.TestCase):
         result = self.collect({"date": self.date, "games": []})
         self.assertEqual(result["games"], [])
         self.assertEqual(json.loads(self.file.read_text())["date"], self.date)
+
+    def test_player_state_tracks_boxscore_without_inventing_a_live_result(self):
+        schedule = {"date": self.date, "games": [{"id": 1, "gameState": "LIVE"}]}
+        details = {
+            "homeTeam": {"abbrev": "SEA", "score": 2},
+            "awayTeam": {"abbrev": "VAN", "score": 1},
+            "playerByGameStats": {"awayTeam": {"forwards": [{"playerId": 1}]}},
+        }
+        with (
+            patch.object(fetch, "get_play_by_play_data", return_value=None),
+            patch.object(fetch, "get_player_recent_games", return_value=[]),
+        ):
+            for boxscore_state, expected_state, expected_result in (
+                ({}, "LIVE", None),
+                ({"gameState": "FINAL"}, "OFF", "L"),
+            ):
+                with self.subTest(state=expected_state):
+                    data = self.collect(schedule, {**details, **boxscore_state})
+                    self.assertEqual(data["games"][0]["gameState"], expected_state)
+                    self.assertEqual(data["players"][0]["game_status"], expected_state)
+                    self.assertEqual(data["players"][0]["game_result"], expected_result)
+                    self.assertEqual(data["players"][0]["game_score"], "1-2")
 
     def test_schedule_selects_the_requested_day(self):
         schedule = {
