@@ -33,6 +33,8 @@ This builds existing snapshots without prebuild collection and previews them on 
 
 [scripts/check_deployment.py](../scripts/check_deployment.py) records the artifact's Git revision in `build/data/deployment.json`. The publishing workflows use it to compare the live revision with the checkout and decide whether another deployment is required. Do not rely only on a successful collector log to establish that the live site has new data.
 
+After uploading the Pages artifact, both publishing workflows wait up to one minute for GitHub's artifact API to show its metadata before starting deployment.
+
 ## Publishing a change
 
 1. Validate the code and generated data using [Testing](TESTING.md).

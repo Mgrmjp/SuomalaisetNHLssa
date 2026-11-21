@@ -103,6 +103,36 @@ class DeploymentTests(unittest.TestCase):
                 check_deployment.main()
             self.assertEqual(output.read_text(), "needs_deployment=true\n")
 
+    def test_artifact_wait_retries_delayed_visibility_and_transient_errors(self):
+        url = "https://api.github.com/repos/example/site/actions/artifacts/123"
+        with (
+            patch.object(
+                check_deployment.requests,
+                "get",
+                side_effect=[Mock(status_code=404), requests.Timeout(), Mock(status_code=200)],
+            ) as getter,
+            patch.object(check_deployment.time, "sleep"),
+        ):
+            check_deployment.wait_for_artifact(url, "test-token")
+
+        self.assertEqual(getter.call_count, 3)
+        self.assertEqual(getter.call_args.args, (url,))
+        self.assertEqual(getter.call_args.kwargs["headers"]["Authorization"], "Bearer test-token")
+
+    def test_artifact_wait_fails_if_the_artifact_stays_missing(self):
+        with (
+            patch.object(
+                check_deployment.requests, "get", return_value=Mock(status_code=404)
+            ) as getter,
+            patch.object(check_deployment.time, "sleep"),
+            self.assertRaisesRegex(RuntimeError, "artifact.*did not become visible"),
+        ):
+            check_deployment.wait_for_artifact(
+                "https://example.invalid/artifacts/123", "test-token"
+            )
+
+        self.assertEqual(getter.call_count, 4)
+
 
 if __name__ == "__main__":
     unittest.main()
