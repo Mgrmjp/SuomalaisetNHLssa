@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-29",
+  "games": [
+    {
+      "gameId": 2026020428,
+      "homeTeam": "CHI",
+      "awayTeam": "MIN",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 2,
+      "startTime": "2026-11-29T19:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    },
+    {
+      "gameId": 2026020429,
+      "homeTeam": "BOS",
+      "awayTeam": "VAN",
+      "homeScore": 0,
+      "awayScore": 0,
+      "gameState": "FUT",
+      "gameType": 2,
+      "startTime": "2026-11-29T22:00:00Z",
+      "isOT": false,
+      "isSO": false,
+      "period": 3,
+      "finnish_players_count": 0,
+      "empty_net_goals": 0
+    }
+  ],
+  "players": [],
+  "total_players": 0,
+  "generated_at": "2026-11-22T14:03:34.067806+00:00",
+  "source": "NHL API - Enhanced with Empty Net Goal Tracking"
+}
