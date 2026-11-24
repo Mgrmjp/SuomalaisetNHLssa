@@ -363,6 +363,30 @@
     "birthDate": "2004-07-29"
   },
   {
+    "id": "8481554",
+    "name": "Kaapo Kakko",
+    "nhlRights": "NYR",
+    "sources": [
+      "draft_picks:2019"
+    ],
+    "currentTeam": "Seattle Kraken",
+    "league": "NHL",
+    "stats": {
+      "gp": 21,
+      "goals": 4,
+      "assists": 11,
+      "points": 15,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": true,
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/SEA/8481554.png",
+    "position": "R",
+    "birthDate": "2001-02-13"
+  },
+  {
     "id": "8486104",
     "name": "Oliver Suvanto",
     "nhlRights": "WSH",
@@ -437,30 +461,6 @@
     },
     "lastSeason": 20262027,
     "hasCurrentSeasonStats": false
-  },
-  {
-    "id": "8481554",
-    "name": "Kaapo Kakko",
-    "nhlRights": "NYR",
-    "sources": [
-      "draft_picks:2019"
-    ],
-    "currentTeam": "Seattle Kraken",
-    "league": "NHL",
-    "stats": {
-      "gp": 20,
-      "goals": 3,
-      "assists": 11,
-      "points": 14,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": true,
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/SEA/8481554.png",
-    "position": "R",
-    "birthDate": "2001-02-13"
   },
   {
     "id": "8481034",
@@ -887,7 +887,7 @@
     "currentTeam": "New York Islanders",
     "league": "NHL",
     "stats": {
-      "gp": 13,
+      "gp": 14,
       "goals": 2,
       "assists": 9,
       "points": 11,
@@ -1247,33 +1247,6 @@
     },
     "lastSeason": 20262027,
     "hasCurrentSeasonStats": {}
-  },
-  {
-    "id": "8482451",
-    "name": "Mikael Pyyhtia",
-    "nhlRights": "CBJ",
-    "position": "L",
-    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/CBJ/8482451.png",
-    "height": 183,
-    "weight": 80,
-    "birthDate": "2001-12-17",
-    "sources": [
-      "team_prospects:CBJ",
-      "draft_picks:2020"
-    ],
-    "currentTeam": "Cleveland Monsters",
-    "league": "AHL",
-    "stats": {
-      "gp": 14,
-      "goals": 3,
-      "assists": 6,
-      "points": 9,
-      "savePct": 0.0,
-      "gaa": 0.0,
-      "shutouts": 0
-    },
-    "lastSeason": 20262027,
-    "hasCurrentSeasonStats": false
   },
   {
     "id": "8484472",
@@ -3154,6 +3127,33 @@
     "headshot": "https://assets.nhle.com/mugs/nhl/latest/8481573.png",
     "position": "L",
     "birthDate": "2001-03-20"
+  },
+  {
+    "id": "8482451",
+    "name": "Mikael Pyyhtia",
+    "nhlRights": "CBJ",
+    "position": "L",
+    "headshot": "https://assets.nhle.com/mugs/nhl/20262027/CBJ/8482451.png",
+    "height": 183,
+    "weight": 80,
+    "birthDate": "2001-12-17",
+    "sources": [
+      "team_prospects:CBJ",
+      "draft_picks:2020"
+    ],
+    "currentTeam": "Columbus Blue Jackets",
+    "league": "NHL",
+    "stats": {
+      "gp": 1,
+      "goals": 1,
+      "assists": 0,
+      "points": 1,
+      "savePct": 0.0,
+      "gaa": 0.0,
+      "shutouts": 0
+    },
+    "lastSeason": 20262027,
+    "hasCurrentSeasonStats": true
   },
   {
     "id": "8479355",
