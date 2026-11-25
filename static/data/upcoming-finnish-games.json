@@ -1,18 +1,6 @@
 {
-  "updatedAt": "2026-11-24T17:08:40Z",
+  "updatedAt": "2026-11-25T16:48:24Z",
   "games": [
-    {
-      "gameId": 2026020385,
-      "startTime": "2026-11-25T01:00:00Z",
-      "awayTeam": "VGK",
-      "homeTeam": "EDM",
-      "finnishPlayers": [
-        {
-          "name": "Kasperi Kapanen",
-          "team": "EDM"
-        }
-      ]
-    },
     {
       "gameId": 2026020387,
       "startTime": "2026-11-26T00:00:00Z",
@@ -138,6 +126,22 @@
         {
           "name": "Mikael Pyyhtia",
           "team": "CBJ"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020394,
+      "startTime": "2026-11-26T00:30:00Z",
+      "awayTeam": "VAN",
+      "homeTeam": "DET",
+      "finnishPlayers": [
+        {
+          "name": "Kevin Lankinen",
+          "team": "VAN"
+        },
+        {
+          "name": "Leevi Meriläinen",
+          "team": "VAN"
         }
       ]
     }
