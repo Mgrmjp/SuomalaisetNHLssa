@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-26T16:18:15Z",
+  "updatedAt": "2026-11-27T16:03:33Z",
   "games": [
     {
       "gameId": 2026020402,
@@ -23,10 +23,6 @@
       "awayTeam": "DAL",
       "homeTeam": "STL",
       "finnishPlayers": [
-        {
-          "name": "Arttu Hyry",
-          "team": "DAL"
-        },
         {
           "name": "Esa Lindell",
           "team": "DAL"
@@ -82,27 +78,11 @@
       ]
     },
     {
-      "gameId": 2026020407,
-      "startTime": "2026-11-27T20:00:00Z",
-      "awayTeam": "DET",
-      "homeTeam": "CBJ",
-      "finnishPlayers": [
-        {
-          "name": "Mikael Pyyhtia",
-          "team": "CBJ"
-        }
-      ]
-    },
-    {
       "gameId": 2026020408,
       "startTime": "2026-11-27T21:00:00Z",
       "awayTeam": "COL",
       "homeTeam": "MIN",
       "finnishPlayers": [
-        {
-          "name": "Artturi Lehkonen",
-          "team": "COL"
-        },
         {
           "name": "Olli Määttä",
           "team": "MIN"
@@ -126,6 +106,18 @@
         {
           "name": "Ville Husso",
           "team": "ANA"
+        }
+      ]
+    },
+    {
+      "gameId": 2026020411,
+      "startTime": "2026-11-27T22:30:00Z",
+      "awayTeam": "NYR",
+      "homeTeam": "CHI",
+      "finnishPlayers": [
+        {
+          "name": "Joonas Korpisalo",
+          "team": "NYR"
         }
       ]
     }
