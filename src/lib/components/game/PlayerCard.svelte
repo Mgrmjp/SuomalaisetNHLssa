@@ -618,7 +618,7 @@ $effect(() => {
                                 {:else if _isLive}
                                     <span class="card__gamebar-status card__gamebar-status--live"
                                         >LIVE{#if Number.isInteger(_game?.period) && _game.period > 0}
-                                            · {_game.isSO
+                                            {' · '}{_game.isSO
                                                 ? 'VL'
                                                 : _game.period <= 3
                                                   ? `${_game.period}. erä`
@@ -631,7 +631,7 @@ $effect(() => {
                                             : _didLose
                                               ? 'Tappio'
                                               : 'Päättynyt'}{#if _gameExtraTimeLabel}
-                                            · {_gameExtraTimeLabel}{/if}</span
+                                            {' · '}{_gameExtraTimeLabel}{/if}</span
                                     >
                                 {:else}
                                     <span class="card__gamebar-status">Tulossa</span>
