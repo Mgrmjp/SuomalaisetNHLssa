@@ -115,36 +115,7 @@ function getLogoSrc(ad) {
                 tabindex={ad.id === activeBanner?.id ? 0 : -1}
                 aria-hidden={ad.id !== activeBanner?.id}
             >
-                {#if ad.isCustom === 'dna'}
-                    <div class="custom-banner dna">
-                        <span
-                            class="firefly"
-                            style="top:20%;left:10%;width:2px;height:2px;--delay:0.3s"
-                        ></span>
-                        <span
-                            class="firefly"
-                            style="top:55%;right:8%;width:3px;height:3px;--delay:2.7s"
-                        ></span>
-                        <span
-                            class="firefly"
-                            style="bottom:25%;left:25%;width:2px;height:2px;--delay:5.1s"
-                        ></span>
-                        <span
-                            class="firefly"
-                            style="top:35%;left:60%;width:2px;height:2px;--delay:1.4s"
-                        ></span>
-                        <img
-                            src={getLogoSrc(ad)}
-                            alt="DNA"
-                            class="logo"
-                            onerror={(e) => {
-                                if (e.target instanceof HTMLElement) e.target.style.display = 'none'
-                            }}
-                        />
-                        <div class="content">Voita iPhone 17 Pro!</div>
-                        <span class="cta">Lisätietoja</span>
-                    </div>
-                {:else if ad.isCustom === 'multitronic'}
+                {#if ad.isCustom === 'multitronic'}
                     <div class="custom-banner multitronic">
                         <span
                             class="firefly"
@@ -530,18 +501,6 @@ function getLogoSrc(ad) {
 }
 
 /* Color themes */
-.custom-banner.dna {
-    background: linear-gradient(135deg, #da0070, #b0005a);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-.custom-banner.dna .cta {
-    background: #fff;
-    color: #da0070;
-}
-.custom-banner.dna .content {
-    color: #fff;
-}
-
 .custom-banner.multitronic {
     background: linear-gradient(135deg, #1e293b, #0f172a);
     border: 1px solid rgba(255, 255, 255, 0.15);

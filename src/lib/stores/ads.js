@@ -65,11 +65,6 @@ const bannerAds = [
         alt: 'Aalto Energia – sähköä kotiisi. Tutustu sopimuksiin.',
     },
     {
-        id: 'dna',
-        href: 'https://go.adt246.net/t/t?a=1883588377&as=2038972948&t=2&tk=1',
-        isCustom: 'dna',
-    },
-    {
         id: 'multitronic',
         href: 'https://go.adt253.net/t/t?a=1930975670&as=2038972948&t=2&tk=1',
         isCustom: 'multitronic',
